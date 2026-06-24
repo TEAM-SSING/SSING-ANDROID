@@ -1,0 +1,120 @@
+# yaml-language-server: $schema=https://coderabbit.ai/integrations/schema.v2.json
+language: ko-KR
+early_access: false
+
+reviews:
+  profile: chill
+  high_level_summary: true
+  collapse_walkthrough: true
+  poem: false
+
+  path_filters:
+    - "**/*.kt"
+    - "**/*.kts"
+    - "**/AndroidManifest.xml"
+    - "**/*.gradle"
+    - "**/*.gradle.kts"
+    - "**/libs.versions.toml"
+    - "!**/build/**"
+    - "!**/.gradle/**"
+    - "!**/out/**"
+    - "!**/generated/**"
+    - "!**/ksp/**"
+    - "!**/kapt/**"
+    - "!**/R.java"
+    - "!**/BuildConfig.java"
+    - "!**/databinding/**"
+    - "!**/*.md"
+
+  auto_review:
+    enabled: true
+    auto_incremental_review: true
+    drafts: false
+    base_branches:
+      - main
+      - develop
+    ignore_usernames:
+      - dependabot
+      - "dependabot[bot]"
+      - renovate
+      - "renovate[bot]"
+
+  path_instructions:
+    - path: "**/*.kt"
+      instructions: |
+        Kotlin best practices: null safety(!! 금지), val 우선, structured concurrency,
+        viewModelScope/lifecycleScope 사용, GlobalScope 금지, Result/sealed로 실패 표현,
+        하드코딩 시크릿 금지, SecureRandom 사용.
+
+    # Composable 화면 (파일명 기반 - 모듈식 프로젝트 대응)
+    - path: "**/*Screen.kt"
+      instructions: |
+        Compose 화면: state hoisting, rememberSaveable로 구성 변경 대응,
+        LaunchedEffect/DisposableEffect의 key 검증, MaterialTheme/stringResource 사용,
+        하드코딩 색상·문자열 회피, contentDescription/48dp 터치 영역 접근성 점검.
+
+    # 디자인 시스템·재사용 UI (NowInAndroid 식 모듈 분리 대응)
+    - path: "**/core/{ui,designsystem}/**/*.kt"
+      instructions: |
+        디자인 시스템: @Composable PascalCase, Modifier 매개변수 디폴트와 위치,
+        @Stable/@Immutable 검토(재구성 최적화), 디자인 토큰 우회 하드코딩 금지,
+        @Preview 라이트/다크/폰트 변형 제공.
+
+    # 단일 모듈 프로젝트 보조 패턴
+    - path: "**/{ui,screen,screens,components,composables}/**/*.kt"
+      instructions: |
+        Jetpack Compose: @Composable PascalCase, Modifier 매개변수 디폴트와 위치,
+        state hoisting, rememberSaveable로 구성 변경 대응, 데이터 클래스에 @Stable/@Immutable 검토,
+        LaunchedEffect/DisposableEffect의 key 검증, MaterialTheme 사용,
+        하드코딩 색상/문자열 회피, contentDescription/접근성 점검.
+
+    - path: "**/*ViewModel.kt"
+      instructions: |
+        ViewModel: viewModelScope 기준, MutableStateFlow는 private+StateFlow 노출,
+        Activity/Context 참조 보관 금지, 의존성 생성자 주입, 일회성 이벤트는 SharedFlow/Channel.
+
+    - path: "**/{di,inject}/**/*.kt"
+      instructions: |
+        Hilt: @InstallIn 명시, 적절한 스코프, @Binds 우선, ApplicationContext 한정자 사용,
+        테스트 모듈은 @TestInstallIn으로 교체 가능 구조 확인.
+
+    # /di 디렉터리 밖에 있는 모듈도 잡기 위한 파일명 패턴
+    - path: "**/*Module.kt"
+      instructions: |
+        Hilt @Module 파일: @Module + @InstallIn 함께 명시, flavor별 동일 키 충돌 점검,
+        테스트용 fake 모듈이 운영 모듈과 일관된 인터페이스를 노출하는지.
+
+    # 컨벤션 플러그인(build-logic) - 모듈식 프로젝트
+    - path: "build-logic/**/*.kt"
+      instructions: |
+        Convention plugin: 클래스명에 의도 반영, 한 책임 원칙, libs.versions.toml에서 버전 끌어오기,
+        plugin 적용 순서 점검.
+
+    - path: "**/*.gradle.kts"
+      instructions: |
+        Gradle: jcenter() 금지, version catalog 사용, deprecated API 마이그레이션,
+        signing config에 평문 비밀번호 금지, debug/release 의존성 분리.
+
+    - path: "**/libs.versions.toml"
+      instructions: |
+        Version catalog: versions/libraries/plugins/bundles 정리, Compose BOM bundle 묶음,
+        중복 정의 금지.
+
+    - path: "**/AndroidManifest.xml"
+      instructions: |
+        Manifest: 위험 권한 추가에 사유/런타임 요청 동반, exported 명시,
+        intent-filter scope, debuggable/cleartextTraffic/allowBackup 의도 일치 확인.
+
+    - path: "**/{test,androidTest}/**/*.kt"
+      instructions: |
+        Android 테스트: 시나리오/기대 결과가 드러나는 이름, AAA 패턴, runTest+TestDispatcher,
+        StateFlow는 Turbine, Compose UI는 createComposeRule, Hilt 테스트는 @HiltAndroidTest.
+
+  tools:
+    detekt:
+      enabled: true
+    gitleaks:
+      enabled: true
+
+chat:
+  auto_reply: true
