@@ -11,6 +11,8 @@ class CoreUiConventionPlugin : Plugin<Project> {
             apply<AndroidLibraryConventionPlugin>()
             with(pluginManager) {
                 apply("org.jetbrains.kotlin.plugin.compose")
+                apply("com.google.dagger.hilt.android")
+                apply("com.google.devtools.ksp")
             }
             extensions.configure<LibraryExtension> {
                 buildFeatures.compose = true
@@ -24,6 +26,11 @@ class CoreUiConventionPlugin : Plugin<Project> {
                 add("debugImplementation", libs.findLibrary("androidx.compose.ui.tooling").get())
                 add("implementation", libs.findLibrary("coil.compose").get())
                 add("implementation", libs.findLibrary("immutable").get())
+                add("implementation", libs.findLibrary("hilt.android").get())
+                add("ksp", libs.findLibrary("hilt.compiler").get())
+                add("implementation", libs.findLibrary("navigation.compose").get())
+                add("implementation", libs.findLibrary("hilt.navigation.compose").get())
+                add("lintChecks", libs.findLibrary("compose.lint.checks").get())
             }
         }
     }

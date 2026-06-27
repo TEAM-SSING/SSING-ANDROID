@@ -1,5 +1,6 @@
 plugins {
     id("ssing.android.application")
+    id("org.jetbrains.kotlin.plugin.serialization")
 }
 
 android {
@@ -24,4 +25,5 @@ dependencies {
     implementation(projects.presentation.consumerMatching)
     implementation(projects.presentation.consumerPayment)
     implementation(projects.presentation.consumerLesson)
+    implementation(libs.immutable)
 }

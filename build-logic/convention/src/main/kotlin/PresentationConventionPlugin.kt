@@ -27,6 +27,7 @@ class PresentationConventionPlugin : Plugin<Project> {
                 add("debugImplementation", libs.findLibrary("androidx.compose.ui.tooling").get())
                 add("implementation", libs.findLibrary("hilt.android").get())
                 add("ksp", libs.findLibrary("hilt.compiler").get())
+                add("implementation", libs.findLibrary("hilt.navigation.compose").get())
                 add("implementation", libs.findLibrary("navigation.compose").get())
                 add("implementation", libs.findLibrary("kotlinx.serialization.json").get())
                 add("implementation", libs.findLibrary("coil.compose").get())
@@ -34,6 +35,7 @@ class PresentationConventionPlugin : Plugin<Project> {
                 add("implementation", libs.findLibrary("timber").get())
                 add("implementation", project(":core:ui"))
                 add("implementation", project(":data"))
+                add("lintChecks", libs.findLibrary("compose.lint.checks").get())
             }
         }
     }

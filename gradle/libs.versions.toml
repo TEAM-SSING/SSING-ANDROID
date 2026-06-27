@@ -11,6 +11,7 @@ activityCompose = "1.10.1"
 composeBom = "2025.06.00"
 coroutines = "1.10.2"
 hilt = "2.56.2"
+hiltNavigationCompose = "1.2.0"
 navigation = "2.9.0"
 retrofit = "2.11.0"
 okhttp = "4.12.0"
@@ -19,6 +20,7 @@ datastore = "1.1.4"
 coil = "2.7.0"
 timber = "5.0.1"
 immutable = "0.3.8"
+composeLints = "1.4.1"
 runner = "1.0.2"
 espressoCoreVersion = "3.0.2"
 appcompatV7 = "28.0.0"
@@ -53,6 +55,7 @@ coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutin
 # hilt
 hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
 hilt-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hilt" }
+hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "hiltNavigationCompose" }
 
 # navigation
 navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigation" }
@@ -77,6 +80,9 @@ timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "tim
 
 # immutable
 immutable = { group = "org.jetbrains.kotlinx", name = "kotlinx-collections-immutable", version.ref = "immutable" }
+
+# compose lint
+compose-lint-checks = { group = "com.slack.lint.compose", name = "compose-lint-checks", version.ref = "composeLints" }
 runner = { group = "com.android.support.test", name = "runner", version.ref = "runner" }
 espresso-core = { group = "com.android.support.test.espresso", name = "espresso-core", version.ref = "espressoCoreVersion" }
 appcompat-v7 = { group = "com.android.support", name = "appcompat-v7", version.ref = "appcompatV7" }

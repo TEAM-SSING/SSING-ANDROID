@@ -48,6 +48,7 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
                 add("debugImplementation", libs.findLibrary("androidx.compose.ui.tooling").get())
                 add("implementation", libs.findLibrary("androidx.activity.compose").get())
                 add("implementation", libs.findLibrary("navigation.compose").get())
+                add("lintChecks", libs.findLibrary("compose.lint.checks").get())
             }
         }
     }
