@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">consumer</string>
+    <string name="consumer_home">홈</string>
+    <string name="consumer_reservation">예약 정보</string>
+    <string name="consumer_lesson">강습 내역</string>
+    <string name="consumer_profile">내 정보</string>
 </resources>

@@ -11,7 +11,7 @@ import com.ssing.presentation.consumerhome.navigtion.ConsumerHome
 import com.ssing.presentation.consumerhome.navigtion.consumerHomeNavGraph
 
 @Composable
-internal fun MainNavHost(
+internal fun ConsumerMainNavHost(
     navController: NavHostController,
     paddingValues: PaddingValues,
     modifier: Modifier = Modifier,
