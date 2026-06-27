@@ -1,4 +1,5 @@
 pluginManagement {
+    includeBuild("build-logic")
     repositories {
         google {
             content {
@@ -11,9 +12,7 @@ pluginManagement {
         gradlePluginPortal()
     }
 }
-plugins {
-    id("org.gradle.toolchains.foojay-resolver-convention") version "1.0.0"
-}
+
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
@@ -23,4 +22,17 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "Ssing-Android"
-include(":app")
+include(":core:ui")
+include(":core:localstorage")
+include(":core:network")
+include(":data")
+include(":presentation:auth")
+include(":presentation:notification")
+include(":presentation:consumer-home")
+include(":presentation:consumer-matching")
+include(":presentation:consumer-payment")
+include(":presentation:consumer-lesson")
+include(":presentation:instructor-home")
+include(":presentation:instructor-matching")
+include(":app:consumer")
+include(":app:instructor")
