@@ -2,12 +2,13 @@ package com.ssing.consumer
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
+import com.ssing.presentation.auth.navigation.authNavGraph
+import com.ssing.presentation.consumerhome.navigtion.ConsumerHome
+import com.ssing.presentation.consumerhome.navigtion.consumerHomeNavGraph
 
 @Composable
 internal fun MainNavHost(
@@ -17,13 +18,12 @@ internal fun MainNavHost(
 ) {
     NavHost(
         navController = navController,
-        startDestination = "home",
-        modifier = modifier
-            .fillMaxSize()
-            .padding(paddingValues),
+        startDestination = ConsumerHome,
+        modifier = modifier.fillMaxSize(),
     ) {
-        // TODO 나중에 각 presentation 모듈 navGraph 연결
-        composable(route = "home") {
-        }
+        authNavGraph(paddingValues = paddingValues)
+        consumerHomeNavGraph(
+            paddingValues = paddingValues,
+        )
     }
 }
