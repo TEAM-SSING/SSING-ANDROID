@@ -1,4 +1,4 @@
-package com.ssing.core.ui.util
+package com.ssing.core.network.di.util
 
 import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.ensureActive
