@@ -1,5 +1,6 @@
 plugins {
     id("ssing.android.application")
+    id("org.jetbrains.kotlin.plugin.serialization")
 }
 
 android {
@@ -22,4 +23,5 @@ dependencies {
     implementation(projects.presentation.notification)
     implementation(projects.presentation.instructorHome)
     implementation(projects.presentation.instructorMatching)
+    implementation(libs.immutable)
 }
