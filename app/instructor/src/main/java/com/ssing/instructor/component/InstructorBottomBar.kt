@@ -43,7 +43,7 @@ fun InstructorBottomBar(
         exit = fadeOut() + slideOut { IntOffset(0, it.height) },
     ) {
         Row(
-            modifier = Modifier
+            modifier = modifier
                 .fillMaxWidth()
                 .background(color = Color.White)
                 .padding(top = 10.dp, bottom = 10.dp)
