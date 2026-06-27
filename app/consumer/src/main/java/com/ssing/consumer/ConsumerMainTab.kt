@@ -5,7 +5,7 @@ import androidx.annotation.StringRes
 import com.ssing.consumer.navigation.ConsumerDummyTabRoute
 import com.ssing.core.ui.navigation.MainTabRoute
 import com.ssing.core.ui.navigation.Route
-import com.ssing.presentation.consumerhome.navigtion.ConsumerHome
+import com.ssing.presentation.consumerhome.navigation.ConsumerHome
 
 enum class ConsumerMainTab(
     @param:DrawableRes val iconRes: Int,

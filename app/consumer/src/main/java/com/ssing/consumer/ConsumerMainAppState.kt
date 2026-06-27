@@ -11,7 +11,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
 import com.ssing.core.ui.extension.stateInWhileSubscribed
 import com.ssing.core.ui.navigation.Route
-import com.ssing.presentation.consumerhome.navigtion.ConsumerHome
+import com.ssing.presentation.consumerhome.navigation.ConsumerHome
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

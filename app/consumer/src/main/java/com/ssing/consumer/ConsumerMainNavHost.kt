@@ -7,8 +7,8 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import com.ssing.presentation.auth.navigation.authNavGraph
-import com.ssing.presentation.consumerhome.navigtion.ConsumerHome
-import com.ssing.presentation.consumerhome.navigtion.consumerHomeNavGraph
+import com.ssing.presentation.consumerhome.navigation.ConsumerHome
+import com.ssing.presentation.consumerhome.navigation.consumerHomeNavGraph
 
 @Composable
 internal fun ConsumerMainNavHost(
