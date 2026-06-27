@@ -16,8 +16,9 @@ fun String.checkLength(): Int {
     iterator.setText(this)
 
     var count = 0
-    while (iterator.next() != BreakIterator.DONE)
+    while (iterator.next() != BreakIterator.DONE) {
         count++
+    }
 
     return count
 }

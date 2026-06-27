@@ -1,7 +1,6 @@
 package com.ssing.core.ui.extension
 
 import androidx.navigation.NavController
-import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.navOptions
 
 /**
@@ -15,12 +14,13 @@ import androidx.navigation.navOptions
  *
  * @return 백스택 초기화 설정만 포함된 NavOptions
  */
-fun NavController.clearBackStackNavOptions() = navOptions {
-    popUpTo(0) {
-        inclusive = true
+fun NavController.clearBackStackNavOptions() =
+    navOptions {
+        popUpTo(0) {
+            inclusive = true
+        }
+        launchSingleTop = true
     }
-    launchSingleTop = true
-}
 
 /**
  * 백스택을 초기화하면서도 이전 Destination의 상태를 저장하고 복원하는 NavOptions를 생성합니다.
@@ -31,10 +31,11 @@ fun NavController.clearBackStackNavOptions() = navOptions {
  *
  * @return 백스택 초기화 및 상태 저장/복원 설정이 포함된 NavOptions
  */
-fun NavController.clearBackStackWithRestoreNavOptions() = navOptions {
-    popUpTo(0) {
-        saveState = true
-        inclusive = true
+fun NavController.clearBackStackWithRestoreNavOptions() =
+    navOptions {
+        popUpTo(0) {
+            saveState = true
+            inclusive = true
+        }
+        restoreState = true
     }
-    restoreState = true
-}

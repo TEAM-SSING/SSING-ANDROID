@@ -13,13 +13,11 @@ import androidx.compose.foundation.text.input.then
  * @param maxLength 최대 글자수
  */
 
-fun InputTransformation.checkMaxLength(maxLength: Int): InputTransformation =
-    this.then(CheckMaxLength(maxLength))
+fun InputTransformation.checkMaxLength(maxLength: Int): InputTransformation = this.then(CheckMaxLength(maxLength))
 
 private data class CheckMaxLength(
-    private val maxLength: Int
+    private val maxLength: Int,
 ) : InputTransformation {
-
     override fun TextFieldBuffer.transformInput() {
         val length = asCharSequence().toString().checkLength()
 
