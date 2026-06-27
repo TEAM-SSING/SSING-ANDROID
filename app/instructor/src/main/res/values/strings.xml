@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">instructor</string>
+    <string name="instructor_home">홈</string>
+    <string name="instructor_reservation">예약</string>
+    <string name="instructor_chat">채팅</string>
+    <string name="instructor_settlement">정산</string>
+    <string name="instructor_profile">프로필</string>
 </resources>
