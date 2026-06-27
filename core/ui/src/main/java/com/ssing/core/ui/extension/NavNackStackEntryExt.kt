@@ -11,7 +11,7 @@ import androidx.navigation.NavHostController
  * 공용 뷰모델을 불러오기 위한 함수
  * */
 @Composable
-inline fun <reified T : ViewModel> sharedViewModel( 
+inline fun <reified T : ViewModel> sharedViewModel(
     backStackEntry: NavBackStackEntry,
     navController: NavHostController,
 ): T {
