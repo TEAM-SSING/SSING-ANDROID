@@ -49,8 +49,7 @@ fun ConsumerBottomBar(
                     color = Color.White,
                 )
                 .padding(
-                    top = 10.dp,
-                    bottom = 10.dp,
+                    vertical = 10.dp
                 )
                 .navigationBarsPadding(),
             horizontalArrangement = Arrangement.spacedBy(10.dp),

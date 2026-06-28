@@ -46,7 +46,7 @@ fun InstructorBottomBar(
             modifier = modifier
                 .fillMaxWidth()
                 .background(color = Color.White)
-                .padding(top = 10.dp, bottom = 10.dp)
+                .padding(vertical = 10.dp)
                 .navigationBarsPadding(),
             horizontalArrangement = Arrangement.spacedBy(10.dp),
             verticalAlignment = Alignment.CenterVertically,
