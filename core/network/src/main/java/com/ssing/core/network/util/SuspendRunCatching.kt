@@ -1,6 +1,7 @@
 package com.ssing.core.network.util
 
 import kotlinx.coroutines.TimeoutCancellationException
+import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.ensureActive
 import kotlin.coroutines.cancellation.CancellationException
 import kotlin.coroutines.coroutineContext
@@ -23,6 +24,6 @@ suspend fun <R> suspendRunCatching(block: suspend () -> R): Result<R> =
     } catch (c: CancellationException) {
         throw c
     } catch (e: Throwable) {
-        coroutineContext.ensureActive()
+        currentCoroutineContext().ensureActive()
         Result.failure(e)
     }
