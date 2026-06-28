@@ -14,7 +14,7 @@ internal class LoginViewModel @Inject constructor() :
 
     fun onLoginClick() {
         viewModelScope.launch {
-            sendEffect(LoginContract.Effect.NavigateToConsumerHome)
+            sendEffect(LoginContract.Effect.NavigateToHome)
         }
     }
 }

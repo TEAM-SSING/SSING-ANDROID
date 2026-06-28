@@ -13,9 +13,11 @@ data object Login
 
 fun NavGraphBuilder.authNavGraph(
     paddingValues: PaddingValues,
+    navigateToHome: () -> Unit,
 ) {
     composable<Login> {
         LoginRoute(
+            navigateToHome = navigateToHome,
             modifier = Modifier.padding(paddingValues),
         )
     }

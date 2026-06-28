@@ -10,8 +10,7 @@ internal interface LoginContract {
     )
 
     sealed interface Effect {
-        data object NavigateToConsumerHome : Effect
-        data object NavigateToInstructorHome : Effect
+        data object NavigateToHome : Effect
         data class ShowToast(val message: String) : Effect
     }
 }
