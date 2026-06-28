@@ -13,7 +13,7 @@ import java.io.IOException
 import javax.inject.Inject
 
 class LocalTokenDataSourceImpl @Inject constructor(
-    @TokenDataStore private val dataStore: DataStore<Preferences>,
+    @param:TokenDataStore private val dataStore: DataStore<Preferences>,
 ) : LocalTokenDataSource {
 
     override suspend fun getAccessToken(): String? = dataStore.data
