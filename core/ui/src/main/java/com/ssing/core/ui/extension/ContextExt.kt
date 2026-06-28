@@ -2,6 +2,7 @@ package com.ssing.core.ui.extension
 
 import android.content.Context
 import android.content.Intent
+import android.widget.Toast
 import androidx.core.net.toUri
 
 /**
@@ -15,4 +16,14 @@ fun Context.openUrl(url: String?): Boolean {
     return runCatching {
         startActivity(Intent(Intent.ACTION_VIEW, url.toUri()))
     }.isSuccess
+}
+
+
+/**
+ * 짧은 길이의 토스트 메시지를 표시합니다.
+ *
+ * @param message 표시할 메시지
+ */
+fun Context.toast(message: String) {
+    Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
 }
