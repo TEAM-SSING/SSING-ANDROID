@@ -21,7 +21,10 @@ internal fun ConsumerMainNavHost(
         startDestination = ConsumerHome,
         modifier = modifier.fillMaxSize(),
     ) {
-        authNavGraph(paddingValues = paddingValues)
+        authNavGraph(
+            paddingValues = paddingValues,
+            navigateToHome = { navController.navigate(ConsumerHome) },
+        )
         consumerHomeNavGraph(
             paddingValues = paddingValues,
         )

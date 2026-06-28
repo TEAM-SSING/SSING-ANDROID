@@ -21,7 +21,10 @@ internal fun InstructorMainNavHost(
         startDestination = InstructorHome,
         modifier = modifier.fillMaxSize(),
     ) {
-        authNavGraph(paddingValues = paddingValues)
+        authNavGraph(
+            paddingValues = paddingValues,
+            navigateToHome = { navController.navigate(InstructorHome) },
+        )
         instructorHomeNavGraph(paddingValues = paddingValues)
         // TODO 나중에 각 presentation 모듈 navGraph 연결
     }
