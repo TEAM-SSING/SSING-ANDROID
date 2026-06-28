@@ -29,6 +29,13 @@ class LocalTokenDataSourceImpl @Inject constructor(
         }.firstOrNull()
 
     override suspend fun getRefreshToken(): String? = dataStore.data
+        .catch { exception ->
+            if (exception is IOException) {
+                emit(emptyPreferences())
+            } else {
+                throw exception
+            }
+        }
         .map { prefs ->
             prefs[REFRESH_TOKEN]
         }.firstOrNull()
