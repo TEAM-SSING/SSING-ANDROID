@@ -43,25 +43,26 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideHttpLoggingInterceptor(): Interceptor = HttpLoggingInterceptor { message ->
-        when {
-            message.isJsonObject() ->
-                Timber.tag(LOGGING_TAG).d(JSONObject(message).toString(4))
+    fun provideHttpLoggingInterceptor(): HttpLoggingInterceptor =
+        HttpLoggingInterceptor { message ->
+            when {
+                message.isJsonObject() ->
+                    Timber.tag(LOGGING_TAG).d(JSONObject(message).toString(4))
 
-            message.isJsonArray() ->
-                Timber.tag(LOGGING_TAG).d(JSONArray(message).toString(4))
+                message.isJsonArray() ->
+                    Timber.tag(LOGGING_TAG).d(JSONArray(message).toString(4))
 
-            else -> {
-                Timber.tag(LOGGING_TAG).d("CONNECTION INFO -> $message")
+                else -> {
+                    Timber.tag(LOGGING_TAG).d("CONNECTION INFO -> $message")
+                }
+            }
+        }.apply {
+            level = if (BuildConfig.DEBUG) {
+                HttpLoggingInterceptor.Level.BODY
+            } else {
+                HttpLoggingInterceptor.Level.NONE
             }
         }
-    }.apply {
-        level = if (BuildConfig.DEBUG) {
-            HttpLoggingInterceptor.Level.BODY
-        } else {
-            HttpLoggingInterceptor.Level.NONE
-        }
-    }
 
     @Provides
     @Singleton
