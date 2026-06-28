@@ -1,12 +1,13 @@
-package com.ssing.core.ui.extension
+package com.ssing.core.ui.util
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.repeatOnLifecycle
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
+
 
 /**
  * UiEffect를 Lifecycle에 맞춰 안전하게 처리합니다.

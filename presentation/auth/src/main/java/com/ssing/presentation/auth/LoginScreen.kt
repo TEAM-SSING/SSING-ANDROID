@@ -10,7 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.ssing.core.ui.extension.HandleUiEffects
+import com.ssing.core.ui.util.HandleUiEffects
 
 @Composable
 internal fun LoginRoute(
