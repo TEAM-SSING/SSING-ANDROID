@@ -43,18 +43,18 @@
 🗃️ SSING-ANDROID
 │
 ├── 📂 app
-│   ├── 📁 consumer             # 소비자 앱 진입점
-│   └── 📁 instructor           # 강사 앱 진입점
+│   ├── 📁 consumer             # 소비자 앱 
+│   └── 📁 instructor           # 강사 앱 
 │
 ├── 📂 presentation
-│   ├── 📁 auth                 # 로그인
-│   ├── 📁 notification         # FCM 알림
-│   ├── 📁 consumer-home        # 소비자 홈
-│   ├── 📁 consumer-matching    # 조건입력 + 매칭 플로우
-│   ├── 📁 consumer-payment     # 결제 + 강습 확정
-│   ├── 📁 consumer-lesson      # 강습 상세
-│   ├── 📁 instructor-home      # 강사 홈 
-│   └── 📁 instructor-matching  # 강사 매칭 + 강습 관리
+│   ├── 📁 auth                 
+│   ├── 📁 notification        
+│   ├── 📁 consumer-home        
+│   ├── 📁 consumer-matching    
+│   ├── 📁 consumer-payment     
+│   ├── 📁 consumer-lesson     
+│   ├── 📁 instructor-home    
+│   └── 📁 instructor-matching 
 │
 ├── 📂 data                     # 단일 모듈, feature별 패키지
 │   ├── 📁 di                   # 의존성 주입 모듈
