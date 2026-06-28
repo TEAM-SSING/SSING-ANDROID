@@ -17,14 +17,15 @@ import kotlinx.coroutines.flow.filter
  *
  * 무한 스크롤(Infinite Scroll) 또는 페이지네이션 구현에 사용됩니다.
  *
- * @param threshold 하단으로부터 몇 개의 아이템 이전에 로드를 시작할지 (기본: 0)
  * @param isLoading 현재 로딩 중인지 여부. 중복 호출을 방지합니다.
  * @param onLoadMore 하단 도달 시 호출될 콜백
+ * @param threshold 하단으로부터 몇 개의 아이템 이전에 로드를 시작할지 (기본: 0)
+ *
  */
 @Composable
-fun LazyListState.onBottomReached(
-    threshold: Int = 0,
+fun LazyListState.OnBottomReached(
     isLoading: Boolean,
+    threshold: Int = 0,
     onLoadMore: () -> Unit,
 ) {
     require(threshold >= 0) { "threshold cannot be negative, but was $threshold" }
@@ -32,7 +33,7 @@ fun LazyListState.onBottomReached(
     val loadMore by rememberUpdatedState(onLoadMore)
     val loading by rememberUpdatedState(isLoading)
 
-    val shouldLoadMore by remember {
+    val shouldLoadMore by remember(threshold) {
         derivedStateOf {
             val total = layoutInfo.totalItemsCount
             if (total == 0 || loading) return@derivedStateOf false
@@ -52,8 +53,8 @@ fun LazyListState.onBottomReached(
 
 @Composable
 fun LazyGridState.onBottomReached(
-    threshold: Int = 0,
     isLoading: Boolean,
+    threshold: Int = 0,
     onLoadMore: () -> Unit,
 ) {
     require(threshold >= 0) { "threshold cannot be negative, but was $threshold" }
@@ -61,7 +62,7 @@ fun LazyGridState.onBottomReached(
     val loadMore by rememberUpdatedState(onLoadMore)
     val loading by rememberUpdatedState(isLoading)
 
-    val shouldLoadMore by remember {
+    val shouldLoadMore by remember(threshold) {
         derivedStateOf {
             val total = layoutInfo.totalItemsCount
             if (total == 0 || loading) return@derivedStateOf false
