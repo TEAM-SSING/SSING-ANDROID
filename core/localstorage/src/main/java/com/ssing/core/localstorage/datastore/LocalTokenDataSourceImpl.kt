@@ -3,10 +3,13 @@ package com.ssing.core.localstorage.datastore
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.core.stringPreferencesKey
 import com.ssing.core.localstorage.datastore.di.TokenDataStore
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
+import java.io.IOException
 import javax.inject.Inject
 
 class LocalTokenDataSourceImpl @Inject constructor(
@@ -14,6 +17,13 @@ class LocalTokenDataSourceImpl @Inject constructor(
 ) : LocalTokenDataSource {
 
     override suspend fun getAccessToken(): String? = dataStore.data
+        .catch { exception ->
+            if (exception is IOException) {
+                emit(emptyPreferences())
+            } else {
+                throw exception
+            }
+        }
         .map { prefs ->
             prefs[ACCESS_TOKEN]
         }.firstOrNull()
