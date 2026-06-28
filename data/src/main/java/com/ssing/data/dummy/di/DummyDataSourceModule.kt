@@ -1,4 +1,4 @@
-package com.ssing.data.di.dummy
+package com.ssing.data.dummy.di
 
 import com.ssing.data.dummy.remote.datasource.api.DummyDataSource
 import com.ssing.data.dummy.remote.datasource.impl.DummyDataSourceImpl

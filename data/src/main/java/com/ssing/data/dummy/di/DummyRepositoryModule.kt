@@ -1,4 +1,4 @@
-package com.ssing.data.di.dummy
+package com.ssing.data.dummy.di
 
 import com.ssing.data.dummy.repository.api.DummyRepository
 import com.ssing.data.dummy.repository.impl.DummyRepositoryImpl
