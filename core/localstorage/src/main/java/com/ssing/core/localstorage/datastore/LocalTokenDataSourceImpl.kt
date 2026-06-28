@@ -47,8 +47,7 @@ class LocalTokenDataSourceImpl @Inject constructor(
 
     override suspend fun clearTokens() {
         dataStore.edit { prefs ->
-            prefs.remove(ACCESS_TOKEN)
-            prefs.remove(REFRESH_TOKEN)
+            prefs.clear()
         }
     }
 
