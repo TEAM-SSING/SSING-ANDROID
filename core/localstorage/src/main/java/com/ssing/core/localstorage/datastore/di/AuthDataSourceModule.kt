@@ -1,4 +1,4 @@
-package com.ssing.data.di.auth
+package com.ssing.core.localstorage.datastore.di
 
 import com.ssing.core.localstorage.datastore.LocalTokenDataSource
 import com.ssing.core.localstorage.datastore.LocalTokenDataSourceImpl
