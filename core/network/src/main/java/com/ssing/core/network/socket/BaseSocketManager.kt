@@ -41,7 +41,10 @@ abstract class BaseSocketManager<T>(
 ) {
     abstract val destination: String
 
+    @Volatile
     private var session: StompSession? = null
+
+    @Volatile
     private var reissueAttempted = false
 
     private val _socketState: MutableStateFlow<SocketState> =
@@ -52,6 +55,8 @@ abstract class BaseSocketManager<T>(
     val event: SharedFlow<T> = _event.asSharedFlow()
 
     private val scope = CoroutineScope(ioDispatcher + SupervisorJob())
+
+    @Volatile
     private var connectJob: Job? = null
 
     @Volatile
