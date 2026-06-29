@@ -91,6 +91,8 @@ abstract class BaseSocketManager<T>(
                     } else {
                         reissue()
                             .onSuccess {
+                                if (_socketState.value == SocketState.Disconnected) return
+
                                 reissueAttempted = true
                                 connectJob = scope.launch { executeConnect() }
                             }
