@@ -51,6 +51,8 @@ abstract class BaseSocketManager<T>(
     private val scope = CoroutineScope(ioDispatcher + SupervisorJob())
 
     fun connect(): Job = scope.launch {
+        if (_socketState.value == SocketState.Connecting || _socketState.value == SocketState.Connected) return@launch
+
         try {
             _socketState.update { SocketState.Connecting }
             val accessToken = tokenDataSource.getAccessToken() ?: return@launch logout()
@@ -119,7 +121,10 @@ abstract class BaseSocketManager<T>(
         }
 
         val encodedBody = json.encodeToString(serializer, body)
-        currentSession.send(StompSendHeaders(destination = destination), FrameBody.Text(encodedBody))
+        currentSession.send(
+            StompSendHeaders(destination = destination),
+            FrameBody.Text(encodedBody)
+        )
     }
 
     private suspend fun reissue(): Result<Unit> = suspendRunCatching {
