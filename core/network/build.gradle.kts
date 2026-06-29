@@ -17,6 +17,7 @@ android {
 
     defaultConfig {
         buildConfigField("String", "BASE_URL", "\"${localProperties.getProperty("BASE_URL", "")}\"")
+        buildConfigField("String", "SOCKET_BASE_URL", "\"${localProperties.getProperty("SOCKET_BASE_URL", "")}\"")
     }
 }
 
