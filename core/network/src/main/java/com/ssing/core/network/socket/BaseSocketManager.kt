@@ -72,8 +72,8 @@ abstract class BaseSocketManager<T>(
             reissueAttempted = false
             _socketState.update { SocketState.Connected }
             subscribe()
-        } catch (e: StompErrorFrameReceived) {
-            when (e.frame.bodyAsText) {
+        } catch (s: StompErrorFrameReceived) {
+            when (s.frame.bodyAsText) {
                 UNAUTHENTICATED, AUTH_INVALID_TOKEN -> logout()
                 AUTH_TOKEN_EXPIRED -> {
                     if (reissueAttempted) {
@@ -91,8 +91,10 @@ abstract class BaseSocketManager<T>(
                 }
 
                 FORBIDDEN -> _socketState.update { SocketState.Forbidden }
-                else -> _socketState.update { SocketState.Error(e) }
+                else -> _socketState.update { SocketState.Error(s) }
             }
+        } catch (e: Exception) {
+            _socketState.update { SocketState.Error(e) }
         }
     }
 
