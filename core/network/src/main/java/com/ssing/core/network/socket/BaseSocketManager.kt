@@ -93,6 +93,7 @@ abstract class BaseSocketManager<T>(
         Timber.d("🐮 connect() - 연결 시작 (endpoint: $endpoint)")
         connectJob?.cancel()
         isIntentionalDisconnect = false
+        retryCount = 0
 
         connectJob = scope.launch { executeConnect() }
     }
@@ -109,7 +110,6 @@ abstract class BaseSocketManager<T>(
             )
 
             reissueAttempted = false
-            retryCount = 0
             Timber.d("🐮 소켓 연결 성공")
             _socketState.update { SocketState.Connected }
             subscribe()
