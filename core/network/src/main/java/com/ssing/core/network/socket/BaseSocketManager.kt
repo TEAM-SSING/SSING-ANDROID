@@ -7,6 +7,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -26,6 +27,7 @@ import org.hildan.krossbow.stomp.StompSession
 import org.hildan.krossbow.stomp.frame.FrameBody
 import org.hildan.krossbow.stomp.headers.StompSendHeaders
 import org.hildan.krossbow.stomp.headers.StompSubscribeHeaders
+import kotlin.math.pow
 
 @OptIn(ExperimentalSerializationApi::class)
 abstract class BaseSocketManager<T>(
@@ -51,10 +53,16 @@ abstract class BaseSocketManager<T>(
     private val scope = CoroutineScope(ioDispatcher + SupervisorJob())
     private var connectJob: Job? = null
 
+    @Volatile
+    private var isIntentionalDisconnect = true
+
+    private var retryCount: Int = 0
+
     fun connect() {
         if (_socketState.value == SocketState.Connecting || _socketState.value == SocketState.Connected) return
 
         connectJob?.cancel()
+        isIntentionalDisconnect = false
 
         connectJob = scope.launch { executeConnect() }
     }
@@ -70,6 +78,7 @@ abstract class BaseSocketManager<T>(
             )
 
             reissueAttempted = false
+            retryCount = 0
             _socketState.update { SocketState.Connected }
             subscribe()
         } catch (s: StompErrorFrameReceived) {
@@ -99,6 +108,7 @@ abstract class BaseSocketManager<T>(
     }
 
     suspend fun disconnect() {
+        isIntentionalDisconnect = true
         connectJob?.cancel()
         connectJob = null
         session?.disconnect()
@@ -123,6 +133,31 @@ abstract class BaseSocketManager<T>(
                 }
             }
             .collect { parsed -> _event.emit(parsed) }
+
+        session = null
+        if (!isIntentionalDisconnect && _socketState.value !is SocketState.Error) {
+            _socketState.update { SocketState.Disconnected }
+            retryConnect()
+        }
+    }
+
+    private suspend fun retryConnect() {
+        if (retryCount >= 5) {
+            _socketState.update {
+                SocketState.Error(IllegalStateException("최대 재연결 시도 횟수(5회)를 초과"))
+            }
+            return
+        }
+
+        retryCount++
+
+        val delayMillis = (1000L * 2.0.pow(retryCount))
+            .toLong()
+            .coerceAtMost(10000L)
+
+        delay(delayMillis)
+
+        executeConnect()
     }
 
     protected suspend fun <V> send(destination: String, body: V, serializer: KSerializer<V>) {
