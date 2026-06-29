@@ -23,6 +23,8 @@ import kotlinx.serialization.json.Json
 import org.hildan.krossbow.stomp.StompClient
 import org.hildan.krossbow.stomp.StompErrorFrameReceived
 import org.hildan.krossbow.stomp.StompSession
+import org.hildan.krossbow.stomp.frame.FrameBody
+import org.hildan.krossbow.stomp.headers.StompSendHeaders
 import org.hildan.krossbow.stomp.headers.StompSubscribeHeaders
 
 @OptIn(ExperimentalSerializationApi::class)
@@ -101,6 +103,17 @@ abstract class BaseSocketManager<T>(
             .map { frame -> json.decodeFromString(serializer, frame.bodyAsText) }
             .catch { throwable -> _socketState.update { SocketState.Error(throwable) } }
             .collect { parsed -> _event.emit(parsed) }
+    }
+
+    protected suspend fun <V> send(destination: String, body: V, serializer: KSerializer<V>) {
+        val session = session ?: return _socketState.update {
+            SocketState.Error(
+                IllegalStateException("Session Not Found")
+            )
+        }
+
+        val encodedBody = json.encodeToString(serializer, body)
+        session.send(StompSendHeaders(destination = destination), FrameBody.Text(encodedBody))
     }
 
     private suspend fun reissue(): Result<Unit> = suspendRunCatching {
