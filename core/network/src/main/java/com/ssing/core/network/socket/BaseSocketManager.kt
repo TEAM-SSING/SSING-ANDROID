@@ -28,6 +28,7 @@ import org.hildan.krossbow.stomp.StompSession
 import org.hildan.krossbow.stomp.frame.FrameBody
 import org.hildan.krossbow.stomp.headers.StompSendHeaders
 import org.hildan.krossbow.stomp.headers.StompSubscribeHeaders
+import timber.log.Timber
 import kotlin.math.pow
 
 @OptIn(ExperimentalSerializationApi::class)
@@ -65,8 +66,12 @@ abstract class BaseSocketManager<T>(
     private var retryCount: Int = 0
 
     fun connect() {
-        if (_socketState.value == SocketState.Connecting || _socketState.value == SocketState.Connected) return
+        if (_socketState.value == SocketState.Connecting || _socketState.value == SocketState.Connected) {
+            Timber.d("🐮 connect() 호출됐지만 이미 연결 중 또는 연결됨 (state: ${_socketState.value})")
+            return
+        }
 
+        Timber.d("🐮 connect() - 연결 시작 (endpoint: $endpoint)")
         connectJob?.cancel()
         isIntentionalDisconnect = false
 
@@ -78,6 +83,7 @@ abstract class BaseSocketManager<T>(
             _socketState.update { SocketState.Connecting }
             val accessToken = tokenDataSource.getAccessToken() ?: return logout()
 
+            Timber.d("🐮 소켓 연결 시도 중 (url: ${BuildConfig.SOCKET_BASE_URL}/$endpoint)")
             session = client.connect(
                 url = "${BuildConfig.SOCKET_BASE_URL}/$endpoint",
                 customStompConnectHeaders = mapOf("Authorization" to "Bearer $accessToken")
@@ -85,39 +91,54 @@ abstract class BaseSocketManager<T>(
 
             reissueAttempted = false
             retryCount = 0
+            Timber.d("🐮 소켓 연결 성공")
             _socketState.update { SocketState.Connected }
             subscribe()
         } catch (s: StompErrorFrameReceived) {
+            Timber.w("🐮 STOMP 에러 프레임 수신: ${s.frame.bodyAsText}")
             when (s.frame.bodyAsText) {
                 UNAUTHENTICATED, AUTH_INVALID_TOKEN -> logout()
                 AUTH_TOKEN_EXPIRED -> {
                     if (reissueAttempted) {
+                        Timber.w("🐮 토큰 재발급 후에도 만료 - 로그아웃 처리")
                         logout()
                     } else {
+                        Timber.d("🐮 액세스 토큰 만료 - 재발급 시도")
                         reissue()
                             .onSuccess {
                                 if (_socketState.value == SocketState.Disconnected) return
 
+                                Timber.d("🐮 토큰 재발급 성공 - 재연결 시도")
                                 reissueAttempted = true
                                 connectJob = scope.launch { executeConnect() }
                             }
                             .onFailure { throwable ->
+                                Timber.e(throwable, "🐮 토큰 재발급 실패")
                                 _socketState.update { SocketState.Error(throwable) }
                             }
                     }
                 }
 
-                FORBIDDEN -> _socketState.update { SocketState.Forbidden }
-                else -> _socketState.update { SocketState.Error(s) }
+                FORBIDDEN -> {
+                    Timber.w("🐮 접근 권한 없음 (FORBIDDEN)")
+                    _socketState.update { SocketState.Forbidden }
+                }
+
+                else -> {
+                    Timber.e("🐮 알 수 없는 STOMP 에러: ${s.frame.bodyAsText}")
+                    _socketState.update { SocketState.Error(s) }
+                }
             }
         } catch (c: CancellationException) {
             throw c
         } catch (e: Exception) {
+            Timber.e(e, "🐮 소켓 연결 중 예외 발생")
             _socketState.update { SocketState.Error(e) }
         }
     }
 
     suspend fun disconnect() {
+        Timber.d("🐮 disconnect() - 연결 해제")
         isIntentionalDisconnect = true
         connectJob?.cancel()
         connectJob = null
@@ -128,24 +149,24 @@ abstract class BaseSocketManager<T>(
     }
 
     private suspend fun subscribe() {
-        val currentSession = session ?: return _socketState.update {
-            SocketState.Error(
-                IllegalStateException("Session Not Found")
-            )
+        val currentSession = session ?: run {
+            Timber.e("🐮 구독 실패 - 세션 없음")
+            return _socketState.update { SocketState.Error(IllegalStateException("Session Not Found")) }
         }
 
+        Timber.d("🐮 구독 시작 (destination: $destination)")
         currentSession.subscribe(StompSubscribeHeaders(destination))
             .map { frame -> json.decodeFromString(serializer, frame.bodyAsText) }
             .catch { throwable ->
+                Timber.e(throwable, "🐮 구독 중 에러 발생")
                 session = null
-                _socketState.update {
-                    SocketState.Error(throwable)
-                }
+                _socketState.update { SocketState.Error(throwable) }
             }
             .collect { parsed -> _event.emit(parsed) }
 
         session = null
         if (!isIntentionalDisconnect && _socketState.value !is SocketState.Error) {
+            Timber.w("🐮 서버에 의해 구독 종료 - 재연결 시도")
             _socketState.update { SocketState.Disconnected }
             retryConnect()
         }
@@ -153,6 +174,7 @@ abstract class BaseSocketManager<T>(
 
     private suspend fun retryConnect() {
         if (retryCount >= 5) {
+            Timber.e("🐮 최대 재연결 횟수(5회) 초과 - 재연결 중단")
             _socketState.update {
                 SocketState.Error(IllegalStateException("최대 재연결 시도 횟수(5회)를 초과"))
             }
@@ -165,6 +187,7 @@ abstract class BaseSocketManager<T>(
             .toLong()
             .coerceAtMost(10000L)
 
+        Timber.w("🐮 재연결 시도 중 (${retryCount}회차, ${delayMillis}ms 후 시도)")
         delay(delayMillis)
 
         executeConnect()
@@ -176,6 +199,7 @@ abstract class BaseSocketManager<T>(
         serializer: KSerializer<V>,
     ): Result<Unit> {
         val currentSession = session ?: run {
+            Timber.e("🐮 send() 실패 - 세션 없음 (destination: $destination)")
             _socketState.update { SocketState.Error(IllegalStateException("Session Not Found")) }
             return Result.failure(IllegalStateException("Session Not Found"))
         }
@@ -186,6 +210,9 @@ abstract class BaseSocketManager<T>(
                 StompSendHeaders(destination = destination),
                 FrameBody.Text(encodedBody)
             )
+            Unit
+        }.onFailure { throwable ->
+            Timber.e(throwable, "🐮 send() 실패 (destination: $destination)")
         }
     }
 
