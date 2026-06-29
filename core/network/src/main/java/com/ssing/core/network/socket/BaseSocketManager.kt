@@ -49,13 +49,20 @@ abstract class BaseSocketManager<T>(
     val event: SharedFlow<T> = _event.asSharedFlow()
 
     private val scope = CoroutineScope(ioDispatcher + SupervisorJob())
+    private var connectJob: Job? = null
 
-    fun connect(): Job = scope.launch {
-        if (_socketState.value == SocketState.Connecting || _socketState.value == SocketState.Connected) return@launch
+    fun connect() {
+        if (_socketState.value == SocketState.Connecting || _socketState.value == SocketState.Connected) return
 
+        connectJob?.cancel()
+
+        connectJob = scope.launch { executeConnect() }
+    }
+
+    private suspend fun executeConnect() {
         try {
             _socketState.update { SocketState.Connecting }
-            val accessToken = tokenDataSource.getAccessToken() ?: return@launch logout()
+            val accessToken = tokenDataSource.getAccessToken() ?: return logout()
 
             session = client.connect(
                 url = "${BuildConfig.SOCKET_BASE_URL}/$endpoint",
@@ -75,7 +82,7 @@ abstract class BaseSocketManager<T>(
                         reissue()
                             .onSuccess {
                                 reissueAttempted = true
-                                connect()
+                                connectJob = scope.launch { executeConnect() }
                             }
                             .onFailure { throwable ->
                                 _socketState.update { SocketState.Error(throwable) }
@@ -90,6 +97,8 @@ abstract class BaseSocketManager<T>(
     }
 
     suspend fun disconnect() {
+        connectJob?.cancel()
+        connectJob = null
         session?.disconnect()
         session = null
         _socketState.update { SocketState.Disconnected }
