@@ -170,18 +170,23 @@ abstract class BaseSocketManager<T>(
         executeConnect()
     }
 
-    protected suspend fun <V> send(destination: String, body: V, serializer: KSerializer<V>) {
-        val currentSession = session ?: return _socketState.update {
-            SocketState.Error(
-                IllegalStateException("Session Not Found")
-            )
+    protected suspend fun <V> send(
+        destination: String,
+        body: V,
+        serializer: KSerializer<V>,
+    ): Result<Unit> {
+        val currentSession = session ?: run {
+            _socketState.update { SocketState.Error(IllegalStateException("Session Not Found")) }
+            return Result.failure(IllegalStateException("Session Not Found"))
         }
 
-        val encodedBody = json.encodeToString(serializer, body)
-        currentSession.send(
-            StompSendHeaders(destination = destination),
-            FrameBody.Text(encodedBody)
-        )
+        return suspendRunCatching {
+            val encodedBody = json.encodeToString(serializer, body)
+            currentSession.send(
+                StompSendHeaders(destination = destination),
+                FrameBody.Text(encodedBody)
+            )
+        }
     }
 
     private suspend fun reissue(): Result<Unit> = suspendRunCatching {
