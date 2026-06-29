@@ -90,6 +90,7 @@ abstract class BaseSocketManager<T>(
     suspend fun disconnect() {
         session?.disconnect()
         session = null
+        _socketState.update { SocketState.Disconnected }
     }
 
     private suspend fun subscribe() {
