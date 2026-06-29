@@ -103,6 +103,7 @@ abstract class BaseSocketManager<T>(
         connectJob = null
         session?.disconnect()
         session = null
+        reissueAttempted = false
         _socketState.update { SocketState.Disconnected }
     }
 
