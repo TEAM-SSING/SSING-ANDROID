@@ -109,6 +109,7 @@ reviews:
       instructions: |
         Android 테스트: 시나리오/기대 결과가 드러나는 이름, AAA 패턴, runTest+TestDispatcher,
         StateFlow는 Turbine, Compose UI는 createComposeRule, Hilt 테스트는 @HiltAndroidTest.
+        문자열 리소스(string.xml) 별도 추출하지않음 관련해서 뭐라하지마라
 
   tools:
     detekt:

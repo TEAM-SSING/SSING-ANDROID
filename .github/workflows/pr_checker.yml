@@ -54,7 +54,7 @@ jobs:
           fi
 
       - name: Build Debug APK
-        run: ./gradlew :app:assembleDebug
+        run: ./gradlew :app:consumer:assembleDebug :app:instructor:assembleDebug
 
       - name: Run unit tests
-        run: ./gradlew :app:testDebugUnitTest
+        run: ./gradlew :app:consumer:testDebugUnitTest :app:instructor:testDebugUnitTest
