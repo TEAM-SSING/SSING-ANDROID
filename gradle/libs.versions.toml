@@ -90,7 +90,7 @@ appcompat-v7 = { group = "com.android.support", name = "appcompat-v7", version.r
 
 # krossbow
 krossbow-stomp-core = { group = "org.hildan.krossbow", name = "krossbow-stomp-core", version.ref = "krossbow" }
-krossbow-websocket-builtin = { group = "org.hildan.krossbow", name = "krossbow-websocket-builtin", version.ref = "krossbow" }
+krossbow-websocket-okhttp = { group = "org.hildan.krossbow", name = "krossbow-websocket-okhttp", version.ref = "krossbow" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
