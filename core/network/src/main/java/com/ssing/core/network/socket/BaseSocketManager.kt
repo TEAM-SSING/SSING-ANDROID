@@ -7,27 +7,44 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.KSerializer
+import kotlinx.serialization.json.Json
 import org.hildan.krossbow.stomp.StompClient
 import org.hildan.krossbow.stomp.StompErrorFrameReceived
 import org.hildan.krossbow.stomp.StompSession
+import org.hildan.krossbow.stomp.headers.StompSubscribeHeaders
 
-abstract class BaseSocketManager(
+@OptIn(ExperimentalSerializationApi::class)
+abstract class BaseSocketManager<T>(
     ioDispatcher: CoroutineDispatcher,
     private val client: StompClient,
     private val tokenDataSource: LocalTokenDataSource,
+    private val json: Json,
+    private val serializer: KSerializer<T>,
     private val endpoint: String,
 ) {
+    abstract val destination: String
+
     private var session: StompSession? = null
     private var reissueAttempted = false
 
     private val _socketState: MutableStateFlow<SocketState> =
         MutableStateFlow(SocketState.Disconnected)
     val socketState: StateFlow<SocketState> = _socketState.asStateFlow()
+
+    private val _event = MutableSharedFlow<T>(extraBufferCapacity = 64)
+    val event: SharedFlow<T> = _event.asSharedFlow()
 
     private val scope = CoroutineScope(ioDispatcher + SupervisorJob())
 
@@ -43,6 +60,7 @@ abstract class BaseSocketManager(
 
             reissueAttempted = false
             _socketState.update { SocketState.Connected }
+            subscribe()
         } catch (e: StompErrorFrameReceived) {
             when (e.frame.bodyAsText) {
                 UNAUTHENTICATED, AUTH_INVALID_TOKEN -> logout()
@@ -70,6 +88,19 @@ abstract class BaseSocketManager(
     suspend fun disconnect() {
         session?.disconnect()
         session = null
+    }
+
+    private suspend fun subscribe() {
+        val session = session ?: return _socketState.update {
+            SocketState.Error(
+                IllegalStateException("Session Not Found")
+            )
+        }
+
+        session.subscribe(StompSubscribeHeaders(destination))
+            .map { frame -> json.decodeFromString(serializer, frame.bodyAsText) }
+            .catch { throwable -> _socketState.update { SocketState.Error(throwable) } }
+            .collect { parsed -> _event.emit(parsed) }
     }
 
     private suspend fun reissue(): Result<Unit> = suspendRunCatching {
