@@ -21,6 +21,8 @@ class CoreNetworkConventionPlugin : Plugin<Project> {
                 add("implementation", libs.findLibrary("okhttp.logging").get())
                 add("implementation", libs.findLibrary("kotlinx.serialization.json").get())
                 add("implementation", libs.findLibrary("timber").get())
+                add("implementation", libs.findLibrary("krossbow.stomp.core").get())
+                add("implementation", libs.findLibrary("krossbow.websocket.builtin").get())
             }
         }
     }
