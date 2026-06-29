@@ -3,6 +3,7 @@ package com.ssing.core.network.socket
 import com.ssing.core.localstorage.datastore.LocalTokenDataSource
 import com.ssing.core.network.BuildConfig
 import com.ssing.core.network.util.suspendRunCatching
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -102,6 +103,8 @@ abstract class BaseSocketManager<T>(
                 FORBIDDEN -> _socketState.update { SocketState.Forbidden }
                 else -> _socketState.update { SocketState.Error(s) }
             }
+        } catch (c: CancellationException) {
+            throw c
         } catch (e: Exception) {
             _socketState.update { SocketState.Error(e) }
         }
