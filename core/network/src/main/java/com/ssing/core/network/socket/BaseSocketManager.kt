@@ -117,27 +117,7 @@ abstract class BaseSocketManager<T>(
             Timber.w("🐮 STOMP 에러 프레임 수신: ${s.frame.bodyAsText}")
             when (s.frame.bodyAsText) {
                 UNAUTHENTICATED, AUTH_INVALID_TOKEN -> logout()
-                AUTH_TOKEN_EXPIRED -> {
-                    if (reissueAttempted) {
-                        Timber.w("🐮 토큰 재발급 후에도 만료 - 로그아웃 처리")
-                        logout()
-                    } else {
-                        Timber.d("🐮 액세스 토큰 만료 - 재발급 시도")
-                        reissue()
-                            .onSuccess {
-                                if (_socketState.value == SocketState.Disconnected) return
-
-                                Timber.d("🐮 토큰 재발급 성공 - 재연결 시도")
-                                reissueAttempted = true
-                                connectJob = scope.launch { executeConnect() }
-                            }
-                            .onFailure { throwable ->
-                                Timber.e(throwable, "🐮 토큰 재발급 실패")
-                                _socketState.update { SocketState.Error(throwable) }
-                            }
-                    }
-                }
-
+                AUTH_TOKEN_EXPIRED -> handleTokenExpired()
                 FORBIDDEN -> {
                     Timber.w("🐮 접근 권한 없음 (FORBIDDEN)")
                     _socketState.update { SocketState.Forbidden }
@@ -232,6 +212,27 @@ abstract class BaseSocketManager<T>(
             Unit
         }.onFailure { throwable ->
             Timber.e(throwable, "🐮 send() 실패 (destination: $destination)")
+        }
+    }
+
+    private suspend fun handleTokenExpired() {
+        if (reissueAttempted) {
+            Timber.w("🐮 토큰 재발급 후에도 만료 - 로그아웃 처리")
+            logout()
+        } else {
+            Timber.d("🐮 액세스 토큰 만료 - 재발급 시도")
+            reissue()
+                .onSuccess {
+                    if (_socketState.value == SocketState.Disconnected) return
+
+                    Timber.d("🐮 토큰 재발급 성공 - 재연결 시도")
+                    reissueAttempted = true
+                    connectJob = scope.launch { executeConnect() }
+                }
+                .onFailure { throwable ->
+                    Timber.e(throwable, "🐮 토큰 재발급 실패")
+                    _socketState.update { SocketState.Error(throwable) }
+                }
         }
     }
 
