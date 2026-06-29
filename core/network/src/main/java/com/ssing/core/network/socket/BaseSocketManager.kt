@@ -31,6 +31,24 @@ import org.hildan.krossbow.stomp.headers.StompSubscribeHeaders
 import timber.log.Timber
 import kotlin.math.pow
 
+/**
+ * STOMP 프로토콜 기반 웹소켓 연결을 추상화한 베이스 클래스.
+ *
+ * 연결/재연결/인증(토큰 만료 시 재발급)을 내부에서 처리하므로
+ * 서브클래스는 [destination]과 [send] 호출만 구현하면 된다.
+ *
+ * - 연결 상태는 [socketState]로 구독
+ * - 수신 이벤트는 [event]로 구독
+ * - 서버에 의한 연결 종료 시 최대 5회 지수 백오프로 자동 재연결
+ *
+ * @param T 수신 이벤트 타입
+ * @param ioDispatcher 소켓 통신에 사용할 디스패처
+ * @param client krossbow [StompClient] 인스턴스
+ * @param tokenDataSource 액세스 토큰 조회 소스
+ * @param json JSON 직렬화 인스턴스
+ * @param serializer 수신 메시지 역직렬화에 사용할 [KSerializer]
+ * @param endpoint 연결할 웹소켓 엔드포인트 경로 (예: "chat")
+ */
 @OptIn(ExperimentalSerializationApi::class)
 abstract class BaseSocketManager<T>(
     ioDispatcher: CoroutineDispatcher,
@@ -40,6 +58,7 @@ abstract class BaseSocketManager<T>(
     private val serializer: KSerializer<T>,
     private val endpoint: String,
 ) {
+    /** 구독할 STOMP destination. 예: "/topic/chat/1" */
     abstract val destination: String
 
     @Volatile
