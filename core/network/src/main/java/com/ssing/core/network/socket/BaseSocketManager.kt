@@ -48,7 +48,6 @@ import kotlin.math.pow
  * @param tokenDataSource 액세스 토큰 조회 소스
  * @param json JSON 직렬화 인스턴스
  * @param serializer 수신 메시지 역직렬화에 사용할 [KSerializer]
- * @param endpoint 연결할 웹소켓 엔드포인트 경로 (예: "/ws/matching")
  */
 @OptIn(ExperimentalSerializationApi::class)
 abstract class BaseSocketManager<T>(
