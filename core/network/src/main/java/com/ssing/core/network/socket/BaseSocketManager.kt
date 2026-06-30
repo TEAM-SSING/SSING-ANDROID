@@ -4,6 +4,7 @@ import com.ssing.core.localstorage.datastore.LocalTokenDataSource
 import com.ssing.core.network.BuildConfig
 import com.ssing.core.network.util.suspendRunCatching
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -150,12 +151,15 @@ abstract class BaseSocketManager<T>(
     suspend fun disconnect() {
         Timber.d("🐮 disconnect() - 연결 해제")
         isIntentionalDisconnect = true
-        connectJob?.cancel()
+        scope.coroutineContext.cancelChildren()
         connectJob = null
-        session?.disconnect()
-        session = null
         reissueAttempted = false
-        _socketState.update { SocketState.Disconnected }
+        try {
+            session?.disconnect()
+        } finally {
+            session = null
+            _socketState.update { SocketState.Disconnected }
+        }
     }
 
     private suspend fun subscribe() {
