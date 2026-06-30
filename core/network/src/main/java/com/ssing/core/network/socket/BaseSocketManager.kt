@@ -139,7 +139,11 @@ abstract class BaseSocketManager<T>(
             throw c
         } catch (e: Exception) {
             Timber.e(e, "🐮 소켓 연결 중 예외 발생")
-            _socketState.update { SocketState.Error(e) }
+            if (!isIntentionalDisconnect) {
+                retryConnect()
+            } else {
+                _socketState.update { SocketState.Error(e) }
+            }
         }
     }
 
