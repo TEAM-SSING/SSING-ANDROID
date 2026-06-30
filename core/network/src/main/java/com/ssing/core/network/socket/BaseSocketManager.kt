@@ -56,9 +56,16 @@ abstract class BaseSocketManager<T>(
     private val tokenDataSource: LocalTokenDataSource,
     private val json: Json,
     private val serializer: KSerializer<T>,
-    private val endpoint: String,
 ) {
-    /** 구독할 STOMP destination. 예: "/topic/chat/1" */
+    /**
+     * WebSocket 업그레이드 요청 경로
+     */
+    open val endpoint: String = "ws/realtime"
+
+    /**
+     * STOMP 구독 destination
+     * 예: `/user/queue/matching` (즉시 매칭), `/user/queue/lesson` (강습)
+     */
     abstract val destination: String
 
     @Volatile
