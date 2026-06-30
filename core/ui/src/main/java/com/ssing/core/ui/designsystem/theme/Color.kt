@@ -1,5 +1,6 @@
 package com.ssing.core.ui.designsystem.theme
 
+import androidx.compose.runtime.Immutable
 import androidx.compose.ui.graphics.Color
 
 val Blue50 = Color(0xFFEFF4FF)
@@ -62,3 +63,34 @@ val Gray900 = Color(0xFF242527)
 val White = Color(0xFFFFFFFF)
 val Black = Color(0xFF000000)
 
+@Immutable
+data class SSINGColors(
+    val backgroundNormal: Color,
+    val backgroundAlternative: Color,
+
+    val textNormal: Color,
+    val textStrong: Color,
+    val textAlternative: Color,
+    val textDisabled: Color,
+
+    val borderNormal: Color,
+    val borderStrong: Color,
+    val borderAlternative: Color,
+    val borderDisabled: Color,
+
+    val primaryNormal: Color,
+    val primaryAlternative: Color,
+    val primaryStrong: Color,
+
+    val accentRedNormal: Color,
+    val accentRedAlternative: Color,
+
+    val accentOrangeNormal: Color,
+    val accentOrangeAlternative: Color,
+
+    val accentGreenNormal: Color,
+    val accentGreenAlternative: Color,
+
+    val statusError: Color,
+    val statusSuccess: Color,
+)
