@@ -1,6 +1,7 @@
 package com.ssing.core.ui.designsystem.theme
 
 import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
 
 val Blue50 = Color(0xFFEFF4FF)
@@ -125,3 +126,5 @@ val defaultSSINGColors = SSINGColors(
     statusError = Red500,
     statusSuccess = Green600,
 )
+
+val LocalSSINGColors = staticCompositionLocalOf { defaultSSINGColors }

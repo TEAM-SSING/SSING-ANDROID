@@ -1,6 +1,7 @@
 package com.ssing.core.ui.designsystem.theme
 
 import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -106,3 +107,5 @@ val defaultSSINGTypography = SSINGTypography(
         letterSpacing = 0.em,
     )
 )
+
+val LocalSSINGTypography = staticCompositionLocalOf { defaultSSINGTypography }
