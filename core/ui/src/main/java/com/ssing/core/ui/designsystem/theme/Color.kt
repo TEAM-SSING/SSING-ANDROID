@@ -94,3 +94,34 @@ data class SSINGColors(
     val statusError: Color,
     val statusSuccess: Color,
 )
+
+val defaultSSINGColors = SSINGColors(
+    backgroundNormal = White,
+    backgroundAlternative = Gray50,
+
+    textNormal = Gray700,
+    textStrong = Gray900,
+    textAlternative = Gray400,
+    textDisabled = Gray200,
+
+    borderNormal = Gray300,
+    borderStrong = Gray600,
+    borderAlternative = Gray200,
+    borderDisabled = Gray75,
+
+    primaryNormal = Blue500,
+    primaryAlternative = Blue100,
+    primaryStrong = Blue600,
+
+    accentRedNormal = Red500,
+    accentRedAlternative = Red100,
+
+    accentOrangeNormal = Orange500,
+    accentOrangeAlternative = Orange100,
+
+    accentGreenNormal = Green500,
+    accentGreenAlternative = Green100,
+
+    statusError = Red500,
+    statusSuccess = Green600,
+)
