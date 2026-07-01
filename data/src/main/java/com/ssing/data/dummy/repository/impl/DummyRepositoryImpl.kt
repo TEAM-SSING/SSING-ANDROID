@@ -24,7 +24,7 @@ class DummyRepositoryImpl @Inject constructor(
             dummyDataSource.postLogin()
         }.mapApiError {
             when (it.serverCode) {
-                "BLOCKED_USER" -> LoginException.BlockedUser(it.message, it.requestId)
+                "BLOCKED_USER" -> LoginException.BlockedUser(it.serverCode, it.message, it.requestId)
                 else -> it
             }
         }

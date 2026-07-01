@@ -1,6 +1,7 @@
 package com.ssing.core.network.exception
 
 abstract class AppException(
+    serverCode: String?,
     message: String?,
-    val requestId: String?,
-) : Exception(message)
+    requestId: String?,
+) : ApiException(serverCode, message, requestId)
