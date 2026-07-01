@@ -9,7 +9,9 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -106,15 +108,20 @@ abstract class BaseSocketManager<T>(
     }
 
     private suspend fun executeConnect() {
+        var newSession: StompSession? = null
+
         try {
             _socketState.update { SocketState.Connecting }
             val accessToken = tokenDataSource.getAccessToken() ?: return logout()
 
             Timber.d("🐮 소켓 연결 시도 중 (url: ${BuildConfig.SOCKET_BASE_URL}/$endpoint)")
-            session = client.connect(
+            newSession = client.connect(
                 url = "${BuildConfig.SOCKET_BASE_URL}/$endpoint",
                 customStompConnectHeaders = mapOf("Authorization" to "Bearer $accessToken")
             )
+
+            currentCoroutineContext().ensureActive()
+            session = newSession
 
             reissueAttempted = false
             Timber.d("🐮 소켓 연결 성공")
@@ -136,6 +143,7 @@ abstract class BaseSocketManager<T>(
                 }
             }
         } catch (c: CancellationException) {
+            newSession?.disconnect()
             throw c
         } catch (e: Exception) {
             Timber.e(e, "🐮 소켓 연결 중 예외 발생")
