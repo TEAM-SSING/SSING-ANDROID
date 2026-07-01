@@ -42,7 +42,7 @@ private fun ssingTextStyle(
 ): TextStyle = TextStyle(
     fontFamily = fontFamily,
     fontSize = fontSize,
-    lineHeight = fontSize * 1.2f,
+    lineHeight = 1.2.em,
     letterSpacing = letterSpacing,
     lineHeightStyle = LineHeightStyle(
         alignment = LineHeightStyle.Alignment.Center,
