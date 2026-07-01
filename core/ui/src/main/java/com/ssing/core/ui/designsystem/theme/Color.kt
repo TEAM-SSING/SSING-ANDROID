@@ -96,7 +96,7 @@ data class SSINGColors(
     val statusSuccess: Color,
 )
 
-val defaultSSINGColors = SSINGColors(
+val defaultSsingColors = SSINGColors(
     backgroundNormal = White,
     backgroundAlternative = Gray50,
 
@@ -127,4 +127,4 @@ val defaultSSINGColors = SSINGColors(
     statusSuccess = Green600,
 )
 
-val LocalSSINGColors = staticCompositionLocalOf { defaultSSINGColors }
+val localSsingColors = staticCompositionLocalOf { defaultSsingColors }

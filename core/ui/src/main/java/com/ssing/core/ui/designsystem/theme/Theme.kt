@@ -9,12 +9,12 @@ object SSINGTheme {
     val colors: SSINGColors
         @Composable
         @ReadOnlyComposable
-        get() = LocalSSINGColors.current
+        get() = localSsingColors.current
 
     val typography: SSINGTypography
         @Composable
         @ReadOnlyComposable
-        get() = LocalSSINGTypography.current
+        get() = localSsingTypography.current
 }
 
 @Composable
@@ -24,8 +24,8 @@ fun ProvideSSINGColorsAndTypography(
     content: @Composable () -> Unit,
 ) {
     CompositionLocalProvider(
-        LocalSSINGColors provides colors,
-        LocalSSINGTypography provides typography,
+        localSsingColors provides colors,
+        localSsingTypography provides typography,
         content = content,
     )
 }
@@ -35,8 +35,8 @@ fun SSINGTheme(
     content: @Composable () -> Unit,
 ) {
     ProvideSSINGColorsAndTypography(
-        colors = defaultSSINGColors,
-        typography = defaultSSINGTypography,
+        colors = defaultSsingColors,
+        typography = defaultSsingTypography,
     ) {
         MaterialTheme(
             content = content,

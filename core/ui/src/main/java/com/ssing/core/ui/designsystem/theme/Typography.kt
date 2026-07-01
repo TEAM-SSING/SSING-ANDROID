@@ -35,7 +35,7 @@ data class SSINGTypography(
     val captionMd12: TextStyle,
 )
 
-private fun SSINGTextStyle(
+private fun ssingTextStyle(
     fontFamily: FontFamily,
     fontSize: TextUnit,
     letterSpacing: TextUnit = (-0.005).em,
@@ -50,62 +50,62 @@ private fun SSINGTextStyle(
     )
 )
 
-val defaultSSINGTypography = SSINGTypography(
-    titleSb28 = SSINGTextStyle(
+val defaultSsingTypography = SSINGTypography(
+    titleSb28 = ssingTextStyle(
         fontFamily = PretendardFont.Semibold,
         fontSize = 28.sp,
     ),
-    titleSb24 = SSINGTextStyle(
+    titleSb24 = ssingTextStyle(
         fontFamily = PretendardFont.Semibold,
         fontSize = 24.sp,
     ),
-    titleMd24 = SSINGTextStyle(
+    titleMd24 = ssingTextStyle(
         fontFamily = PretendardFont.Medium,
         fontSize = 24.sp,
     ),
-    titleSb22 = SSINGTextStyle(
+    titleSb22 = ssingTextStyle(
         fontFamily = PretendardFont.Semibold,
         fontSize = 22.sp,
     ),
-    titleMd22 = SSINGTextStyle(
+    titleMd22 = ssingTextStyle(
         fontFamily = PretendardFont.Medium,
         fontSize = 22.sp,
     ),
 
-    bodySb20 = SSINGTextStyle(
+    bodySb20 = ssingTextStyle(
         fontFamily = PretendardFont.Semibold,
         fontSize = 20.sp,
     ),
-    bodyMd20 = SSINGTextStyle(
+    bodyMd20 = ssingTextStyle(
         fontFamily = PretendardFont.Medium,
         fontSize = 20.sp,
     ),
-    bodySb16 = SSINGTextStyle(
+    bodySb16 = ssingTextStyle(
         fontFamily = PretendardFont.Semibold,
         fontSize = 16.sp,
     ),
-    bodyMd16 = SSINGTextStyle(
+    bodyMd16 = ssingTextStyle(
         fontFamily = PretendardFont.Medium,
         fontSize = 16.sp,
     ),
 
-    captionSb14 = SSINGTextStyle(
+    captionSb14 = ssingTextStyle(
         fontFamily = PretendardFont.Semibold,
         fontSize = 14.sp,
     ),
-    captionMd14 = SSINGTextStyle(
+    captionMd14 = ssingTextStyle(
         fontFamily = PretendardFont.Medium,
         fontSize = 14.sp,
     ),
-    captionSb12 = SSINGTextStyle(
+    captionSb12 = ssingTextStyle(
         fontFamily = PretendardFont.Semibold,
         fontSize = 12.sp,
     ),
-    captionMd12 = SSINGTextStyle(
+    captionMd12 = ssingTextStyle(
         fontFamily = PretendardFont.Medium,
         fontSize = 12.sp,
         letterSpacing = 0.em,
     )
 )
 
-val LocalSSINGTypography = staticCompositionLocalOf { defaultSSINGTypography }
+val localSsingTypography = staticCompositionLocalOf { defaultSsingTypography }
