@@ -1,4 +1,4 @@
-package com.example.fcm
+package com.ssing.fcm
 
 import org.junit.Test
 
