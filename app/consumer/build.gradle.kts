@@ -26,4 +26,5 @@ dependencies {
     implementation(projects.presentation.consumerPayment)
     implementation(projects.presentation.consumerLesson)
     implementation(libs.immutable)
+    implementation(libs.kakao.user) // 카카오 로그인 API 모듈
 }
