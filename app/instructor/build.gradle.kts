@@ -24,6 +24,7 @@ dependencies {
     implementation(projects.presentation.notification)
     implementation(projects.presentation.instructorHome)
     implementation(projects.presentation.instructorMatching)
-    implementation("com.google.firebase:firebase-analytics")
     implementation(project(":core:fcm"))
+    implementation(platform("com.google.firebase:firebase-bom:34.15.0"))
+    implementation("com.google.firebase:firebase-analytics")
 }
