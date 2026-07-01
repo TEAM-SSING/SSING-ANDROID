@@ -20,29 +20,29 @@ object PretendardFont {
 sealed interface TypographyTokens {
     @Immutable
     data class Title(
-        val titleB24: TextStyle,
-        val titleSb24: TextStyle,
-        val titleB22: TextStyle,
-        val titleSb22: TextStyle,
-        val titleB20: TextStyle,
-        val titleB18: TextStyle,
-        val titleB16: TextStyle,
+        val b24: TextStyle,
+        val sb24: TextStyle,
+        val b22: TextStyle,
+        val sb22: TextStyle,
+        val b20: TextStyle,
+        val b18: TextStyle,
+        val b16: TextStyle,
     ) : TypographyTokens
 
     @Immutable
     data class Body(
-        val bodySb20: TextStyle,
-        val bodyMd20: TextStyle,
-        val bodySb16: TextStyle,
-        val bodyMd16: TextStyle,
+        val sb20: TextStyle,
+        val md20: TextStyle,
+        val sb16: TextStyle,
+        val md16: TextStyle,
     ) : TypographyTokens
 
     @Immutable
     data class Caption(
-        val captionSb14: TextStyle,
-        val captionMd14: TextStyle,
-        val captionSb12: TextStyle,
-        val captionMd12: TextStyle,
+        val sb14: TextStyle,
+        val md14: TextStyle,
+        val sb12: TextStyle,
+        val md12: TextStyle,
     ) : TypographyTokens
 }
 
@@ -70,67 +70,67 @@ data class SSINGTypography(
 
 val defaultSsingTypography = SSINGTypography(
     title = TypographyTokens.Title(
-        titleB24 = ssingTextStyle(
+        b24 = ssingTextStyle(
             fontFamily = PretendardFont.Bold,
             fontSize = 24.sp,
         ),
-        titleSb24 = ssingTextStyle(
+        sb24 = ssingTextStyle(
             fontFamily = PretendardFont.Semibold,
             fontSize = 24.sp,
         ),
-        titleB22 = ssingTextStyle(
+        b22 = ssingTextStyle(
             fontFamily = PretendardFont.Bold,
             fontSize = 22.sp,
         ),
-        titleSb22 = ssingTextStyle(
+        sb22 = ssingTextStyle(
             fontFamily = PretendardFont.Semibold,
             fontSize = 22.sp,
         ),
-        titleB20 = ssingTextStyle(
+        b20 = ssingTextStyle(
             fontFamily = PretendardFont.Bold,
             fontSize = 20.sp,
         ),
-        titleB18 = ssingTextStyle(
+        b18 = ssingTextStyle(
             fontFamily = PretendardFont.Bold,
             fontSize = 18.sp,
         ),
-        titleB16 = ssingTextStyle(
+        b16 = ssingTextStyle(
             fontFamily = PretendardFont.Bold,
             fontSize = 16.sp,
         ),
     ),
     body = TypographyTokens.Body(
-        bodySb20 = ssingTextStyle(
+        sb20 = ssingTextStyle(
             fontFamily = PretendardFont.Semibold,
             fontSize = 20.sp,
         ),
-        bodyMd20 = ssingTextStyle(
+        md20 = ssingTextStyle(
             fontFamily = PretendardFont.Medium,
             fontSize = 20.sp,
         ),
-        bodySb16 = ssingTextStyle(
+        sb16 = ssingTextStyle(
             fontFamily = PretendardFont.Semibold,
             fontSize = 16.sp,
         ),
-        bodyMd16 = ssingTextStyle(
+        md16 = ssingTextStyle(
             fontFamily = PretendardFont.Medium,
             fontSize = 16.sp,
         ),
     ),
     caption = TypographyTokens.Caption(
-        captionSb14 = ssingTextStyle(
+        sb14 = ssingTextStyle(
             fontFamily = PretendardFont.Semibold,
             fontSize = 14.sp,
         ),
-        captionMd14 = ssingTextStyle(
+        md14 = ssingTextStyle(
             fontFamily = PretendardFont.Medium,
             fontSize = 14.sp,
         ),
-        captionSb12 = ssingTextStyle(
+        sb12 = ssingTextStyle(
             fontFamily = PretendardFont.Semibold,
             fontSize = 12.sp,
         ),
-        captionMd12 = ssingTextStyle(
+        md12 = ssingTextStyle(
             fontFamily = PretendardFont.Medium,
             fontSize = 12.sp,
         ),
