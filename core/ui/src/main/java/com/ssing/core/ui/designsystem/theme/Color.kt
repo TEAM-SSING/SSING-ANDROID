@@ -49,7 +49,7 @@ val Red800 = Color(0xFF860000)
 val Red900 = Color(0xFF4A0000)
 
 val Gray50 = Color(0xFFF7F7F8)
-val Gray75 = Color(0xFFF3F3F3)
+val Gray75 = Color(0xFFF2F3F5)
 val Gray100 = Color(0xFFEEEEEF)
 val Gray150 = Color(0xFFE4E4E4)
 val Gray200 = Color(0xFFCBCCCC)
@@ -98,7 +98,7 @@ data class SSINGColors(
 
 val defaultSsingColors = SSINGColors(
     backgroundNormal = White,
-    backgroundAlternative = Gray50,
+    backgroundAlternative = Gray75,
 
     textNormal = Gray700,
     textStrong = Gray900,
