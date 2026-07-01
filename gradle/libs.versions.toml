@@ -89,7 +89,7 @@ espresso-core = { group = "com.android.support.test.espresso", name = "espresso-
 appcompat-v7 = { group = "com.android.support", name = "appcompat-v7", version.ref = "appcompatV7" }
 
 # kakao
-kakao-user = { module = "com.kakao.sdk:v2-user", version.ref = "kakao" }
+kakao-user = { group = "com.kakao.sdk", name = "v2-user", version.ref = "kakao" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

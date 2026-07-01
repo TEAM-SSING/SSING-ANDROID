@@ -1,6 +1,12 @@
+import java.util.Properties
+
 plugins {
     id("ssing.android.application")
     id("org.jetbrains.kotlin.plugin.serialization")
+}
+
+val properties = Properties().apply {
+    load(rootProject.file("local.properties").inputStream())
 }
 
 android {
@@ -10,6 +16,10 @@ android {
         applicationId = "com.ssing.consumer"
         versionCode = 1
         versionName = "1.0"
+
+        val kakaoNativeAppKey = properties["KAKAO_NATIVE_APP_KEY"].toString()
+        buildConfigField("String", "KAKAO_NATIVE_APP_KEY", "\"$kakaoNativeAppKey\"")
+        manifestPlaceholders["KAKAO_NATIVE_APP_KEY"] = kakaoNativeAppKey
     }
 
     buildFeatures {
@@ -26,5 +36,5 @@ dependencies {
     implementation(projects.presentation.consumerPayment)
     implementation(projects.presentation.consumerLesson)
     implementation(libs.immutable)
-    implementation(libs.kakao.user) // 카카오 로그인 API 모듈
+    implementation(libs.kakao.user)
 }

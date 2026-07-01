@@ -1,6 +1,7 @@
 package com.ssing.consumer
 
 import android.app.Application
+import com.kakao.sdk.common.KakaoSdk
 import dagger.hilt.android.HiltAndroidApp
 import timber.log.Timber
 
@@ -11,5 +12,10 @@ class SsingConsumerApp : Application() {
         if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())
         }
+        initKakaoSdk()
+    }
+
+    private fun initKakaoSdk() {
+        KakaoSdk.init(this, BuildConfig.KAKAO_NATIVE_APP_KEY)
     }
 }
