@@ -13,7 +13,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.collections.immutable.toImmutableList
 
 @AndroidEntryPoint
-class ComsumerMainActivity : ComponentActivity() {
+class ConsumerMainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
