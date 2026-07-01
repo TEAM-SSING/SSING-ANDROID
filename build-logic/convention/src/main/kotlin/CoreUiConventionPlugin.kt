@@ -30,6 +30,7 @@ class CoreUiConventionPlugin : Plugin<Project> {
                 add("ksp", libs.findLibrary("hilt.compiler").get())
                 add("implementation", libs.findLibrary("navigation.compose").get())
                 add("implementation", libs.findLibrary("hilt.navigation.compose").get())
+                add("implementation", project(":core:network"))
                 add("lintChecks", libs.findLibrary("compose.lint.checks").get())
             }
         }
