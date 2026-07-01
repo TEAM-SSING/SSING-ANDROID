@@ -133,7 +133,6 @@ val defaultSsingTypography = SSINGTypography(
         captionMd12 = ssingTextStyle(
             fontFamily = PretendardFont.Medium,
             fontSize = 12.sp,
-            letterSpacing = 0.em,
         ),
     ),
 )
