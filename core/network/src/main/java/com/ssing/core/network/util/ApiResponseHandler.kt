@@ -1,6 +1,6 @@
 package com.ssing.core.network.util
 
-import com.ssing.core.network.exception.ApiError
+import com.ssing.core.network.exception.ApiException
 import com.ssing.core.network.model.BaseResponse
 import com.ssing.core.network.model.ErrorResponse
 import kotlinx.serialization.json.Json
@@ -32,12 +32,12 @@ class ApiResponseHandler @Inject constructor(
     private fun mapThrowable(throwable: Throwable): Throwable =
         when (throwable) {
             is HttpException -> parseHttpException(throwable)
-            is UnknownHostException, is ConnectException, is SocketTimeoutException -> ApiError.NetworkConnection()
-            is ApiError -> throwable
-            else -> ApiError.Unknown()
+            is UnknownHostException, is ConnectException, is SocketTimeoutException -> ApiException.NetworkConnection()
+            is ApiException -> throwable
+            else -> ApiException.Unknown()
         }
 
-    private fun parseHttpException(e: HttpException): ApiError {
+    private fun parseHttpException(e: HttpException): ApiException {
         val errorBody = e.response()?.errorBody()?.string()
         val errorResponse = runCatching {
             errorBody?.let { json.decodeFromString<ErrorResponse>(it) }
@@ -48,13 +48,13 @@ class ApiResponseHandler @Inject constructor(
         val requestId = errorResponse?.requestId
 
         return when (e.code()) {
-            400 -> ApiError.BadRequest(code, message, requestId)
-            401 -> ApiError.Unauthorized(code, message, requestId)
-            403 -> ApiError.Forbidden(code, message, requestId)
-            404 -> ApiError.NotFound(code, message, requestId)
-            409 -> ApiError.Conflict(code, message, requestId)
-            in 500..599 -> ApiError.InternalServerError(code, message, requestId)
-            else -> ApiError.Unknown()
+            400 -> ApiException.BadRequest(code, message, requestId)
+            401 -> ApiException.Unauthorized(code, message, requestId)
+            403 -> ApiException.Forbidden(code, message, requestId)
+            404 -> ApiException.NotFound(code, message, requestId)
+            409 -> ApiException.Conflict(code, message, requestId)
+            in 500..599 -> ApiException.InternalServerError(code, message, requestId)
+            else -> ApiException.Unknown()
         }
     }
 }
