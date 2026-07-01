@@ -15,7 +15,7 @@ import kotlin.coroutines.cancellation.CancellationException
  * @param block 실행할 suspend 블록
  * @return 성공 시 [Result.success], 실패 시 [Result.failure]
  */
-suspend fun <R> suspendRunCatching(block: suspend () -> R): Result<R> =
+suspend inline fun <R> suspendRunCatching(crossinline block: suspend () -> R): Result<R> =
     try {
         Result.success(block())
     } catch (t: TimeoutCancellationException) {
