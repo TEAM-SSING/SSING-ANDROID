@@ -14,16 +14,19 @@ import com.ssing.core.ui.R
 object PretendardFont {
     val Medium = FontFamily(Font(R.font.pretendard_medium))
     val Semibold = FontFamily(Font(R.font.pretendard_semibold))
+    val Bold = FontFamily(Font(R.font.pretendard_bold))
 }
 
 sealed interface TypographyTokens {
     @Immutable
     data class Title(
-        val titleSb28: TextStyle,
+        val titleB24: TextStyle,
         val titleSb24: TextStyle,
-        val titleMd24: TextStyle,
+        val titleB22: TextStyle,
         val titleSb22: TextStyle,
-        val titleMd22: TextStyle,
+        val titleB20: TextStyle,
+        val titleB18: TextStyle,
+        val titleB16: TextStyle,
     ) : TypographyTokens
 
     @Immutable
@@ -67,25 +70,33 @@ data class SSINGTypography(
 
 val defaultSsingTypography = SSINGTypography(
     title = TypographyTokens.Title(
-        titleSb28 = ssingTextStyle(
-            fontFamily = PretendardFont.Semibold,
-            fontSize = 28.sp,
+        titleB24 = ssingTextStyle(
+            fontFamily = PretendardFont.Bold,
+            fontSize = 24.sp,
         ),
         titleSb24 = ssingTextStyle(
             fontFamily = PretendardFont.Semibold,
             fontSize = 24.sp,
         ),
-        titleMd24 = ssingTextStyle(
-            fontFamily = PretendardFont.Medium,
-            fontSize = 24.sp,
+        titleB22 = ssingTextStyle(
+            fontFamily = PretendardFont.Bold,
+            fontSize = 22.sp,
         ),
         titleSb22 = ssingTextStyle(
             fontFamily = PretendardFont.Semibold,
             fontSize = 22.sp,
         ),
-        titleMd22 = ssingTextStyle(
-            fontFamily = PretendardFont.Medium,
-            fontSize = 22.sp,
+        titleB20 = ssingTextStyle(
+            fontFamily = PretendardFont.Bold,
+            fontSize = 20.sp,
+        ),
+        titleB18 = ssingTextStyle(
+            fontFamily = PretendardFont.Bold,
+            fontSize = 18.sp,
+        ),
+        titleB16 = ssingTextStyle(
+            fontFamily = PretendardFont.Bold,
+            fontSize = 16.sp,
         ),
     ),
     body = TypographyTokens.Body(
