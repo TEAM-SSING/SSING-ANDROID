@@ -11,10 +11,22 @@ import java.net.UnknownHostException
 import javax.inject.Inject
 import javax.inject.Singleton
 
+/**
+ * API 호출 결과를 [Result]로 감싸고, 실패 시 발생한 예외를 [ApiException]으로 변환합니다.
+ *
+ * 레포지토리는 이 핸들러를 통해 API를 호출함으로써, Result의 실패값이 항상
+ * [ApiException]임을 보장받을 수 있습니다.
+ */
 @Singleton
 class ApiResponseHandler @Inject constructor(
     private val json: Json,
 ) {
+
+    /**
+     * [BaseResponse]를 반환하는 API를 호출하고 [BaseResponse.data]만 추출해 [Result]로 반환합니다.
+     *
+     * @param block 실행할 suspend API 호출
+     */
     suspend fun <T> safeApiCall(block: suspend () -> BaseResponse<T>): Result<T> =
         suspendRunCatching {
             block().data
@@ -22,6 +34,11 @@ class ApiResponseHandler @Inject constructor(
             throw mapThrowable(throwable)
         }
 
+    /**
+     * 반환값이 없는(Unit) API를 호출하고 결과를 [Result]로 반환합니다.
+     *
+     * @param block 실행할 suspend API 호출
+     */
     suspend fun safeUnitApiCall(block: suspend () -> Unit): Result<Unit> =
         suspendRunCatching {
             block()
