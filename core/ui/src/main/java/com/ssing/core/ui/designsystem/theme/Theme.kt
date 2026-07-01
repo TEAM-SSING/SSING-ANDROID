@@ -5,6 +5,10 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.ReadOnlyComposable
+import androidx.compose.runtime.SideEffect
+import androidx.compose.ui.platform.LocalView
+import androidx.core.view.WindowCompat
+import androidx.activity.compose.LocalActivity
 
 object SSINGTheme {
     val colors: SSINGColors
@@ -35,6 +39,15 @@ fun ProvideSSINGColorsAndTypography(
 fun SSINGTheme(
     content: @Composable () -> Unit,
 ) {
+    val view = LocalView.current
+    val activity = LocalActivity.current
+
+    SideEffect {
+        activity?.window?.let {
+            WindowCompat.getInsetsController(it, view).isAppearanceLightStatusBars = true
+        }
+    }
+
     ProvideSSINGColorsAndTypography(
         colors = defaultSsingColors,
         typography = defaultSsingTypography,
