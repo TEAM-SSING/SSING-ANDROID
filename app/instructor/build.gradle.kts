@@ -1,7 +1,6 @@
 plugins {
     id("ssing.android.application")
     id("org.jetbrains.kotlin.plugin.serialization")
-    id("com.google.gms.google-services")
 }
 
 android {
@@ -24,7 +23,5 @@ dependencies {
     implementation(projects.presentation.notification)
     implementation(projects.presentation.instructorHome)
     implementation(projects.presentation.instructorMatching)
-    implementation(project(":core:fcm"))
-    implementation(platform("com.google.firebase:firebase-bom:34.15.0"))
-    implementation("com.google.firebase:firebase-analytics")
+    implementation(libs.immutable)
 }

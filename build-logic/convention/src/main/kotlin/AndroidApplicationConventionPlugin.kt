@@ -16,6 +16,7 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
                 apply("org.jetbrains.kotlin.plugin.compose")
                 apply("com.google.dagger.hilt.android")
                 apply("com.google.devtools.ksp")
+                apply("com.google.gms.google-services")
             }
             extensions.configure<ApplicationExtension> {
                 compileSdk = 35
@@ -49,6 +50,9 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
                 add("implementation", libs.findLibrary("androidx.activity.compose").get())
                 add("implementation", libs.findLibrary("navigation.compose").get())
                 add("lintChecks", libs.findLibrary("compose.lint.checks").get())
+                add("implementation", project(":core:fcm"))
+                add("implementation", platform(libs.findLibrary("firebase.bom").get()))
+                add("implementation", libs.findLibrary("firebase.analytics").get())
             }
         }
     }
