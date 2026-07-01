@@ -1,6 +1,6 @@
 package com.ssing.data.dummy.repository.impl
 
-import com.ssing.core.network.extension.mapApiError
+import com.ssing.core.network.extension.mapApiException
 import com.ssing.core.network.util.ApiResponseHandler
 import com.ssing.data.dummy.exception.LoginException
 import com.ssing.data.dummy.model.DummyInstructor
@@ -22,7 +22,7 @@ class DummyRepositoryImpl @Inject constructor(
     override suspend fun login(): Result<Unit> =
         apiResponseHandler.safeUnitApiCall {
             dummyDataSource.postLogin()
-        }.mapApiError {
+        }.mapApiException {
             when (it.serverCode) {
                 "BLOCKED_USER" -> LoginException.BlockedUser(it.serverCode, it.message, it.requestId)
                 else -> it
