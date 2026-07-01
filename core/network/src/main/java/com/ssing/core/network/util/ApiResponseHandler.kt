@@ -5,6 +5,7 @@ import com.ssing.core.network.model.BaseResponse
 import com.ssing.core.network.model.ErrorResponse
 import kotlinx.serialization.json.Json
 import retrofit2.HttpException
+import timber.log.Timber
 import java.net.ConnectException
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
@@ -51,13 +52,18 @@ class ApiResponseHandler @Inject constructor(
             is HttpException -> parseHttpException(throwable)
             is UnknownHostException, is ConnectException, is SocketTimeoutException -> ApiException.NetworkConnection()
             is ApiException -> throwable
-            else -> ApiException.Unknown()
+            else -> {
+                Timber.e(throwable, "ApiResponseHandler에서 처리 불가능한 Throwable 발생")
+                ApiException.Unknown()
+            }
         }
 
     private fun parseHttpException(e: HttpException): ApiException {
         val errorBody = e.response()?.errorBody()?.string()
         val errorResponse = runCatching {
             errorBody?.let { json.decodeFromString<ErrorResponse>(it) }
+        }.onFailure { throwable ->
+            Timber.e(throwable, "ErrorBody 파싱 중 에러 발생: $errorBody")
         }.getOrNull()
 
         val code = errorResponse?.code
