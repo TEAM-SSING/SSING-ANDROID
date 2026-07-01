@@ -1,6 +1,6 @@
 package com.ssing.core.network.exception
 
-abstract class AppException(
+abstract class BusinessException(
     serverCode: String?,
     message: String?,
     requestId: String?,
