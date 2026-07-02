@@ -5,8 +5,12 @@ plugins {
     id("org.jetbrains.kotlin.plugin.serialization")
 }
 
-val properties = Properties().apply {
-    load(rootProject.file("local.properties").inputStream())
+val properties = Properties().apply{
+    val localProperties = rootProject.file("local.properties")
+
+    if (localProperties.exists()) {
+        load(localProperties.inputStream())
+    }
 }
 
 android {
@@ -17,7 +21,11 @@ android {
         versionCode = 1
         versionName = "1.0"
 
-        val kakaoNativeAppKey = properties["KAKAO_NATIVE_APP_KEY"].toString()
+        val kakaoNativeAppKey = properties.getProperty("KAKAO_NATIVE_APP_KEY").orEmpty()
+        require(kakaoNativeAppKey.isNotBlank()) {
+            "로컬 프로퍼티 설정"
+        }
+
         buildConfigField("String", "KAKAO_NATIVE_APP_KEY", "\"$kakaoNativeAppKey\"")
         manifestPlaceholders["KAKAO_NATIVE_APP_KEY"] = kakaoNativeAppKey
     }
