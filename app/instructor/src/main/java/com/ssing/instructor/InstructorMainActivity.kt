@@ -8,6 +8,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.ssing.core.ui.designsystem.theme.SSINGTheme
 import com.ssing.instructor.component.InstructorBottomBar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.collections.immutable.toImmutableList
@@ -17,25 +18,27 @@ class InstructorMainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            val appState = rememberInstructorMainAppState()
-            val isBottomBarVisible by appState.isBottomBarVisible.collectAsStateWithLifecycle()
-            val currentTab by appState.currentTab.collectAsStateWithLifecycle()
+            SSINGTheme {
+                val appState = rememberInstructorMainAppState()
+                val isBottomBarVisible by appState.isBottomBarVisible.collectAsStateWithLifecycle()
+                val currentTab by appState.currentTab.collectAsStateWithLifecycle()
 
-            Scaffold(
-                modifier = Modifier.fillMaxSize(),
-                bottomBar = {
-                    InstructorBottomBar(
-                        isVisible = isBottomBarVisible,
-                        tabs = InstructorMainTab.entries.toImmutableList(),
-                        currentTab = currentTab,
-                        onTabSelected = appState::navigate,
+                Scaffold(
+                    modifier = Modifier.fillMaxSize(),
+                    bottomBar = {
+                        InstructorBottomBar(
+                            isVisible = isBottomBarVisible,
+                            tabs = InstructorMainTab.entries.toImmutableList(),
+                            currentTab = currentTab,
+                            onTabSelected = appState::navigate,
+                        )
+                    },
+                ) { innerPadding ->
+                    InstructorMainNavHost(
+                        navController = appState.navController,
+                        paddingValues = innerPadding,
                     )
-                },
-            ) { innerPadding ->
-                InstructorMainNavHost(
-                    navController = appState.navController,
-                    paddingValues = innerPadding,
-                )
+                }
             }
         }
     }
