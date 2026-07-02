@@ -28,9 +28,9 @@ fun SsingChip(
     modifier: Modifier = Modifier,
 ) {
     val (backgroundColor, textColor) = when (style) {
-        SsingChipStyle.DeepBlue -> Blue50 to SSINGTheme.colors.primaryStrong
-        SsingChipStyle.Blue -> Blue100 to SSINGTheme.colors.primaryNormal
-        SsingChipStyle.Gray ->
+        SsingChipStyle.DEEP_BLUE -> Blue50 to SSINGTheme.colors.primaryStrong
+        SsingChipStyle.BLUE -> Blue100 to SSINGTheme.colors.primaryNormal
+        SsingChipStyle.GRAY ->
             SSINGTheme.colors.backgroundAlternative to SSINGTheme.colors.textNormal
     }
 
@@ -46,9 +46,9 @@ fun SsingChip(
 
 
 enum class SsingChipStyle {
-    DeepBlue,
-    Blue,
-    Gray,
+    DEEP_BLUE,
+    BLUE,
+    GRAY,
 }
 
 @Preview(showBackground = true)
@@ -58,8 +58,8 @@ private fun SsingChipPreview() {
         modifier = Modifier.padding(20.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
-        SsingChip(text = "text", style = SsingChipStyle.DeepBlue)
-        SsingChip(text = "text", style = SsingChipStyle.Blue)
-        SsingChip(text = "text", style = SsingChipStyle.Gray)
+        SsingChip(text = "text", style = SsingChipStyle.DEEP_BLUE)
+        SsingChip(text = "text", style = SsingChipStyle.BLUE)
+        SsingChip(text = "text", style = SsingChipStyle.GRAY)
     }
 }
