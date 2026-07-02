@@ -51,8 +51,9 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
                 add("implementation", libs.findLibrary("navigation.compose").get())
                 add("lintChecks", libs.findLibrary("compose.lint.checks").get())
                 add("implementation", project(":core:fcm"))
-                add("implementation", platform(libs.findLibrary("firebase.bom").get()))
-                add("implementation", libs.findLibrary("firebase.analytics").get())
+                add("implementation", platform(libs.findLibrary("firebase-bom").get()))
+                add("implementation", libs.findLibrary("firebase-analytics").get())
+                add("implementation", libs.findLibrary("firebase-messaging").get())
             }
         }
     }
