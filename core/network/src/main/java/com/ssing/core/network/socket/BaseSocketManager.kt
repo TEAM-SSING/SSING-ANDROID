@@ -276,8 +276,7 @@ abstract class BaseSocketManager<T>(
 
     private suspend fun logout() {
         Timber.w("🐮 세션 만료 - 로그아웃 처리")
-        tokenAccessManager.withLock { clearTokens() }
-        authSessionManager.notifySessionExpired()
+        authSessionManager.forceLogout()
         _socketState.update { SocketState.Disconnected }
     }
 
