@@ -1,6 +1,5 @@
 package com.ssing.presentation.auth
 
-import android.widget.Toast
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -16,6 +15,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.kakao.sdk.user.UserApiClient
+import com.ssing.core.ui.extension.toast
 import com.ssing.core.ui.util.HandleUiEffects
 import timber.log.Timber
 
@@ -31,7 +31,7 @@ internal fun LoginRoute(
     HandleUiEffects(viewModel.uiEffect) { effect ->
         when (effect) {
             is LoginContract.Effect.NavigateToHome -> navigateToHome()
-            is LoginContract.Effect.ShowToast -> Toast.makeText(context, effect.message, Toast.LENGTH_SHORT).show()
+            is LoginContract.Effect.ShowToast -> context.toast(effect.message)
         }
     }
 
