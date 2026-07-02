@@ -56,7 +56,7 @@ import kotlin.math.pow
  * @param serializer 수신 메시지 역직렬화에 사용할 [KSerializer]
  */
 @OptIn(ExperimentalSerializationApi::class)
-abstract class BaseSocketManager<T>(
+internal abstract class BaseSocketManager<T>(
     ioDispatcher: CoroutineDispatcher,
     private val client: StompClient,
     private val tokenAccessManager: TokenAccessManager,
