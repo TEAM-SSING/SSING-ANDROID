@@ -26,4 +26,5 @@ dependencies {
     implementation(projects.presentation.consumerPayment)
     implementation(projects.presentation.consumerLesson)
     implementation(libs.immutable)
+    implementation(libs.material)
 }
