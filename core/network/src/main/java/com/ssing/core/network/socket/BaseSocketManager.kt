@@ -1,8 +1,8 @@
 package com.ssing.core.network.socket
 
-import com.ssing.core.localstorage.datastore.LocalTokenDataSource
 import com.ssing.core.network.BuildConfig
 import com.ssing.core.network.session.AuthSessionManager
+import com.ssing.core.network.token.TokenAccessManager
 import com.ssing.core.network.token.TokenReissueManager
 import com.ssing.core.network.util.suspendRunCatching
 import kotlinx.coroutines.CancellationException
@@ -49,7 +49,7 @@ import kotlin.math.pow
  * @param T 수신 이벤트 타입
  * @param ioDispatcher 소켓 통신에 사용할 디스패처
  * @param client krossbow [StompClient] 인스턴스
- * @param tokenDataSource 액세스 토큰 조회 소스
+ * @param tokenAccessManager 토큰 읽기/쓰기 단일 진입점
  * @param tokenReissueManager 토큰 만료 시 재발급 처리
  * @param authSessionManager 세션 만료 이벤트 전파
  * @param json JSON 직렬화 인스턴스
@@ -59,7 +59,7 @@ import kotlin.math.pow
 abstract class BaseSocketManager<T>(
     ioDispatcher: CoroutineDispatcher,
     private val client: StompClient,
-    private val tokenDataSource: LocalTokenDataSource,
+    private val tokenAccessManager: TokenAccessManager,
     private val tokenReissueManager: TokenReissueManager,
     private val authSessionManager: AuthSessionManager,
     private val json: Json,
@@ -121,7 +121,7 @@ abstract class BaseSocketManager<T>(
 
         try {
             _socketState.update { SocketState.Connecting }
-            accessToken = tokenDataSource.getAccessToken() ?: return logout()
+            accessToken = tokenAccessManager.getAccessToken() ?: return logout()
 
             Timber.d("🐮 소켓 연결 시도 중 (url: ${BuildConfig.SOCKET_BASE_URL}/$endpoint)")
             newSession = client.connect(
@@ -276,7 +276,7 @@ abstract class BaseSocketManager<T>(
 
     private suspend fun logout() {
         Timber.w("🐮 세션 만료 - 로그아웃 처리")
-        tokenDataSource.clearTokens()
+        tokenAccessManager.withLock { clearTokens() }
         authSessionManager.notifySessionExpired()
         _socketState.update { SocketState.Disconnected }
     }
