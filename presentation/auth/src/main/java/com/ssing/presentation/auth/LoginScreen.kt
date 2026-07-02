@@ -1,5 +1,6 @@
 package com.ssing.presentation.auth
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -14,7 +15,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.kakao.sdk.user.UserApiClient
 import com.ssing.core.ui.util.HandleUiEffects
+import timber.log.Timber
 
 @Composable
 internal fun LoginRoute(
@@ -28,7 +31,7 @@ internal fun LoginRoute(
     HandleUiEffects(viewModel.uiEffect) { effect ->
         when (effect) {
             is LoginContract.Effect.NavigateToHome -> navigateToHome()
-            is LoginContract.Effect.ShowToast -> {}
+            is LoginContract.Effect.ShowToast -> Toast.makeText(context, effect.message, Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -53,12 +56,28 @@ private fun LoginScreen(
     ) {
         Text(text = "로그인")
 
-        // 카카오톡 로그인 테스트용 버튼
+        // [TEST] 카카오톡 로그인 테스트용 버튼
         Button(
             onClick = onKakaoClick,
             modifier = Modifier.padding(top = 80.dp)
         ) {
             Text("임시 로그인 버튼")
+        }
+
+        // [TEST] 카카오톡 로그아웃 버튼 (자동 로그인 방지)
+        Button(
+            modifier = Modifier.padding(top = 180.dp),
+            onClick = {
+                UserApiClient.instance.unlink { error ->
+                    if (error != null) {
+                        Timber.e(error, "카카오 연결 해제 실패")
+                    } else {
+                        Timber.i("카카오 연결 해제 성공")
+                    }
+                }
+            }
+        ) {
+            Text("카카오 연결 해제")
         }
     }
 }
