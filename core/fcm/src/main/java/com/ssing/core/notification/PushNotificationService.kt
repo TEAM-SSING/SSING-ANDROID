@@ -10,7 +10,6 @@ import androidx.core.app.NotificationCompat
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.ssing.core.auth.manager.AuthManager
-import com.ssing.core.fcm.R
 import com.ssing.data.repository.NotificationRepository
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
@@ -51,6 +50,7 @@ class PushNotificationService : FirebaseMessagingService() {
     override fun onMessageReceived(message: RemoteMessage) {
         super.onMessageReceived(message)
 
+        createChannels(this)
         val title = message.notification?.title ?: return
         val body = message.notification?.body ?: return
         showNotification(title, body)
@@ -72,7 +72,7 @@ class PushNotificationService : FirebaseMessagingService() {
         }
 
         val notification = NotificationCompat.Builder(this, DEFAULT_CHANNEL_ID)
-            .setSmallIcon(R.mipmap.ic_launcher)
+            .setSmallIcon(android.R.drawable.ic_dialog_info)
             .setContentTitle(title)
             .setContentText(body)
             .apply { pendingIntent?.let { setContentIntent(it) } }
