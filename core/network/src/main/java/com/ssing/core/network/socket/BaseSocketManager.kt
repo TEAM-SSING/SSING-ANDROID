@@ -80,6 +80,9 @@ abstract class BaseSocketManager<T>(
     private var session: StompSession? = null
 
     @Volatile
+    private var accessToken: String? = null
+
+    @Volatile
     private var reissueAttempted = false
 
     private val _socketState: MutableStateFlow<SocketState> =
@@ -118,7 +121,7 @@ abstract class BaseSocketManager<T>(
 
         try {
             _socketState.update { SocketState.Connecting }
-            val accessToken = tokenDataSource.getAccessToken() ?: return logout()
+            accessToken = tokenDataSource.getAccessToken() ?: return logout()
 
             Timber.d("🐮 소켓 연결 시도 중 (url: ${BuildConfig.SOCKET_BASE_URL}/$endpoint)")
             newSession = client.connect(
@@ -166,6 +169,7 @@ abstract class BaseSocketManager<T>(
         isIntentionalDisconnect = true
         scope.coroutineContext.cancelChildren()
         connectJob = null
+        accessToken = null
         reissueAttempted = false
         try {
             session?.disconnect()
@@ -265,8 +269,7 @@ abstract class BaseSocketManager<T>(
     }
 
     private suspend fun reissue(): Result<Unit> = suspendRunCatching {
-        val failedAccessToken = tokenDataSource.getAccessToken()
-        checkNotNull(tokenReissueManager.reissue(failedAccessToken)) { "토큰 재발급 실패" }
+        checkNotNull(tokenReissueManager.reissue(accessToken)) { "토큰 재발급 실패" }
         Unit
     }
 
