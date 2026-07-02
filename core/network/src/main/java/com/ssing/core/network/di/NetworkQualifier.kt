@@ -8,8 +8,8 @@ annotation class SocketOkHttpClient
 
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
-annotation class WithToken
+annotation class WithTokenOkHttpClient
 
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
-annotation class WithoutToken
+annotation class WithoutTokenOkHttpClient
