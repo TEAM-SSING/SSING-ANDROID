@@ -16,7 +16,7 @@ import javax.inject.Inject
  * 실제 재발급은 [TokenReissueManager]에 위임하고,
  * 여기서는 재시도 횟수 제한과 요청 헤더 교체만 담당한다.
  */
-class TokenAuthenticator @Inject constructor(
+internal class TokenAuthenticator @Inject constructor(
     private val tokenReissueManager: TokenReissueManager,
 ) : Authenticator {
     override fun authenticate(route: Route?, response: Response): Request? {
