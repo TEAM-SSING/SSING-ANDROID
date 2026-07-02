@@ -16,32 +16,32 @@ import com.ssing.core.ui.designsystem.theme.Red200
 import com.ssing.core.ui.designsystem.theme.SSINGTheme
 import com.ssing.core.ui.designsystem.theme.White
 
-enum class SsingButtonType {
+enum class SsingButtonStyle {
     BLUE, GRAY, RED
 }
 
-private val SsingButtonType.textColor: Color
+private val SsingButtonStyle.textColor: Color
     @Composable
     get() = when (this) {
-        SsingButtonType.BLUE -> White
-        SsingButtonType.GRAY -> SSINGTheme.colors.textNormal
-        SsingButtonType.RED -> SSINGTheme.colors.accentRedNormal
+        SsingButtonStyle.BLUE -> White
+        SsingButtonStyle.GRAY -> SSINGTheme.colors.textNormal
+        SsingButtonStyle.RED -> SSINGTheme.colors.accentRedNormal
     }
 
-private val SsingButtonType.defaultColor: Color
+private val SsingButtonStyle.defaultColor: Color
     @Composable
     get() = when (this) {
-        SsingButtonType.BLUE -> SSINGTheme.colors.primaryNormal
-        SsingButtonType.GRAY -> SSINGTheme.colors.borderDisabled
-        SsingButtonType.RED -> SSINGTheme.colors.accentRedAlternative
+        SsingButtonStyle.BLUE -> SSINGTheme.colors.primaryNormal
+        SsingButtonStyle.GRAY -> SSINGTheme.colors.borderDisabled
+        SsingButtonStyle.RED -> SSINGTheme.colors.accentRedAlternative
     }
 
-private val SsingButtonType.pressedColor: Color
+private val SsingButtonStyle.pressedColor: Color
     @Composable
     get() = when (this) {
-        SsingButtonType.BLUE -> Blue600
-        SsingButtonType.GRAY -> SSINGTheme.colors.borderAlternative
-        SsingButtonType.RED -> Red200
+        SsingButtonStyle.BLUE -> Blue600
+        SsingButtonStyle.GRAY -> SSINGTheme.colors.borderAlternative
+        SsingButtonStyle.RED -> Red200
     }
 
 /**
@@ -49,48 +49,48 @@ private val SsingButtonType.pressedColor: Color
  *
  * @param text 버튼에 표시할 텍스트
  * @param onClick 클릭 시 실행될 콜백
- * @param type 버튼 색상 스타일 (배경색, 텍스트색 결정)
+ * @param style 버튼 색상 스타일 (배경색, 텍스트색 결정)
  * @param enabled 버튼 활성 여부
  */
 @Composable
 fun SsingButton(
     text: String,
     onClick: () -> Unit,
-    type: SsingButtonType,
+    style: SsingButtonStyle,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
 ) {
     SsingBasicButton(
-        defaultColor = type.defaultColor,
-        pressedColor = type.pressedColor,
+        defaultColor = style.defaultColor,
+        pressedColor = style.pressedColor,
         onClick = onClick,
         modifier = modifier,
         enabled = enabled
     ) {
         Text(
             text = text,
-            color = type.textColor,
+            color = style.textColor,
             style = SSINGTheme.typography.body.sb16,
             modifier = Modifier.align(Alignment.Center)
         )
     }
 }
 
-private class SsingButtonPreviewProvider: PreviewParameterProvider<SsingButtonType> {
-    override val values: Sequence<SsingButtonType>
-        get() = SsingButtonType.entries.asSequence()
+private class SsingButtonPreviewProvider: PreviewParameterProvider<SsingButtonStyle> {
+    override val values: Sequence<SsingButtonStyle>
+        get() = SsingButtonStyle.entries.asSequence()
 }
 
 @Preview
 @Composable
 private fun SsingButtonPreview(
-    @PreviewParameter(SsingButtonPreviewProvider::class) type: SsingButtonType,
+    @PreviewParameter(SsingButtonPreviewProvider::class) type: SsingButtonStyle,
 ) {
     SSINGTheme {
         SsingButton(
             text = type.name,
             onClick = {},
-            type = type,
+            style = type,
             modifier = Modifier.width(328.dp)
         )
     }
