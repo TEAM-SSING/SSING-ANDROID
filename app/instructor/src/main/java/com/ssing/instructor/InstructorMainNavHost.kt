@@ -24,10 +24,12 @@ internal fun InstructorMainNavHost(
     ) {
         authNavGraph(
             paddingValues = paddingValues,
-            navigateToHome = { navController.navigate(
-                InstructorHome,
-                navController.clearBackStackNavOptions(),
-            ) },
+            navigateToHome = {
+                navController.navigate(
+                    route = InstructorHome,
+                    navOptions = navController.clearBackStackNavOptions(),
+                )
+            },
         )
         instructorHomeNavGraph(paddingValues = paddingValues)
         // TODO 나중에 각 presentation 모듈 navGraph 연결
