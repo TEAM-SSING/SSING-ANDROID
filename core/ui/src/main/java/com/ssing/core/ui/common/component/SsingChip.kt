@@ -8,11 +8,34 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ssing.core.ui.designsystem.theme.Blue100
 import com.ssing.core.ui.designsystem.theme.Blue50
 import com.ssing.core.ui.designsystem.theme.SSINGTheme
+
+enum class SsingChipStyle {
+    DEEP_BLUE,
+    BLUE,
+    GRAY,
+}
+
+private val SsingChipStyle.backgroundColor: Color
+    @Composable
+    get() = when (this) {
+        SsingChipStyle.DEEP_BLUE -> Blue50
+        SsingChipStyle.BLUE -> Blue100
+        SsingChipStyle.GRAY -> SSINGTheme.colors.backgroundAlternative
+    }
+
+private val SsingChipStyle.textColor: Color
+    @Composable
+    get() = when (this) {
+        SsingChipStyle.DEEP_BLUE -> SSINGTheme.colors.primaryStrong
+        SsingChipStyle.BLUE -> SSINGTheme.colors.primaryNormal
+        SsingChipStyle.GRAY -> SSINGTheme.colors.textNormal
+    }
 
 /**
  * 짧은 라벨/태그를 표시하는 칩 공통 컴포넌트입니다.
@@ -27,29 +50,16 @@ fun SsingChip(
     style: SsingChipStyle,
     modifier: Modifier = Modifier,
 ) {
-    val (backgroundColor, textColor) = when (style) {
-        SsingChipStyle.DEEP_BLUE -> Blue50 to SSINGTheme.colors.primaryStrong
-        SsingChipStyle.BLUE -> Blue100 to SSINGTheme.colors.primaryNormal
-        SsingChipStyle.GRAY ->
-            SSINGTheme.colors.backgroundAlternative to SSINGTheme.colors.textNormal
-    }
-
     Text(
         text = text,
         style = SSINGTheme.typography.caption.sb12,
-        color = textColor,
+        color = style.textColor,
         modifier = modifier
-            .background(color = backgroundColor, shape = RoundedCornerShape(12.dp))
+            .background(color = style.backgroundColor, shape = RoundedCornerShape(12.dp))
             .padding(horizontal = 8.dp, vertical = 4.dp),
     )
 }
 
-
-enum class SsingChipStyle {
-    DEEP_BLUE,
-    BLUE,
-    GRAY,
-}
 
 @Preview(showBackground = true)
 @Composable
