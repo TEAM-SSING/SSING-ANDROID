@@ -190,11 +190,13 @@ abstract class BaseSocketManager<T>(
             .map { frame -> json.decodeFromString(serializer, frame.bodyAsText) }
             .catch { throwable ->
                 Timber.e(throwable, "🐮 구독 중 에러 발생")
+                session?.disconnect()
                 session = null
                 _socketState.update { SocketState.Error(throwable) }
             }
             .collect { parsed -> _event.emit(parsed) }
 
+        session?.disconnect()
         session = null
         if (!isIntentionalDisconnect && _socketState.value !is SocketState.Error) {
             Timber.w("🐮 서버에 의해 구독 종료 - 재연결 시도")
