@@ -1,12 +1,14 @@
 package com.ssing.core.network.di
 
 import com.ssing.core.network.BuildConfig
+import com.ssing.core.network.authenticator.TokenAuthenticator
+import com.ssing.core.network.interceptor.AuthInterceptor
+import com.ssing.core.network.service.ReissueService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import kotlinx.serialization.json.Json
-import okhttp3.Interceptor
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -67,24 +69,57 @@ object NetworkModule {
             }
         }
 
+    @WithToken
     @Provides
     @Singleton
-    fun provideOkHttpClient(
-        loggingInterceptor: Interceptor,
+    fun provideWithTokenOkHttpClient(
+        loggingInterceptor: HttpLoggingInterceptor,
+        authInterceptor: AuthInterceptor,
+        tokenAuthenticator: TokenAuthenticator,
+    ): OkHttpClient = OkHttpClient.Builder()
+        .addInterceptor(authInterceptor)
+        .authenticator(tokenAuthenticator)
+        .addInterceptor(loggingInterceptor)
+        .build()
+
+    @WithoutToken
+    @Provides
+    @Singleton
+    fun provideWithoutTokenOkHttpClient(
+        loggingInterceptor: HttpLoggingInterceptor,
     ): OkHttpClient = OkHttpClient.Builder()
         .addInterceptor(loggingInterceptor)
         .build()
 
+    @WithToken
     @Provides
     @Singleton
-    fun provideRetrofit(
-        client: OkHttpClient,
+    fun provideWithTokenRetrofit(
+        @WithToken client: OkHttpClient,
         factory: Converter.Factory,
     ): Retrofit = Retrofit.Builder()
         .baseUrl(BASE_URL)
         .client(client)
         .addConverterFactory(factory)
         .build()
+
+    @WithoutToken
+    @Provides
+    @Singleton
+    fun provideWithoutTokenRetrofit(
+        @WithoutToken client: OkHttpClient,
+        factory: Converter.Factory,
+    ): Retrofit = Retrofit.Builder()
+        .baseUrl(BASE_URL)
+        .client(client)
+        .addConverterFactory(factory)
+        .build()
+
+    @Provides
+    @Singleton
+    fun provideReissueService(
+        @WithoutToken retrofit: Retrofit,
+    ): ReissueService = retrofit.create(ReissueService::class.java)
 
     @SocketOkHttpClient
     @Provides
