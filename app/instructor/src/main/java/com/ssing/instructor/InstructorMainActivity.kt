@@ -10,6 +10,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.ssing.core.ui.designsystem.theme.SSINGTheme
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.ssing.core.network.session.AuthSessionManager
@@ -27,27 +28,28 @@ class InstructorMainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        observeSessionExpired()
         setContent {
-            val appState = rememberInstructorMainAppState()
-            val isBottomBarVisible by appState.isBottomBarVisible.collectAsStateWithLifecycle()
-            val currentTab by appState.currentTab.collectAsStateWithLifecycle()
+            SSINGTheme {
+                val appState = rememberInstructorMainAppState()
+                val isBottomBarVisible by appState.isBottomBarVisible.collectAsStateWithLifecycle()
+                val currentTab by appState.currentTab.collectAsStateWithLifecycle()
 
-            Scaffold(
-                modifier = Modifier.fillMaxSize(),
-                bottomBar = {
-                    InstructorBottomBar(
-                        isVisible = isBottomBarVisible,
-                        tabs = InstructorMainTab.entries.toImmutableList(),
-                        currentTab = currentTab,
-                        onTabSelected = appState::navigate,
+                Scaffold(
+                    modifier = Modifier.fillMaxSize(),
+                    bottomBar = {
+                        InstructorBottomBar(
+                            isVisible = isBottomBarVisible,
+                            tabs = InstructorMainTab.entries.toImmutableList(),
+                            currentTab = currentTab,
+                            onTabSelected = appState::navigate,
+                        )
+                    },
+                ) { innerPadding ->
+                    InstructorMainNavHost(
+                        navController = appState.navController,
+                        paddingValues = innerPadding,
                     )
-                },
-            ) { innerPadding ->
-                InstructorMainNavHost(
-                    navController = appState.navController,
-                    paddingValues = innerPadding,
-                )
+                }
             }
         }
     }
