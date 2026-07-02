@@ -13,7 +13,7 @@ import javax.inject.Singleton
  * 로그인 화면으로 이동시키면 된다.
  */
 @Singleton
-class SessionManager @Inject constructor() {
+class AuthSessionManager @Inject constructor() {
     private val _sessionExpired = MutableSharedFlow<Unit>(extraBufferCapacity = 1)
     val sessionExpired: SharedFlow<Unit> = _sessionExpired.asSharedFlow()
 

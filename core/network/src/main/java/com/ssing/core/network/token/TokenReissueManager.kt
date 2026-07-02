@@ -3,7 +3,7 @@ package com.ssing.core.network.token
 import com.ssing.core.localstorage.datastore.LocalTokenDataSource
 import com.ssing.core.network.dto.request.TokenRefreshRequest
 import com.ssing.core.network.service.ReissueService
-import com.ssing.core.network.session.SessionManager
+import com.ssing.core.network.session.AuthSessionManager
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import retrofit2.HttpException
@@ -22,7 +22,7 @@ import javax.inject.Singleton
 class TokenReissueManager @Inject constructor(
     private val reissueService: ReissueService,
     private val tokenDataSource: LocalTokenDataSource,
-    private val sessionManager: SessionManager,
+    private val authSessionManager: AuthSessionManager,
 ) {
     private val mutex = Mutex()
 
@@ -66,7 +66,7 @@ class TokenReissueManager @Inject constructor(
 
     private suspend fun expireSession(): String? {
         tokenDataSource.clearTokens()
-        sessionManager.notifySessionExpired()
+        authSessionManager.notifySessionExpired()
         return null
     }
 }
