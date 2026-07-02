@@ -276,11 +276,9 @@ internal abstract class BaseSocketManager<T>(
 
     private suspend fun logout() {
         Timber.w("🐮 세션 만료 - 로그아웃 처리")
-        try {
-            session?.disconnect()
-        } finally {
-            session = null
-        }
+        suspendRunCatching { session?.disconnect() }
+            .onFailure { Timber.w(it, "🐮 세션 종료 실패 (이미 끊겼을 수 있음)") }
+        session = null
         authSessionManager.forceLogout()
         _socketState.update { SocketState.Disconnected }
     }
