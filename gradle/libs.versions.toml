@@ -25,6 +25,7 @@ runner = "1.0.2"
 espressoCoreVersion = "3.0.2"
 appcompatV7 = "28.0.0"
 krossbow = "9.3.0"
+annotationExperimental = "1.4.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -91,6 +92,9 @@ appcompat-v7 = { group = "com.android.support", name = "appcompat-v7", version.r
 # krossbow
 krossbow-stomp-core = { group = "org.hildan.krossbow", name = "krossbow-stomp-core", version.ref = "krossbow" }
 krossbow-websocket-okhttp = { group = "org.hildan.krossbow", name = "krossbow-websocket-okhttp", version.ref = "krossbow" }
+
+# annotation
+annotationExperimental = { group = "androidx.annotation", name = "annotation-experimental", version.ref = "annotationExperimental" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

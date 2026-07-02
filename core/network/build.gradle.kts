@@ -1,8 +1,11 @@
 import java.util.Properties
+import org.gradle.accessors.dm.LibrariesForLibs
 
 plugins {
     id("ssing.core.network")
 }
+
+val libs = the<LibrariesForLibs>()
 
 val localProperties = Properties().apply {
     rootProject.file("local.properties").takeIf { it.exists() }?.inputStream()?.use { load(it) }
@@ -23,4 +26,5 @@ android {
 
 dependencies {
     implementation(projects.core.localstorage)
+    implementation(libs.annotationExperimental)
 }
