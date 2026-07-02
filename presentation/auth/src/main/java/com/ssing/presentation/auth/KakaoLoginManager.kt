@@ -34,7 +34,7 @@ class KakaoLoginManager @Inject constructor() {
                                 Timber.i("🍫 카카오 계정 로그인 성공")
                                 onResult(Result.success(token2))
                             } else {
-                                Timber.e(error, "🍫 카카오계정 로그인 실패")
+                                Timber.e(error2, "🍫 카카오계정 로그인 실패")
                                 onResult(Result.failure(error2 ?: Exception("Unknown error")))
                             }
                         }
