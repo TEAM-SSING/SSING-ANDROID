@@ -44,7 +44,7 @@ class PushNotificationService : FirebaseMessagingService() {
 
         serviceScope.launch {
             notificationRepository.saveNotificationToken(token)
-                .onFailure { Timber.Forest.e(it, "FCM 토큰 저장 실패") }
+                .onFailure { Timber.e(it, "FCM 토큰 저장 실패") }
         }
     }
 
