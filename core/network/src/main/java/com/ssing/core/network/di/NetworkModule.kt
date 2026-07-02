@@ -10,12 +10,15 @@ import okhttp3.Interceptor
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
+import org.hildan.krossbow.stomp.StompClient
+import org.hildan.krossbow.websocket.okhttp.OkHttpWebSocketClient
 import org.json.JSONArray
 import org.json.JSONObject
 import retrofit2.Converter
 import retrofit2.Retrofit
 import retrofit2.converter.kotlinx.serialization.asConverterFactory
 import timber.log.Timber
+import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
 private fun String.isJsonObject(): Boolean = trimStart().startsWith("{")
@@ -82,4 +85,17 @@ object NetworkModule {
         .client(client)
         .addConverterFactory(factory)
         .build()
+
+    @SocketOkHttpClient
+    @Provides
+    @Singleton
+    fun provideSocketOkHttpClient(): OkHttpClient = OkHttpClient.Builder()
+        .pingInterval(30, TimeUnit.SECONDS)
+        .readTimeout(0, TimeUnit.SECONDS)
+        .build()
+
+    @Provides
+    @Singleton
+    fun providerStompClient(@SocketOkHttpClient okHttpClient: OkHttpClient): StompClient =
+        StompClient(OkHttpWebSocketClient(okHttpClient))
 }
