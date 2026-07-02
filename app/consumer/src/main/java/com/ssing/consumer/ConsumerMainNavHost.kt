@@ -25,10 +25,12 @@ internal fun ConsumerMainNavHost(
     ) {
         authNavGraph(
             paddingValues = paddingValues,
-            navigateToHome = { navController.navigate(
-                ConsumerHome,
-                navController.clearBackStackNavOptions(),
-            ) },
+            navigateToHome = {
+                navController.navigate(
+                    route = ConsumerHome,
+                    navOptions = navController.clearBackStackNavOptions(),
+                )
+            },
         )
         consumerHomeNavGraph(
             paddingValues = paddingValues,
