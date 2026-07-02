@@ -24,8 +24,7 @@ composeLints = "1.4.1"
 runner = "1.0.2"
 espressoCoreVersion = "3.0.2"
 appcompatV7 = "28.0.0"
-appcompat = "1.7.1"
-material = "1.10.0"
+material = "1.11.0"
 krossbow = "9.3.0"
 firebaseBom = "33.1.0"
 
@@ -47,6 +46,7 @@ androidx-compose-material3 = { group = "androidx.compose.material3", name = "mat
 firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebaseBom" }
 firebase-messaging = { group = "com.google.firebase", name = "firebase-messaging" }
 firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics" }
+material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 
 # build-logic
 android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "agp" }
