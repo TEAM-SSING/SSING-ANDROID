@@ -1,4 +1,4 @@
-package com.ssing.instructor
+package com.ssing.consumer
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -8,33 +8,33 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.ssing.consumer.component.ConsumerBottomBar
 import com.ssing.core.ui.designsystem.theme.SSINGTheme
-import com.ssing.instructor.component.InstructorBottomBar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.collections.immutable.toImmutableList
 
 @AndroidEntryPoint
-class InstructorMainActivity : ComponentActivity() {
+class ConsumerMainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             SSINGTheme {
-                val appState = rememberInstructorMainAppState()
+                val appState = rememberConsumerMainAppState()
                 val isBottomBarVisible by appState.isBottomBarVisible.collectAsStateWithLifecycle()
                 val currentTab by appState.currentTab.collectAsStateWithLifecycle()
 
                 Scaffold(
                     modifier = Modifier.fillMaxSize(),
                     bottomBar = {
-                        InstructorBottomBar(
+                        ConsumerBottomBar(
                             isVisible = isBottomBarVisible,
-                            tabs = InstructorMainTab.entries.toImmutableList(),
+                            tabs = ConsumerMainTab.entries.toImmutableList(),
                             currentTab = currentTab,
                             onTabSelected = appState::navigate,
                         )
                     },
                 ) { innerPadding ->
-                    InstructorMainNavHost(
+                    ConsumerMainNavHost(
                         navController = appState.navController,
                         paddingValues = innerPadding,
                     )
