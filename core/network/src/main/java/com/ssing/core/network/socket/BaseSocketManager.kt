@@ -6,11 +6,11 @@ import com.ssing.core.network.token.TokenAccessManager
 import com.ssing.core.network.token.TokenReissueManager
 import com.ssing.core.network.util.suspendRunCatching
 import kotlinx.coroutines.CancellationException
-import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.ensureActive
@@ -276,6 +276,11 @@ abstract class BaseSocketManager<T>(
 
     private suspend fun logout() {
         Timber.w("🐮 세션 만료 - 로그아웃 처리")
+        try {
+            session?.disconnect()
+        } finally {
+            session = null
+        }
         authSessionManager.forceLogout()
         _socketState.update { SocketState.Disconnected }
     }
