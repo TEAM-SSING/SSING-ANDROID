@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
+    id("ssing.core.network")
 }
 
 android {
@@ -26,4 +27,5 @@ android {
 dependencies {
     implementation(platform("com.google.firebase:firebase-bom:34.15.0"))
     implementation("com.google.firebase:firebase-messaging")
+    implementation(projects.data)
 }
