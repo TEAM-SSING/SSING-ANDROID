@@ -2,6 +2,8 @@ package com.ssing.core.network.socket
 
 import com.ssing.core.localstorage.datastore.LocalTokenDataSource
 import com.ssing.core.network.BuildConfig
+import com.ssing.core.network.session.SessionManager
+import com.ssing.core.network.token.TokenReissueManager
 import com.ssing.core.network.util.suspendRunCatching
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.cancelChildren
@@ -48,6 +50,8 @@ import kotlin.math.pow
  * @param ioDispatcher 소켓 통신에 사용할 디스패처
  * @param client krossbow [StompClient] 인스턴스
  * @param tokenDataSource 액세스 토큰 조회 소스
+ * @param tokenReissueManager 토큰 만료 시 재발급 처리
+ * @param sessionManager 세션 만료 이벤트 전파
  * @param json JSON 직렬화 인스턴스
  * @param serializer 수신 메시지 역직렬화에 사용할 [KSerializer]
  */
@@ -56,6 +60,8 @@ abstract class BaseSocketManager<T>(
     ioDispatcher: CoroutineDispatcher,
     private val client: StompClient,
     private val tokenDataSource: LocalTokenDataSource,
+    private val tokenReissueManager: TokenReissueManager,
+    private val sessionManager: SessionManager,
     private val json: Json,
     private val serializer: KSerializer<T>,
 ) {
@@ -259,10 +265,17 @@ abstract class BaseSocketManager<T>(
     }
 
     private suspend fun reissue(): Result<Unit> = suspendRunCatching {
-        // TODO: reissue API 호출
+        val failedAccessToken = tokenDataSource.getAccessToken()
+        checkNotNull(tokenReissueManager.reissue(failedAccessToken)) { "토큰 재발급 실패" }
+        Unit
     }
 
-    private fun logout() {}
+    private suspend fun logout() {
+        Timber.w("🐮 세션 만료 - 로그아웃 처리")
+        tokenDataSource.clearTokens()
+        sessionManager.notifySessionExpired()
+        _socketState.update { SocketState.Disconnected }
+    }
 
     private companion object {
         const val UNAUTHENTICATED = "UNAUTHENTICATED"
