@@ -46,12 +46,12 @@ fun SsingTextField(
                     .fillMaxWidth()
                     .background(
                         color = SSINGTheme.colors.backgroundNormal,
-                        shape,
+                        shape = shape,
                     )
                     .border(
                         width = 1.dp,
                         color = SSINGTheme.colors.borderAlternative,
-                        shape,
+                        shape = shape,
                     )
                     .padding(16.dp),
                 contentAlignment = Alignment.CenterStart,
