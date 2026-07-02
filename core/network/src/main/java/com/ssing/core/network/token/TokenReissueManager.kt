@@ -18,7 +18,7 @@ import javax.inject.Singleton
  * - Refresh Token까지 만료(401)되면 토큰 삭제 + 세션 만료 이벤트 발행
  */
 @Singleton
-class TokenReissueManager @Inject constructor(
+internal class TokenReissueManager @Inject constructor(
     private val reissueService: ReissueService,
     private val tokenAccessManager: TokenAccessManager,
     private val authSessionManager: AuthSessionManager,

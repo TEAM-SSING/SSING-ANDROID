@@ -11,7 +11,7 @@ import javax.inject.Inject
 /**
  * 저장된 Access Token을 모든 요청의 Authorization 헤더에 자동으로 첨부한다.
  */
-class AuthInterceptor @Inject constructor(
+internal class AuthInterceptor @Inject constructor(
     private val tokenDataSource: LocalTokenDataSource,
 ) : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {

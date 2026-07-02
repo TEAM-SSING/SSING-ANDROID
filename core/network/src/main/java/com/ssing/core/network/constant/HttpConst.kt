@@ -1,4 +1,4 @@
 package com.ssing.core.network.constant
 
-const val AUTHORIZATION = "Authorization"
-const val BEARER_PREFIX = "Bearer "
+internal const val AUTHORIZATION = "Authorization"
+internal const val BEARER_PREFIX = "Bearer "

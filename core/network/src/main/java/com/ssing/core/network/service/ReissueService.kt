@@ -6,7 +6,7 @@ import com.ssing.core.network.model.BaseResponse
 import retrofit2.http.Body
 import retrofit2.http.POST
 
-interface ReissueService {
+internal interface ReissueService {
     @POST("api/v1/auth/refresh")
     suspend fun postRefresh(
         @Body request: TokenRefreshRequest,
