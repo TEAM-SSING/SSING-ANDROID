@@ -4,6 +4,7 @@ import com.ssing.core.localstorage.datastore.LocalTokenDataSource
 import com.ssing.core.network.dto.request.TokenRefreshRequest
 import com.ssing.core.network.service.ReissueService
 import com.ssing.core.network.session.AuthSessionManager
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import retrofit2.HttpException
@@ -57,6 +58,8 @@ class TokenReissueManager @Inject constructor(
                 Timber.e(e, "토큰 재발급 실패 (HTTP ${e.code()})")
                 null
             }
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: Exception) {
             Timber.e(e, "토큰 재발급 중 예외 발생")
             null
