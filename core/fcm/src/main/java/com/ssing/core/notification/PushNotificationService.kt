@@ -5,6 +5,7 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import androidx.core.app.NotificationCompat
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
@@ -86,15 +87,17 @@ class PushNotificationService : FirebaseMessagingService() {
         private const val DEFAULT_CHANNEL_NAME = "기본 알림"
 
         fun createChannels(context: Context) {
-            val notificationManager =
-                context.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
-            notificationManager.createNotificationChannel(
-                NotificationChannel(
-                    DEFAULT_CHANNEL_ID,
-                    DEFAULT_CHANNEL_NAME,
-                    NotificationManager.IMPORTANCE_DEFAULT
-                ),
-            )
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                val notificationManager =
+                    context.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+                notificationManager.createNotificationChannel(
+                    NotificationChannel(
+                        DEFAULT_CHANNEL_ID,
+                        DEFAULT_CHANNEL_NAME,
+                        NotificationManager.IMPORTANCE_DEFAULT
+                    ),
+                )
+            }
         }
     }
 }
