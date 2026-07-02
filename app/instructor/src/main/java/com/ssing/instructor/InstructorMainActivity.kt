@@ -28,6 +28,7 @@ class InstructorMainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        observeSessionExpired()
         setContent {
             SSINGTheme {
                 val appState = rememberInstructorMainAppState()
