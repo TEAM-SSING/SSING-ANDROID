@@ -38,7 +38,7 @@ internal fun LoginRoute(
     LoginScreen(
         state = state,
         onKakaoClick = {
-            viewModel.onLoginClick(context)
+            viewModel.KakaoLogin(context)
         },
         modifier = modifier,
     )

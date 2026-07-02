@@ -15,22 +15,21 @@ internal class LoginViewModel @Inject constructor(
         LoginContract.State()
     ) {
 
-    fun onLoginClick(context: Context) {
-        viewModelScope.launch {
-            kakaoLoginManager.login(context) { result ->
-                viewModelScope.launch {
-                    result.onSuccess { token ->
-                        sendEffect(LoginContract.Effect.ShowToast("로그인 되었습니다."))
-                        sendEffect(LoginContract.Effect.NavigateToHome)
+    fun KakaoLogin(context: Context) {
+        kakaoLoginManager.login(context) { result ->
+            viewModelScope.launch {
+                result.onSuccess { token ->
+                    sendEffect(LoginContract.Effect.ShowToast("로그인 되었습니다."))
+                    sendEffect(LoginContract.Effect.NavigateToHome)
 
-                        // TODO: 서버 연결 시 token.accessToken 전달
-                    }.onFailure { error ->
-                        sendEffect(LoginContract.Effect.ShowToast("로그인에 실패했습니다."))
+                    // TODO: 서버 연결 시 token.accessToken 전달
+                }.onFailure { error ->
+                    sendEffect(LoginContract.Effect.ShowToast("로그인에 실패했습니다."))
 
-                        // TODO: 실패 처리
-                    }
+                    // TODO: 실패 처리
                 }
             }
         }
+
     }
 }
