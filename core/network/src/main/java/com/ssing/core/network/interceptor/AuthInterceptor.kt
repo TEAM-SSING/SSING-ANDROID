@@ -1,6 +1,8 @@
 package com.ssing.core.network.interceptor
 
 import com.ssing.core.localstorage.datastore.LocalTokenDataSource
+import com.ssing.core.network.constant.AUTHORIZATION
+import com.ssing.core.network.constant.BEARER_PREFIX
 import kotlinx.coroutines.runBlocking
 import okhttp3.Interceptor
 import okhttp3.Response
@@ -21,10 +23,5 @@ class AuthInterceptor @Inject constructor(
             .build()
 
         return chain.proceed(request)
-    }
-
-    companion object {
-        const val AUTHORIZATION = "Authorization"
-        const val BEARER_PREFIX = "Bearer "
     }
 }

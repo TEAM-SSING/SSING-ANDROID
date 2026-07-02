@@ -1,7 +1,7 @@
 package com.ssing.core.network.authenticator
 
-import com.ssing.core.network.interceptor.AuthInterceptor.Companion.AUTHORIZATION
-import com.ssing.core.network.interceptor.AuthInterceptor.Companion.BEARER_PREFIX
+import com.ssing.core.network.constant.AUTHORIZATION
+import com.ssing.core.network.constant.BEARER_PREFIX
 import com.ssing.core.network.token.TokenReissueManager
 import kotlinx.coroutines.runBlocking
 import okhttp3.Authenticator
