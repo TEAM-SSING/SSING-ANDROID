@@ -44,8 +44,7 @@ class TokenReissueManager @Inject constructor(
 
         try {
             val response = reissueService.postRefresh(TokenRefreshRequest(refreshToken))
-            val newAccessToken = response.data?.accessToken
-                ?: return@withLock expireSession()
+            val newAccessToken = response.data.accessToken
 
             tokenDataSource.setAccessToken(newAccessToken)
             Timber.d("Access Token 재발급 성공")
