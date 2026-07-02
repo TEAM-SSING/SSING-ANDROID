@@ -269,8 +269,7 @@ abstract class BaseSocketManager<T>(
     }
 
     private suspend fun reissue(): Result<Unit> = suspendRunCatching {
-        checkNotNull(tokenReissueManager.reissue(accessToken)) { "토큰 재발급 실패" }
-        Unit
+        check(tokenReissueManager.reissue(accessToken) != null) { "토큰 재발급 실패" }
     }
 
     private suspend fun logout() {
