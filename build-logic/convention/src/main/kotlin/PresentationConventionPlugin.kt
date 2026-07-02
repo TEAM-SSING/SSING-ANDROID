@@ -34,6 +34,7 @@ class PresentationConventionPlugin : Plugin<Project> {
                 add("implementation", libs.findLibrary("immutable").get())
                 add("implementation", libs.findLibrary("timber").get())
                 add("implementation", project(":core:ui"))
+                add("implementation", project(":core:network"))
                 add("implementation", project(":data"))
                 add("lintChecks", libs.findLibrary("compose.lint.checks").get())
             }

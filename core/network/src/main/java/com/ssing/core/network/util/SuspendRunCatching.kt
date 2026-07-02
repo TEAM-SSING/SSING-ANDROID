@@ -4,7 +4,6 @@ import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.ensureActive
 import kotlin.coroutines.cancellation.CancellationException
-import kotlin.coroutines.coroutineContext
 
 /**
  * suspend 함수를 안전하게 실행하고 결과를 [Result]로 반환합니다.
@@ -16,14 +15,14 @@ import kotlin.coroutines.coroutineContext
  * @param block 실행할 suspend 블록
  * @return 성공 시 [Result.success], 실패 시 [Result.failure]
  */
-suspend fun <R> suspendRunCatching(block: suspend () -> R): Result<R> =
+suspend inline fun <R> suspendRunCatching(crossinline block: suspend () -> R): Result<R> =
     try {
         Result.success(block())
     } catch (t: TimeoutCancellationException) {
         Result.failure(t)
     } catch (c: CancellationException) {
         throw c
-    } catch (e: Throwable) {
+    } catch (e: Exception) {
         currentCoroutineContext().ensureActive()
         Result.failure(e)
     }
