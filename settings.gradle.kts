@@ -19,11 +19,6 @@ dependencyResolutionManagement {
         google()
         mavenCentral()
     }
-    versionCatalogs {
-        create("libs") {
-            from(files("gradle/libs.versions.toml"))
-        }
-    }
 }
 
 rootProject.name = "Ssing-Android"
@@ -41,4 +36,4 @@ include(":presentation:instructor-home")
 include(":presentation:instructor-matching")
 include(":app:consumer")
 include(":app:instructor")
-include(":core:fcm")
+include(":core:notification")
