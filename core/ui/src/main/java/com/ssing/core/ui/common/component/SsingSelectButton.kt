@@ -35,8 +35,7 @@ private val Boolean.selectButtonText: Color
     get() = if (this) SSINGTheme.colors.primaryNormal else SSINGTheme.colors.textAlternative
 
 /**
- * 선택형 옵션 버튼 공통 컴포넌트입니다.
- * 선택 여부에 따라 배경/테두리/텍스트 색상이 변경됩니다.
+ * 선택형 옵션 버튼 공통 컴포넌트
  * @param text 버튼에 표시할 텍스트
  * @param isSelected 선택 여부
  * @param onClick 클릭 시 호출되는 콜백
