@@ -6,7 +6,7 @@ plugins {
 
 android {
     namespace = "com.ssing.core.fcm"
-    compileSdk = 37
+    compileSdk = 35
 
     defaultConfig {
         minSdk = 24
