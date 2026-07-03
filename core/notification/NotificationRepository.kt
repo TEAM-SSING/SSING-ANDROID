@@ -1,4 +1,4 @@
-package com.ssing.data.repository
+package com.ssing.core.notification
 
 interface NotificationRepository {
     suspend fun saveNotificationToken(token: String): Result<Unit>

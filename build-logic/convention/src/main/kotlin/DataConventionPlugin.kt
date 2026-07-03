@@ -22,6 +22,7 @@ class DataConventionPlugin : Plugin<Project> {
                 add("implementation", libs.findLibrary("datastore").get())
                 add("implementation", project(":core:network"))
                 add("implementation", project(":core:localstorage"))
+                add("implementation", project(":core:notification"))
                 add("implementation", libs.findLibrary("krossbow.stomp.core").get())
                 add("implementation", libs.findLibrary("krossbow.websocket.okhttp").get())
                 add("implementation", libs.findLibrary("timber").get())

@@ -1,7 +1,7 @@
 package com.ssing.data.di
 
+import com.ssing.core.notification.NotificationRepository
 import com.ssing.data.remote.datasource.NotificationDataSource
-import com.ssing.data.repository.NotificationRepository
 import com.ssing.data.repository.impl.NotificationDataSourceImpl
 import com.ssing.data.repository.impl.NotificationRepositoryImpl
 import com.ssing.data.repository.api.NotificationApi
@@ -37,4 +37,3 @@ abstract class NotificationModule {
             retrofit.create(NotificationApi::class.java)
     }
 }
-

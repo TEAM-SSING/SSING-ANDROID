@@ -1,8 +1,8 @@
 package com.ssing.data.repository.impl
 
+import com.ssing.core.notification.NotificationRepository
 import com.ssing.data.remote.datasource.NotificationDataSource
 import com.ssing.data.remote.dto.NotificationRequestDto
-import com.ssing.data.repository.NotificationRepository
 import javax.inject.Inject
 
 class NotificationRepositoryImpl @Inject constructor(
