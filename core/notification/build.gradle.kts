@@ -20,7 +20,6 @@ android {
 }
 
 dependencies {
-    implementation(project(":core:notification"))
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
     implementation(libs.timber)
