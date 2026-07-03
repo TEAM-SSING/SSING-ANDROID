@@ -1,15 +1,18 @@
 package com.ssing.data.repository.impl
 
+import com.ssing.core.network.model.BaseResponse
 import com.ssing.data.remote.datasource.NotificationDataSource
 import com.ssing.data.remote.dto.NotificationRequestDto
-import com.ssing.data.repository.NotificationRepository
+import com.ssing.data.repository.api.NotificationApi
 import javax.inject.Inject
 
-class NotificationRepositoryImpl @Inject constructor(
-    private val dataSource: NotificationDataSource
-) : NotificationRepository {
+class NotificationDataSourceImpl @Inject constructor(
+    private val api: NotificationApi,
+) : NotificationDataSource {
 
-    override suspend fun saveNotificationToken(token: String): Result<Unit> = runCatching {
-        dataSource.postNotificationToken(NotificationRequestDto(token = token))
-    }
+    override suspend fun postNotificationToken(request: NotificationRequestDto): BaseResponse<Unit> =
+        api.postNotificationToken(request)
+
+    override suspend fun deleteNotificationToken(token: String): BaseResponse<Unit> =
+        api.deleteNotificationToken(token)
 }
