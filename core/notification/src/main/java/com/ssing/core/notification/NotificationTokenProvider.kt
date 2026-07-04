@@ -1,6 +1,7 @@
 package com.ssing.core.notification
 
 import com.google.firebase.messaging.FirebaseMessaging
+import com.ssing.data.repository.NotificationRepository
 import kotlinx.coroutines.suspendCancellableCoroutine
 import timber.log.Timber
 import javax.inject.Inject

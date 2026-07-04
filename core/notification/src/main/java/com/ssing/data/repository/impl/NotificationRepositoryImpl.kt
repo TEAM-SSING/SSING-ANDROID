@@ -1,9 +1,9 @@
-package com.ssing.data.repository.impl
+package com.ssing.core.notification.data.repository.impl
 
 import com.ssing.core.network.token.TokenAccessManager
-import com.ssing.core.notification.NotificationRepository
 import com.ssing.data.remote.datasource.NotificationDataSource
 import com.ssing.data.remote.dto.NotificationRequestDto
+import com.ssing.data.repository.NotificationRepository
 import timber.log.Timber
 import javax.inject.Inject
 
