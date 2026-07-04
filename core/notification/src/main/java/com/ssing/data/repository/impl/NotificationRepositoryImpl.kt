@@ -1,4 +1,4 @@
-package com.ssing.core.notification.data.repository.impl
+package com.ssing.data.repository.impl
 
 import com.ssing.core.network.token.TokenAccessManager
 import com.ssing.data.remote.datasource.NotificationDataSource
