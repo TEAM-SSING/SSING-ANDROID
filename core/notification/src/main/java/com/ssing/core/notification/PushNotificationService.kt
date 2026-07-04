@@ -9,8 +9,7 @@ import android.os.Build
 import androidx.core.app.NotificationCompat
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
-import com.ssing.core.auth.manager.AuthManager
-import com.ssing.core.notification.NotificationRepository
+import com.ssing.core.network.token.TokenAccessManager
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -27,7 +26,7 @@ class PushNotificationService : FirebaseMessagingService() {
     lateinit var notificationRepository: NotificationRepository
 
     @Inject
-    lateinit var authManager: AuthManager
+    lateinit var tokenAccessManager: TokenAccessManager
 
     private val serviceScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
@@ -39,9 +38,9 @@ class PushNotificationService : FirebaseMessagingService() {
     override fun onNewToken(token: String) {
         super.onNewToken(token)
 
-        if (!authManager.isLoggedIn.value) return
-
         serviceScope.launch {
+            if (tokenAccessManager.getAccessToken() == null) return@launch
+
             notificationRepository.saveNotificationToken(token)
                 .onFailure { Timber.e(it, "FCM 토큰 저장 실패") }
         }
