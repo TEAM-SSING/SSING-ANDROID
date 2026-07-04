@@ -19,6 +19,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.semantics.Role
@@ -27,6 +28,14 @@ import androidx.compose.ui.unit.dp
 import com.ssing.core.ui.R
 import com.ssing.core.ui.designsystem.theme.SSINGTheme
 import com.ssing.core.ui.designsystem.theme.White
+
+private val Boolean.backgroundColor: Color
+    @Composable
+    get() = if (this) SSINGTheme.colors.primaryNormal else SSINGTheme.colors.backgroundNormal
+
+private val Boolean.borderColor: Color
+    @Composable
+    get() = if (this) SSINGTheme.colors.primaryAlternative else SSINGTheme.colors.borderNormal
 
 /**
  * 체크박스 컴포넌트입니다.
@@ -42,12 +51,12 @@ fun SsingCheckbox(
     modifier: Modifier = Modifier,
 ) {
     val backgroundColor by animateColorAsState(
-        targetValue = if (isChecked) SSINGTheme.colors.primaryNormal else SSINGTheme.colors.backgroundNormal,
+        targetValue = isChecked.backgroundColor,
         animationSpec = tween(100),
     )
 
     val borderColor by animateColorAsState(
-        targetValue = if (isChecked) SSINGTheme.colors.primaryAlternative else SSINGTheme.colors.borderNormal,
+        targetValue = isChecked.borderColor,
         animationSpec = tween(100),
     )
 
