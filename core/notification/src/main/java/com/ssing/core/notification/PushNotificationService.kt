@@ -15,7 +15,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
 
@@ -23,7 +22,7 @@ import javax.inject.Inject
 class PushNotificationService : FirebaseMessagingService() {
 
     @Inject
-    lateinit var notificationRepository: NotificationRepository
+    lateinit var notificationTokenProvider: NotificationTokenProvider
 
     private val serviceScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
@@ -36,8 +35,7 @@ class PushNotificationService : FirebaseMessagingService() {
         super.onNewToken(token)
 
         serviceScope.launch {
-            notificationRepository.saveNotificationToken(token)
-                .onFailure { Timber.e(it, "FCM 토큰 저장 실패") }
+            notificationTokenProvider.getToken(token)
         }
     }
 

@@ -12,9 +12,14 @@ class NotificationTokenProvider @Inject constructor(
     private val notificationRepository: NotificationRepository,
 ) {
 
-    suspend fun syncToken(token: String) {
+    suspend fun getToken(token: String) {
         notificationRepository.saveNotificationToken(token)
             .onFailure { Timber.e(it, "FCM 토큰 저장 실패") }
+    }
+
+    suspend fun getCurrentToken() {
+        val token = getToken() ?: return
+        getToken(token)
     }
 
     private suspend fun getToken(): String? =
@@ -22,7 +27,7 @@ class NotificationTokenProvider @Inject constructor(
             FirebaseMessaging.getInstance().token
                 .addOnSuccessListener { continuation.resume(it) }
                 .addOnFailureListener {
-                    Timber.e(it, "Failed to get FCM token")
+                    Timber.e(it, "FCM 토큰 발급 실패")
                     continuation.resume(null)
                 }
         }
