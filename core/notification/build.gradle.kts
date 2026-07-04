@@ -20,6 +20,7 @@ android {
 }
 
 dependencies {
+    implementation(project(":core:network"))
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
     implementation(libs.timber)
