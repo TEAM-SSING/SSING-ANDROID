@@ -31,7 +31,7 @@ internal class TokenReissueManager @Inject constructor(
      */
     suspend fun reissue(failedAccessToken: String?): String? = tokenAccessManager.withLock {
         val storedToken = getAccessToken()
-        if (storedToken != null && storedToken != failedAccessToken) {
+        if (failedAccessToken != null && storedToken != null && storedToken != failedAccessToken) {
             Timber.d("다른 요청이 이미 토큰을 갱신함 - 재발급 생략")
             return@withLock storedToken
         }
