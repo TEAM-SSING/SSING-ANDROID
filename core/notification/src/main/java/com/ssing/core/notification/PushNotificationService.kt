@@ -18,6 +18,19 @@ import kotlinx.coroutines.launch
 import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
 
+/**
+ * 디바이스 fcm 토큰 조회 및 서버 동기화 관리 컴포넌트
+ *
+ * firebase 라이브러리와 의존성을 캡슐화, 최신 토큰을 제공하는 역할
+ *
+ * 유저 회원가입/로그인 성공 시 서버에 디바이스 토큰 등록
+ * PushNotificationService.onNewToken에서 새 토큰 갱신 시 사용
+ *
+ * @param notificationRepository fcm 토큰 저장 및 서버 전송을 위한 레포지토리
+ * @param token 백엔드 서버에 저장하거나 firebase로부터 발급받은 fcm 토큰 문자열
+ * @param continuation 비동기 Task 기반의 토큰 발급 작업을 코루틴 흐름으로 변환하기 위한 중단 상태 제어 객체
+ */
+
 @AndroidEntryPoint
 class PushNotificationService : FirebaseMessagingService() {
 
