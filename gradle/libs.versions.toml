@@ -29,6 +29,7 @@ krossbow = "9.3.0"
 firebaseBom = "34.15.0"
 google-services = "4.5.0"
 appcompat = "1.7.1"
+annotationExperimental = "1.4.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -102,6 +103,9 @@ appcompat-v7 = { group = "com.android.support", name = "appcompat-v7", version.r
 krossbow-stomp-core = { group = "org.hildan.krossbow", name = "krossbow-stomp-core", version.ref = "krossbow" }
 krossbow-websocket-okhttp = { group = "org.hildan.krossbow", name = "krossbow-websocket-okhttp", version.ref = "krossbow" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+
+# annotation
+annotationExperimental = { group = "androidx.annotation", name = "annotation-experimental", version.ref = "annotationExperimental" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

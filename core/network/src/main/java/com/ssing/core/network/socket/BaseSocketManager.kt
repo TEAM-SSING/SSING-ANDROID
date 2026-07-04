@@ -1,14 +1,16 @@
 package com.ssing.core.network.socket
 
-import com.ssing.core.localstorage.datastore.LocalTokenDataSource
 import com.ssing.core.network.BuildConfig
+import com.ssing.core.network.session.AuthSessionManager
+import com.ssing.core.network.token.TokenAccessManager
+import com.ssing.core.network.token.TokenReissueManager
 import com.ssing.core.network.util.suspendRunCatching
 import kotlinx.coroutines.CancellationException
-import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.ensureActive
@@ -47,15 +49,19 @@ import kotlin.math.pow
  * @param T 수신 이벤트 타입
  * @param ioDispatcher 소켓 통신에 사용할 디스패처
  * @param client krossbow [StompClient] 인스턴스
- * @param tokenDataSource 액세스 토큰 조회 소스
+ * @param tokenAccessManager 토큰 읽기/쓰기 단일 진입점
+ * @param tokenReissueManager 토큰 만료 시 재발급 처리
+ * @param authSessionManager 세션 만료 이벤트 전파
  * @param json JSON 직렬화 인스턴스
  * @param serializer 수신 메시지 역직렬화에 사용할 [KSerializer]
  */
 @OptIn(ExperimentalSerializationApi::class)
-abstract class BaseSocketManager<T>(
+internal abstract class BaseSocketManager<T>(
     ioDispatcher: CoroutineDispatcher,
     private val client: StompClient,
-    private val tokenDataSource: LocalTokenDataSource,
+    private val tokenAccessManager: TokenAccessManager,
+    private val tokenReissueManager: TokenReissueManager,
+    private val authSessionManager: AuthSessionManager,
     private val json: Json,
     private val serializer: KSerializer<T>,
 ) {
@@ -72,6 +78,9 @@ abstract class BaseSocketManager<T>(
 
     @Volatile
     private var session: StompSession? = null
+
+    @Volatile
+    private var accessToken: String? = null
 
     @Volatile
     private var reissueAttempted = false
@@ -112,7 +121,7 @@ abstract class BaseSocketManager<T>(
 
         try {
             _socketState.update { SocketState.Connecting }
-            val accessToken = tokenDataSource.getAccessToken() ?: return logout()
+            accessToken = tokenAccessManager.getAccessToken() ?: return logout()
 
             Timber.d("🐮 소켓 연결 시도 중 (url: ${BuildConfig.SOCKET_BASE_URL}/$endpoint)")
             newSession = client.connect(
@@ -160,6 +169,7 @@ abstract class BaseSocketManager<T>(
         isIntentionalDisconnect = true
         scope.coroutineContext.cancelChildren()
         connectJob = null
+        accessToken = null
         reissueAttempted = false
         try {
             session?.disconnect()
@@ -180,11 +190,13 @@ abstract class BaseSocketManager<T>(
             .map { frame -> json.decodeFromString(serializer, frame.bodyAsText) }
             .catch { throwable ->
                 Timber.e(throwable, "🐮 구독 중 에러 발생")
+                session?.disconnect()
                 session = null
                 _socketState.update { SocketState.Error(throwable) }
             }
             .collect { parsed -> _event.emit(parsed) }
 
+        session?.disconnect()
         session = null
         if (!isIntentionalDisconnect && _socketState.value !is SocketState.Error) {
             Timber.w("🐮 서버에 의해 구독 종료 - 재연결 시도")
@@ -259,10 +271,17 @@ abstract class BaseSocketManager<T>(
     }
 
     private suspend fun reissue(): Result<Unit> = suspendRunCatching {
-        // TODO: reissue API 호출
+        check(tokenReissueManager.reissue(accessToken) != null) { "토큰 재발급 실패" }
     }
 
-    private fun logout() {}
+    private suspend fun logout() {
+        Timber.w("🐮 세션 만료 - 로그아웃 처리")
+        suspendRunCatching { session?.disconnect() }
+            .onFailure { Timber.w(it, "🐮 세션 종료 실패 (이미 끊겼을 수 있음)") }
+        session = null
+        authSessionManager.forceLogout()
+        _socketState.update { SocketState.Disconnected }
+    }
 
     private companion object {
         const val UNAUTHENTICATED = "UNAUTHENTICATED"
