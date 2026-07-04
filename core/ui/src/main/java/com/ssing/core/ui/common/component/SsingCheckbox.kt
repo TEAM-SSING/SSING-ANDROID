@@ -31,23 +31,23 @@ import com.ssing.core.ui.designsystem.theme.White
 /**
  * 체크박스 컴포넌트입니다.
  *
- * @param checked 현재 체크 여부.
+ * @param isChecked 현재 체크 여부.
  * @param onCheckedChange 체크 상태가 변경될 때 호출되는 콜백.
  * @param modifier Composable에 적용할 Modifier.
  */
 @Composable
 fun SsingCheckbox(
-    checked: Boolean,
+    isChecked: Boolean,
     onCheckedChange: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val backgroundColor by animateColorAsState(
-        targetValue = if (checked) SSINGTheme.colors.primaryNormal else SSINGTheme.colors.backgroundNormal,
+        targetValue = if (isChecked) SSINGTheme.colors.primaryNormal else SSINGTheme.colors.backgroundNormal,
         animationSpec = tween(100),
     )
 
     val borderColor by animateColorAsState(
-        targetValue = if (checked) SSINGTheme.colors.primaryAlternative else SSINGTheme.colors.borderNormal,
+        targetValue = if (isChecked) SSINGTheme.colors.primaryAlternative else SSINGTheme.colors.borderNormal,
         animationSpec = tween(100),
     )
 
@@ -67,13 +67,13 @@ fun SsingCheckbox(
             )
             .toggleable(
                 role = Role.Checkbox,
-                value = checked,
+                value = isChecked,
                 onValueChange = onCheckedChange,
             ),
         contentAlignment = Alignment.Center,
     ) {
         AnimatedVisibility(
-            visible = checked,
+            visible = isChecked,
             enter = fadeIn(tween(100)),
             exit = fadeOut(tween(100)),
         ) {
@@ -93,7 +93,7 @@ private fun SsingCheckboxPreview() {
         var checked by remember { mutableStateOf(false) }
 
         SsingCheckbox(
-            checked = checked,
+            isChecked = checked,
             onCheckedChange = { checked = it }
         )
     }
