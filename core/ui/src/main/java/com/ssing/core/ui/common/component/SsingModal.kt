@@ -125,7 +125,7 @@ private fun SsingModalPreview() {
     SSINGTheme {
         SsingModalContent(
             title = "대기를 중지할까요?",
-            text = "홈으로 이동해도 빠른 매칭 대기는 유지되요.\n대기를 중지하면 더 이상 요청을 받지 않아요.",
+            text = "홈으로 이동해도 빠른 매칭 대기는 유지돼요.\n대기를 중지하면 더 이상 요청을 받지 않아요.",
             primaryText = "대기 중지",
             secondaryText = "계속 대기",
             onPrimary = {},
