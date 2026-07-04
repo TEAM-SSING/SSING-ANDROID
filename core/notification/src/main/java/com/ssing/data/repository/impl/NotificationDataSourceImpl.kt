@@ -1,24 +1,20 @@
 package com.ssing.data.repository.impl
 
+import com.ssing.core.network.model.BaseResponse
 import com.ssing.core.network.util.ApiResponseHandler
 import com.ssing.data.remote.datasource.NotificationDataSource
 import com.ssing.data.remote.dto.NotificationRequestDto
+import com.ssing.data.repository.api.NotificationApi
 import javax.inject.Inject
 
 class NotificationDataSourceImpl @Inject constructor(
+    private val api: NotificationApi,
     private val apiResponseHandler: ApiResponseHandler,
-    private val dataSource: NotificationDataSource,
 ) : NotificationDataSource {
 
     override suspend fun postNotificationToken(request: NotificationRequestDto): Result<Unit> =
-        apiResponseHandler.safeUnitApiCall { dataSource.postNotificationToken(request) }
+        apiResponseHandler.safeUnitApiCall { api.postNotificationToken(request) }
 
-    override suspend fun saveNotificationToken(token: String): Result<Unit> =
-        apiResponseHandler.safeUnitApiCall {
-            dataSource.postNotificationToken(
-                NotificationRequestDto(
-                    token = token
-                )
-            )
-        }
+    override suspend fun deleteNotificationToken(token: String): Result<Unit> =
+        apiResponseHandler.safeUnitApiCall { api.deleteNotificationToken(token) }
 }
