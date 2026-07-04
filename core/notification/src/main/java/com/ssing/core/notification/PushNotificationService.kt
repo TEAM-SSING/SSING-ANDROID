@@ -18,6 +18,7 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
+import java.util.concurrent.atomic.AtomicBoolean
 
 @AndroidEntryPoint
 class PushNotificationService : FirebaseMessagingService() {
@@ -84,19 +85,21 @@ class PushNotificationService : FirebaseMessagingService() {
     companion object {
         private const val DEFAULT_CHANNEL_ID = "default_channel"
         private const val DEFAULT_CHANNEL_NAME = "기본 알림"
+        private val channelsCreated = AtomicBoolean(false)
 
         fun createChannels(context: Context) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                val notificationManager =
-                    context.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
-                notificationManager.createNotificationChannel(
-                    NotificationChannel(
-                        DEFAULT_CHANNEL_ID,
-                        DEFAULT_CHANNEL_NAME,
-                        NotificationManager.IMPORTANCE_DEFAULT
-                    ),
-                )
-            }
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return
+            if (!channelsCreated.compareAndSet(false, true)) return
+
+            val notificationManager =
+                context.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.createNotificationChannel(
+                NotificationChannel(
+                    DEFAULT_CHANNEL_ID,
+                    DEFAULT_CHANNEL_NAME,
+                    NotificationManager.IMPORTANCE_DEFAULT
+                ),
+            )
         }
     }
 }
