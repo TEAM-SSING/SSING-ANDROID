@@ -80,7 +80,6 @@ class PushNotificationService : FirebaseMessagingService() {
         private val channelsCreated = AtomicBoolean(false)
 
         fun createChannels(context: Context) {
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return
             if (!channelsCreated.compareAndSet(false, true)) return
 
             val notificationManager =
