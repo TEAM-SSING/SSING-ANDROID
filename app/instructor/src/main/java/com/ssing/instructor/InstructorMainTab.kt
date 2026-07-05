@@ -2,51 +2,56 @@ package com.ssing.instructor
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
-import com.ssing.instructor.navigation.InstructorDummyTabRoute
 import com.ssing.core.ui.navigation.MainTabRoute
 import com.ssing.core.ui.navigation.Route
+import com.ssing.instructor.R
+import com.ssing.instructor.navigation.InstructorDummyTabRoute
 import com.ssing.presentation.instructorhome.navigation.InstructorHome
 
 enum class InstructorMainTab(
-    @param:DrawableRes val iconRes: Int,
+    @param:DrawableRes val selectedIconRes: Int,
+    @param:DrawableRes val unselectedIconRes: Int,
     @param:StringRes val titleRes: Int,
     val route: MainTabRoute,
 ) {
     HOME(
-        iconRes = R.drawable.ic_launcher_background,
+        selectedIconRes = com.ssing.core.ui.R.drawable.ic_home_selected,
+        unselectedIconRes = com.ssing.core.ui.R.drawable.ic_home_unselected,
         titleRes = R.string.instructor_home,
         route = InstructorHome,
     ),
-
-    // TODO: 추후 변경 예정 앱잼 MVP 아님 비활성화 상태
     RESERVATION(
-        iconRes = R.drawable.ic_launcher_background,
+        selectedIconRes = com.ssing.core.ui.R.drawable.ic_reservation_selected,
+        unselectedIconRes = com.ssing.core.ui.R.drawable.ic_reservation_unselected,
         titleRes = R.string.instructor_reservation,
         route = InstructorDummyTabRoute,
     ),
     CHAT(
-        iconRes = R.drawable.ic_launcher_background,
+        selectedIconRes = com.ssing.core.ui.R.drawable.ic_chat_selected,
+        unselectedIconRes = com.ssing.core.ui.R.drawable.ic_chat_unselected,
         titleRes = R.string.instructor_chat,
         route = InstructorDummyTabRoute,
     ),
     SETTLEMENT(
-        iconRes = R.drawable.ic_launcher_background,
+        selectedIconRes = com.ssing.core.ui.R.drawable.ic_wallet_selected,
+        unselectedIconRes = com.ssing.core.ui.R.drawable.ic_wallet_unselected,
         titleRes = R.string.instructor_settlement,
         route = InstructorDummyTabRoute,
     ),
     PROFILE(
-        iconRes = R.drawable.ic_launcher_background,
+        selectedIconRes = com.ssing.core.ui.R.drawable.ic_profile_selected,
+        unselectedIconRes = com.ssing.core.ui.R.drawable.ic_profile_unselected,
         titleRes = R.string.instructor_profile,
         route = InstructorDummyTabRoute,
     );
 
     companion object {
         fun find(predicate: (MainTabRoute) -> Boolean): InstructorMainTab? {
-            return entries.find { predicate(it.route) }
+            return values().find { predicate(it.route) }
         }
 
         fun contains(predicate: (Route) -> Boolean): Boolean {
-            return entries.any { predicate(it.route) }
+            return values().any { predicate(it.route) }
         }
     }
 }
