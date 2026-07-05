@@ -3,6 +3,7 @@ package com.ssing.core.ui.common.component
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -34,6 +35,7 @@ fun SsingHomeTopBar(
     logo: @Composable () -> Unit,
     onNotificationClick: () -> Unit,
     modifier: Modifier = Modifier,
+    hasUnreadNotifications: Boolean = false,
 ) {
     Row(
         modifier = modifier
@@ -44,8 +46,13 @@ fun SsingHomeTopBar(
         verticalAlignment = Alignment.CenterVertically,
     ) {
         logo()
+        val bellIconRes = if (hasUnreadNotifications) {
+            R.drawable.ic_bell_filled
+        } else {
+            R.drawable.ic_bell
+        }
         Icon(
-            painter = painterResource(R.drawable.ic_bell),
+            painter = painterResource(bellIconRes),
             contentDescription = null,
             tint = Color.Unspecified,
             modifier = Modifier
@@ -69,14 +76,27 @@ private fun SsingHomeTopBarPreview(
     @PreviewParameter(SsingHomeTopBarPreviewProvider::class) logoRes: Int,
 ) {
     SSINGTheme {
-        SsingHomeTopBar(
-            logo = {
-                Image(
-                    painter = painterResource(logoRes),
-                    contentDescription = null,
-                )
-            },
-            onNotificationClick = {},
-        )
+        Column {
+            SsingHomeTopBar(
+                logo = {
+                    Image(
+                        painter = painterResource(logoRes),
+                        contentDescription = null,
+                    )
+                },
+                onNotificationClick = {},
+                hasUnreadNotifications = false,
+            )
+            SsingHomeTopBar(
+                logo = {
+                    Image(
+                        painter = painterResource(logoRes),
+                        contentDescription = null,
+                    )
+                },
+                onNotificationClick = {},
+                hasUnreadNotifications = true,
+            )
+        }
     }
 }
