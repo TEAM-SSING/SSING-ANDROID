@@ -11,7 +11,7 @@ import dagger.hilt.android.components.ActivityComponent
 import javax.inject.Inject
 import timber.log.Timber
 
-class KakaoLoginManager @Inject constructor() {
+internal class KakaoLoginManager @Inject constructor() {
     fun login(
         context: Context,
         onResult: (Result<OAuthToken>) -> Unit
@@ -57,6 +57,6 @@ class KakaoLoginManager @Inject constructor() {
 
 @EntryPoint
 @InstallIn(ActivityComponent::class)
-interface KakaoLoginEntryPoint {
+internal interface KakaoLoginEntryPoint {
     fun kakaoLoginManager(): KakaoLoginManager
 }
