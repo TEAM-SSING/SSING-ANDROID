@@ -9,9 +9,11 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -22,13 +24,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import com.ssing.consumer.ConsumerMainTab
+import com.ssing.core.ui.designsystem.theme.SSINGTheme
 import com.ssing.core.ui.extension.noRippleClickable
 import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.toImmutableList
 
-// TODO: Color, padding 디자인 사항에 맞게 수정 예정
 @Composable
 fun ConsumerBottomBar(
     isVisible: Boolean,
@@ -46,13 +50,15 @@ fun ConsumerBottomBar(
             modifier = modifier
                 .fillMaxWidth()
                 .background(
-                    color = Color.White,
+                    color = SSINGTheme.colors.backgroundNormal,
+                    shape = RoundedCornerShape(
+                        topStart = 12.dp,
+                        topEnd = 12.dp
+                    )
                 )
-                .padding(
-                    vertical = 10.dp
-                )
+                .padding(horizontal = 16.dp, vertical = 8.dp)
                 .navigationBarsPadding(),
-            horizontalArrangement = Arrangement.spacedBy(10.dp),
+            horizontalArrangement = Arrangement.spacedBy(56.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             tabs.forEach { tab ->
@@ -76,21 +82,53 @@ private fun MainBottomBarItem(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Column(
-        modifier = modifier
-            .noRippleClickable(onClick = onClick),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(4.dp),
-    ) {
-        Icon(
-            imageVector = ImageVector.vectorResource(tab.iconRes),
-            contentDescription = stringResource(tab.titleRes),
-            tint = Color.Unspecified,
+    val (textColor, iconColor, iconRes) = when {
+        isSelected -> Triple(
+            SSINGTheme.colors.textStrong,
+            Color.Unspecified,
+            tab.selectedIconRes,
         )
 
+        else -> Triple(
+            SSINGTheme.colors.textAlternative,
+            Color.Unspecified,
+            tab.unselectedIconRes,
+        )
+    }
+
+    Column(
+        modifier = modifier.noRippleClickable(onClick = onClick),
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        Icon(
+            imageVector = ImageVector.vectorResource(iconRes),
+            contentDescription = stringResource(tab.titleRes),
+            tint = iconColor,
+        )
         Text(
             text = stringResource(tab.titleRes),
-            color = Color.Black,
+            style = SSINGTheme.typography.caption.md11,
+            color = textColor,
         )
+    }
+}
+
+@Preview(showBackground = true, backgroundColor = 0XFFF3F4F8)
+@Composable
+private fun ConsumerBottomBarPreview() {
+    SSINGTheme {
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Bottom,
+        ) {
+            ConsumerBottomBar(
+                isVisible = true,
+                tabs = ConsumerMainTab.entries.toImmutableList(),
+                currentTab = ConsumerMainTab.HOME,
+                onTabSelected = {},
+                modifier = Modifier.fillMaxWidth(),
+            )
+        }
     }
 }
