@@ -1,0 +1,19 @@
+package com.ssing.data.devauth.remote.datasource.impl
+
+import com.ssing.core.network.model.BaseResponse
+import com.ssing.data.devauth.remote.datasource.api.DevAuthRemoteDataSource
+import com.ssing.data.devauth.remote.dto.PersonasResponse
+import com.ssing.data.devauth.remote.dto.TokenRequest
+import com.ssing.data.devauth.remote.dto.TokenResponse
+import com.ssing.data.devauth.remote.service.DevAuthService
+import javax.inject.Inject
+
+class DevAuthRemoteDataSourceImpl @Inject constructor(
+    private val devAuthService: DevAuthService,
+) : DevAuthRemoteDataSource {
+    override suspend fun getPersonas(): BaseResponse<PersonasResponse> =
+        devAuthService.getPersonas()
+
+    override suspend fun postToken(request: TokenRequest): BaseResponse<TokenResponse> =
+        devAuthService.postToken(request)
+}
