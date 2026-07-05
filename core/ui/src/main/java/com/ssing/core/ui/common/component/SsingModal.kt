@@ -28,6 +28,7 @@ import com.ssing.core.ui.designsystem.theme.SSINGTheme
  * 버튼 없이 모달을 닫을 수 없어야 하는 경우(예: 강습 연결 취소 안내)에는
  * [dismissOnBackPress]와 [dismissOnClickOutside]를 false로 설정.
  *
+ * @param onDismissRequest 모달을 닫는 콜백입니다. 버튼 클릭 및 외부 터치/뒤로가기 시 모두 호출됩니다.
  * @param title 모달 제목입니다.
  * @param text 모달 본문 설명입니다.
  * @param primaryText 주요 액션 버튼 텍스트입니다.
@@ -43,6 +44,7 @@ import com.ssing.core.ui.designsystem.theme.SSINGTheme
  */
 @Composable
 fun SsingModal(
+    onDismissRequest: () -> Unit,
     title: String,
     text: String,
     primaryText: String,
@@ -56,7 +58,7 @@ fun SsingModal(
     dismissOnClickOutside: Boolean = true,
 ) {
     SsingBasicModal(
-        onDismissRequest = { onSecondary?.invoke() },
+        onDismissRequest = onDismissRequest,
         modifier = modifier,
         dismissOnBackPress = dismissOnBackPress,
         dismissOnClickOutside = dismissOnClickOutside,
@@ -65,10 +67,10 @@ fun SsingModal(
             title = title,
             text = text,
             primaryText = primaryText,
-            onPrimary = onPrimary,
+            onPrimary = { onDismissRequest(); onPrimary() },
             primaryStyle = primaryStyle,
             secondaryText = secondaryText,
-            onSecondary = onSecondary,
+            onSecondary = onSecondary?.let { { onDismissRequest(); it() } },
             secondaryStyle = secondaryStyle,
         )
     }
