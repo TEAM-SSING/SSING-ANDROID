@@ -75,7 +75,8 @@ object NetworkModule {
         }.apply {
             level = if (BuildConfig.DEBUG) {
                 HttpLoggingInterceptor.Level.BODY
-            } else {
+            }
+            else {
                 HttpLoggingInterceptor.Level.NONE
             }
         }
