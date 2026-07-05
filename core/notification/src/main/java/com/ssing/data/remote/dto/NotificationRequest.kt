@@ -13,7 +13,6 @@ import kotlinx.serialization.Serializable
  * 유저 로그인/회원가입 완료 후 서버에 푸시 토큰 전송 시 활용
  *
  * @param token 서버에 저장할 디바이스 고유 fcm 토큰
- * @param platform 알림을 수신할 기기의 OS 종류
  */
 
 @Serializable
@@ -21,10 +20,4 @@ import kotlinx.serialization.Serializable
 data class NotificationRequest(
     @SerialName("token")
     val token: String,
-    @SerialName("platform")
-    val platform: String = ANDROID,
-) {
-    companion object {
-        private const val ANDROID = "ANDROID"
-    }
-}
+    )
