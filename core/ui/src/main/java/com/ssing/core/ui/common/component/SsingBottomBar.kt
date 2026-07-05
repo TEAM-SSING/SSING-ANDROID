@@ -6,7 +6,6 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideIn
 import androidx.compose.animation.slideOut
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -59,9 +58,8 @@ fun <T : MainTab> SsingBottomBar(
                     color = SSINGTheme.colors.backgroundNormal,
                     shape = RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp),
                 )
-                .padding(horizontal = 16.dp, vertical = 8.dp)
+                .padding(horizontal = 16.dp)
                 .navigationBarsPadding(),
-            horizontalArrangement = Arrangement.SpaceEvenly,
             verticalAlignment = Alignment.CenterVertically,
         ) {
             tabs.forEach { tab ->
@@ -91,7 +89,9 @@ private fun SsingBottomBarItem(
     }
 
     Column(
-        modifier = modifier.noRippleClickable(onClick = onClick),
+        modifier = modifier
+            .noRippleClickable(onClick = onClick)
+            .padding(vertical = 8.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Icon(
