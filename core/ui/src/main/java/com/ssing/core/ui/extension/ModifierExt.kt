@@ -19,6 +19,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.dropShadow
 import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.Color
@@ -29,8 +30,10 @@ import androidx.compose.ui.layout.boundsInParent
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
+import androidx.compose.ui.graphics.shadow.Shadow
 
 /**
  * 리플 효과 없이 클릭 가능하게 만드는 Modifier
@@ -154,4 +157,32 @@ fun Modifier.roundedBackgroundWithBorder(
             color = borderColor,
             shape = shape,
         )
+}
+
+/**
+ * 피그마 드롭섀도우와 동일하게 구현하기 위한 확장함수
+ *
+ * @param shape 적용할 컴포저블의 shape
+ * @param dpOffset 피그마 x, y 값을 DpOffset으로 작성
+ * @param blur 피그마 blur 값을 Dp 단위로 작성
+ * @param spread 피그마 shape 값을 Dp 단위로 작성
+ * @param color 그림자 색상
+ * @return
+ */
+fun Modifier.figmaDropShadow(
+    shape: Shape,
+    dpOffset: DpOffset,
+    blur: Dp,
+    spread: Dp,
+    color: Color,
+): Modifier {
+    return this.dropShadow(
+        shape = shape,
+        shadow = Shadow(
+            radius = blur,
+            color = color,
+            offset = dpOffset,
+            spread = spread,
+        ),
+    )
 }
