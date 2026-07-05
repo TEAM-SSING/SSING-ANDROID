@@ -19,7 +19,7 @@ import retrofit2.http.Query
  * @param token 서버에서 찾아서 지울 디바이스 고유 fcm 토큰 문자열
  */
 
-interface NotificationApi {
+interface NotificationService {
     @POST("notifications/token")
     suspend fun postNotificationToken(
         @Body request: NotificationRequest,

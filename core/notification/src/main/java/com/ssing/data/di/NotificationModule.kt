@@ -2,7 +2,7 @@ package com.ssing.data.di
 
 import com.ssing.data.remote.datasource.NotificationDataSource
 import com.ssing.data.repository.NotificationRepository
-import com.ssing.data.repository.api.NotificationApi
+import com.ssing.data.repository.api.NotificationService
 import com.ssing.data.repository.impl.NotificationDataSourceImpl
 import com.ssing.data.repository.impl.NotificationRepositoryImpl
 import dagger.Binds
@@ -45,7 +45,7 @@ abstract class NotificationModule {
     companion object {
         @Provides
         @Singleton
-        fun provideNotificationApi(retrofit: Retrofit): NotificationApi =
-            retrofit.create(NotificationApi::class.java)
+        fun provideNotificationApi(retrofit: Retrofit): NotificationService =
+            retrofit.create(NotificationService::class.java)
     }
 }

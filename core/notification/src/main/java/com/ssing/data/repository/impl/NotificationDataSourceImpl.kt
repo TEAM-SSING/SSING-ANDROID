@@ -3,7 +3,7 @@ package com.ssing.data.repository.impl
 import com.ssing.core.network.util.ApiResponseHandler
 import com.ssing.data.remote.datasource.NotificationDataSource
 import com.ssing.data.remote.dto.NotificationRequest
-import com.ssing.data.repository.api.NotificationApi
+import com.ssing.data.repository.api.NotificationService
 import javax.inject.Inject
 
 /**
@@ -21,7 +21,7 @@ import javax.inject.Inject
  */
 
 class NotificationDataSourceImpl @Inject constructor(
-    private val api: NotificationApi,
+    private val api: NotificationService,
     private val apiResponseHandler: ApiResponseHandler,
 ) : NotificationDataSource {
 
