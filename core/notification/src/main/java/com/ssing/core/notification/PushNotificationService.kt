@@ -66,15 +66,16 @@ class PushNotificationService : FirebaseMessagingService() {
         val launchIntent = packageManager.getLaunchIntentForPackage(packageName)?.apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
         }
+
+        val id = System.currentTimeMillis().toInt()
         val pendingIntent = launchIntent?.let {
             PendingIntent.getActivity(
                 this,
-                0,
+                id,
                 it,
                 PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
             )
         }
-
         val notification = NotificationCompat.Builder(this, DEFAULT_CHANNEL_ID)
             .setSmallIcon(android.R.drawable.ic_dialog_info)
             .setContentTitle(title)
@@ -83,7 +84,7 @@ class PushNotificationService : FirebaseMessagingService() {
             .setAutoCancel(true)
             .build()
 
-        notificationManager.notify(System.currentTimeMillis().toInt(), notification)
+        notificationManager.notify(id, notification)
     }
 
     companion object {
