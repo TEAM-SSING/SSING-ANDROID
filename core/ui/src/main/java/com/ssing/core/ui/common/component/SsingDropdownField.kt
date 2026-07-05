@@ -12,6 +12,9 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -57,6 +60,7 @@ import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupPositionProvider
 import androidx.compose.ui.window.PopupProperties
 import com.ssing.core.ui.R
+import com.ssing.core.ui.designsystem.theme.Blue50
 import com.ssing.core.ui.designsystem.theme.SSINGTheme
 import com.ssing.core.ui.extension.figmaDropShadow
 import com.ssing.core.ui.extension.noRippleClickable
@@ -323,15 +327,21 @@ private fun SsingDropdownMenuItem(
     modifier: Modifier = Modifier,
 ) {
     val borderColor = SSINGTheme.colors.borderDisabled
+    val interactionSource = remember { MutableInteractionSource() }
+    val isPressed by interactionSource.collectIsPressedAsState()
 
     Text(
         text = text,
-        color = SSINGTheme.colors.textNormal,
+        color = if (isPressed) SSINGTheme.colors.primaryNormal else SSINGTheme.colors.textNormal,
         style = SSINGTheme.typography.caption.md14,
         modifier = modifier
-            .noRippleClickable(onClick = onClick)
+            .clickable(
+                onClick = onClick,
+                interactionSource = interactionSource,
+                indication = null,
+            )
             .fillMaxWidth()
-            .background(SSINGTheme.colors.backgroundNormal)
+            .background(if (isPressed) Blue50 else SSINGTheme.colors.backgroundNormal)
             .then(
                 if (!isLastIndex) {
                     Modifier.drawBehind {
