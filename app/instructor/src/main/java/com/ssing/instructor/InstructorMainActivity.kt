@@ -1,13 +1,19 @@
 package com.ssing.instructor
 
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ssing.core.ui.designsystem.theme.SSINGTheme
@@ -26,9 +32,18 @@ class InstructorMainActivity : ComponentActivity() {
     @Inject
     lateinit var authSessionManager: AuthSessionManager
 
+    private val requestNotificationPermissionLauncher =
+        registerForActivityResult(
+            ActivityResultContracts.RequestPermission()
+        ) { isGranted ->
+            val msg = if (isGranted) "권한이 허용되었습니다." else "권한이 거부되었습니다."
+            Toast.makeText(applicationContext, msg, Toast.LENGTH_SHORT).show()
+        }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         observeSessionExpired()
+        requestNotificationPermission()
         setContent {
             SSINGTheme {
                 val appState = rememberInstructorMainAppState()
@@ -52,6 +67,16 @@ class InstructorMainActivity : ComponentActivity() {
                     )
                 }
             }
+        }
+    }
+
+    private fun requestNotificationPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+            ContextCompat.checkSelfPermission(
+                this, Manifest.permission.POST_NOTIFICATIONS
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            requestNotificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
         }
     }
 

@@ -33,6 +33,10 @@ gradlePlugin {
             id = "ssing.core.network"
             implementationClass = "CoreNetworkConventionPlugin"
         }
+        register("coreNotification") {
+            id = "ssing.core.notification"
+            implementationClass = "CoreNotificationConventionPlugin"
+        }
         register("coreLocalstorage") {
             id = "ssing.core.localstorage"
             implementationClass = "CoreLocalstorageConventionPlugin"
