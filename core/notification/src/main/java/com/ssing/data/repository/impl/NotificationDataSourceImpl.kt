@@ -16,5 +16,5 @@ class NotificationDataSourceImpl @Inject constructor(
         apiResponseHandler.safeUnitApiCall { api.postNotificationToken(request) }
 
     override suspend fun deleteNotificationToken(token: String): Result<Unit> =
-        apiResponseHandler.safeUnitApiCall { api.deleteNotificationToken(token) }
+        apiResponseHandler.safeUnitApiCall { api.deleteNotificationToken(NotificationRequest(token)) }
 }
