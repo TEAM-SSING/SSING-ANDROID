@@ -287,8 +287,8 @@ private fun SsingClassDetailCardPreview() {
             state = ClassDetailUiState(
                 tags = listOf(
                     ChipUiModel("하이원", SsingChipStyle.DEEP_BLUE),
-                    ChipUiModel("스노보드", SsingChipStyle.BLUE),
-                    ChipUiModel("처음타요", SsingChipStyle.GRAY),
+                    ChipUiModel("스노보드", SsingChipStyle.DEEP_BLUE),
+                    ChipUiModel("처음타요", SsingChipStyle.DEEP_BLUE),
                 ),
                 nickname = "김OO",
                 teamCount = 0,
@@ -314,8 +314,8 @@ private fun SsingClassDetailCardSmallPreview() {
         SsingClassDetailCardSmall(
             state = ClassDetailSmallUiState(
                 tags = listOf(
-                    ChipUiModel("지산포레스트", SsingChipStyle.DEEP_BLUE),
-                    ChipUiModel("스노보드", SsingChipStyle.BLUE),
+                    ChipUiModel("지산포레스트", SsingChipStyle.GRAY),
+                    ChipUiModel("스노보드", SsingChipStyle.GRAY),
                     ChipUiModel("자격증이 있어요", SsingChipStyle.GRAY),
                 ),
                 nickname = "김OO",
