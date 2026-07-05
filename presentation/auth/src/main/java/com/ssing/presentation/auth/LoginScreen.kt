@@ -1,5 +1,6 @@
 package com.ssing.presentation.auth
 
+import android.app.Activity
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -7,6 +8,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -17,6 +19,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.kakao.sdk.user.UserApiClient
 import com.ssing.core.ui.extension.toast
 import com.ssing.core.ui.util.HandleUiEffects
+import dagger.hilt.android.EntryPointAccessors
 import timber.log.Timber
 
 @Composable
@@ -28,18 +31,38 @@ internal fun LoginRoute(
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val context = LocalContext.current
 
+    val kakaoLoginManager = remember(context) {
+        val activity = context as? Activity ?: throw IllegalStateException("Context is not an Activity")
+        EntryPointAccessors.fromActivity(
+            activity,
+            KakaoLoginEntryPoint::class.java,
+        ).kakaoLoginManager()
+    }
+
     HandleUiEffects(viewModel.uiEffect) { effect ->
         when (effect) {
             is LoginContract.Effect.NavigateToHome -> navigateToHome()
             is LoginContract.Effect.ShowToast -> context.toast(effect.message)
+
+            LoginContract.Effect.LaunchKakaoLogin -> {
+                kakaoLoginManager.login(context) { result ->
+                    result.onSuccess { token ->
+                        viewModel.processIntent(
+                            LoginContract.LoginIntent.OnKakaoLoginSuccess(token.accessToken)
+                        )
+                    }.onFailure { error ->
+                        viewModel.processIntent(
+                            LoginContract.LoginIntent.OnKakaoLoginFailure(error.message ?: "카카오 로그인 실패")
+                        )
+                    }
+                }
+            }
         }
     }
 
     LoginScreen(
         state = state,
-        onKakaoClick = {
-            viewModel.KakaoLogin(context)
-        },
+        onKakaoClick = { viewModel.processIntent(LoginContract.LoginIntent.OnKakaoLoginClick) },
         modifier = modifier,
     )
 }
