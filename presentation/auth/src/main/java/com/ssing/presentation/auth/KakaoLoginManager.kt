@@ -30,7 +30,10 @@ internal class KakaoLoginManager @Inject constructor() {
                     error != null -> {
                         Timber.e(error, "🍫 카카오톡 로그인 실패 -> 카카오 계정 로그인 시도")
                         UserApiClient.instance.loginWithKakaoAccount(context) { token2, error2 ->
-                            if (token2 != null) {
+                            if (error2 is ClientError && error2.reason == ClientErrorCause.Cancelled) {
+                                Timber.d("🍫 카카오 계정 로그인 취소")
+                                return@loginWithKakaoAccount
+                            } else if (token2 != null) {
                                 Timber.i("🍫 카카오 계정 로그인 성공")
                                 onResult(Result.success(token2))
                             } else {
@@ -43,7 +46,10 @@ internal class KakaoLoginManager @Inject constructor() {
             }
         } else {
             UserApiClient.instance.loginWithKakaoAccount(context) { token, error ->
-                if (token != null) {
+                if (error is ClientError && error.reason == ClientErrorCause.Cancelled) {
+                    Timber.d("🍫 카카오 계정 로그인 취소")
+                    return@loginWithKakaoAccount
+                } else if (token != null) {
                     Timber.i("🍫 카카오 계정 로그인 성공")
                     onResult(Result.success(token))
                 } else {
