@@ -12,7 +12,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -48,13 +47,10 @@ fun SsingSelectButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val shape = RoundedCornerShape(12.dp)
-
     Box(
         modifier = modifier
-            .clip(shape)
             .roundedBackgroundWithBorder(
-                shape = shape,
+                shape = RoundedCornerShape(12.dp),
                 backgroundColor = isSelected.selectButtonBackground,
                 borderColor = isSelected.selectButtonBorder,
                 borderWidth = 1.dp,
