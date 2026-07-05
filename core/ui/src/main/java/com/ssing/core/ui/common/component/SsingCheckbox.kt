@@ -40,6 +40,8 @@ private val Boolean.borderColor: Color
     @Composable
     get() = if (this) SSINGTheme.colors.primaryAlternative else SSINGTheme.colors.borderNormal
 
+private const val ANIMATION_DURATION = 100
+
 /**
  * 체크박스 컴포넌트입니다.
  *
@@ -59,12 +61,12 @@ fun SsingCheckbox(
     )
 
     val backgroundColor by transition.animateColor (
-        transitionSpec = { tween(100) },
+        transitionSpec = { tween(ANIMATION_DURATION) },
         label = "backgroundColor",
     ) { checked -> checked.backgroundColor }
 
     val borderColor by transition.animateColor (
-        transitionSpec = { tween(100) },
+        transitionSpec = { tween(ANIMATION_DURATION) },
         label = "borderColor",
     ) { checked -> checked.borderColor }
 
@@ -91,8 +93,8 @@ fun SsingCheckbox(
     ) {
         AnimatedVisibility(
             visible = isChecked,
-            enter = fadeIn(tween(100)),
-            exit = fadeOut(tween(100)),
+            enter = fadeIn(tween(ANIMATION_DURATION)),
+            exit = fadeOut(tween(ANIMATION_DURATION)),
         ) {
             Icon(
                 imageVector = ImageVector.vectorResource(R.drawable.ic_check),
