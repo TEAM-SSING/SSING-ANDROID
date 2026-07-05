@@ -231,9 +231,9 @@ private fun <T> SsingDropdownMenu(
     }
 
     val targetCount = minOf(DEFAULT_ITEM_COUNT, items.size)
-    var measureItemCount by remember { mutableIntStateOf(0) }
-    var calculatedMaxHeight by remember { mutableStateOf(0.dp) }
-    var isCalculationFinished by remember { mutableStateOf(false) }
+    var measureItemCount by remember(items) { mutableIntStateOf(0) }
+    var calculatedMaxHeight by remember(items) { mutableStateOf(0.dp) }
+    var isCalculationFinished by remember(items) { mutableStateOf(false) }
 
     if (expandedState.currentState || expandedState.targetState) {
         Popup(
