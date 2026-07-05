@@ -62,7 +62,7 @@ fun ConsumerBottomBar(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             tabs.forEach { tab ->
-                key(tab.route) {
+                key(tab.name) {
                     MainBottomBarItem(
                         tab = tab,
                         isSelected = tab == currentTab,
