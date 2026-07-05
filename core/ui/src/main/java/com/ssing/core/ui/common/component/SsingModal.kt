@@ -9,75 +9,84 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
-import androidx.compose.ui.window.DialogProperties
-import androidx.compose.ui.window.DialogWindowProvider
+import com.ssing.core.ui.designsystem.component.SsingBasicModal
 import com.ssing.core.ui.designsystem.theme.SSINGTheme
 
 /**
- * SSING 공통 모달
- * @param title 제목
- * @param text 본문 설명
- * @param primaryText 오른쪽 파란 버튼 텍스트 (주요 액션, 예: "대기 중지", "강습 종료하기")
- * @param secondaryText 왼쪽 회색 버튼 텍스트 (보조 액션, 예: "계속 대기", "계속 진행하기")
- * @param onPrimary 파란 버튼 클릭 콜백
- * @param onSecondary 회색 버튼 클릭 콜백 (외부 터치 시에도 호출)
+ * 제목, 설명, 버튼으로 구성된 모달 컴포넌트입니다.
+ *
+ * [secondaryText]와 [onSecondary]를 모두 전달하면 버튼 두 개(보조/주요)가 표시되고,
+ * 생략하면 [primaryText] 버튼 하나만 표시됩니다.
+ *
+ * 버튼 없이 모달을 닫을 수 없어야 하는 경우(예: 강습 연결 취소 안내)에는
+ * [dismissOnBackPress]와 [dismissOnClickOutside]를 false로 설정.
+ *
+ * @param title 모달 제목입니다.
+ * @param text 모달 본문 설명입니다.
+ * @param primaryText 주요 액션 버튼 텍스트입니다.
+ * @param onPrimary 주요 액션 버튼 클릭 콜백입니다.
+ * @param modifier
+ * @param primaryStyle 주요 버튼 스타일입니다.
+ * @param secondaryText 보조 액션 버튼 텍스트입니다.
+ * @param onSecondary 보조 액션 버튼 클릭 콜백입니다.
+ * @param secondaryStyle 보조 버튼 스타일입니다.
+ * @param dismissOnBackPress 시스템 뒤로가기로 모달을 닫을 수 있는지 여부입니다.
+ * @param dismissOnClickOutside 모달 바깥 영역 터치로 모달을 닫을 수 있는지 여부입니다.
+ * @sample SsingModalPreview
  */
 @Composable
 fun SsingModal(
     title: String,
     text: String,
     primaryText: String,
-    secondaryText: String,
     onPrimary: () -> Unit,
-    onSecondary: () -> Unit,
     modifier: Modifier = Modifier,
+    primaryStyle: SsingButtonStyle = SsingButtonStyle.BLUE,
+    secondaryText: String? = null,
+    onSecondary: (() -> Unit)? = null,
+    secondaryStyle: SsingButtonStyle = SsingButtonStyle.GRAY,
+    dismissOnBackPress: Boolean = true,
+    dismissOnClickOutside: Boolean = true,
 ) {
-    Dialog(
-        onDismissRequest = onSecondary,
-        properties = DialogProperties(usePlatformDefaultWidth = false),
+    SsingBasicModal(
+        onDismissRequest = { onSecondary?.invoke() },
+        modifier = modifier,
+        dismissOnBackPress = dismissOnBackPress,
+        dismissOnClickOutside = dismissOnClickOutside,
     ) {
-        val dialogWindow = (LocalView.current.parent as? DialogWindowProvider)?.window
-        SideEffect {
-            dialogWindow?.setDimAmount(0.45f)
-        }
-
-        SsingModalContent(
+        SsingModalBody(
             title = title,
             text = text,
             primaryText = primaryText,
-            secondaryText = secondaryText,
             onPrimary = onPrimary,
+            primaryStyle = primaryStyle,
+            secondaryText = secondaryText,
             onSecondary = onSecondary,
-            modifier = modifier,
+            secondaryStyle = secondaryStyle,
         )
     }
 }
 
 @Composable
-private fun SsingModalContent(
+private fun SsingModalBody(
     title: String,
     text: String,
     primaryText: String,
-    secondaryText: String,
     onPrimary: () -> Unit,
-    onSecondary: () -> Unit,
-    modifier: Modifier = Modifier,
+    primaryStyle: SsingButtonStyle,
+    secondaryText: String?,
+    onSecondary: (() -> Unit)?,
+    secondaryStyle: SsingButtonStyle,
 ) {
     Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(horizontal = 32.dp)
-            .clip(RoundedCornerShape(12.dp))
-            .background(SSINGTheme.colors.backgroundNormal)
-            .padding(start = 16.dp, end = 16.dp, top = 24.dp, bottom = 16.dp),
+        modifier = Modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         Column(
@@ -99,37 +108,81 @@ private fun SsingModalContent(
                 modifier = Modifier.fillMaxWidth(),
             )
         }
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-        ) {
-            SsingButton(
-                text = secondaryText,
-                onClick = onSecondary,
-                style = SsingButtonStyle.GRAY,
-                modifier = Modifier.weight(1f),
-            )
-            SsingButton(
-                text = primaryText,
-                onClick = onPrimary,
-                style = SsingButtonStyle.BLUE,
-                modifier = Modifier.weight(1f),
-            )
+        if (secondaryText != null && onSecondary != null) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+            ) {
+                SsingButton(secondaryText, onSecondary, secondaryStyle, Modifier.weight(1f))
+                SsingButton(primaryText, onPrimary, primaryStyle, Modifier.weight(1f))
+            }
+        } else {
+            SsingButton(primaryText, onPrimary, primaryStyle, Modifier.fillMaxWidth())
         }
     }
 }
 
-@Preview(showBackground = true, backgroundColor = 0XFF7C7C7C)
-@Composable
-private fun SsingModalPreview() {
-    SSINGTheme {
-        SsingModalContent(
+private data class SsingModalPreviewData(
+    val title: String,
+    val text: String,
+    val primaryText: String,
+    val primaryStyle: SsingButtonStyle = SsingButtonStyle.BLUE,
+    val secondaryText: String? = null,
+    val onSecondary: (() -> Unit)? = null,
+    val secondaryStyle: SsingButtonStyle = SsingButtonStyle.GRAY,
+)
+
+private class SsingModalPreviewProvider : PreviewParameterProvider<SsingModalPreviewData> {
+    override val values = sequenceOf(
+        SsingModalPreviewData(
             title = "대기를 중지할까요?",
-            text = "홈으로 이동해도 빠른 매칭 대기는 유지돼요.\n대기를 중지하면 더 이상 요청을 받지 않아요.",
+            text = "홈으로 이동해도 빠른 매칭 대기는 유지되요.\n대기를 중지하면 더 이상 요청을 받지 않아요.",
             primaryText = "대기 중지",
             secondaryText = "계속 대기",
-            onPrimary = {},
             onSecondary = {},
-        )
+        ),
+        SsingModalPreviewData(
+            title = "강습 대기를 취소할까요?",
+            text = "강습 준비가 완료되어야 강습이 시작돼요",
+            primaryText = "취소",
+            primaryStyle = SsingButtonStyle.RED,
+            secondaryText = "대기 유지",
+            onSecondary = {},
+            secondaryStyle = SsingButtonStyle.GRAY,
+        ),
+        SsingModalPreviewData(
+            title = "강습연결이 취소됐어요",
+            text = "3분 이내로 수락하지 않아\n강습연결이 자동으로 취소되었어요",
+            primaryText = "홈으로 이동",
+        ),
+    )
+}
+
+@Preview(showBackground = true, backgroundColor = 0XFF8C8C8C)
+@Composable
+private fun SsingModalPreview(
+    @PreviewParameter(SsingModalPreviewProvider::class) data: SsingModalPreviewData,
+) {
+    SSINGTheme {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 20.dp)
+                .clip(RoundedCornerShape(12.dp))
+                .background(SSINGTheme.colors.backgroundNormal)
+                .padding(start = 16.dp, end = 16.dp, top = 24.dp, bottom = 16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+        ) {
+            SsingModalBody(
+                title = data.title,
+                text = data.text,
+                primaryText = data.primaryText,
+                onPrimary = {},
+                primaryStyle = data.primaryStyle,
+                secondaryText = data.secondaryText,
+                onSecondary = data.onSecondary,
+                secondaryStyle = data.secondaryStyle,
+            )
+        }
     }
 }
