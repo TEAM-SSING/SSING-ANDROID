@@ -1,6 +1,6 @@
 package com.ssing.data.remote.datasource
 
-import com.ssing.data.remote.dto.NotificationRequestDto
+import com.ssing.data.remote.dto.NotificationRequest
 
 /**
  * notification 관련 원격 서버 데이터 통신을 추상화
@@ -16,7 +16,7 @@ import com.ssing.data.remote.dto.NotificationRequestDto
  */
 
 interface NotificationDataSource {
-    suspend fun postNotificationToken(request: NotificationRequestDto): Result<Unit>
+    suspend fun postNotificationToken(request: NotificationRequest): Result<Unit>
 
     suspend fun deleteNotificationToken(token: String): Result<Unit>
 }

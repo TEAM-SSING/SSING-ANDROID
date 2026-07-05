@@ -18,7 +18,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 @OptIn(InternalSerializationApi::class)
-data class NotificationRequestDto(
+data class NotificationRequest(
     @SerialName("token")
     val token: String,
     @SerialName("platform")

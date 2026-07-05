@@ -2,7 +2,7 @@ package com.ssing.data.repository.impl
 
 import com.ssing.core.network.token.TokenAccessManager
 import com.ssing.data.remote.datasource.NotificationDataSource
-import com.ssing.data.remote.dto.NotificationRequestDto
+import com.ssing.data.remote.dto.NotificationRequest
 import com.ssing.data.repository.NotificationRepository
 import timber.log.Timber
 import javax.inject.Inject
@@ -33,6 +33,6 @@ class NotificationRepositoryImpl @Inject constructor(
             return Result.success(Unit)
         }
 
-        return dataSource.postNotificationToken(NotificationRequestDto(token = token))
+        return dataSource.postNotificationToken(NotificationRequest(token = token))
     }
 }
