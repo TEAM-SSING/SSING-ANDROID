@@ -97,7 +97,7 @@ private fun SsingButtonPreview(
 
 @Preview
 @Composable
-private fun SsingButtonGrapyDisabledPreview() {
+private fun SsingButtonGrayDisabledPreview() {
     SSINGTheme {
         SsingButton(
             text = "GRAY-DISABLED",
