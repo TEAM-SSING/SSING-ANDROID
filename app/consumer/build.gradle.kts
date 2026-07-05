@@ -37,6 +37,7 @@ android {
 
 dependencies {
     implementation(projects.core.ui)
+    implementation(projects.core.network)
     implementation(projects.presentation.auth)
     implementation(projects.presentation.notification)
     implementation(projects.presentation.consumerHome)

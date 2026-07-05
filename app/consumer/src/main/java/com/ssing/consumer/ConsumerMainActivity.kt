@@ -1,4 +1,4 @@
-package com.ssing.instructor
+package com.ssing.consumer
 
 import android.content.Intent
 import android.os.Bundle
@@ -10,19 +10,18 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.ssing.core.ui.designsystem.theme.SSINGTheme
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.ssing.consumer.component.ConsumerBottomBar
 import com.ssing.core.network.session.AuthSessionManager
-import com.ssing.instructor.component.InstructorBottomBar
+import com.ssing.core.ui.designsystem.theme.SSINGTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class InstructorMainActivity : ComponentActivity() {
-
+class ConsumerMainActivity : ComponentActivity() {
     @Inject
     lateinit var authSessionManager: AuthSessionManager
 
@@ -31,22 +30,22 @@ class InstructorMainActivity : ComponentActivity() {
         observeSessionExpired()
         setContent {
             SSINGTheme {
-                val appState = rememberInstructorMainAppState()
+                val appState = rememberConsumerMainAppState()
                 val isBottomBarVisible by appState.isBottomBarVisible.collectAsStateWithLifecycle()
                 val currentTab by appState.currentTab.collectAsStateWithLifecycle()
 
                 Scaffold(
                     modifier = Modifier.fillMaxSize(),
                     bottomBar = {
-                        InstructorBottomBar(
+                        ConsumerBottomBar(
                             isVisible = isBottomBarVisible,
-                            tabs = InstructorMainTab.entries.toImmutableList(),
+                            tabs = ConsumerMainTab.entries.toImmutableList(),
                             currentTab = currentTab,
                             onTabSelected = appState::navigate,
                         )
                     },
                 ) { innerPadding ->
-                    InstructorMainNavHost(
+                    ConsumerMainNavHost(
                         navController = appState.navController,
                         paddingValues = innerPadding,
                     )
@@ -54,7 +53,6 @@ class InstructorMainActivity : ComponentActivity() {
             }
         }
     }
-
     /**
      * 세션 만료(refresh token 만료) 이벤트 구독.
      * 토큰은 이미 clear된 상태이므로 앱을 재시작하면
@@ -65,8 +63,8 @@ class InstructorMainActivity : ComponentActivity() {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 authSessionManager.sessionExpired.collect {
                     val intent = Intent(
-                        this@InstructorMainActivity,
-                        InstructorMainActivity::class.java,
+                        this@ConsumerMainActivity,
+                        ConsumerMainActivity::class.java,
                     ).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
                     startActivity(intent)
                 }
