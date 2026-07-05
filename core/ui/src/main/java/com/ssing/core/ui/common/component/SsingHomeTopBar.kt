@@ -41,7 +41,7 @@ fun SsingHomeTopBar(
         modifier = modifier
             .fillMaxWidth()
             .background(color = SSINGTheme.colors.backgroundNormal)
-            .padding(horizontal = 16.dp),
+            .padding(start = 16.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
     ) {
@@ -57,7 +57,7 @@ fun SsingHomeTopBar(
             tint = Color.Unspecified,
             modifier = Modifier
                 .noRippleClickable(onClick = onNotificationClick)
-                .padding(vertical = 14.dp)
+                .padding(horizontal = 16.dp, vertical = 14.dp)
                 .size(24.dp)
         )
     }
