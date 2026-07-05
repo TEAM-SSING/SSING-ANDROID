@@ -110,16 +110,26 @@ private fun SsingModalBody(
                 modifier = Modifier.fillMaxWidth(),
             )
         }
-        if (secondaryText != null && onSecondary != null) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-            ) {
-                SsingButton(secondaryText, onSecondary, secondaryStyle, Modifier.weight(1f))
-                SsingButton(primaryText, onPrimary, primaryStyle, Modifier.weight(1f))
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+        ) {
+            if (secondaryText != null && onSecondary != null) {
+                SsingButton(
+                    text = secondaryText,
+                    onClick = onSecondary,
+                    style = secondaryStyle,
+                    modifier = Modifier.weight(1f),
+                )
             }
-        } else {
-            SsingButton(primaryText, onPrimary, primaryStyle, Modifier.fillMaxWidth())
+
+            SsingButton(
+                text = primaryText,
+                onClick = onPrimary,
+                style = primaryStyle,
+                modifier = Modifier.weight(1f),
+            )
         }
     }
 }
