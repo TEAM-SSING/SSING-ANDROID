@@ -20,13 +20,12 @@ enum class SsingButtonStyle {
     BLUE, GRAY, RED
 }
 
-private val SsingButtonStyle.textColor: Color
-    @Composable
-    get() = when (this) {
-        SsingButtonStyle.BLUE -> White
-        SsingButtonStyle.GRAY -> SSINGTheme.colors.textNormal
-        SsingButtonStyle.RED -> SSINGTheme.colors.accentRedNormal
-    }
+@Composable
+private fun SsingButtonStyle.textColor(enabled: Boolean): Color = when (this) {
+    SsingButtonStyle.BLUE -> White
+    SsingButtonStyle.GRAY -> if (enabled) SSINGTheme.colors.textNormal else SSINGTheme.colors.textAlternative
+    SsingButtonStyle.RED -> SSINGTheme.colors.accentRedNormal
+}
 
 private val SsingButtonStyle.defaultColor: Color
     @Composable
@@ -69,14 +68,14 @@ fun SsingButton(
     ) {
         Text(
             text = text,
-            color = style.textColor,
+            color = style.textColor(enabled),
             style = SSINGTheme.typography.body.sb16,
             modifier = Modifier.align(Alignment.Center)
         )
     }
 }
 
-private class SsingButtonPreviewProvider: PreviewParameterProvider<SsingButtonStyle> {
+private class SsingButtonPreviewProvider : PreviewParameterProvider<SsingButtonStyle> {
     override val values: Sequence<SsingButtonStyle>
         get() = SsingButtonStyle.entries.asSequence()
 }
@@ -92,6 +91,20 @@ private fun SsingButtonPreview(
             onClick = {},
             style = type,
             modifier = Modifier.width(328.dp)
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun SsingButtonGrapyDisabledPreview() {
+    SSINGTheme {
+        SsingButton(
+            text = "GRAY-DISABLED",
+            onClick = {},
+            style = SsingButtonStyle.GRAY,
+            modifier = Modifier.width(328.dp),
+            enabled = false,
         )
     }
 }
