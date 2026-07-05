@@ -24,6 +24,8 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import com.ssing.core.ui.R
 import com.ssing.core.ui.designsystem.theme.SSINGTheme
@@ -95,11 +97,18 @@ fun SsingCheckbox(
     }
 }
 
+private class SsingCheckboxPreviewProvider: PreviewParameterProvider<Boolean> {
+    override val values: Sequence<Boolean>
+        get() = sequenceOf(true, false)
+}
+
 @Preview
 @Composable
-private fun SsingCheckboxPreview() {
+private fun SsingCheckboxPreview(
+    @PreviewParameter(SsingCheckboxPreviewProvider::class) initialChecked: Boolean,
+) {
     SSINGTheme {
-        var checked by remember { mutableStateOf(false) }
+        var checked by remember { mutableStateOf(initialChecked) }
 
         SsingCheckbox(
             isChecked = checked,
