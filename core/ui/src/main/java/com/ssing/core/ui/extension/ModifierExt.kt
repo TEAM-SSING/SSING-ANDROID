@@ -1,6 +1,8 @@
 package com.ssing.core.ui.extension
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -16,8 +18,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.geometry.Rect
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.LayoutCoordinates
 import androidx.compose.ui.layout.boundsInParent
@@ -125,3 +130,28 @@ fun Modifier.preventCursorScroll(): Modifier =
             }
         },
     )
+
+/**
+ * 코너 둥근 배경 + 보더를 한 번에 설정
+ *
+ * @param shape Shape
+ * @param backgroundColor 배경 색상
+ * @param borderColor 보더 색상
+ * @param borderWidth dp 단위 보더 굵기
+ * @return
+ */
+fun Modifier.roundedBackgroundWithBorder(
+    shape: Shape,
+    backgroundColor: Color,
+    borderColor: Color = Color.Transparent,
+    borderWidth: Dp = 0.dp,
+): Modifier {
+    return this
+        .clip(shape)
+        .background(backgroundColor)
+        .border(
+            width = borderWidth,
+            color = borderColor,
+            shape = shape,
+        )
+}
