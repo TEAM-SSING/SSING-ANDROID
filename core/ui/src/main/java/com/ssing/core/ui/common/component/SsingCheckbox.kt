@@ -1,8 +1,9 @@
 package com.ssing.core.ui.common.component
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.animateColor
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.core.updateTransition
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
@@ -52,15 +53,20 @@ fun SsingCheckbox(
     onCheckedChange: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val backgroundColor by animateColorAsState(
-        targetValue = isChecked.backgroundColor,
-        animationSpec = tween(100),
+    val transition = updateTransition(
+        targetState = isChecked,
+        label = "checkedTransition",
     )
 
-    val borderColor by animateColorAsState(
-        targetValue = isChecked.borderColor,
-        animationSpec = tween(100),
-    )
+    val backgroundColor by transition.animateColor (
+        transitionSpec = { tween(100) },
+        label = "backgroundColor",
+    ) { checked -> checked.backgroundColor }
+
+    val borderColor by transition.animateColor (
+        transitionSpec = { tween(100) },
+        label = "borderColor",
+    ) { checked -> checked.borderColor }
 
     val shape = RoundedCornerShape(6.dp)
 
