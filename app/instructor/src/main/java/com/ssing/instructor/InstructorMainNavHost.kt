@@ -6,6 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
+import com.ssing.core.ui.extension.clearBackStackNavOptions
 import com.ssing.presentation.auth.navigation.authNavGraph
 import com.ssing.presentation.instructorhome.navigation.InstructorHome
 import com.ssing.presentation.instructorhome.navigation.instructorHomeNavGraph
@@ -23,7 +24,12 @@ internal fun InstructorMainNavHost(
     ) {
         authNavGraph(
             paddingValues = paddingValues,
-            navigateToHome = { navController.navigate(InstructorHome) },
+            navigateToHome = {
+                navController.navigate(
+                    route = InstructorHome,
+                    navOptions = navController.clearBackStackNavOptions(),
+                )
+            },
         )
         instructorHomeNavGraph(paddingValues = paddingValues)
         // TODO 나중에 각 presentation 모듈 navGraph 연결
