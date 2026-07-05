@@ -1,7 +1,5 @@
 package com.ssing.core.ui.common.component
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -21,6 +19,7 @@ import androidx.compose.ui.unit.dp
 import com.ssing.core.ui.designsystem.theme.Blue50
 import com.ssing.core.ui.designsystem.theme.SSINGTheme
 import com.ssing.core.ui.extension.noRippleClickable
+import com.ssing.core.ui.extension.roundedBackgroundWithBorder
 
 private val Boolean.selectButtonBackground: Color
     @Composable
@@ -54,8 +53,12 @@ fun SsingSelectButton(
     Box(
         modifier = modifier
             .clip(shape)
-            .background(color = isSelected.selectButtonBackground, shape = shape)
-            .border(width = 1.dp, color = isSelected.selectButtonBorder, shape = shape)
+            .roundedBackgroundWithBorder(
+                shape = shape,
+                backgroundColor = isSelected.selectButtonBackground,
+                borderColor = isSelected.selectButtonBorder,
+                borderWidth = 1.dp,
+            )
             .noRippleClickable(onClick = onClick)
             .padding(16.dp),
         contentAlignment = Alignment.Center,

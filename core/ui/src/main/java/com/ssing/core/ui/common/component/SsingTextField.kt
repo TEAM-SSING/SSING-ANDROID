@@ -1,7 +1,5 @@
 package com.ssing.core.ui.common.component
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -23,6 +21,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ssing.core.ui.designsystem.theme.SSINGTheme
+import com.ssing.core.ui.extension.roundedBackgroundWithBorder
 
 /**
  * 기본 텍스트 입력 컴포넌트입니다.
@@ -47,8 +46,6 @@ fun SsingTextField(
     inputTransformation: InputTransformation? = null,
     outputTransformation: OutputTransformation? = null,
 ) {
-    val shape = RoundedCornerShape(12.dp)
-
     BasicTextField(
         state = state,
         textStyle = SSINGTheme.typography.caption.sb14.copy(
@@ -69,14 +66,11 @@ fun SsingTextField(
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(
-                        color = SSINGTheme.colors.backgroundNormal,
-                        shape = shape,
-                    )
-                    .border(
-                        width = 1.dp,
-                        color = SSINGTheme.colors.borderAlternative,
-                        shape = shape,
+                    .roundedBackgroundWithBorder(
+                        shape = RoundedCornerShape(12),
+                        backgroundColor = SSINGTheme.colors.backgroundNormal,
+                        borderColor = SSINGTheme.colors.borderAlternative,
+                        borderWidth = 1.dp,
                     )
                     .padding(16.dp),
                 contentAlignment = Alignment.CenterStart,
