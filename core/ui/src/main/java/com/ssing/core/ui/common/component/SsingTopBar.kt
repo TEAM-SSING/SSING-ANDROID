@@ -1,5 +1,6 @@
 package com.ssing.core.ui.common.component
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -37,6 +38,7 @@ fun SsingTopBar(
     Box(
         modifier = modifier
             .fillMaxWidth()
+            .background(color = SSINGTheme.colors.backgroundNormal)
             .padding(horizontal = 16.dp, vertical = 12.dp),
     ) {
         if (onBack != null) {

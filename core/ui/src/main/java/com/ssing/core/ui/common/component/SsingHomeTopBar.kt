@@ -1,6 +1,7 @@
 package com.ssing.core.ui.common.component
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -38,6 +39,7 @@ fun SsingHomeTopBar(
     Row(
         modifier = modifier
             .fillMaxWidth()
+            .background(color = SSINGTheme.colors.backgroundNormal)
             .padding(horizontal = 16.dp, vertical = 14.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
