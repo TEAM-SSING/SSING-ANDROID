@@ -8,13 +8,12 @@ import retrofit2.http.Query
 
 
 interface NotificationService {
-    @POST("notifications/token")
+    @POST("api/v1/fcm-tokens")
     suspend fun postNotificationToken(
         @Body request: NotificationRequest,
     )
-
-    @DELETE("notifications/token")
+    @DELETE("api/v1/fcm-tokens")
     suspend fun deleteNotificationToken(
-        @Query("token") token: String,
+        @Body request: NotificationRequest,
     )
 }
