@@ -1,6 +1,5 @@
 package com.ssing.presentation.auth
 
-import android.app.Activity
 import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -33,8 +32,8 @@ internal fun LoginRoute(
     val context = LocalContext.current
     val activity = LocalActivity.current
 
-    val kakaoLoginManager = remember(context) {
-        val activity = activity ?: throw IllegalArgumentException("Activity not found")
+    val kakaoLoginManager = remember(activity) {
+        val activity = activity ?: throw IllegalStateException("Activity not found")
         EntryPointAccessors.fromActivity(
             activity,
             KakaoLoginEntryPoint::class.java,
