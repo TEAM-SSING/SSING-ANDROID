@@ -25,6 +25,7 @@ runner = "1.0.2"
 espressoCoreVersion = "3.0.2"
 appcompatV7 = "28.0.0"
 material = "1.11.0"
+kakao = "2.24.0"
 krossbow = "9.3.0"
 firebaseBom = "34.15.0"
 google-services = "4.5.0"
@@ -98,6 +99,9 @@ compose-lint-checks = { group = "com.slack.lint.compose", name = "compose-lint-c
 runner = { group = "com.android.support.test", name = "runner", version.ref = "runner" }
 espresso-core = { group = "com.android.support.test.espresso", name = "espresso-core", version.ref = "espressoCoreVersion" }
 appcompat-v7 = { group = "com.android.support", name = "appcompat-v7", version.ref = "appcompatV7" }
+
+# kakao
+kakao-user = { group = "com.kakao.sdk", name = "v2-user", version.ref = "kakao" }
 
 # krossbow
 krossbow-stomp-core = { group = "org.hildan.krossbow", name = "krossbow-stomp-core", version.ref = "krossbow" }

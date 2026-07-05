@@ -1,6 +1,17 @@
+import java.util.Properties
+import kotlin.apply
+
 plugins {
     id("ssing.android.application")
     id("org.jetbrains.kotlin.plugin.serialization")
+}
+
+val properties = Properties().apply{
+    val localProperties = rootProject.file("local.properties")
+
+    if (localProperties.exists()) {
+        load(localProperties.inputStream())
+    }
 }
 
 android {
@@ -10,6 +21,14 @@ android {
         applicationId = "com.ssing.instructor"
         versionCode = 1
         versionName = "1.0"
+
+        val kakaoNativeAppKey = properties.getProperty("KAKAO_NATIVE_APP_KEY").orEmpty()
+        require(kakaoNativeAppKey.isNotBlank()) {
+            "로컬 프로퍼티 설정"
+        }
+
+        buildConfigField("String", "KAKAO_NATIVE_APP_KEY", "\"$kakaoNativeAppKey\"")
+        manifestPlaceholders["KAKAO_NATIVE_APP_KEY"] = kakaoNativeAppKey
     }
 
     buildFeatures {
@@ -26,4 +45,5 @@ dependencies {
     implementation(projects.presentation.instructorMatching)
     implementation(libs.immutable)
     implementation(libs.material)
+    implementation(libs.kakao.user)
 }
