@@ -10,10 +10,10 @@ import com.ssing.core.ui.navigation.Route
 import com.ssing.presentation.consumerhome.navigation.ConsumerHome
 
 enum class ConsumerMainTab(
-    @param:DrawableRes val selectedIconRes: Int,
-    @param:DrawableRes val unselectedIconRes: Int,
-    @param:StringRes val titleRes: Int,
-    val route: MainTabRoute,
+    @param:DrawableRes override val selectedIconRes: Int,
+    @param:DrawableRes override val unselectedIconRes: Int,
+    @param:StringRes override val titleRes: Int,
+    override val route: MainTabRoute,
 ) : MainTab {
     HOME(
         selectedIconRes = drawable.ic_home_selected,

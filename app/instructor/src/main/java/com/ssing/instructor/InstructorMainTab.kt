@@ -9,10 +9,10 @@ import com.ssing.instructor.navigation.InstructorDummyTabRoute
 import com.ssing.presentation.instructorhome.navigation.InstructorHome
 
 enum class InstructorMainTab(
-    @param:DrawableRes val selectedIconRes: Int,
-    @param:DrawableRes val unselectedIconRes: Int,
-    @param:StringRes val titleRes: Int,
-    val route: MainTabRoute,
+    @param:DrawableRes override val selectedIconRes: Int,
+    @param:DrawableRes override val unselectedIconRes: Int,
+    @param:StringRes override val titleRes: Int,
+    override val route: MainTabRoute,
 ) : MainTab {
     HOME(
         selectedIconRes = com.ssing.core.ui.R.drawable.ic_home_selected,
