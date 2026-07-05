@@ -12,7 +12,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.ssing.consumer.component.ConsumerBottomBar
+import com.ssing.core.ui.common.component.SsingBottomBar
 import com.ssing.core.network.session.AuthSessionManager
 import com.ssing.core.ui.designsystem.theme.SSINGTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -37,7 +37,7 @@ class ConsumerMainActivity : ComponentActivity() {
                 Scaffold(
                     modifier = Modifier.fillMaxSize(),
                     bottomBar = {
-                        ConsumerBottomBar(
+                        SsingBottomBar(
                             isVisible = isBottomBarVisible,
                             tabs = ConsumerMainTab.entries.toImmutableList(),
                             currentTab = currentTab,

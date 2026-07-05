@@ -1,4 +1,4 @@
-package com.ssing.instructor.component
+package com.ssing.core.ui.common.component
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
@@ -9,7 +9,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
@@ -24,21 +23,28 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import com.ssing.core.ui.designsystem.theme.SSINGTheme
 import com.ssing.core.ui.extension.noRippleClickable
-import com.ssing.instructor.InstructorMainTab
+import com.ssing.core.ui.navigation.MainTab
 import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.toImmutableList
 
+/**
+ * 앱 공통 하단 내비게이션 바.
+ *
+ * @param T [MainTab]을 구현하는 탭 enum 타입 (ConsumerMainTab / InstructorMainTab)
+ * @param isVisible 바 표시 여부 (애니메이션 포함)
+ * @param tabs 표시할 탭 목록
+ * @param currentTab 현재 선택된 탭. null이면 아무 탭도 선택되지 않은 상태.
+ * @param onTabSelected 탭 선택 콜백
+ */
 @Composable
-fun InstructorBottomBar(
+fun <T : MainTab> SsingBottomBar(
     isVisible: Boolean,
-    tabs: ImmutableList<InstructorMainTab>,
-    currentTab: InstructorMainTab?,
-    onTabSelected: (InstructorMainTab) -> Unit,
+    tabs: ImmutableList<T>,
+    currentTab: T?,
+    onTabSelected: (T) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     AnimatedVisibility(
@@ -51,19 +57,16 @@ fun InstructorBottomBar(
                 .fillMaxWidth()
                 .background(
                     color = SSINGTheme.colors.backgroundNormal,
-                    shape = RoundedCornerShape(
-                        topStart = 12.dp,
-                        topEnd = 12.dp,
-                    )
+                    shape = RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp),
                 )
                 .padding(horizontal = 16.dp, vertical = 8.dp)
                 .navigationBarsPadding(),
-            horizontalArrangement = Arrangement.spacedBy(32.dp),
+            horizontalArrangement = Arrangement.SpaceEvenly,
             verticalAlignment = Alignment.CenterVertically,
         ) {
             tabs.forEach { tab ->
-                key(tab.route) {
-                    InstructorBottomBarItem(
+                key(tab.name) {
+                    SsingBottomBarItem(
                         tab = tab,
                         isSelected = tab == currentTab,
                         onClick = { onTabSelected(tab) },
@@ -76,24 +79,15 @@ fun InstructorBottomBar(
 }
 
 @Composable
-private fun InstructorBottomBarItem(
-    tab: InstructorMainTab,
+private fun SsingBottomBarItem(
+    tab: MainTab,
     isSelected: Boolean,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val (textColor, iconColor, iconRes) = when {
-        isSelected -> Triple(
-            SSINGTheme.colors.textStrong,
-            Color.Unspecified,
-            tab.selectedIconRes,
-        )
-
-        else -> Triple(
-            SSINGTheme.colors.textAlternative,
-            Color.Unspecified,
-            tab.unselectedIconRes,
-        )
+    val (textColor, iconRes) = when {
+        isSelected -> Pair(SSINGTheme.colors.textStrong, tab.selectedIconRes)
+        else -> Pair(SSINGTheme.colors.textAlternative, tab.unselectedIconRes)
     }
 
     Column(
@@ -103,32 +97,12 @@ private fun InstructorBottomBarItem(
         Icon(
             imageVector = ImageVector.vectorResource(iconRes),
             contentDescription = stringResource(tab.titleRes),
-            tint = iconColor,
+            tint = Color.Unspecified,
         )
         Text(
             text = stringResource(tab.titleRes),
             style = SSINGTheme.typography.caption.md11,
             color = textColor,
         )
-    }
-}
-
-@Preview(showBackground = true, backgroundColor = 0XFFF3F4F8)
-@Composable
-private fun InstructorBottomBarPreview() {
-    SSINGTheme {
-        Column(
-            modifier = Modifier.fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Bottom,
-        ) {
-            InstructorBottomBar(
-                isVisible = true,
-                tabs = InstructorMainTab.entries.toImmutableList(),
-                currentTab = InstructorMainTab.HOME,
-                onTabSelected = {},
-                modifier = Modifier.fillMaxWidth(),
-            )
-        }
     }
 }

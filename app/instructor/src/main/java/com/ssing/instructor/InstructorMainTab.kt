@@ -2,6 +2,7 @@ package com.ssing.instructor
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
+import com.ssing.core.ui.navigation.MainTab
 import com.ssing.core.ui.navigation.MainTabRoute
 import com.ssing.core.ui.navigation.Route
 import com.ssing.instructor.navigation.InstructorDummyTabRoute
@@ -12,7 +13,7 @@ enum class InstructorMainTab(
     @param:DrawableRes val unselectedIconRes: Int,
     @param:StringRes val titleRes: Int,
     val route: MainTabRoute,
-) {
+) : MainTab {
     HOME(
         selectedIconRes = com.ssing.core.ui.R.drawable.ic_home_selected,
         unselectedIconRes = com.ssing.core.ui.R.drawable.ic_home_unselected,

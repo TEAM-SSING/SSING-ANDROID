@@ -4,6 +4,7 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import com.ssing.consumer.navigation.ConsumerDummyTabRoute
 import com.ssing.core.ui.R.drawable
+import com.ssing.core.ui.navigation.MainTab
 import com.ssing.core.ui.navigation.MainTabRoute
 import com.ssing.core.ui.navigation.Route
 import com.ssing.presentation.consumerhome.navigation.ConsumerHome
@@ -13,7 +14,7 @@ enum class ConsumerMainTab(
     @param:DrawableRes val unselectedIconRes: Int,
     @param:StringRes val titleRes: Int,
     val route: MainTabRoute,
-) {
+) : MainTab {
     HOME(
         selectedIconRes = drawable.ic_home_selected,
         unselectedIconRes = drawable.ic_home_unselected,
