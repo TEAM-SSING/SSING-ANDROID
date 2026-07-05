@@ -4,7 +4,6 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import com.ssing.core.ui.navigation.MainTabRoute
 import com.ssing.core.ui.navigation.Route
-import com.ssing.instructor.R
 import com.ssing.instructor.navigation.InstructorDummyTabRoute
 import com.ssing.presentation.instructorhome.navigation.InstructorHome
 
@@ -47,11 +46,11 @@ enum class InstructorMainTab(
 
     companion object {
         fun find(predicate: (MainTabRoute) -> Boolean): InstructorMainTab? {
-            return values().find { predicate(it.route) }
+            return entries.find { predicate(it.route) }
         }
 
         fun contains(predicate: (Route) -> Boolean): Boolean {
-            return values().any { predicate(it.route) }
+            return entries.any { predicate(it.route) }
         }
     }
 }
