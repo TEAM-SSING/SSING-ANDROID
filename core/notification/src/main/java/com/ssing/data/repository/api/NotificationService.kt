@@ -1,6 +1,5 @@
 package com.ssing.data.repository.api
 
-import com.ssing.core.network.model.BaseResponse
 import com.ssing.data.remote.dto.NotificationRequest
 import retrofit2.http.Body
 import retrofit2.http.DELETE
@@ -23,10 +22,10 @@ interface NotificationService {
     @POST("notifications/token")
     suspend fun postNotificationToken(
         @Body request: NotificationRequest,
-    ): BaseResponse<Unit>
+    ): Unit
 
     @DELETE("notifications/token")
     suspend fun deleteNotificationToken(
         @Query("token") token: String,
-    ): BaseResponse<Unit>
+    ): Unit
 }
