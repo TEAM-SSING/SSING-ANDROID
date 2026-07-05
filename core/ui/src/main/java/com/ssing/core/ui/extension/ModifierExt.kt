@@ -165,7 +165,7 @@ fun Modifier.roundedBackgroundWithBorder(
  * @param shape 적용할 컴포저블의 shape
  * @param dpOffset 피그마 x, y 값을 DpOffset으로 작성
  * @param blur 피그마 blur 값을 Dp 단위로 작성
- * @param spread 피그마 shape 값을 Dp 단위로 작성
+ * @param spread 피그마 spread 값을 Dp 단위로 작성
  * @param color 그림자 색상
  * @return
  */
