@@ -67,7 +67,7 @@ fun SsingTextField(
                 modifier = Modifier
                     .fillMaxWidth()
                     .roundedBackgroundWithBorder(
-                        shape = RoundedCornerShape(12),
+                        shape = RoundedCornerShape(12.dp),
                         backgroundColor = SSINGTheme.colors.backgroundNormal,
                         borderColor = SSINGTheme.colors.borderAlternative,
                         borderWidth = 1.dp,
