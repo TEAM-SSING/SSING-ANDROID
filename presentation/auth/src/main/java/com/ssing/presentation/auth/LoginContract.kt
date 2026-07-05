@@ -9,10 +9,10 @@ internal interface LoginContract {
         val isLoading: Boolean = false,
     )
 
-    sealed interface LoginIntent {
-        data object OnKakaoLoginClick : LoginIntent
-        data class OnKakaoLoginSuccess(val token: String) : LoginIntent
-        data class OnKakaoLoginFailure(val message: String) : LoginIntent
+    sealed interface Intent {
+        data object OnKakaoClick : Intent
+        data class OnKakaoSuccess(val token: String) : Intent
+        data class OnKakaoFailure(val message: String) : Intent
     }
 
     sealed interface Effect {

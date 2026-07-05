@@ -10,20 +10,20 @@ internal class LoginViewModel @Inject constructor() :
         LoginContract.State()
     ) {
 
-    fun processIntent(intent: LoginContract.LoginIntent) {
+    fun processIntent(intent: LoginContract.Intent) {
         when (intent) {
-            LoginContract.LoginIntent.OnKakaoLoginClick -> {
+            LoginContract.Intent.OnKakaoClick -> {
                 sendEffect(LoginContract.Effect.LaunchKakaoLogin)
             }
 
-            is LoginContract.LoginIntent.OnKakaoLoginSuccess -> {
+            is LoginContract.Intent.OnKakaoSuccess -> {
                 sendEffect(LoginContract.Effect.ShowToast("로그인 되었습니다."))
                 sendEffect(LoginContract.Effect.NavigateToHome)
 
                 // TODO: 서버 연결 시 intent.token 전달
             }
 
-            is LoginContract.LoginIntent.OnKakaoLoginFailure -> {
+            is LoginContract.Intent.OnKakaoFailure -> {
                 sendEffect(LoginContract.Effect.ShowToast("로그인에 실패했습니다."))
             }
         }

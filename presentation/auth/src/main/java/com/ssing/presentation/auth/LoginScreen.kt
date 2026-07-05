@@ -32,7 +32,8 @@ internal fun LoginRoute(
     val context = LocalContext.current
 
     val kakaoLoginManager = remember(context) {
-        val activity = context as? Activity ?: throw IllegalStateException("Context is not an Activity")
+        val activity =
+            context as? Activity ?: throw IllegalStateException("Context is not an Activity")
         EntryPointAccessors.fromActivity(
             activity,
             KakaoLoginEntryPoint::class.java,
@@ -48,11 +49,13 @@ internal fun LoginRoute(
                 kakaoLoginManager.login(context) { result ->
                     result.onSuccess { token ->
                         viewModel.processIntent(
-                            LoginContract.LoginIntent.OnKakaoLoginSuccess(token.accessToken)
+                            LoginContract.Intent.OnKakaoSuccess(token.accessToken)
                         )
                     }.onFailure { error ->
                         viewModel.processIntent(
-                            LoginContract.LoginIntent.OnKakaoLoginFailure(error.message ?: "카카오 로그인 실패")
+                            LoginContract.Intent.OnKakaoFailure(
+                                error.message ?: "카카오 로그인 실패"
+                            )
                         )
                     }
                 }
@@ -62,7 +65,7 @@ internal fun LoginRoute(
 
     LoginScreen(
         state = state,
-        onKakaoClick = { viewModel.processIntent(LoginContract.LoginIntent.OnKakaoLoginClick) },
+        onKakaoClick = { viewModel.processIntent(LoginContract.Intent.OnKakaoClick) },
         modifier = modifier,
     )
 }
