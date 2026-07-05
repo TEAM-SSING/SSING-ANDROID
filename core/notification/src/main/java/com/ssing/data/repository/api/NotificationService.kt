@@ -22,10 +22,10 @@ interface NotificationService {
     @POST("notifications/token")
     suspend fun postNotificationToken(
         @Body request: NotificationRequest,
-    ): Unit
+    )
 
     @DELETE("notifications/token")
     suspend fun deleteNotificationToken(
         @Query("token") token: String,
-    ): Unit
+    )
 }
