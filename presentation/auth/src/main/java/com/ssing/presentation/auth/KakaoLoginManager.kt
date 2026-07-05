@@ -8,7 +8,7 @@ import com.kakao.sdk.user.UserApiClient
 import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ActivityComponent
-import jakarta.inject.Inject
+import javax.inject.Inject
 import timber.log.Timber
 
 class KakaoLoginManager @Inject constructor() {
