@@ -1,7 +1,5 @@
 package com.ssing.core.ui.common.component
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -14,13 +12,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ssing.core.ui.designsystem.theme.Blue50
 import com.ssing.core.ui.designsystem.theme.SSINGTheme
 import com.ssing.core.ui.extension.noRippleClickable
+import com.ssing.core.ui.extension.roundedBackgroundWithBorder
 
 private val Boolean.selectButtonBackground: Color
     @Composable
@@ -49,13 +47,14 @@ fun SsingSelectButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val shape = RoundedCornerShape(12.dp)
-
     Box(
         modifier = modifier
-            .clip(shape)
-            .background(color = isSelected.selectButtonBackground, shape = shape)
-            .border(width = 1.dp, color = isSelected.selectButtonBorder, shape = shape)
+            .roundedBackgroundWithBorder(
+                shape = RoundedCornerShape(12.dp),
+                backgroundColor = isSelected.selectButtonBackground,
+                borderColor = isSelected.selectButtonBorder,
+                borderWidth = 1.dp,
+            )
             .noRippleClickable(onClick = onClick)
             .padding(16.dp),
         contentAlignment = Alignment.Center,
