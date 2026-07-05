@@ -55,8 +55,8 @@ class PushNotificationService : FirebaseMessagingService() {
         super.onMessageReceived(message)
 
         createChannels(this)
-        val title = message.notification?.title ?: return
-        val body = message.notification?.body ?: return
+        val title = message.data["title"] ?: return
+        val body = message.data["body"] ?: return
         showNotification(title, body)
     }
 
