@@ -11,7 +11,7 @@
         android:theme="@style/Theme.Ssing">
 
         <activity
-            android:name=".ComsumerMainActivity"
+            android:name=".ConsumerMainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
