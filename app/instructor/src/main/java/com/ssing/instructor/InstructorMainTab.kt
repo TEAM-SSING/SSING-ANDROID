@@ -2,6 +2,16 @@ package com.ssing.instructor
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
+import com.ssing.core.ui.R.drawable.ic_chat_selected
+import com.ssing.core.ui.R.drawable.ic_chat_unselected
+import com.ssing.core.ui.R.drawable.ic_home_selected
+import com.ssing.core.ui.R.drawable.ic_home_unselected
+import com.ssing.core.ui.R.drawable.ic_profile_selected
+import com.ssing.core.ui.R.drawable.ic_profile_unselected
+import com.ssing.core.ui.R.drawable.ic_reservation_selected
+import com.ssing.core.ui.R.drawable.ic_reservation_unselected
+import com.ssing.core.ui.R.drawable.ic_wallet_selected
+import com.ssing.core.ui.R.drawable.ic_wallet_unselected
 import com.ssing.core.ui.navigation.MainTab
 import com.ssing.core.ui.navigation.MainTabRoute
 import com.ssing.core.ui.navigation.Route
@@ -15,32 +25,32 @@ enum class InstructorMainTab(
     override val route: MainTabRoute,
 ) : MainTab {
     HOME(
-        selectedIconRes = com.ssing.core.ui.R.drawable.ic_home_selected,
-        unselectedIconRes = com.ssing.core.ui.R.drawable.ic_home_unselected,
+        selectedIconRes = ic_home_selected,
+        unselectedIconRes = ic_home_unselected,
         titleRes = R.string.instructor_home,
         route = InstructorHome,
     ),
     RESERVATION(
-        selectedIconRes = com.ssing.core.ui.R.drawable.ic_reservation_selected,
-        unselectedIconRes = com.ssing.core.ui.R.drawable.ic_reservation_unselected,
+        selectedIconRes = ic_reservation_selected,
+        unselectedIconRes = ic_reservation_unselected,
         titleRes = R.string.instructor_reservation,
         route = InstructorDummyTabRoute,
     ),
     CHAT(
-        selectedIconRes = com.ssing.core.ui.R.drawable.ic_chat_selected,
-        unselectedIconRes = com.ssing.core.ui.R.drawable.ic_chat_unselected,
+        selectedIconRes = ic_chat_selected,
+        unselectedIconRes = ic_chat_unselected,
         titleRes = R.string.instructor_chat,
         route = InstructorDummyTabRoute,
     ),
     SETTLEMENT(
-        selectedIconRes = com.ssing.core.ui.R.drawable.ic_wallet_selected,
-        unselectedIconRes = com.ssing.core.ui.R.drawable.ic_wallet_unselected,
+        selectedIconRes = ic_wallet_selected,
+        unselectedIconRes = ic_wallet_unselected,
         titleRes = R.string.instructor_settlement,
         route = InstructorDummyTabRoute,
     ),
     PROFILE(
-        selectedIconRes = com.ssing.core.ui.R.drawable.ic_profile_selected,
-        unselectedIconRes = com.ssing.core.ui.R.drawable.ic_profile_unselected,
+        selectedIconRes = ic_profile_selected,
+        unselectedIconRes = ic_profile_unselected,
         titleRes = R.string.instructor_profile,
         route = InstructorDummyTabRoute,
     );
