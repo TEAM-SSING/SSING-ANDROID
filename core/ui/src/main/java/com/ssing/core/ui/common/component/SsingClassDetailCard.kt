@@ -1,5 +1,6 @@
 package com.ssing.core.ui.common.component
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -12,8 +13,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -21,7 +20,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ssing.core.ui.designsystem.theme.SSINGTheme
@@ -39,56 +37,56 @@ fun SsingMatchingDetailCard(
     onContinueClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Card(
-        modifier = modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(12.dp),
-        colors = CardDefaults.cardColors(containerColor = SSINGTheme.colors.backgroundNormal),
+    Column(
+        modifier = modifier
+            .background(
+                color = SSINGTheme.colors.backgroundNormal,
+                shape = RoundedCornerShape(12.dp),
+            )
+            .padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(4.dp),
     ) {
+        Text(
+            text = "현재 단계",
+            style = SSINGTheme.typography.caption.sb12,
+            color = SSINGTheme.colors.textAlternative,
+            modifier = Modifier.padding(bottom = 12.dp),
+        )
+        SsingTagChipRow(tags = state.tags)
+
+        SsingClassTitleRow(
+            name = "${state.nickname}님 팀 ${state.teamCount}명",
+            totalCount = state.totalCount
+        )
+
+        HorizontalDivider(
+            color = SSINGTheme.colors.backgroundAlternative,
+            modifier = Modifier.padding(vertical = 4.dp),
+        )
+
         Column(
-            modifier = Modifier.padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(4.dp),
+            verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
-            Text(
-                text = "현재 단계",
-                style = SSINGTheme.typography.caption.sb12,
-                color = SSINGTheme.colors.textAlternative,
-                modifier = Modifier.padding(bottom = 12.dp),
-            )
-            SsingTagChipRow(tags = state.tags)
-
-            SsingClassTitleRow(
-                name = "${state.nickname}님 팀 ${state.teamCount}명",
-                totalCount = state.totalCount
-            )
-
-            HorizontalDivider(
-                color = SSINGTheme.colors.backgroundAlternative,
-                modifier = Modifier.padding(vertical = 4.dp),
-            )
-
-            Column(
-                verticalArrangement = Arrangement.spacedBy(4.dp)
-            ) {
-                SsingInfoRow(label = "강습 일시", value = state.classDateTime)
-                SsingInfoRow(label = "강습 장소", value = state.location)
-                SsingInfoRow(label = "강습 시간", value = state.duration)
-                SsingInfoRow(label = "최대 인원", value = "${state.maxCapacity}명")
-                SsingParticipantsRow(label = "강습 인원", participants = state.participants)
-                SsingPriceRow(label = "예상 가격", isPaid = state.isPaid, price = state.price)
-                SsingInfoRow(label = "장비상태", value = state.equipmentStatus)
-            }
-            SsingButton(
-                text = "이어보기",
-                onClick = onContinueClick,
-                style = SsingButtonStyle.BLUE,
-                modifier = Modifier
-                    .padding(top = 16.dp)
-                    .fillMaxWidth()
-                    .height(52.dp),
-            )
+            SsingInfoRow(label = "강습 일시", value = state.classDateTime)
+            SsingInfoRow(label = "강습 장소", value = state.location)
+            SsingInfoRow(label = "강습 시간", value = state.duration)
+            SsingInfoRow(label = "최대 인원", value = "${state.maxCapacity}명")
+            SsingParticipantsRow(label = "강습 인원", participants = state.participants)
+            SsingPriceRow(label = "예상 가격", isPaid = state.isPaid, price = state.price)
+            SsingInfoRow(label = "장비상태", value = state.equipmentStatus)
         }
+        SsingButton(
+            text = "이어보기",
+            onClick = onContinueClick,
+            style = SsingButtonStyle.BLUE,
+            modifier = Modifier
+                .padding(top = 16.dp)
+                .fillMaxWidth()
+                .height(52.dp),
+        )
     }
 }
+
 
 /**
  * 강습 상세 정보 카드 / Small (취소/이력 조회용).
@@ -100,38 +98,37 @@ fun SsingMatchingDetailCardSmall(
     state: ClassDetailSmallUiState,
     modifier: Modifier = Modifier,
 ) {
-    Card(
-        modifier = modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(12.dp),
-        colors = CardDefaults.cardColors(containerColor = SSINGTheme.colors.backgroundNormal),
-    ) {
-        Column(
-            modifier = Modifier.padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(4.dp),
-        ) {
-            SsingTagChipRowSmall(tags = state.tags)
-
-            SsingClassTitleRow(
-                name = "${state.nickname}님",
-                totalCount = state.totalCount,
+    Column(
+        modifier = modifier
+            .background(
+                color = SSINGTheme.colors.backgroundNormal,
+                shape = RoundedCornerShape(12.dp),
             )
-            Column(
-                verticalArrangement = Arrangement.spacedBy(2.dp)
-            ) {
-                SsingInfoRow(label = "강습 인원", value = "총 ${state.teamCount}명")
-                SsingInfoRow(label = "강습 시간", value = state.duration)
-                SsingInfoRow(label = "실제 강습 시간", value = state.actualTimeRange)
-                SsingPriceRow(label = "예상 가격", isPaid = state.isPaid, price = state.price)
+            .padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(4.dp),
+    ) {
+        SsingTagChipRowSmall(tags = state.tags)
 
-                HorizontalDivider(
-                    color = SSINGTheme.colors.backgroundAlternative,
-                    modifier = Modifier.padding(vertical = 6.dp)
-                )
+        SsingClassTitleRow(
+            name = "${state.nickname}님",
+            totalCount = state.totalCount,
+        )
+        Column(
+            verticalArrangement = Arrangement.spacedBy(2.dp)
+        ) {
+            SsingInfoRow(label = "강습 인원", value = "총 ${state.teamCount}명")
+            SsingInfoRow(label = "강습 시간", value = state.duration)
+            SsingInfoRow(label = "실제 강습 시간", value = state.actualTimeRange)
+            SsingPriceRow(label = "예상 가격", isPaid = state.isPaid, price = state.price)
 
-                SsingInfoRow(label = "취소 일시", value = state.cancelDateTime)
-                SsingInfoRow(label = "취소 주체", value = state.cancelSubject)
-                SsingInfoRow(label = "취소 사유", value = state.cancelReason)
-            }
+            HorizontalDivider(
+                color = SSINGTheme.colors.backgroundAlternative,
+                modifier = Modifier.padding(vertical = 6.dp)
+            )
+
+            SsingInfoRow(label = "취소 일시", value = state.cancelDateTime)
+            SsingInfoRow(label = "취소 주체", value = state.cancelSubject)
+            SsingInfoRow(label = "취소 사유", value = state.cancelReason)
         }
     }
 }
