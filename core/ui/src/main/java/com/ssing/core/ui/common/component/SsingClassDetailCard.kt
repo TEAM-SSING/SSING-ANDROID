@@ -239,16 +239,13 @@ private fun SsingParticipantsRow(label: String, participants: List<String>) {
 private fun SsingClassTitleRow(name: String, totalCount: Int) {
     Row(
         modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween,
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(
             text = name,
             style = SSINGTheme.typography.body.sb20,
             color = SSINGTheme.colors.textNormal,
-            modifier = Modifier
-                .weight(1f)
-                .padding(end = 8.dp),
         )
         Text(
             text = "총 ${totalCount}명",
