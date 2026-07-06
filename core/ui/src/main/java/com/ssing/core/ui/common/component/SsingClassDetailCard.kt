@@ -110,10 +110,11 @@ fun SsingMatchingDetailCardSmall(
     ) {
         SsingTagChipRowSmall(tags = state.tags)
 
-        SsingClassTitleRow(
-            title = "${state.nickname}님",
-            totalCount = state.totalCount,
-        )
+        val title = state.teamNicknames.joinToString(", ") {
+            "${it.nickname}님 팀 ${it.teamCount}명"
+        }
+        SsingClassTitleRow(title = title, totalCount = state.totalCount)
+
         Column(
             verticalArrangement = Arrangement.spacedBy(2.dp)
         ) {
@@ -271,6 +272,12 @@ private fun SsingClassTitleRow(title: String, totalCount: Int) {
 }
 
 @Immutable
+data class TeamNickname(
+    val nickname: String,
+    val teamCount: Int,
+)
+
+@Immutable
 data class ClassDetailUiState(
     val stepLabel: String,
     val tags: ImmutableList<String>,
@@ -290,7 +297,7 @@ data class ClassDetailUiState(
 @Immutable
 data class ClassDetailSmallUiState(
     val tags: ImmutableList<String>,
-    val nickname: String,
+    val teamNicknames: ImmutableList<TeamNickname>,
     val totalCount: Int,
     val teamCount: Int,
     val duration: String,
@@ -334,8 +341,13 @@ private fun SsingClassDetailCardSmallPreview() {
         SsingMatchingDetailCardSmall(
             state = ClassDetailSmallUiState(
                 tags = persistentListOf("지산포레스트", "스노보드", "자격증이 있어요"),
-                nickname = "김남자님 팀 1명, 김여자님 팀 1명, 김야웅이님 팀 1명, 강아지님 팀 1명",
-                totalCount = 0,
+                teamNicknames = persistentListOf(
+                    TeamNickname("김남자", 1),
+                    TeamNickname("김여자", 1),
+                    TeamNickname("김야웅이", 1),
+                    TeamNickname("강아지", 1),
+                ),
+                totalCount = 4,
                 teamCount = 0,
                 duration = "0시간",
                 actualTimeRange = "00:00~00:00 (0시간)",
