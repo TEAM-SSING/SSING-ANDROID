@@ -1,4 +1,4 @@
-package com.ssing.data.devauth.remote.dto
+package com.ssing.data.devauth.remote.dto.response
 
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.SerialName

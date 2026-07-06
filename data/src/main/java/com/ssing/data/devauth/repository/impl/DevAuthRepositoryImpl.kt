@@ -4,7 +4,7 @@ import com.ssing.core.network.token.TokenAccessManager
 import com.ssing.core.network.util.ApiResponseHandler
 import com.ssing.core.network.util.suspendRunCatching
 import com.ssing.data.devauth.remote.datasource.api.DevAuthRemoteDataSource
-import com.ssing.data.devauth.remote.dto.TokenRequest
+import com.ssing.data.devauth.remote.dto.request.TokenRequest
 import com.ssing.data.devauth.repository.api.DevAuthRepository
 import javax.inject.Inject
 
