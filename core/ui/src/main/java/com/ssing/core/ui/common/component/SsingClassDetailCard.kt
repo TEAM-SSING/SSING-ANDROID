@@ -1,5 +1,6 @@
 package com.ssing.core.ui.common.component
 
+import android.R.attr.top
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
