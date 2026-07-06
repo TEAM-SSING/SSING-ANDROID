@@ -6,9 +6,10 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -48,13 +49,13 @@ fun SsingStartClassCard(
             colorFilter = ColorFilter.tint(iconTint),
             modifier = Modifier
                 .align(Alignment.BottomEnd)
-                .aspectRatio(1.5f)
+                .size(width = 160.dp, height = 200.dp)
                 .offset(x = 24.dp, y = 24.dp),
         )
         Column(
             modifier = Modifier
-                .align(Alignment.TopStart),
-            verticalArrangement = Arrangement.spacedBy(8.dp),
+                .align(Alignment.TopStart)
+                .padding(12.dp),
         ) {
             SsingChip(text = badgeText, style = chipStyle)
 
