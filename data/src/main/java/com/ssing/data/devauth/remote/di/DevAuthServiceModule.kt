@@ -10,7 +10,7 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object DevAutherviceModule {
+object DevAuthServiceModule {
     @Provides
     @Singleton
     fun provideDevAuthService(retrofit: Retrofit): DevAuthService =
