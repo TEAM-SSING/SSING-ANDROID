@@ -91,7 +91,7 @@ private fun SsingBottomBarItem(
     val isPressed by interactionSource.collectIsPressedAsState()
 
     val (textColor, iconRes) = when {
-        isSelected && !isPressed -> Pair(SSINGTheme.colors.textStrong, tab.selectedIconRes)
+        isSelected -> Pair(SSINGTheme.colors.textStrong, tab.selectedIconRes)
         else -> Pair(SSINGTheme.colors.textAlternative, tab.unselectedIconRes)
     }
 
