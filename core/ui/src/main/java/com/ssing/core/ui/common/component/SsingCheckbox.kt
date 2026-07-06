@@ -9,6 +9,7 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -20,6 +21,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
@@ -74,6 +76,7 @@ fun SsingCheckbox(
 
     Box(
         modifier = modifier
+            .clip(shape = shape)
             .size(24.dp)
             .background(
                 color = backgroundColor,
@@ -118,9 +121,15 @@ private fun SsingCheckboxPreview(
     SSINGTheme {
         var checked by remember { mutableStateOf(initialChecked) }
 
-        SsingCheckbox(
-            isChecked = checked,
-            onCheckedChange = { checked = it }
-        )
+        Box(
+            modifier = Modifier
+                .background(Color.White)
+                .padding(20.dp),
+        ) {
+            SsingCheckbox(
+                isChecked = checked,
+                onCheckedChange = { checked = it }
+            )
+        }
     }
 }
