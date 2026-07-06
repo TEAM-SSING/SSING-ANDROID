@@ -35,6 +35,11 @@ class DevAuthRepositoryImpl @Inject constructor(
                     setAccessToken(response.accessToken)
                     setRefreshToken(response.refreshToken)
                 }
+            }.onFailure {throwable ->
+                tokenAccessManager.withLock {
+                    clearTokens()
+                }
+                return Result.failure(throwable)
             }
         },
         onFailure = { throwable -> Result.failure(throwable) },
