@@ -151,7 +151,7 @@ private fun ConsumerInfoInputCardPreview(
 
     SSINGTheme {
         ConsumerInfoInputCard(
-            heading = "강습생1",
+            heading = "강습생 1",
             ageState = rememberTextFieldState(),
             selectedConsumerGender = selectedGender,
             isFocused = pair.first,
