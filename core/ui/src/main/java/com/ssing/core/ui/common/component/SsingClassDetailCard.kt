@@ -44,7 +44,6 @@ fun SsingMatchingDetailCard(
                 shape = RoundedCornerShape(12.dp),
             )
             .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(4.dp),
     ) {
         Text(
             text = "현재 단계",
@@ -105,7 +104,6 @@ fun SsingMatchingDetailCardSmall(
                 shape = RoundedCornerShape(12.dp),
             )
             .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(4.dp),
     ) {
         SsingTagChipRowSmall(tags = state.tags)
 
