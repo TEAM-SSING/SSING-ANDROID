@@ -21,6 +21,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ssing.core.ui.designsystem.theme.SSINGTheme
@@ -248,19 +249,17 @@ private fun SsingClassTitleRow(name: String, totalCount: Int) {
             text = name,
             style = SSINGTheme.typography.body.sb20,
             color = SSINGTheme.colors.textNormal,
-            modifier = Modifier.padding(end = 8.dp, top = 4.dp),
+            modifier = Modifier
+                .weight(1f)
+                .padding(end = 8.dp),
         )
         Text(
             text = "총 ${totalCount}명",
             style = SSINGTheme.typography.caption.sb14,
             color = SSINGTheme.colors.textAlternative,
-            modifier = Modifier
-                .padding(vertical = 4.dp)
-                .weight(1f),
         )
     }
 }
-
 
 @Immutable
 data class ChipUiModel(
@@ -317,7 +316,7 @@ private fun SsingClassDetailCardPreview() {
                 location = "OOO 리조트",
                 duration = "0시간",
                 maxCapacity = 0,
-                participants = listOf("11세 남", "11세 남", "9세 여", "9세 여"),
+                participants = listOf("11세 남", "11세 남", "9세 여", "9세 여", "9세 여"),
                 isPaid = true,
                 price = 0, // 수정
                 equipmentStatus = "착용 완료",
@@ -338,7 +337,7 @@ private fun SsingClassDetailCardSmallPreview() {
                     ChipUiModel("스노보드", SsingChipStyle.GRAY),
                     ChipUiModel("자격증이 있어요", SsingChipStyle.GRAY),
                 ),
-                nickname = "김OO",
+                nickname = "김남자님 팀 1명, 김여자님 팀 1명, 김야웅이님 팀 1명, 강아지님 팀 1명",
                 totalCount = 0,
                 teamCount = 0,
                 duration = "0시간",
