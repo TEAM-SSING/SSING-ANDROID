@@ -34,7 +34,7 @@ import java.util.Locale
  * @param onContinueClick "이어보기" 버튼 클릭 콜백
  */
 @Composable
-fun SsingClassDetailCard(
+fun SsingMatchingDetailCard(
     state: ClassDetailUiState,
     onContinueClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -96,7 +96,7 @@ fun SsingClassDetailCard(
  * @param state 카드에 표시할 강습 상세 정보 (Small)
  */
 @Composable
-fun SsingClassDetailCardSmall(
+fun SsingMatchingDetailCardSmall(
     state: ClassDetailSmallUiState,
     modifier: Modifier = Modifier,
 ) {
@@ -302,7 +302,7 @@ data class ClassDetailSmallUiState(
 @Composable
 private fun SsingClassDetailCardPreview() {
     SSINGTheme {
-        SsingClassDetailCard(
+        SsingMatchingDetailCard(
             state = ClassDetailUiState(
                 tags = listOf(
                     ChipUiModel("하이원", SsingChipStyle.DEEP_BLUE),
@@ -330,7 +330,7 @@ private fun SsingClassDetailCardPreview() {
 @Composable
 private fun SsingClassDetailCardSmallPreview() {
     SSINGTheme {
-        SsingClassDetailCardSmall(
+        SsingMatchingDetailCardSmall(
             state = ClassDetailSmallUiState(
                 tags = listOf(
                     ChipUiModel("지산포레스트", SsingChipStyle.GRAY),
