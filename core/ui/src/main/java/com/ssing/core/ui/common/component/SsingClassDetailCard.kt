@@ -24,6 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ssing.core.ui.designsystem.theme.SSINGTheme
+import java.util.Locale
 
 /**
  * 강습 상세 정보 카드 (Full).
@@ -202,7 +203,7 @@ private fun SsingPriceRow(label: String, isPaid: Boolean, price: Int) {
                 )
             }
             Text(
-                "₩ ${"%,d".format(price)}",
+                "₩ ${String.format(Locale.KOREA, "%,d", price)}",
                 style = SSINGTheme.typography.caption.sb14,
                 color = SSINGTheme.colors.textNormal
             )
