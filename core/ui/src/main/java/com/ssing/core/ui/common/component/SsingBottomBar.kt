@@ -106,7 +106,7 @@ private fun SsingBottomBarItem(
                 indication = null,
                 onClick = onClick,
             )
-            .padding(vertical = 8.dp),
+            .padding(top = 8.dp, bottom = 12.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Icon(
