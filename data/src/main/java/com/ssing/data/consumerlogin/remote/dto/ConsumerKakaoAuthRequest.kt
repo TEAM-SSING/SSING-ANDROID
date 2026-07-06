@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class ConsumerAuthRequest(
+data class ConsumerKakaoAuthRequest(
     @SerialName("kakaoAccessToken")
     val kakaoAccessToken: String,
 )

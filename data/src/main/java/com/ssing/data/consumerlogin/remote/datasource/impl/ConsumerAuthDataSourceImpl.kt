@@ -2,7 +2,7 @@ package com.ssing.data.consumerlogin.remote.datasource.impl
 
 import com.ssing.core.network.model.BaseResponse
 import com.ssing.data.consumerlogin.remote.datasource.api.ConsumerAuthDataSource
-import com.ssing.data.consumerlogin.remote.dto.ConsumerAuthRequest
+import com.ssing.data.consumerlogin.remote.dto.ConsumerKakaoAuthRequest
 import com.ssing.data.consumerlogin.remote.dto.ConsumerAuthResponse
 import com.ssing.data.consumerlogin.remote.service.ConsumerAuthService
 import javax.inject.Inject
@@ -13,6 +13,6 @@ class ConsumerAuthDataSourceImpl @Inject constructor(
 
     override suspend fun postConsumerKakaoAuth(kakaoAccessToken: String): BaseResponse<ConsumerAuthResponse> =
         consumerLoginService.postConsumerKakaoAuth(
-            ConsumerAuthRequest(kakaoAccessToken),
+            ConsumerKakaoAuthRequest(kakaoAccessToken),
         )
 }
