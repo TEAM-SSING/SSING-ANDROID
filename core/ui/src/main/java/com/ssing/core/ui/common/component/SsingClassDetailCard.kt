@@ -39,6 +39,7 @@ fun SsingMatchingDetailCard(
     state: ClassDetailUiState,
     onContinueClick: () -> Unit,
     modifier: Modifier = Modifier,
+    isContinueEnabled: Boolean = true,
 ) {
     Column(
         modifier = modifier
@@ -80,6 +81,7 @@ fun SsingMatchingDetailCard(
         SsingButton(
             text = "이어보기",
             onClick = onContinueClick,
+            enabled = isContinueEnabled,
             style = SsingButtonStyle.BLUE,
             modifier = Modifier
                 .padding(top = 16.dp)
