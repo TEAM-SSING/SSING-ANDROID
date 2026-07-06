@@ -48,7 +48,7 @@ fun SsingMatchingDetailCard(
             .padding(16.dp),
     ) {
         Text(
-            text = "현재 단계",
+            text = state.stepLabel,
             style = SSINGTheme.typography.caption.sb12,
             color = SSINGTheme.colors.textAlternative,
             modifier = Modifier.padding(bottom = 12.dp),
@@ -257,6 +257,7 @@ private fun SsingClassTitleRow(title: String, totalCount: Int) {
 
 @Immutable
 data class ClassDetailUiState(
+    val stepLabel: String,
     val tags: ImmutableList<String>,
     val nickname: String,
     val teamCount: Int,
@@ -292,6 +293,7 @@ private fun SsingClassDetailCardPreview() {
     SSINGTheme {
         SsingMatchingDetailCard(
             state = ClassDetailUiState(
+                stepLabel = "현재 단계",
                 tags = persistentListOf("하이원", "스노보드", "처음타요"),
                 nickname = "김OO",
                 teamCount = 0,
