@@ -23,6 +23,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ssing.core.ui.designsystem.theme.SSINGTheme
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
 import java.util.Locale
 
 /**
@@ -154,19 +156,19 @@ private fun SsingInfoRow(label: String, value: String) {
 
 /** 태그 칩 한 줄 나열. 기존 공용 Chip 컴포넌트 있으면 이걸로 교체. */
 @Composable
-private fun SsingTagChipRow(tags: List<ChipUiModel>) {
+private fun SsingTagChipRow(tags: ImmutableList<String>) {
     Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-        tags.forEach { chip ->
-            SsingChip(text = chip.text, style = SsingChipStyle.DEEP_BLUE)
+        tags.forEach { text ->
+            SsingChip(text = text, style = SsingChipStyle.DEEP_BLUE)
         }
     }
 }
 
 @Composable
-private fun SsingTagChipRowSmall(tags: List<ChipUiModel>) {
+private fun SsingTagChipRowSmall(tags: ImmutableList<String>) {
     Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-        tags.forEach { chip ->
-            SsingChip(text = chip.text, style = SsingChipStyle.GRAY)
+        tags.forEach { text ->
+            SsingChip(text = text, style = SsingChipStyle.GRAY)
         }
     }
 }
@@ -257,14 +259,8 @@ private fun SsingClassTitleRow(name: String, totalCount: Int) {
 }
 
 @Immutable
-data class ChipUiModel(
-    val text: String,
-    val style: SsingChipStyle,
-)
-
-@Immutable
 data class ClassDetailUiState(
-    val tags: List<ChipUiModel>,
+    val tags: ImmutableList<String>,
     val nickname: String,
     val teamCount: Int,
     val totalCount: Int,
@@ -280,7 +276,7 @@ data class ClassDetailUiState(
 
 @Immutable
 data class ClassDetailSmallUiState(
-    val tags: List<ChipUiModel>,
+    val tags: ImmutableList<String>,
     val nickname: String,
     val totalCount: Int,
     val teamCount: Int,
@@ -299,11 +295,7 @@ private fun SsingClassDetailCardPreview() {
     SSINGTheme {
         SsingMatchingDetailCard(
             state = ClassDetailUiState(
-                tags = listOf(
-                    ChipUiModel("하이원", SsingChipStyle.DEEP_BLUE),
-                    ChipUiModel("스노보드", SsingChipStyle.DEEP_BLUE),
-                    ChipUiModel("처음타요", SsingChipStyle.DEEP_BLUE),
-                ),
+                tags = persistentListOf("하이원", "스노보드", "처음타요"),
                 nickname = "김OO",
                 teamCount = 0,
                 totalCount = 0,
@@ -327,11 +319,7 @@ private fun SsingClassDetailCardSmallPreview() {
     SSINGTheme {
         SsingMatchingDetailCardSmall(
             state = ClassDetailSmallUiState(
-                tags = listOf(
-                    ChipUiModel("지산포레스트", SsingChipStyle.GRAY),
-                    ChipUiModel("스노보드", SsingChipStyle.GRAY),
-                    ChipUiModel("자격증이 있어요", SsingChipStyle.GRAY),
-                ),
+                tags = persistentListOf("지산포레스트", "스노보드", "자격증이 있어요"),
                 nickname = "김남자님 팀 1명, 김여자님 팀 1명, 김야웅이님 팀 1명, 강아지님 팀 1명",
                 totalCount = 0,
                 teamCount = 0,
