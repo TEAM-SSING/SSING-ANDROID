@@ -6,13 +6,12 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -20,12 +19,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.ssing.core.ui.R
 import com.ssing.core.ui.designsystem.theme.SSINGTheme
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
-import java.util.Locale
 
 /**
  * 강습 상세 정보 카드 (Full).
@@ -189,19 +190,23 @@ private fun SsingPriceRow(label: String, isPaid: Boolean, price: Int) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             if (isPaid) {
                 Icon(
-                    imageVector = Icons.Filled.CheckCircle,
+                    imageVector = ImageVector.vectorResource(R.drawable.ic_check_cirlcle_filled_sm_12),
                     contentDescription = null,
-                    tint = SSINGTheme.colors.primaryNormal,
-                    modifier = Modifier.width(16.dp),
+                    tint = SSINGTheme.colors.primaryNormal
                 )
+
+                Spacer(Modifier.width(4.dp))
+
                 Text(
-                    "  결제완료  ",
+                    "결제완료",
                     style = SSINGTheme.typography.caption.sb12,
                     color = SSINGTheme.colors.primaryNormal,
                 )
+
+                Spacer(Modifier.width(8.dp))
             }
             Text(
-                "₩ ${String.format(Locale.KOREA, "%,d", price)}",
+                "₩ ${"%,d".format(price)}",
                 style = SSINGTheme.typography.caption.sb14,
                 color = SSINGTheme.colors.textNormal
             )
@@ -246,6 +251,7 @@ private fun SsingClassTitleRow(title: String, totalCount: Int) {
             text = title,
             style = SSINGTheme.typography.body.sb20,
             color = SSINGTheme.colors.textNormal,
+            modifier = Modifier.weight(1f),
         )
         Text(
             text = "총 ${totalCount}명",
