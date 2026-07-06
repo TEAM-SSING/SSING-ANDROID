@@ -39,7 +39,6 @@ enum class Gender(val label: String) {
 fun ConsumerInfoCard(
     isReady: Boolean,
     nickname: String,
-    teamCount: Int,
     participants: ImmutableList<Participant>,
     modifier: Modifier = Modifier,
 ) {
@@ -80,7 +79,7 @@ fun ConsumerInfoCard(
             verticalArrangement = Arrangement.spacedBy(4.dp),
         ) {
             Text(
-                text = "${nickname}님 팀 ${teamCount}명",
+                text = "${nickname}님 팀 ${participants.size}명",
                 color = SSINGTheme.colors.textNormal,
                 style = SSINGTheme.typography.body.sb16,
             )
@@ -118,7 +117,6 @@ private fun ConsumerInfoCardPreview(
             ConsumerInfoCard(
                 isReady = isReady,
                 nickname = "김OO",
-                teamCount = 3,
                 participants = persistentListOf(
                     Participant(age = 38, gender = Gender.MALE),
                     Participant(age = 12, gender = Gender.FEMALE),
