@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -56,6 +57,8 @@ fun SsingMatchingDetailCard(
         )
         SsingTagChipRow(tags = state.tags)
 
+        Spacer(modifier = Modifier.height(4.dp))
+
         SsingClassTitleRow(
             title = "${state.nickname}님 팀 ${state.teamCount}명",
             totalCount = state.totalCount
@@ -63,7 +66,7 @@ fun SsingMatchingDetailCard(
 
         HorizontalDivider(
             color = SSINGTheme.colors.backgroundAlternative,
-            modifier = Modifier.padding(vertical = 4.dp),
+            modifier = Modifier.padding(vertical = 8.dp),
         )
 
         Column(
@@ -77,14 +80,15 @@ fun SsingMatchingDetailCard(
             SsingPriceRow(label = "예상 가격", isPaid = state.isPaid, price = state.price)
             SsingInfoRow(label = "장비상태", value = state.equipmentStatus)
         }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
         SsingButton(
             text = "이어보기",
             onClick = onContinueClick,
             enabled = isContinueEnabled,
             style = SsingButtonStyle.BLUE,
-            modifier = Modifier
-                .padding(top = 16.dp)
-                .fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth(),
         )
     }
 }
@@ -110,10 +114,14 @@ fun SsingMatchingDetailCardSmall(
     ) {
         SsingTagChipRowSmall(tags = state.tags)
 
+        Spacer(modifier = Modifier.height(4.dp))
+
         val title = state.teamNicknames.joinToString(", ") {
             "${it.nickname}님 팀 ${it.teamCount}명"
         }
         SsingClassTitleRowSmall(title = title, totalCount = state.totalCount)
+
+        Spacer(modifier = Modifier.height(4.dp))
 
         Column(
             verticalArrangement = Arrangement.spacedBy(2.dp)
@@ -259,7 +267,7 @@ private fun SsingClassTitleRow(title: String, totalCount: Int) {
     ) {
         Text(
             text = title,
-            style = SSINGTheme.typography.caption.sb14,
+            style = SSINGTheme.typography.body.sb20,
             color = SSINGTheme.colors.textNormal,
         )
         Text(
