@@ -50,8 +50,8 @@ reviews:
     - path: "**/*Screen.kt"
       instructions: |
         Compose 화면: state hoisting, rememberSaveable로 구성 변경 대응,
-        LaunchedEffect/DisposableEffect의 key 검증, MaterialTheme/stringResource 사용,
-        하드코딩 색상·문자열 회피, contentDescription/48dp 터치 영역 접근성 점검.
+        LaunchedEffect/DisposableEffect의 key 검증,
+        하드코딩 색상 회피, 하드코딩 문자열은 써도 됨, contentDescription/48dp 터치 영역 접근성 점검.
 
     # 디자인 시스템·재사용 UI (NowInAndroid 식 모듈 분리 대응)
     - path: "**/core/{ui,designsystem}/**/*.kt"
@@ -66,7 +66,7 @@ reviews:
         Jetpack Compose: @Composable PascalCase, Modifier 매개변수 디폴트와 위치,
         state hoisting, rememberSaveable로 구성 변경 대응, 데이터 클래스에 @Stable/@Immutable 검토,
         LaunchedEffect/DisposableEffect의 key 검증, MaterialTheme 사용,
-        하드코딩 색상/문자열 회피, contentDescription/접근성 점검.
+        하드코딩 색상 회피, 하드코딩 문자열은 써도 됨, contentDescription/접근성 점검.
 
     - path: "**/*ViewModel.kt"
       instructions: |
