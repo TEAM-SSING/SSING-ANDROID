@@ -16,27 +16,27 @@ enum class ConsumerMainTab(
     override val route: MainTabRoute,
 ) : MainTab {
     HOME(
-        selectedIconRes = drawable.ic_home_selected,
-        unselectedIconRes = drawable.ic_home_unselected,
+        selectedIconRes = drawable.ic_home,
+        unselectedIconRes = drawable.ic_home,
         titleRes = R.string.consumer_home,
         route = ConsumerHome,
     ),
 
     RESERVATION(
-        selectedIconRes = drawable.ic_reservation_selected,
-        unselectedIconRes = drawable.ic_reservation_unselected,
+        selectedIconRes = drawable.ic_reservation,
+        unselectedIconRes = drawable.ic_reservation,
         titleRes = R.string.consumer_reservation,
         route = ConsumerDummyTabRoute,
     ),
     CHAT(
-        selectedIconRes = drawable.ic_chat_selected,
-        unselectedIconRes = drawable.ic_chat_unselected,
+        selectedIconRes = drawable.ic_chat,
+        unselectedIconRes = drawable.ic_chat,
         titleRes = R.string.consumer_chat,
         route = ConsumerDummyTabRoute,
     ),
     PROFILE(
-        selectedIconRes = drawable.ic_profile_selected,
-        unselectedIconRes = drawable.ic_profile_unselected,
+        selectedIconRes = drawable.ic_profile,
+        unselectedIconRes = drawable.ic_profile,
         titleRes = R.string.consumer_profile,
         route = ConsumerDummyTabRoute,
     );
