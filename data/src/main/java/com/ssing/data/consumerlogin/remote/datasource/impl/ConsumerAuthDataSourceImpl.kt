@@ -7,7 +7,7 @@ import com.ssing.data.consumerlogin.remote.dto.ConsumerAuthResponse
 import com.ssing.data.consumerlogin.remote.service.ConsumerAuthService
 import javax.inject.Inject
 
-internal class ConsumerAuthDataSourceImpl @Inject constructor(
+class ConsumerAuthDataSourceImpl @Inject constructor(
     private val consumerLoginService: ConsumerAuthService,
 ) : ConsumerAuthDataSource {
 
