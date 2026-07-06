@@ -1,6 +1,6 @@
 package com.ssing.data.consumerlogin.model
 
-data class ConsumerLoginResult(
+data class ConsumerAuthResult(
     val accessToken: String,
     val refreshToken: String,
     val tokenType: String,

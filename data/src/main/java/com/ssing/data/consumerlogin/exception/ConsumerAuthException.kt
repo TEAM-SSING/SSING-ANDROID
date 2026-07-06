@@ -2,7 +2,7 @@ package com.ssing.data.consumerlogin.exception
 
 import com.ssing.core.network.exception.BusinessException
 
-sealed class ConsumerLoginException(
+sealed class ConsumerAuthException(
     serverCode: String?,
     message: String?,
     requestId: String?,
@@ -16,17 +16,17 @@ sealed class ConsumerLoginException(
         serverCode: String?,
         message: String?,
         requestId: String?,
-    ) : ConsumerLoginException(serverCode, message, requestId)
+    ) : ConsumerAuthException(serverCode, message, requestId)
 
     class AuthInvalidKakaoToken(
         serverCode: String?,
         message: String?,
         requestId: String?,
-    ) : ConsumerLoginException(serverCode, message, requestId)
+    ) : ConsumerAuthException(serverCode, message, requestId)
 
     class ExternalServiceUnavailable(
         serverCode: String?,
         message: String?,
         requestId: String?,
-    ) : ConsumerLoginException(serverCode, message, requestId)
+    ) : ConsumerAuthException(serverCode, message, requestId)
 }
