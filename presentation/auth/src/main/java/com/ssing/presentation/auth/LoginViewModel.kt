@@ -1,9 +1,7 @@
 package com.ssing.presentation.auth
 
-import androidx.lifecycle.viewModelScope
 import com.ssing.core.ui.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -12,9 +10,22 @@ internal class LoginViewModel @Inject constructor() :
         LoginContract.State()
     ) {
 
-    fun onLoginClick() {
-        viewModelScope.launch {
-            sendEffect(LoginContract.Effect.NavigateToHome)
+    fun processIntent(intent: LoginContract.Intent) {
+        when (intent) {
+            LoginContract.Intent.OnKakaoClick -> {
+                sendEffect(LoginContract.Effect.LaunchKakaoLogin)
+            }
+
+            is LoginContract.Intent.OnKakaoSuccess -> {
+                sendEffect(LoginContract.Effect.ShowToast("로그인 되었습니다."))
+                sendEffect(LoginContract.Effect.NavigateToHome)
+
+                // TODO: 서버 연결 시 intent.token 전달
+            }
+
+            is LoginContract.Intent.OnKakaoFailure -> {
+                sendEffect(LoginContract.Effect.ShowToast("로그인에 실패했습니다."))
+            }
         }
     }
 }
