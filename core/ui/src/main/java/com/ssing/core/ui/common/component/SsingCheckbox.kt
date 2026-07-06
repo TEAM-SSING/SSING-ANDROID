@@ -123,7 +123,7 @@ private fun SsingCheckboxPreview(
 
         Box(
             modifier = Modifier
-                .background(Color.White)
+                .background(White)
                 .padding(20.dp),
         ) {
             SsingCheckbox(
