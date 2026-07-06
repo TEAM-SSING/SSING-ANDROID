@@ -260,7 +260,7 @@ private fun SsingClassTitleRow(title: String, totalCount: Int) {
     ) {
         Text(
             text = title,
-            style = SSINGTheme.typography.body.sb20,
+            style = SSINGTheme.typography.caption.sb14,
             color = SSINGTheme.colors.textNormal,
             modifier = Modifier.weight(1f),
         )
