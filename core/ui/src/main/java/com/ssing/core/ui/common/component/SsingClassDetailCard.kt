@@ -1,6 +1,5 @@
 package com.ssing.core.ui.common.component
 
-import android.R.attr.top
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -114,7 +113,7 @@ fun SsingMatchingDetailCardSmall(
         val title = state.teamNicknames.joinToString(", ") {
             "${it.nickname}님 팀 ${it.teamCount}명"
         }
-        SsingClassTitleRow(title = title, totalCount = state.totalCount)
+        SsingClassTitleRowSmall(title = title, totalCount = state.totalCount)
 
         Column(
             verticalArrangement = Arrangement.spacedBy(2.dp)
@@ -253,6 +252,26 @@ private fun SsingParticipantsRow(label: String, participants: List<String>) {
 
 @Composable
 private fun SsingClassTitleRow(title: String, totalCount: Int) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Text(
+            text = title,
+            style = SSINGTheme.typography.caption.sb14,
+            color = SSINGTheme.colors.textNormal,
+        )
+        Text(
+            text = "총 ${totalCount}명",
+            style = SSINGTheme.typography.caption.sb14,
+            color = SSINGTheme.colors.textAlternative,
+        )
+    }
+}
+
+@Composable
+private fun SsingClassTitleRowSmall(title: String, totalCount: Int) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(8.dp),
