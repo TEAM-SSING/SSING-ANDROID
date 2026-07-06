@@ -44,5 +44,6 @@ dependencies {
     implementation(projects.presentation.instructorHome)
     implementation(projects.presentation.instructorMatching)
     implementation(libs.immutable)
+    implementation(libs.material)
     implementation(libs.kakao.user)
 }
