@@ -3,6 +3,8 @@ package com.ssing.core.network.session
 import com.ssing.core.network.token.TokenAccessManager
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -19,6 +21,13 @@ class AuthSessionManager @Inject constructor(
 ) {
     private val _sessionExpired = Channel<Unit>(Channel.CONFLATED)
     val sessionExpired: Flow<Unit> = _sessionExpired.receiveAsFlow()
+
+    private val _isLoggedIn = MutableStateFlow(false)
+    val isLoggedIn: StateFlow<Boolean> = _isLoggedIn
+
+    fun setLoggedIn(value: Boolean) {
+        _isLoggedIn.value = value
+    }
 
     /**
      * 토큰 삭제 + 세션 만료 이벤트 발행.
