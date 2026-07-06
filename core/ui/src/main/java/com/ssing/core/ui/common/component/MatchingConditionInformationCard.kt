@@ -68,7 +68,7 @@ private class MatchingConditionInformationCardPreviewParameter :
 
 @Preview
 @Composable
-private fun MatchingConditionInformationCardPreveiw(
+private fun MatchingConditionInformationCardPreview(
     @PreviewParameter(MatchingConditionInformationCardPreviewParameter::class) initialChecked: Boolean,
 ) {
     var isChecked by remember { mutableStateOf(initialChecked) }
