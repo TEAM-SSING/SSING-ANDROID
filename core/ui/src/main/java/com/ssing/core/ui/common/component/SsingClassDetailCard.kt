@@ -1,6 +1,5 @@
 package com.ssing.core.ui.common.component
 
-import android.R.attr.label
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
