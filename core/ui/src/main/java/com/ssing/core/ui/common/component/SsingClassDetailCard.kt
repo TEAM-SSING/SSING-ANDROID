@@ -56,7 +56,7 @@ fun SsingMatchingDetailCard(
         SsingTagChipRow(tags = state.tags)
 
         SsingClassTitleRow(
-            name = "${state.nickname}님 팀 ${state.teamCount}명",
+            title = "${state.nickname}님 팀 ${state.teamCount}명",
             totalCount = state.totalCount
         )
 
@@ -110,7 +110,7 @@ fun SsingMatchingDetailCardSmall(
         SsingTagChipRowSmall(tags = state.tags)
 
         SsingClassTitleRow(
-            name = "${state.nickname}님",
+            title = "${state.nickname}님",
             totalCount = state.totalCount,
         )
         Column(
@@ -236,14 +236,14 @@ private fun SsingParticipantsRow(label: String, participants: List<String>) {
 }
 
 @Composable
-private fun SsingClassTitleRow(name: String, totalCount: Int) {
+private fun SsingClassTitleRow(title: String, totalCount: Int) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(
-            text = name,
+            text = title,
             style = SSINGTheme.typography.body.sb20,
             color = SSINGTheme.colors.textNormal,
         )
