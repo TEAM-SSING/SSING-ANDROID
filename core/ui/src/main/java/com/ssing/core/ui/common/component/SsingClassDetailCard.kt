@@ -31,12 +31,36 @@ import kotlinx.collections.immutable.persistentListOf
 /**
  * 강습 상세 정보 카드 (Full).
  *
- * @param state 카드에 표시할 강습 상세 정보
+ * @param stepLabel 현재 단계 라벨
+ * @param tags 강습 태그 목록
+ * @param nickname 팀장 닉네임
+ * @param teamCount 팀장이 속한 팀의 인원 수
+ * @param totalCount 전체 강습 인원 수
+ * @param classDateTime 강습 일시
+ * @param location 강습 장소
+ * @param duration 강습 시간
+ * @param maxCapacity 최대 인원
+ * @param participants 강습 참여자 목록 (나이/성별 등)
+ * @param isPaid 결제 완료 여부
+ * @param price 예상 가격
+ * @param equipmentStatus 장비 상태
  * @param onContinueClick "이어보기" 버튼 클릭 콜백
  */
 @Composable
 fun SsingMatchingDetailCard(
-    state: ClassDetailUiState,
+    stepLabel: String,
+    tags: ImmutableList<String>,
+    nickname: String,
+    teamCount: Int,
+    totalCount: Int,
+    classDateTime: String,
+    location: String,
+    duration: String,
+    maxCapacity: Int,
+    participants: List<String>,
+    isPaid: Boolean,
+    price: Int,
+    equipmentStatus: String,
     onContinueClick: () -> Unit,
     modifier: Modifier = Modifier,
     isContinueEnabled: Boolean = true,
@@ -50,18 +74,18 @@ fun SsingMatchingDetailCard(
             .padding(16.dp),
     ) {
         Text(
-            text = state.stepLabel,
+            text = stepLabel,
             style = SSINGTheme.typography.caption.sb12,
             color = SSINGTheme.colors.textAlternative,
             modifier = Modifier.padding(bottom = 12.dp),
         )
-        SsingTagChipRow(tags = state.tags)
+        SsingTagChipRow(tags = tags)
 
         Spacer(modifier = Modifier.height(4.dp))
 
         SsingClassTitleRow(
-            title = "${state.nickname}님 팀 ${state.teamCount}명",
-            totalCount = state.totalCount
+            title = "${nickname}님 팀 ${teamCount}명",
+            totalCount = totalCount,
         )
 
         HorizontalDivider(
@@ -72,13 +96,13 @@ fun SsingMatchingDetailCard(
         Column(
             verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
-            SsingInfoRow(label = "강습 일시", value = state.classDateTime)
-            SsingInfoRow(label = "강습 장소", value = state.location)
-            SsingInfoRow(label = "강습 시간", value = state.duration)
-            SsingInfoRow(label = "최대 인원", value = "${state.maxCapacity}명")
-            SsingParticipantsRow(label = "강습 인원", participants = state.participants)
-            SsingPriceRow(label = "예상 가격", isPaid = state.isPaid, price = state.price)
-            SsingInfoRow(label = "장비상태", value = state.equipmentStatus)
+            SsingInfoRow(label = "강습 일시", value = classDateTime)
+            SsingInfoRow(label = "강습 장소", value = location)
+            SsingInfoRow(label = "강습 시간", value = duration)
+            SsingInfoRow(label = "최대 인원", value = "${maxCapacity}명")
+            SsingParticipantsRow(label = "강습 인원", participants = participants)
+            SsingPriceRow(label = "예상 가격", isPaid = isPaid, price = price)
+            SsingInfoRow(label = "장비상태", value = equipmentStatus)
         }
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -97,11 +121,31 @@ fun SsingMatchingDetailCard(
 /**
  * 강습 상세 정보 카드 / Small (취소/이력 조회용).
  *
- * @param state 카드에 표시할 강습 상세 정보 (Small)
+ * @param tags 강습 태그 목록
+ * @param teamNicknames 팀별 닉네임/인원 목록
+ * @param totalCount 전체 강습 인원 수
+ * @param teamCount 강습 인원 수 (표시용 총합)
+ * @param duration 강습 시간
+ * @param actualTimeRange 실제 강습 시간 범위
+ * @param isPaid 결제 완료 여부
+ * @param price 예상 가격
+ * @param cancelDateTime 취소 일시
+ * @param cancelSubject 취소 주체
+ * @param cancelReason 취소 사유
  */
 @Composable
 fun SsingMatchingDetailCardSmall(
-    state: ClassDetailSmallUiState,
+    tags: ImmutableList<String>,
+    teamNicknames: ImmutableList<TeamNickname>,
+    totalCount: Int,
+    teamCount: Int,
+    duration: String,
+    actualTimeRange: String,
+    isPaid: Boolean,
+    price: Int,
+    cancelDateTime: String,
+    cancelSubject: String,
+    cancelReason: String,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -112,33 +156,33 @@ fun SsingMatchingDetailCardSmall(
             )
             .padding(16.dp),
     ) {
-        SsingTagChipRowSmall(tags = state.tags)
+        SsingTagChipRowSmall(tags = tags)
 
         Spacer(modifier = Modifier.height(4.dp))
 
-        val title = state.teamNicknames.joinToString(", ") {
+        val title = teamNicknames.joinToString(", ") {
             "${it.nickname}님 팀 ${it.teamCount}명"
         }
-        SsingClassTitleRowSmall(title = title, totalCount = state.totalCount)
+        SsingClassTitleRowSmall(title = title, totalCount = totalCount)
 
         Spacer(modifier = Modifier.height(4.dp))
 
         Column(
             verticalArrangement = Arrangement.spacedBy(2.dp)
         ) {
-            SsingInfoRow(label = "강습 인원", value = "총 ${state.teamCount}명")
-            SsingInfoRow(label = "강습 시간", value = state.duration)
-            SsingInfoRow(label = "실제 강습 시간", value = state.actualTimeRange)
-            SsingPriceRow(label = "예상 가격", isPaid = state.isPaid, price = state.price)
+            SsingInfoRow(label = "강습 인원", value = "총 ${teamCount}명")
+            SsingInfoRow(label = "강습 시간", value = duration)
+            SsingInfoRow(label = "실제 강습 시간", value = actualTimeRange)
+            SsingPriceRow(label = "예상 가격", isPaid = isPaid, price = price)
 
             HorizontalDivider(
                 color = SSINGTheme.colors.backgroundAlternative,
                 modifier = Modifier.padding(vertical = 6.dp)
             )
 
-            SsingInfoRow(label = "취소 일시", value = state.cancelDateTime)
-            SsingInfoRow(label = "취소 주체", value = state.cancelSubject)
-            SsingInfoRow(label = "취소 사유", value = state.cancelReason)
+            SsingInfoRow(label = "취소 일시", value = cancelDateTime)
+            SsingInfoRow(label = "취소 주체", value = cancelSubject)
+            SsingInfoRow(label = "취소 사유", value = cancelReason)
         }
     }
 }
@@ -299,42 +343,11 @@ private fun SsingClassTitleRowSmall(title: String, totalCount: Int) {
     }
 }
 
+/** 팀 단위 닉네임/인원 정보. Small 카드에서 여러 팀을 나열할 때 사용. */
 @Immutable
 data class TeamNickname(
     val nickname: String,
     val teamCount: Int,
-)
-
-@Immutable
-data class ClassDetailUiState(
-    val stepLabel: String,
-    val tags: ImmutableList<String>,
-    val nickname: String,
-    val teamCount: Int,
-    val totalCount: Int,
-    val classDateTime: String,
-    val location: String,
-    val duration: String,
-    val maxCapacity: Int,
-    val participants: List<String>,
-    val isPaid: Boolean,
-    val price: Int,
-    val equipmentStatus: String,
-)
-
-@Immutable
-data class ClassDetailSmallUiState(
-    val tags: ImmutableList<String>,
-    val teamNicknames: ImmutableList<TeamNickname>,
-    val totalCount: Int,
-    val teamCount: Int,
-    val duration: String,
-    val actualTimeRange: String,
-    val isPaid: Boolean,
-    val price: Int,
-    val cancelDateTime: String,
-    val cancelSubject: String,
-    val cancelReason: String,
 )
 
 @Preview
@@ -342,21 +355,19 @@ data class ClassDetailSmallUiState(
 private fun SsingClassDetailCardPreview() {
     SSINGTheme {
         SsingMatchingDetailCard(
-            state = ClassDetailUiState(
-                stepLabel = "현재 단계",
-                tags = persistentListOf("하이원", "스노보드", "처음타요"),
-                nickname = "김OO",
-                teamCount = 0,
-                totalCount = 0,
-                classDateTime = "0월 0일 오전 00:00",
-                location = "OOO 리조트",
-                duration = "0시간",
-                maxCapacity = 0,
-                participants = listOf("11세 남", "11세 남", "9세 여"),
-                isPaid = true,
-                price = 0, // 수정
-                equipmentStatus = "착용 완료",
-            ),
+            stepLabel = "현재 단계",
+            tags = persistentListOf("하이원", "스노보드", "처음타요"),
+            nickname = "김OO",
+            teamCount = 0,
+            totalCount = 0,
+            classDateTime = "0월 0일 오전 00:00",
+            location = "OOO 리조트",
+            duration = "0시간",
+            maxCapacity = 0,
+            participants = listOf("11세 남", "11세 남", "9세 여"),
+            isPaid = true,
+            price = 0, // 수정
+            equipmentStatus = "착용 완료",
             onContinueClick = {},
         )
     }
@@ -367,24 +378,22 @@ private fun SsingClassDetailCardPreview() {
 private fun SsingClassDetailCardSmallPreview() {
     SSINGTheme {
         SsingMatchingDetailCardSmall(
-            state = ClassDetailSmallUiState(
-                tags = persistentListOf("지산포레스트", "스노보드", "자격증이 있어요"),
-                teamNicknames = persistentListOf(
-                    TeamNickname("김남자", 1),
-                    TeamNickname("김여자", 1),
-                    TeamNickname("김야웅이", 1),
-                    TeamNickname("강아지", 1),
-                ),
-                totalCount = 4,
-                teamCount = 0,
-                duration = "0시간",
-                actualTimeRange = "00:00~00:00 (0시간)",
-                isPaid = true,
-                price = 0,
-                cancelDateTime = "00월 00일 O요일 00:00",
-                cancelSubject = "취소 주체",
-                cancelReason = "취소 사유",
+            tags = persistentListOf("지산포레스트", "스노보드", "자격증이 있어요"),
+            teamNicknames = persistentListOf(
+                TeamNickname("김남자", 1),
+                TeamNickname("김여자", 1),
+                TeamNickname("김야웅이", 1),
+                TeamNickname("강아지", 1),
             ),
+            totalCount = 4,
+            teamCount = 0,
+            duration = "0시간",
+            actualTimeRange = "00:00~00:00 (0시간)",
+            isPaid = true,
+            price = 0,
+            cancelDateTime = "00월 00일 O요일 00:00",
+            cancelSubject = "취소 주체",
+            cancelReason = "취소 사유",
         )
     }
 }
