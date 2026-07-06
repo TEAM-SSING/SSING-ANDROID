@@ -228,6 +228,7 @@ private fun SsingParticipantsRow(label: String, participants: List<String>) {
             modifier = Modifier.weight(1f),
             horizontalArrangement = Arrangement.End,
             verticalArrangement = Arrangement.spacedBy(4.dp),
+            maxItemsInEachRow = 3,
         ) {
             participants.forEach { participant ->
                 SsingChip(text = participant, style = SsingChipStyle.GRAY)
@@ -316,7 +317,7 @@ private fun SsingClassDetailCardPreview() {
                 location = "OOO 리조트",
                 duration = "0시간",
                 maxCapacity = 0,
-                participants = listOf("11세 남", "11세 남", "9세 여"),
+                participants = listOf("11세 남", "11세 남", "9세 여", "9세 여"),
                 isPaid = true,
                 price = 0, // 수정
                 equipmentStatus = "착용 완료",
