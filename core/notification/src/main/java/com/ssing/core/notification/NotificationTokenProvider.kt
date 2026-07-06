@@ -21,14 +21,9 @@ class NotificationTokenProvider @Inject constructor(
     private val notificationRepository: NotificationRepository,
 ) {
 
-    suspend fun getToken(token: String) {
-        notificationRepository.saveNotificationToken(token)
-            .onFailure { Timber.e(it, "FCM 토큰 저장 실패") }
-    }
-
     suspend fun getCurrentToken() {
         val token = getToken() ?: return
-        getToken(token)
+        notificationRepository.saveNotificationToken(token)
     }
 
     private suspend fun getToken(): String? =
