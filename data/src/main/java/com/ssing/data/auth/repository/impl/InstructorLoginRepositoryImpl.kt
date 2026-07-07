@@ -3,6 +3,7 @@ package com.ssing.data.instructorlogin.repository.impl
 import com.ssing.core.network.extension.mapApiException
 import com.ssing.core.network.token.TokenAccessManager
 import com.ssing.core.network.util.ApiResponseHandler
+import com.ssing.core.network.util.suspendRunCatching
 import com.ssing.data.instructorlogin.exception.InstructorLoginException
 import com.ssing.data.instructorlogin.model.InstructorLoginResult
 import com.ssing.data.instructorlogin.remote.datasource.api.InstructorLoginDataSource
@@ -19,11 +20,21 @@ class InstructorLoginRepositoryImpl @Inject constructor(
     override suspend fun loginWithKakao(kakaoAccessToken: String): Result<InstructorLoginResult> =
         apiResponseHandler.safeApiCall {
             dataSource.postKakaoLogin(kakaoAccessToken)
-        }.onSuccess { response ->
-            tokenAccessManager.withLock {
-                setAccessToken(response.accessToken)
-                setRefreshToken(response.refreshToken)
+        }.mapCatching { response ->
+            try {
+                tokenAccessManager.withLock {
+                    setAccessToken(response.accessToken)
+                    setRefreshToken(response.refreshToken)
+                }
+            } catch (e: Exception) {
+                suspendRunCatching {
+                    tokenAccessManager.withLock {
+                        clearTokens()
+                    }
+                }
+                throw e
             }
+            response
         }.map { it.toInstructorLoginResult() }
             .mapApiException {
                 when (it.serverCode) {
