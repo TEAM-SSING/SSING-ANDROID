@@ -30,6 +30,7 @@ fun ConsumerInfoCard(
     isReady: Boolean,
     nickname: String,
     participants: ImmutableList<String>,
+    price: Int,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -72,17 +73,33 @@ fun ConsumerInfoCard(
                 style = SSINGTheme.typography.body.sb16,
             )
 
-            FlowRow(
-                modifier = Modifier,
-                horizontalArrangement = Arrangement.spacedBy(2.dp),
-                verticalArrangement = Arrangement.spacedBy(2.dp),
+            val isSingleLine = participants.size <= 3
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = if (isSingleLine) Alignment.Top else Alignment.Bottom,
             ) {
-                participants.forEach { participant ->
-                    SsingChip(
-                        text = participant,
-                        style = SsingChipStyle.GRAY,
-                    )
+                FlowRow(
+                    modifier = Modifier,
+                    horizontalArrangement = Arrangement.spacedBy(2.dp),
+                    verticalArrangement = Arrangement.spacedBy(2.dp),
+                    maxItemsInEachRow = 3,
+                ) {
+                    participants.forEach { participant ->
+                        SsingChip(
+                            text = participant,
+                            style = SsingChipStyle.GRAY,
+                        )
+                    }
                 }
+
+                Text(
+                    text = "₩ ${"%,d".format(price)}",
+                    color = SSINGTheme.colors.textNormal,
+                    style = SSINGTheme.typography.caption.sb14,
+                )
             }
         }
     }
@@ -99,15 +116,34 @@ private fun ConsumerInfoCardPreview(
     @PreviewParameter(ConsumerInfoCardPreviewProvider::class) isReady: Boolean
 ) {
     SSINGTheme {
-        ConsumerInfoCard(
-            isReady = isReady,
-            nickname = "김OO",
-            participants = persistentListOf(
-                "38세 남",
-                "12세 여",
-                "9세 남",
-            ),
-            modifier = Modifier.padding(20.dp),
-        )
+        Column(
+            modifier = Modifier
+                .padding(20.dp),
+            verticalArrangement = Arrangement.spacedBy(20.dp)
+        ) {
+            ConsumerInfoCard(
+                isReady = isReady,
+                nickname = "김OO",
+                participants = persistentListOf(
+                    "38세 남",
+                    "12세 여",
+                    "9세 남",
+                ),
+                price = 50000,
+            )
+
+            ConsumerInfoCard(
+                isReady = isReady,
+                nickname = "김OO",
+                participants = persistentListOf(
+                    "38세 남",
+                    "12세 여",
+                    "9세 남",
+                    "38세 남",
+                    "12세 여",
+                ),
+                price = 50000,
+            )
+        }
     }
 }
