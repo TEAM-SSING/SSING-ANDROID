@@ -43,6 +43,8 @@ sealed interface TypographyTokens {
         val md14: TextStyle,
         val sb12: TextStyle,
         val md12: TextStyle,
+        val sb11: TextStyle,
+        val md11: TextStyle,
     ) : TypographyTokens
 }
 
@@ -133,6 +135,14 @@ val defaultSsingTypography = SSINGTypography(
         md12 = ssingTextStyle(
             fontFamily = PretendardFont.Medium,
             fontSize = 12.sp,
+        ),
+        sb11 = ssingTextStyle(
+            fontFamily = PretendardFont.Semibold,
+            fontSize = 11.sp,
+        ),
+        md11 = ssingTextStyle(
+            fontFamily = PretendardFont.Medium,
+            fontSize = 11.sp,
         ),
     ),
 )

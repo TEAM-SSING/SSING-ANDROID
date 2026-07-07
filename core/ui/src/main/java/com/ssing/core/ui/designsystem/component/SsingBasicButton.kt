@@ -1,6 +1,7 @@
 package com.ssing.core.ui.designsystem.component
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
@@ -32,15 +33,24 @@ internal fun SsingBasicButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
+    defaultBorderColor: Color? = null,
+    pressedBorderColor: Color? = null,
     content: @Composable (BoxScope.() -> Unit),
 ) {
     val interactionSource = remember { MutableInteractionSource() }
     val isPressed by interactionSource.collectIsPressedAsState()
+    val shape = RoundedCornerShape(12.dp)
 
     Box(
         modifier = modifier
-            .clip(RoundedCornerShape(12.dp))
+            .clip(shape)
             .background(if (isPressed) pressedColor else defaultColor)
+            .border(
+                width = 1.dp,
+                color = if (isPressed) pressedBorderColor ?: pressedColor else defaultBorderColor
+                    ?: defaultColor,
+                shape = shape,
+            )
             .clickable(
                 enabled = enabled,
                 onClick = onClick,
