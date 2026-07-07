@@ -203,7 +203,10 @@ private fun SsingTagChipRow(
     tags: ImmutableList<String>,
     style: SsingChipStyle,
 ) {
-    Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+    FlowRow(
+        horizontalArrangement = Arrangement.spacedBy(4.dp),
+        verticalArrangement = Arrangement.spacedBy(4.dp)
+    ) {
         tags.forEach { text ->
             SsingChip(text = text, style = style)
         }
