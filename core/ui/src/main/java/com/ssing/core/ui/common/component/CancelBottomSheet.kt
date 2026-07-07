@@ -112,6 +112,8 @@ private fun CancelBottomSheetContent(
     val enabled = selectedReason != null &&
             (selectedReason != CancelReason.ETC || etcState.text.isNotBlank())
 
+    val focusManager = LocalFocusManager.current
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -197,6 +199,8 @@ private fun CancelBottomSheetContent(
                     SsingTextField(
                         state = etcState,
                         placeholder = "직접 입력",
+                        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                        onKeyboardAction = { focusManager.clearFocus() }
                     )
                 }
             }
@@ -208,7 +212,7 @@ private fun CancelBottomSheetContent(
             style = SSINGTheme.typography.caption.sb12,
         )
 
-        Row (
+        Row(
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             SsingButton(
