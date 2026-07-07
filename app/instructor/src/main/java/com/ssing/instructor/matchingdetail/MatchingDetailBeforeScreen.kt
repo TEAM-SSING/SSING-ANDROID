@@ -1,6 +1,5 @@
 package com.ssing.instructor.matchingdetail
 
-import android.graphics.Color.blue
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -52,8 +51,6 @@ import kotlinx.collections.immutable.persistentListOf
 /**
  * 강습 상세 (강습 전) 화면.
  *
- * @param progress 준비 완료한 인원 / 전체 인원 (예: 1 / 6)
- * @param totalProgress 전체 인원
  * @param tags 강습 태그
  * @param classTitle 팀 타이틀 (예: "김OO님 팀, 홍지민님 팀 총 5명")
  * @param location 강습 장소
@@ -69,8 +66,9 @@ import kotlinx.collections.immutable.persistentListOf
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun InstructorClassPreparationScreen(
-    progress: Int,
-    totalProgress: Int,
+    isInstructorReady: Boolean,
+    participantReadyCount: Int,
+    participantTotalCount: Int,
     tags: ImmutableList<String>,
     classTitle: String,
     location: String,
@@ -155,7 +153,11 @@ fun InstructorClassPreparationScreen(
                 .padding(innerPadding),
         ) {
             item {
-                PreparationHeader(progress = progress, totalProgress = totalProgress)
+                PreparationHeader(
+                    isInstructorReady = isInstructorReady,
+                    participantReadyCount = participantReadyCount,
+                    participantTotalCount = participantTotalCount
+                )
             }
 
             item {
@@ -204,19 +206,20 @@ fun InstructorClassPreparationScreen(
 }
 
 @Composable
-private fun PreparationHeader(progress: Int, totalProgress: Int) {
-    val isInstructorDone = progress >= 1
-    val participantTotal = totalProgress - 1
-    val participantDoneCount = (progress - 1).coerceAtLeast(0)
+private fun PreparationHeader(
+    isInstructorReady: Boolean,
+    participantReadyCount: Int,
+    participantTotalCount: Int,
+) {
     val density = LocalDensity.current
     var instructorImageHeightPx by remember { mutableIntStateOf(0) }
+    val totalReady = (if (isInstructorReady) 1 else 0) + participantReadyCount
+    val totalCount = 1 + participantTotalCount
 
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .background(
-                color = Blue50,
-            )
+            .background(color = Blue50)
             .padding(16.dp),
     ) {
         Text(
@@ -244,7 +247,7 @@ private fun PreparationHeader(progress: Int, totalProgress: Int) {
         ) {
 
             Text(
-                text = "$progress / $totalProgress",
+                text = "$totalReady / $totalCount",
                 style = SSINGTheme.typography.caption.sb14,
                 color = SSINGTheme.colors.primaryNormal,
             )
@@ -253,10 +256,10 @@ private fun PreparationHeader(progress: Int, totalProgress: Int) {
 
             Image(
                 painter = painterResource(
-                    id = if (isInstructorDone) {
-                        R.drawable.img_instructor_default
-                    } else {
+                    id = if (isInstructorReady) {
                         R.drawable.img_instructor_ready
+                    } else {
+                        R.drawable.img_instructor_default
                     }
                 ),
                 contentDescription = "강사 준비 완료 여부",
@@ -283,15 +286,15 @@ private fun PreparationHeader(progress: Int, totalProgress: Int) {
             Spacer(modifier = Modifier.width(8.dp))
 
             Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-                repeat(participantTotal) { index ->
-                    val isParticipantDone = index < participantDoneCount
+                repeat(participantTotalCount) { index ->
+                    val isParticipantDone = index < participantReadyCount
 
                     Image(
                         painter = painterResource(
                             id = if (isParticipantDone) {
-                                R.drawable.img_waiting_default
-                            } else {
                                 R.drawable.img_waiting_ready
+                            } else {
+                                R.drawable.img_waiting_default
                             }
                         ),
                         contentDescription = "강습생 준비 완료 여부",
@@ -422,8 +425,9 @@ private fun InfoRow(label: String, value: String) {
 private fun InstructorClassPreparationScreenPreview() {
     SSINGTheme {
         InstructorClassPreparationScreen(
-            progress = 1,
-            totalProgress = 6,
+            isInstructorReady = true,
+            participantReadyCount = 2,
+            participantTotalCount = 5,
             tags = persistentListOf("스노보드", "자격증이 있어요"),
             classTitle = "김OO님 팀, 홍지민님 팀 총 5명",
             location = "OOO 리조트",
