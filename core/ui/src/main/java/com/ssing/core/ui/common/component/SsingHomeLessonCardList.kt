@@ -2,8 +2,11 @@ package com.ssing.core.ui.common.component
 
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -11,6 +14,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -26,6 +30,14 @@ import com.ssing.core.ui.R
 import com.ssing.core.ui.common.component.HomeLessonCardState.Reservation.Status
 import com.ssing.core.ui.designsystem.theme.SSINGTheme
 import com.ssing.core.ui.extension.roundedBackgroundWithBorder
+import kotlinx.collections.immutable.ImmutableList
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.tooling.preview.PreviewParameterProvider
+import kotlinx.collections.immutable.persistentListOf
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.Locale
@@ -37,19 +49,66 @@ sealed interface HomeLessonCardState {
         val location: String,
         val date: LocalDateTime,
         val status: Status
-    ): HomeLessonCardState {
+    ) : HomeLessonCardState {
         sealed interface Status {
-            data class Default(val member: Int): Status
-            data class Matched(val member: Int): Status
-            data object Matching: Status
+            data class Default(val member: Int) : Status
+            data class Matched(val member: Int) : Status
+            data object Matching : Status
         }
     }
 
-    data object Empty: HomeLessonCardState
+    data object Empty : HomeLessonCardState
 }
 
 @Composable
-fun SsingHomeLessonCard(
+fun SsingHomeLessonCardRow(
+    states: ImmutableList<HomeLessonCardState>,
+    modifier: Modifier = Modifier,
+) {
+    Column(
+        modifier = modifier
+    ) {
+       val pagerState = rememberPagerState(
+           pageCount = { states.size }
+       )
+
+        HorizontalPager(
+            modifier = Modifier.fillMaxWidth(),
+            state = pagerState,
+            contentPadding = PaddingValues(horizontal = 16.dp),
+            pageSpacing = 8.dp,
+        ) { page ->
+            SsingHomeLessonCard(
+                state = states[page],
+                onClick = {},
+                modifier = Modifier.fillMaxWidth()
+            )
+        }
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        Row(
+            Modifier
+                .wrapContentHeight()
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.Center,
+        ) {
+            repeat(pagerState.pageCount) { iteration ->
+                val color = if (pagerState.currentPage == iteration) SSINGTheme.colors.borderStrong else SSINGTheme.colors.borderAlternative
+                Box(
+                    modifier = Modifier
+                        .padding(horizontal = 2.dp)
+                        .clip(CircleShape)
+                        .background(color)
+                        .size(5.dp)
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun SsingHomeLessonCard(
     state: HomeLessonCardState,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -137,16 +196,16 @@ private fun LessonInfoSection(
                     iconRes = R.drawable.ic_reservation_16,
                     text = state.date.ssingDateFormatter(),
                 )
-                
+
                 Icon(
-                    imageVector =  ImageVector.vectorResource(R.drawable.ic_divide_line),
+                    imageVector = ImageVector.vectorResource(R.drawable.ic_divide_line),
                     contentDescription = null,
                     tint = SSINGTheme.colors.borderAlternative,
                 )
 
                 InfoRow(
                     iconRes = R.drawable.ic_location_16,
-                    text =  state.location,
+                    text = state.location,
                 )
             }
         }
@@ -236,7 +295,7 @@ private fun SsingHomeLessonEmptyCardPreview() {
         SsingHomeLessonCard(
             state = HomeLessonCardState.Empty,
             onClick = {},
-            modifier = Modifier.width(320.dp),
+            modifier = Modifier.width(328.dp),
         )
     }
 }
@@ -254,7 +313,7 @@ private fun SsingHomeLessonMatchingCardPreview() {
                 status = Status.Matching
             ),
             onClick = {},
-            modifier = Modifier.width(320.dp),
+            modifier = Modifier.width(328.dp),
         )
     }
 }
@@ -272,7 +331,7 @@ private fun SsingHomeLessonMatchedCardPreview() {
                 status = Status.Matched(member = 3),
             ),
             onClick = {},
-            modifier = Modifier.width(320.dp),
+            modifier = Modifier.width(328.dp),
         )
     }
 }
@@ -290,7 +349,36 @@ private fun SsingHomeLessonCardPreview() {
                 status = Status.Default(member = 3)
             ),
             onClick = {},
-            modifier = Modifier.width(320.dp),
+            modifier = Modifier.width(328.dp),
+        )
+    }
+}
+
+private class HomeLessonCardPreviewProvider : PreviewParameterProvider<ImmutableList<HomeLessonCardState>> {
+    override val values = sequenceOf(
+        persistentListOf(HomeLessonCardState.Empty),
+        persistentListOf(
+            HomeLessonCardState.Reservation(
+                chip = "Now",
+                title = "김OO",
+                location = "하이원",
+                date = LocalDateTime.of(2025, 7, 15, 19, 0),
+                status = Status.Default(member = 3),
+            ),
+
+        ),
+    )
+}
+
+@Preview
+@Composable
+private fun SsingHomeLessonCardRowPreview(
+    @PreviewParameter(HomeLessonCardPreviewProvider::class) states: ImmutableList<HomeLessonCardState>,
+) {
+    SSINGTheme {
+        SsingHomeLessonCardRow(
+            states = states,
+            modifier = Modifier,
         )
     }
 }
