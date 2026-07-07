@@ -19,7 +19,6 @@ import com.ssing.core.ui.common.component.SsingButtonStyle
 import com.ssing.core.ui.common.component.SsingHeader
 import com.ssing.core.ui.common.component.SsingTopBar
 import com.ssing.core.ui.designsystem.theme.SSINGTheme
-import com.ssing.presentation.instructormatching.MatchingContract
 import com.ssing.presentation.instructormatching.model.LessonSummaryUiModel
 import com.ssing.presentation.instructormatching.model.MatchingOfferUiModel
 import com.ssing.presentation.instructormatching.model.OfferStatusOption
@@ -27,7 +26,9 @@ import com.ssing.presentation.instructormatching.model.OfferStatusOption
 @Composable
 internal fun MatchingOfferScreen(
     offer: MatchingOfferUiModel,
-    onIntent: (MatchingContract.Intent) -> Unit,
+    onBackClick: () -> Unit,
+    onRejectOfferClick: () -> Unit,
+    onAcceptOfferClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -37,7 +38,7 @@ internal fun MatchingOfferScreen(
     ) {
         SsingTopBar(
             title = "씽 매칭중",
-            onBack = { onIntent(MatchingContract.Intent.OnBackClick) },
+            onBack = onBackClick,
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -75,13 +76,13 @@ internal fun MatchingOfferScreen(
         ) {
             SsingButton(
                 text = "거절",
-                onClick = { onIntent(MatchingContract.Intent.OnRejectOfferClick) },
+                onClick = onRejectOfferClick,
                 style = SsingButtonStyle.RED,
                 modifier = Modifier.weight(1f),
             )
             SsingButton(
                 text = "수락",
-                onClick = { onIntent(MatchingContract.Intent.OnAcceptOfferClick) },
+                onClick = onAcceptOfferClick,
                 style = SsingButtonStyle.BLUE,
                 modifier = Modifier.weight(1f),
             )
@@ -107,7 +108,9 @@ private fun MatchingOfferScreenPreview() {
                     durationHours = 2,
                 ),
             ),
-            onIntent = {},
+            onBackClick = {},
+            onRejectOfferClick = {},
+            onAcceptOfferClick = {},
         )
     }
 }

@@ -15,7 +15,6 @@ import com.ssing.core.ui.common.component.SsingButtonStyle
 import com.ssing.core.ui.common.component.SsingHeader
 import com.ssing.core.ui.common.component.SsingTopBar
 import com.ssing.core.ui.designsystem.theme.SSINGTheme
-import com.ssing.presentation.instructormatching.MatchingContract
 import com.ssing.presentation.instructormatching.model.LessonSummaryUiModel
 import com.ssing.presentation.instructormatching.model.MatchingOfferUiModel
 import com.ssing.presentation.instructormatching.model.OfferStatusOption
@@ -23,7 +22,7 @@ import com.ssing.presentation.instructormatching.model.OfferStatusOption
 @Composable
 internal fun MatchingPendingScreen(
     offer: MatchingOfferUiModel,
-    onIntent: (MatchingContract.Intent) -> Unit,
+    onBackClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -33,7 +32,7 @@ internal fun MatchingPendingScreen(
     ) {
         SsingTopBar(
             title = "강습 확정 대기",
-            onBack = { onIntent(MatchingContract.Intent.OnBackClick) },
+            onBack = onBackClick,
         )
         SsingHeader(
             title = "강습생의 확정을 기다리고 있어요",
@@ -77,7 +76,7 @@ private fun MatchingPendingScreenPreview() {
                     durationHours = 2,
                 ),
             ),
-            onIntent = {},
+            onBackClick = {},
         )
     }
 }

@@ -21,7 +21,6 @@ import com.ssing.core.ui.common.component.SsingHeader
 import com.ssing.core.ui.common.component.SsingSelectButton
 import com.ssing.core.ui.common.component.SsingTopBar
 import com.ssing.core.ui.designsystem.theme.SSINGTheme
-import com.ssing.presentation.instructormatching.MatchingContract
 import com.ssing.presentation.instructormatching.component.MatchingConditionFixedResortField
 import com.ssing.presentation.instructormatching.component.MatchingConditionNoticeSection
 import com.ssing.presentation.instructormatching.component.MatchingConditionSection
@@ -35,7 +34,13 @@ import com.ssing.presentation.instructormatching.model.SportOption
 @Composable
 internal fun MatchingConditionScreen(
     condition: ConditionUiState,
-    onIntent: (MatchingContract.Intent) -> Unit,
+    onSportToggle: (SportOption) -> Unit,
+    onLevelToggle: (LevelOption) -> Unit,
+    onDurationToggle: (DurationOption) -> Unit,
+    onMaxHeadcountChange: (Int) -> Unit,
+    onNoticeCheckedChange: (Boolean) -> Unit,
+    onStartMatchingClick: () -> Unit,
+    onBackClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -45,7 +50,7 @@ internal fun MatchingConditionScreen(
     ) {
         SsingTopBar(
             title = "씽 매칭 노출 조건",
-            onBack = { onIntent(MatchingContract.Intent.OnBackClick) },
+            onBack = onBackClick,
         )
 
         Column(
@@ -74,7 +79,7 @@ internal fun MatchingConditionScreen(
                             SsingSelectButton(
                                 text = sport.label,
                                 isSelected = sport in condition.selectedSports,
-                                onClick = { onIntent(MatchingContract.Intent.OnSportToggle(sport)) },
+                                onClick = { onSportToggle(sport) },
                                 modifier = Modifier.weight(1f),
                             )
                         }
@@ -96,9 +101,7 @@ internal fun MatchingConditionScreen(
                                         SsingSelectButton(
                                             text = level.label,
                                             isSelected = level in condition.selectedLevels,
-                                            onClick = {
-                                                onIntent(MatchingContract.Intent.OnLevelToggle(level))
-                                            },
+                                            onClick = { onLevelToggle(level) },
                                             modifier = Modifier.weight(1f),
                                         )
                                     }
@@ -116,9 +119,7 @@ internal fun MatchingConditionScreen(
                             SsingSelectButton(
                                 text = duration.label,
                                 isSelected = duration in condition.selectedDurations,
-                                onClick = {
-                                    onIntent(MatchingContract.Intent.OnDurationToggle(duration))
-                                },
+                                onClick = { onDurationToggle(duration) },
                                 modifier = Modifier.weight(1f),
                             )
                         }
@@ -137,23 +138,19 @@ internal fun MatchingConditionScreen(
                 ) {
                     MatchingStepSlider(
                         value = condition.maxHeadcount,
-                        onValueChange = {
-                            onIntent(MatchingContract.Intent.OnMaxHeadcountChange(it))
-                        },
+                        onValueChange = onMaxHeadcountChange,
                         valueRange = condition.maxHeadcountRange,
                     )
                 }
 
                 MatchingConditionNoticeSection(
                     isChecked = condition.isNoticeChecked,
-                    onCheckedChange = {
-                        onIntent(MatchingContract.Intent.OnNoticeCheckedChange(it))
-                    },
+                    onCheckedChange = onNoticeCheckedChange,
                 )
 
                 SsingButton(
                     text = "씽 매칭 시작",
-                    onClick = { onIntent(MatchingContract.Intent.OnStartMatchingClick) },
+                    onClick = onStartMatchingClick,
                     style = SsingButtonStyle.BLUE,
                     enabled = condition.isStartEnabled,
                     modifier = Modifier.fillMaxWidth(),
@@ -180,7 +177,13 @@ private fun MatchingConditionScreenPreview() {
                 availableSports = setOf(SportOption.SKI),
                 resortName = "하이원 리조트",
             ),
-            onIntent = {},
+            onSportToggle = {},
+            onLevelToggle = {},
+            onDurationToggle = {},
+            onMaxHeadcountChange = {},
+            onNoticeCheckedChange = {},
+            onStartMatchingClick = {},
+            onBackClick = {},
         )
     }
 }

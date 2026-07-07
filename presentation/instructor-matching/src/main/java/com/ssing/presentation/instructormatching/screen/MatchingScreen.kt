@@ -14,6 +14,9 @@ import com.ssing.presentation.instructormatching.MatchingContract
 import com.ssing.presentation.instructormatching.MatchingContract.MatchingDialog
 import com.ssing.presentation.instructormatching.MatchingContract.MatchingPhase
 import com.ssing.presentation.instructormatching.MatchingViewModel
+import com.ssing.presentation.instructormatching.model.DurationOption
+import com.ssing.presentation.instructormatching.model.LevelOption
+import com.ssing.presentation.instructormatching.model.SportOption
 
 @Composable
 internal fun MatchingRoute(
@@ -33,7 +36,21 @@ internal fun MatchingRoute(
 
     MatchingScreen(
         state = state,
-        onIntent = viewModel::processIntent,
+        onSportToggle = viewModel::toggleSport,
+        onLevelToggle = viewModel::toggleLevel,
+        onDurationToggle = viewModel::toggleDuration,
+        onMaxHeadcountChange = viewModel::changeMaxHeadcount,
+        onNoticeCheckedChange = viewModel::changeNoticeChecked,
+        onStartMatchingClick = viewModel::startMatching,
+        onEditConditionClick = viewModel::editCondition,
+        onStopWaitingClick = viewModel::stopWaiting,
+        onAcceptOfferClick = viewModel::acceptOffer,
+        onRejectOfferClick = viewModel::rejectOffer,
+        onStopWaitingConfirm = viewModel::confirmStopWaiting,
+        onContinueMatchingClick = viewModel::continueMatching,
+        onRetryMatchingClick = viewModel::retryMatching,
+        onDialogDismiss = viewModel::dismissDialog,
+        onBackClick = viewModel::onBack,
         modifier = modifier,
     )
 }
@@ -41,30 +58,54 @@ internal fun MatchingRoute(
 @Composable
 private fun MatchingScreen(
     state: MatchingContract.State,
-    onIntent: (MatchingContract.Intent) -> Unit,
+    onSportToggle: (SportOption) -> Unit,
+    onLevelToggle: (LevelOption) -> Unit,
+    onDurationToggle: (DurationOption) -> Unit,
+    onMaxHeadcountChange: (Int) -> Unit,
+    onNoticeCheckedChange: (Boolean) -> Unit,
+    onStartMatchingClick: () -> Unit,
+    onEditConditionClick: () -> Unit,
+    onStopWaitingClick: () -> Unit,
+    onAcceptOfferClick: () -> Unit,
+    onRejectOfferClick: () -> Unit,
+    onStopWaitingConfirm: () -> Unit,
+    onContinueMatchingClick: () -> Unit,
+    onRetryMatchingClick: () -> Unit,
+    onDialogDismiss: () -> Unit,
+    onBackClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     when (val phase = state.phase) {
         MatchingPhase.SettingCondition -> MatchingConditionScreen(
             condition = state.condition,
-            onIntent = onIntent,
+            onSportToggle = onSportToggle,
+            onLevelToggle = onLevelToggle,
+            onDurationToggle = onDurationToggle,
+            onMaxHeadcountChange = onMaxHeadcountChange,
+            onNoticeCheckedChange = onNoticeCheckedChange,
+            onStartMatchingClick = onStartMatchingClick,
+            onBackClick = onBackClick,
             modifier = modifier,
         )
 
         MatchingPhase.Waiting -> MatchingWaitingScreen(
-            onIntent = onIntent,
+            onBackClick = onBackClick,
+            onEditConditionClick = onEditConditionClick,
+            onStopWaitingClick = onStopWaitingClick,
             modifier = modifier,
         )
 
         is MatchingPhase.OfferArrived -> MatchingOfferScreen(
             offer = phase.offer,
-            onIntent = onIntent,
+            onBackClick = onBackClick,
+            onRejectOfferClick = onRejectOfferClick,
+            onAcceptOfferClick = onAcceptOfferClick,
             modifier = modifier,
         )
 
         is MatchingPhase.PendingConfirm -> MatchingPendingScreen(
             offer = phase.offer,
-            onIntent = onIntent,
+            onBackClick = onBackClick,
             modifier = modifier,
         )
     }
@@ -72,7 +113,10 @@ private fun MatchingScreen(
     state.dialog?.let { dialog ->
         MatchingDialogHost(
             dialog = dialog,
-            onIntent = onIntent,
+            onStopWaitingConfirm = onStopWaitingConfirm,
+            onContinueMatchingClick = onContinueMatchingClick,
+            onRetryMatchingClick = onRetryMatchingClick,
+            onDialogDismiss = onDialogDismiss,
         )
     }
 }
@@ -80,37 +124,40 @@ private fun MatchingScreen(
 @Composable
 private fun MatchingDialogHost(
     dialog: MatchingDialog,
-    onIntent: (MatchingContract.Intent) -> Unit,
+    onStopWaitingConfirm: () -> Unit,
+    onContinueMatchingClick: () -> Unit,
+    onRetryMatchingClick: () -> Unit,
+    onDialogDismiss: () -> Unit,
 ) {
     when (dialog) {
         MatchingDialog.StopWaiting -> SsingModal(
-            onDismissRequest = { onIntent(MatchingContract.Intent.OnDialogDismiss) },
+            onDismissRequest = onDialogDismiss,
             title = "대기를 중지할까요?",
             text = "홈으로 이동해도 씽 매칭 대기는 유지돼요.\n대기를 중지하면 더 이상 요청을 받지 않아요.",
             primaryText = "대기 중지",
-            onPrimary = { onIntent(MatchingContract.Intent.OnStopWaitingConfirm) },
+            onPrimary = onStopWaitingConfirm,
             secondaryText = "계속 대기",
-            onSecondary = { onIntent(MatchingContract.Intent.OnDialogDismiss) },
+            onSecondary = onDialogDismiss,
         )
 
         MatchingDialog.ConsumerRejected -> SsingModal(
-            onDismissRequest = { onIntent(MatchingContract.Intent.OnDialogDismiss) },
+            onDismissRequest = onDialogDismiss,
             title = "강습생이 매칭을 거절했어요",
             text = "이전에 설정한 조건을 유지한 채\n씽 매칭을 계속 할까요?",
             primaryText = "계속하기",
-            onPrimary = { onIntent(MatchingContract.Intent.OnContinueMatchingClick) },
+            onPrimary = onContinueMatchingClick,
             secondaryText = "그만두기",
-            onSecondary = { onIntent(MatchingContract.Intent.OnStopWaitingConfirm) },
+            onSecondary = onStopWaitingConfirm,
         )
 
         MatchingDialog.MatchingFailed -> SsingModal(
-            onDismissRequest = { onIntent(MatchingContract.Intent.OnDialogDismiss) },
+            onDismissRequest = onDialogDismiss,
             title = "매칭이 실패했어요",
             text = "연결 상태를 확인한 후 다시 시도해주세요",
             primaryText = "계속하기",
-            onPrimary = { onIntent(MatchingContract.Intent.OnRetryMatchingClick) },
+            onPrimary = onRetryMatchingClick,
             secondaryText = "그만하기",
-            onSecondary = { onIntent(MatchingContract.Intent.OnDialogDismiss) },
+            onSecondary = onDialogDismiss,
             secondaryStyle = SsingButtonStyle.GRAY,
         )
     }

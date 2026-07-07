@@ -17,11 +17,12 @@ import com.ssing.core.ui.common.component.SsingButtonStyle
 import com.ssing.core.ui.common.component.SsingHeader
 import com.ssing.core.ui.common.component.SsingTopBar
 import com.ssing.core.ui.designsystem.theme.SSINGTheme
-import com.ssing.presentation.instructormatching.MatchingContract
 
 @Composable
 internal fun MatchingWaitingScreen(
-    onIntent: (MatchingContract.Intent) -> Unit,
+    onBackClick: () -> Unit,
+    onEditConditionClick: () -> Unit,
+    onStopWaitingClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -31,7 +32,7 @@ internal fun MatchingWaitingScreen(
     ) {
         SsingTopBar(
             title = "씽 매칭중",
-            onBack = { onIntent(MatchingContract.Intent.OnBackClick) },
+            onBack = onBackClick,
         )
 
         SsingHeader(
@@ -46,7 +47,6 @@ internal fun MatchingWaitingScreen(
 
         Spacer(modifier = Modifier.weight(1f))
 
-
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -55,13 +55,13 @@ internal fun MatchingWaitingScreen(
         ) {
             SsingButton(
                 text = "조건 수정",
-                onClick = { onIntent(MatchingContract.Intent.OnEditConditionClick) },
+                onClick = onEditConditionClick,
                 style = SsingButtonStyle.GRAY,
                 modifier = Modifier.weight(1f),
             )
             SsingButton(
                 text = "대기 중지",
-                onClick = { onIntent(MatchingContract.Intent.OnStopWaitingClick) },
+                onClick = onStopWaitingClick,
                 style = SsingButtonStyle.BLUE,
                 modifier = Modifier.weight(1f),
             )
@@ -73,6 +73,10 @@ internal fun MatchingWaitingScreen(
 @Composable
 private fun MatchingWaitingScreenPreview() {
     SSINGTheme {
-        MatchingWaitingScreen(onIntent = {})
+        MatchingWaitingScreen(
+            onBackClick = {},
+            onEditConditionClick = {},
+            onStopWaitingClick = {},
+        )
     }
 }
