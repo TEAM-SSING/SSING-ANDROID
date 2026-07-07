@@ -1,6 +1,8 @@
 package com.ssing.presentation.instructormatching.model
 
 import androidx.compose.runtime.Immutable
+import com.ssing.core.ui.common.component.Gender
+import com.ssing.core.ui.common.component.Participant
 
 
 // TODO(매칭-API): API 연동 시 MatchingRepository 내 private 메소드로 DTO → UiModel 변환 구현
@@ -80,6 +82,13 @@ internal data class MatchingOfferUiModel(
     val groupId: Long,
     val status: OfferStatusOption,
     val expiresAtMillis: Long?,
+    val nickname: String = "",
+    val teamCount: Int = 0,
+    val classDateTime: String = "",
+    val participants: List<ParticipantUiModel> = emptyList(),
+    val isPaid: Boolean = false,
+    val price: Int = 0,
+    val equipmentStatus: String = "",
     val lesson: LessonSummaryUiModel,
 )
 
@@ -93,4 +102,30 @@ internal data class LessonSummaryUiModel(
     val levelLabel: String,
     val headcount: Int,
     val durationHours: Int,
+)
+
+/**
+ * 매칭 대기 화면 카드에 표시할 상태.
+ * TODO(매칭-API): Repository 연동 시 실제 데이터로 교체
+ */
+@Immutable
+internal data class MatchingWaitingUiState(
+    val nickname: String = "",
+    val teamCount: Int = 0,
+    val classDateTime: String = "",
+    val participants: List<ParticipantUiModel> = emptyList(),
+    val isPaid: Boolean = false,
+    val price: Int = 0,
+    val equipmentStatus: String = "",
+)
+
+@Immutable
+internal data class ParticipantUiModel(
+    val age: Int,
+    val isMale: Boolean,
+)
+
+internal fun ParticipantUiModel.toParticipant() = Participant(
+    age = age,
+    gender = if (isMale) Gender.MALE else Gender.FEMALE,
 )
