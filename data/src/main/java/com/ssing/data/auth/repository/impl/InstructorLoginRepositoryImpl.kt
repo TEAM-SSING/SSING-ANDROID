@@ -17,7 +17,7 @@ class InstructorLoginRepositoryImpl @Inject constructor(
     private val tokenAccessManager: TokenAccessManager,
 ) : InstructorLoginRepository {
 
-    override suspend fun loginWithKakao(kakaoAccessToken: String): Result<InstructorLoginResult> =
+    override suspend fun loginWithKakao(kakaoAccessToken: String): Result<Unit> =
         apiResponseHandler.safeApiCall {
             dataSource.postKakaoLogin(kakaoAccessToken)
         }.mapCatching { response ->
@@ -34,16 +34,29 @@ class InstructorLoginRepositoryImpl @Inject constructor(
                 }
                 throw e
             }
-            response
-        }.map { it.toInstructorLoginResult() }
-            .mapApiException {
-                when (it.serverCode) {
-                    "VALIDATION_FAILED" -> InstructorLoginException.ValidationFailed(it.serverCode, it.message, it.requestId)
-                    "AUTH_INVALID_KAKAO_TOKEN" -> InstructorLoginException.AuthInvalidKakaoToken(it.serverCode, it.message, it.requestId)
-                    "EXTERNAL_SERVICE_UNAVAILABLE" -> InstructorLoginException.ExternalServiceUnavailable(it.serverCode, it.message, it.requestId)
-                    else -> it
-                }
+        }.mapApiException {
+            when (it.serverCode) {
+                "VALIDATION_FAILED" -> InstructorLoginException.ValidationFailed(
+                    it.serverCode,
+                    it.message,
+                    it.requestId
+                )
+
+                "AUTH_INVALID_KAKAO_TOKEN" -> InstructorLoginException.AuthInvalidKakaoToken(
+                    it.serverCode,
+                    it.message,
+                    it.requestId
+                )
+
+                "EXTERNAL_SERVICE_UNAVAILABLE" -> InstructorLoginException.ExternalServiceUnavailable(
+                    it.serverCode,
+                    it.message,
+                    it.requestId
+                )
+
+                else -> it
             }
+        }
 
     private fun InstructorKakaoLoginResponse.toInstructorLoginResult() = InstructorLoginResult(
         id = this.member.id,
