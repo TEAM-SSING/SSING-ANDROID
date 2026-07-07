@@ -129,6 +129,7 @@ internal fun MatchingConditionScreen(
                 MatchingConditionSection(
                     label = "최대 인원",
                     labelSuffix = {
+                        Spacer(modifier = Modifier.weight(1f))
                         Text(
                             text = "최대 ${condition.maxHeadcount}명",
                             style = SSINGTheme.typography.caption.sb12,
