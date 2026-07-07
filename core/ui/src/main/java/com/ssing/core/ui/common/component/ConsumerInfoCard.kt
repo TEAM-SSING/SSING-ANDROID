@@ -1,8 +1,8 @@
 package com.ssing.core.ui.common.component
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -32,7 +32,7 @@ fun ConsumerInfoCard(
     participants: ImmutableList<String>,
     modifier: Modifier = Modifier,
 ) {
-    Column (
+    Column(
         modifier = modifier
             .fillMaxWidth()
             .roundedBackgroundWithBorder(
@@ -45,17 +45,17 @@ fun ConsumerInfoCard(
         verticalArrangement = Arrangement.spacedBy(6.dp)
     ) {
         if (isReady) {
-            Row (
+            Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(4.dp),
             ) {
-                Icon (
+                Icon(
                     imageVector = ImageVector.vectorResource(R.drawable.ic_check_circle_filled_sm_12),
                     contentDescription = null,
                     tint = SSINGTheme.colors.primaryNormal,
                 )
 
-                Text (
+                Text(
                     text = "준비완료",
                     color = SSINGTheme.colors.primaryNormal,
                     style = SSINGTheme.typography.caption.sb12,
@@ -72,9 +72,10 @@ fun ConsumerInfoCard(
                 style = SSINGTheme.typography.body.sb16,
             )
 
-            Row (
+            FlowRow(
                 modifier = Modifier,
                 horizontalArrangement = Arrangement.spacedBy(2.dp),
+                verticalArrangement = Arrangement.spacedBy(2.dp),
             ) {
                 participants.forEach { participant ->
                     SsingChip(
@@ -87,7 +88,7 @@ fun ConsumerInfoCard(
     }
 }
 
-private class ConsumerInfoCardPreviewProvider: PreviewParameterProvider<Boolean> {
+private class ConsumerInfoCardPreviewProvider : PreviewParameterProvider<Boolean> {
     override val values: Sequence<Boolean>
         get() = sequenceOf(true, false)
 }
@@ -98,19 +99,15 @@ private fun ConsumerInfoCardPreview(
     @PreviewParameter(ConsumerInfoCardPreviewProvider::class) isReady: Boolean
 ) {
     SSINGTheme {
-        Box(
-            modifier = Modifier
-                .padding(20.dp),
-        ) {
-            ConsumerInfoCard(
-                isReady = isReady,
-                nickname = "김OO",
-                participants = persistentListOf(
-                    "38세 남",
-                    "12세 여",
-                    "9세 남",
-                ),
-            )
-        }
+        ConsumerInfoCard(
+            isReady = isReady,
+            nickname = "김OO",
+            participants = persistentListOf(
+                "38세 남",
+                "12세 여",
+                "9세 남",
+            ),
+            modifier = Modifier.padding(20.dp),
+        )
     }
 }
