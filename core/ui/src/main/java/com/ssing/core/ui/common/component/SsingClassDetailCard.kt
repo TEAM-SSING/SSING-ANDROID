@@ -57,7 +57,7 @@ fun SsingMatchingDetailCard(
     location: String,
     duration: String,
     maxCapacity: Int,
-    participants: List<String>,
+    participants: ImmutableList<String>,
     isPaid: Boolean,
     price: Int,
     equipmentStatus: String,
@@ -269,7 +269,7 @@ private fun SsingPriceRow(label: String, isPaid: Boolean, price: Int) {
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-private fun SsingParticipantsRow(label: String, participants: List<String>) {
+private fun SsingParticipantsRow(label: String, participants: ImmutableList<String>) {
     val verticalAlignment = if (participants.size <= 3) {
         Alignment.CenterVertically
     } else {
@@ -364,7 +364,7 @@ private fun SsingClassDetailCardPreview() {
             location = "OOO 리조트",
             duration = "0시간",
             maxCapacity = 0,
-            participants = listOf("11세 남", "11세 남", "9세 여"),
+            participants = persistentListOf("11세 남", "11세 남", "9세 여"),
             isPaid = true,
             price = 0, // 수정
             equipmentStatus = "착용 완료",
