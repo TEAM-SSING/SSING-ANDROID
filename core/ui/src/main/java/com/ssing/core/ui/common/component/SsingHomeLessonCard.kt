@@ -49,16 +49,6 @@ sealed interface HomeLessonCardState {
 }
 
 @Composable
-private fun Modifier.lessonCardBackground() = this
-    .fillMaxWidth()
-    .roundedBackgroundWithBorder(
-        shape = RoundedCornerShape(12.dp),
-        backgroundColor = SSINGTheme.colors.backgroundNormal,
-        borderColor = SSINGTheme.colors.borderAlternative,
-        borderWidth = 1.dp,
-    )
-
-@Composable
 fun SsingHomeLessonCard(
     state: HomeLessonCardState,
     onClick: () -> Unit,
@@ -224,9 +214,20 @@ private fun EmptyLessonInfoSection(
     }
 }
 
+
 private fun LocalDateTime.ssingDateFormatter(): String {
     return this.format(DateTimeFormatter.ofPattern("yyyy. MM. dd (E) HH:mm", Locale.KOREAN))
 }
+
+@Composable
+private fun Modifier.lessonCardBackground() = this
+    .fillMaxWidth()
+    .roundedBackgroundWithBorder(
+        shape = RoundedCornerShape(12.dp),
+        backgroundColor = SSINGTheme.colors.backgroundNormal,
+        borderColor = SSINGTheme.colors.borderAlternative,
+        borderWidth = 1.dp,
+    )
 
 @Preview
 @Composable
