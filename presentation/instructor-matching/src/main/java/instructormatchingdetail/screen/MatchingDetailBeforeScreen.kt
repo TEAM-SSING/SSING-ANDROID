@@ -27,6 +27,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -39,6 +40,7 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ssing.core.ui.R
+import com.ssing.core.ui.common.component.ConsumerInfoCard
 import com.ssing.core.ui.common.component.SsingButton
 import com.ssing.core.ui.common.component.SsingButtonStyle
 import com.ssing.core.ui.common.component.SsingChip
@@ -81,6 +83,8 @@ fun InstructorClassPreparationScreen(
     onReadyClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    var isReadyState by remember { mutableStateOf(isInstructorReady) }
+
     Scaffold(
         modifier = modifier.background(Blue50),
         topBar = {
@@ -138,9 +142,12 @@ fun InstructorClassPreparationScreen(
                 }
                 Spacer(modifier = Modifier.height(8.dp))
                 SsingButton(
-                    text = "강습 준비 완료",
-                    onClick = onReadyClick,
-                    style = SsingButtonStyle.BLUE,
+                    text = if (isReadyState) "강습 대기중" else "강습 준비 완료",
+                    onClick = {
+                        isReadyState = !isReadyState
+                        onReadyClick()
+                    },
+                    style = if (isReadyState) SsingButtonStyle.GRAY else SsingButtonStyle.BLUE,
                     modifier = Modifier.fillMaxWidth(),
                 )
             }
@@ -154,7 +161,7 @@ fun InstructorClassPreparationScreen(
         ) {
             item {
                 PreparationHeader(
-                    isInstructorReady = isInstructorReady,
+                    isInstructorReady = isReadyState,
                     participantReadyCount = participantReadyCount,
                     participantTotalCount = participantTotalCount
                 )
@@ -164,7 +171,8 @@ fun InstructorClassPreparationScreen(
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .background(color = SSINGTheme.colors.backgroundNormal,
+                        .background(
+                            color = SSINGTheme.colors.backgroundNormal,
                             shape = RoundedCornerShape(
                                 topStart = 12.dp,
                                 topEnd = 12.dp,
@@ -185,6 +193,7 @@ fun InstructorClassPreparationScreen(
                             duration = duration,
                             price = price,
                         )
+
                     }
 
                     Spacer(modifier = Modifier.height(24.dp))
@@ -193,7 +202,12 @@ fun InstructorClassPreparationScreen(
                         SectionTitle(text = "강습생 정보")
                         Spacer(modifier = Modifier.height(8.dp))
                         teams.forEachIndexed { index, team ->
-                            TeamParticipantsCard(team = team)
+                            ConsumerInfoCard(
+                                isReady = team.isReady,
+                                nickname = team.teamNickname,
+                                participants = team.participants,
+                                price = team.price,
+                            )
                             if (index != teams.lastIndex) {
                                 Spacer(modifier = Modifier.height(8.dp))
                             }
@@ -361,44 +375,8 @@ data class TeamParticipantsInfo(
     val teamCount: Int,
     val participants: ImmutableList<String>,
     val price: Int,
+    val isReady: Boolean,
 )
-
-@Composable
-private fun TeamParticipantsCard(team: TeamParticipantsInfo) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(
-                color = SSINGTheme.colors.backgroundNormal,
-                shape = RoundedCornerShape(12.dp),
-            )
-            .padding(16.dp),
-    ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Text(
-                text = "${team.teamNickname}님 팀 ${team.teamCount}명",
-                style = SSINGTheme.typography.body.sb16,
-                color = SSINGTheme.colors.textNormal,
-                modifier = Modifier.weight(1f),
-            )
-            Text(
-                text = "₩ ${"%,d".format(team.price)}",
-                style = SSINGTheme.typography.caption.sb14,
-                color = SSINGTheme.colors.textNormal,
-            )
-        }
-        Spacer(modifier = Modifier.height(8.dp))
-        Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-            team.participants.forEach { participant ->
-                SsingChip(text = participant, style = SsingChipStyle.GRAY)
-            }
-        }
-    }
-}
 
 @Composable
 private fun InfoRow(label: String, value: String) {
@@ -439,12 +417,14 @@ private fun InstructorClassPreparationScreenPreview() {
                     teamCount = 0,
                     participants = persistentListOf("38세 남", "12세 여", "9세 남"),
                     price = 0,
+                    isReady = true,
                 ),
                 TeamParticipantsInfo(
                     teamNickname = "김OO",
                     teamCount = 0,
                     participants = persistentListOf("38세 남", "12세 여", "9세 남"),
                     price = 0,
+                    isReady = false,
                 ),
             ),
             onBackClick = {},
