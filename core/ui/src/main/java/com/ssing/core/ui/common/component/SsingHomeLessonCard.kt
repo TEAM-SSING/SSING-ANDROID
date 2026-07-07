@@ -1,6 +1,5 @@
 package com.ssing.core.ui.common.component
 
-import android.R.attr.top
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -39,6 +38,16 @@ sealed interface HomeLessonCardState {
 }
 
 @Composable
+private fun Modifier.lessonCardBackground() = this
+    .fillMaxWidth()
+    .roundedBackgroundWithBorder(
+        shape = RoundedCornerShape(12.dp),
+        backgroundColor = SSINGTheme.colors.backgroundNormal,
+        borderColor = SSINGTheme.colors.borderAlternative,
+        borderWidth = 1.dp,
+    )
+
+@Composable
 fun SsingHomeLessonCard(
     state: HomeLessonCardState,
     onClick: () -> Unit,
@@ -48,13 +57,7 @@ fun SsingHomeLessonCard(
         is HomeLessonCardState.Reservation -> {
             Column(
                 modifier = modifier
-                    .fillMaxWidth()
-                    .roundedBackgroundWithBorder(
-                        shape = RoundedCornerShape(12.dp),
-                        backgroundColor = SSINGTheme.colors.backgroundNormal,
-                        borderColor = SSINGTheme.colors.borderAlternative,
-                        borderWidth = 1.dp,
-                    )
+                    .lessonCardBackground()
                     .padding(16.dp),
                 verticalArrangement = Arrangement.spacedBy(24.dp),
             ) {
@@ -77,13 +80,7 @@ fun SsingHomeLessonCard(
         HomeLessonCardState.Empty -> {
             Row(
                 modifier = modifier
-                    .fillMaxWidth()
-                    .roundedBackgroundWithBorder(
-                        shape = RoundedCornerShape(12.dp),
-                        backgroundColor = SSINGTheme.colors.backgroundNormal,
-                        borderColor = SSINGTheme.colors.borderAlternative,
-                        borderWidth = 1.dp,
-                    )
+                    .lessonCardBackground()
                     .padding(
                         vertical = 24.dp,
                         horizontal = 16.dp
