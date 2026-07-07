@@ -20,7 +20,7 @@ import com.ssing.core.ui.designsystem.theme.SSINGTheme
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.ssing.core.network.session.AuthSessionManager
-import com.ssing.instructor.component.InstructorBottomBar
+import com.ssing.core.ui.common.component.SsingBottomBar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.launch
@@ -53,7 +53,7 @@ class InstructorMainActivity : ComponentActivity() {
                 Scaffold(
                     modifier = Modifier.fillMaxSize(),
                     bottomBar = {
-                        InstructorBottomBar(
+                        SsingBottomBar(
                             isVisible = isBottomBarVisible,
                             tabs = InstructorMainTab.entries.toImmutableList(),
                             currentTab = currentTab,
