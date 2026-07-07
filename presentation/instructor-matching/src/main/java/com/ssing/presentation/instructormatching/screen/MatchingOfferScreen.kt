@@ -16,16 +16,13 @@ import androidx.compose.ui.unit.dp
 import com.ssing.core.ui.common.component.SsingButton
 import com.ssing.core.ui.common.component.SsingButtonStyle
 import com.ssing.core.ui.common.component.SsingHeader
-import com.ssing.core.ui.common.component.SsingMatchingDetailCard
 import com.ssing.core.ui.common.component.SsingTopBar
 import com.ssing.core.ui.designsystem.theme.SSINGTheme
+import com.ssing.presentation.instructormatching.component.MatchingOfferSummaryDetailCard
 import com.ssing.presentation.instructormatching.model.LessonSummaryUiModel
 import com.ssing.presentation.instructormatching.model.MatchingOfferUiModel
 import com.ssing.presentation.instructormatching.model.OfferStatusOption
 import com.ssing.presentation.instructormatching.model.ParticipantUiModel
-import com.ssing.presentation.instructormatching.model.toParticipant
-import kotlinx.collections.immutable.persistentListOf
-import kotlinx.collections.immutable.toPersistentList
 
 @Composable
 internal fun MatchingOfferScreen(
@@ -57,18 +54,9 @@ internal fun MatchingOfferScreen(
                 .padding(horizontal = 16.dp, vertical = 24.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
-            SsingMatchingDetailCard(
+            MatchingOfferSummaryDetailCard(
+                offer = offer,
                 stepLabel = "빠른 요청",
-                stepLabelColor = SSINGTheme.colors.primaryNormal,
-                tags = persistentListOf(offer.lesson.sportLabel, offer.lesson.levelLabel),
-                nickname = offer.nickname,
-                teamCount = offer.teamCount,
-                totalCount = offer.lesson.headcount,
-                classDateTime = offer.classDateTime,
-                location = offer.lesson.resortLabel,
-                duration = "${offer.lesson.durationHours}시간",
-                participants = offer.participants.map { it.toParticipant() }.toPersistentList(),
-                price = offer.price,
             )
 
             Text(
@@ -101,6 +89,7 @@ internal fun MatchingOfferScreen(
         }
     }
 }
+
 
 @Preview(showBackground = true)
 @Composable
