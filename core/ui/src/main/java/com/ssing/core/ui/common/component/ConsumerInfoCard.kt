@@ -36,7 +36,7 @@ fun ConsumerInfoCard(
         modifier = modifier
             .fillMaxWidth()
             .roundedBackgroundWithBorder(
-                shape = RoundedCornerShape(16.dp),
+                shape = RoundedCornerShape(12.dp),
                 backgroundColor = White,
                 borderWidth = 1.dp,
                 borderColor = if (isReady) SSINGTheme.colors.primaryNormal else SSINGTheme.colors.borderAlternative,
