@@ -31,6 +31,7 @@ fun SsingHomeLessonCard(
     date: String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
+    hasLesson: Boolean = true,
 ) {
     Column(
         modifier = modifier
@@ -145,7 +146,7 @@ private fun InfoRow(
     }
 }
 
-@Preview(showBackground = true)
+@Preview
 @Composable
 private fun SsingHomeLessonCardPreview() {
     SSINGTheme {
