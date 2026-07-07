@@ -74,7 +74,7 @@ enum class CancelReason(val label: String) {
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CancelBottomSheet(
+fun MatchingCancelBottomSheet(
     userRole: UserRole,
     selectedReason: CancelReason?,
     onReasonClick: (CancelReason) -> Unit,
@@ -306,7 +306,7 @@ private fun CancelBottomSheetPreview(
             }
 
             if (showSheet) {
-                CancelBottomSheet(
+                MatchingCancelBottomSheet(
                     userRole = userRole,
                     selectedReason = selectedReason,
                     onReasonClick = { selectedReason = it },
