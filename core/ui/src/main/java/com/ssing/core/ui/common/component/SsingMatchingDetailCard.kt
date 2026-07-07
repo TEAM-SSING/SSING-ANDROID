@@ -123,11 +123,9 @@ fun SsingMatchingDetailCard(
  * @param tags 강습 태그 목록
  * @param teamNicknames 팀별 닉네임/인원 목록
  * @param totalCount 전체 강습 인원 수
- * @param teamCount 강습 인원 수 (표시용 총합)
  * @param duration 강습 시간
  * @param actualTimeRange 실제 강습 시간 범위
- * @param isPaid 결제 완료 여부
- * @param price 예상 가격
+ * @param price 강습 가격
  * @param cancelDateTime 취소 일시
  * @param cancelSubject 취소 주체
  * @param cancelReason 취소 사유
@@ -137,10 +135,9 @@ fun SsingMatchingDetailCardSmall(
     tags: ImmutableList<String>,
     teamNicknames: ImmutableList<TeamNickname>,
     totalCount: Int,
-    teamCount: Int,
+    place: String,
     duration: String,
     actualTimeRange: String,
-    isPaid: Boolean,
     price: Int,
     cancelDateTime: String,
     cancelSubject: String,
@@ -169,10 +166,10 @@ fun SsingMatchingDetailCardSmall(
         Column(
             verticalArrangement = Arrangement.spacedBy(2.dp)
         ) {
-            SsingInfoRow(label = "강습 인원", value = "총 ${teamCount}명")
+            SsingInfoRow(label = "강습 장소", value = place)
             SsingInfoRow(label = "강습 시간", value = duration)
             SsingInfoRow(label = "실제 강습 시간", value = actualTimeRange)
-            SsingPriceRow(isPaid = isPaid, price = price)
+            SsingInfoRow(label = "강습 가격", value = "₩ ${"%,d".format(price)}")
 
             HorizontalDivider(
                 color = SSINGTheme.colors.borderDisabled,
@@ -229,7 +226,7 @@ private fun SsingPriceRow(isPaid: Boolean, price: Int) {
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(
-            text = "예상가격",
+            text = "예상 가격",
             style = SSINGTheme.typography.caption.sb12,
             color = SSINGTheme.colors.textAlternative
         )
@@ -391,7 +388,7 @@ private fun SsingClassDetailCardPreview() {
 private fun SsingClassDetailCardSmallPreview() {
     SSINGTheme {
         SsingMatchingDetailCardSmall(
-            tags = persistentListOf("지산포레스트", "스노보드", "자격증이 있어요"),
+            tags = persistentListOf("스노보드", "자격증이 있어요"),
             teamNicknames = persistentListOf(
                 TeamNickname("김남자", 1),
                 TeamNickname("김여자", 1),
@@ -399,10 +396,9 @@ private fun SsingClassDetailCardSmallPreview() {
                 TeamNickname("강아지", 1),
             ),
             totalCount = 4,
-            teamCount = 0,
+            place = "000 리조트",
             duration = "0시간",
             actualTimeRange = "00:00~00:00 (0시간)",
-            isPaid = true,
             price = 0,
             cancelDateTime = "00월 00일 O요일 00:00",
             cancelSubject = "취소 주체",
