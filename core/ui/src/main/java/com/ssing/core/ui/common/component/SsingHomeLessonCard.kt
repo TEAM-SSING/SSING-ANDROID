@@ -1,5 +1,7 @@
 package com.ssing.core.ui.common.component
 
+import android.R.attr.text
+import android.system.Os.stat
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -23,6 +25,7 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ssing.core.ui.R
+import com.ssing.core.ui.common.component.HomeLessonCardState.Reservation.Status
 import com.ssing.core.ui.designsystem.theme.SSINGTheme
 import com.ssing.core.ui.extension.roundedBackgroundWithBorder
 import java.time.LocalDateTime
@@ -31,11 +34,18 @@ import java.util.Locale
 
 sealed interface HomeLessonCardState {
     data class Reservation(
+        val chip: String,
         val title: String,
         val location: String,
-        val dDay: Int,
         val date: LocalDateTime,
-    ): HomeLessonCardState
+        val status: Status
+    ): HomeLessonCardState {
+        sealed interface Status {
+            data class Default(val member: Int): Status
+            data class Matched(val member: Int): Status
+            data object Matching: Status
+        }
+    }
 
     data object Empty: HomeLessonCardState
 }
@@ -57,30 +67,7 @@ fun SsingHomeLessonCard(
     modifier: Modifier = Modifier,
 ) {
     when (state) {
-        is HomeLessonCardState.Reservation -> {
-            Column(
-                modifier = modifier
-                    .lessonCardBackground()
-                    .padding(16.dp),
-                verticalArrangement = Arrangement.spacedBy(24.dp),
-            ) {
-                LessonInfoSection(
-                    title = state.title,
-                    location = state.location,
-                    date = state.date.ssingDateFormatter(),
-                    dDay = state.dDay,
-                )
-
-                SsingButton(
-                    text = "강습 상세보기",
-                    onClick = onClick,
-                    style = SsingButtonStyle.GRAY,
-                    modifier = Modifier.fillMaxWidth(),
-                )
-            }
-        }
-
-        HomeLessonCardState.Empty -> {
+        is HomeLessonCardState.Empty -> {
             Row(
                 modifier = modifier
                     .lessonCardBackground()
@@ -88,16 +75,34 @@ fun SsingHomeLessonCard(
                         vertical = 24.dp,
                         horizontal = 16.dp
                     ),
-                verticalAlignment = Alignment.CenterVertically,
+                verticalAlignment = Alignment.Bottom,
             ) {
                 EmptyLessonInfoSection(
                     modifier = Modifier.weight(1f)
                 )
 
                 Image(
-                    painter = painterResource(id = R.drawable.img_ski),
+                    painter = painterResource(id = R.drawable.img_ski_66),
                     contentDescription = null,
-                    modifier = Modifier.size(86.dp),
+                    modifier = Modifier.size(66.dp),
+                )
+            }
+        }
+
+        is HomeLessonCardState.Reservation -> {
+            Column(
+                modifier = modifier
+                    .lessonCardBackground()
+                    .padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(24.dp),
+            ) {
+                LessonInfoSection(state = state)
+
+                SsingButton(
+                    text = if (state.status is Status.Default) "강습 상세보기" else "이어보기",
+                    onClick = onClick,
+                    style = SsingButtonStyle.GRAY,
+                    modifier = Modifier.fillMaxWidth(),
                 )
             }
         }
@@ -106,29 +111,31 @@ fun SsingHomeLessonCard(
 
 @Composable
 private fun LessonInfoSection(
-    title: String,
-    location: String,
-    date: String,
-    dDay: Int,
+    state: HomeLessonCardState.Reservation,
     modifier: Modifier = Modifier,
 ) {
     Row(
         modifier = modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.Bottom
     ) {
         Column(
             modifier = Modifier.weight(1f),
             verticalArrangement = Arrangement.spacedBy(4.dp),
         ) {
             SsingChip(
-                text = "D-${dDay}",
+                text = state.chip,
                 style = SsingChipStyle.BLUE,
             )
 
             Spacer(modifier = Modifier.height(8.dp))
 
             Text(
-                text = title,
+                text = when (state.status) {
+                    is Status.Matching -> "매칭중"
+                    is Status.Default -> "${state.title}님 팀 ${state.status.member}명"
+                    is Status.Matched -> "${state.title}님 팀 ${state.status.member}명"
+                },
                 style = SSINGTheme.typography.body.sb20,
                 modifier = Modifier.fillMaxWidth()
             )
@@ -140,7 +147,7 @@ private fun LessonInfoSection(
             ) {
                 InfoRow(
                     iconRes = R.drawable.ic_reservation_16,
-                    text = date,
+                    text = state.date.ssingDateFormatter(),
                 )
                 
                 Icon(
@@ -151,15 +158,15 @@ private fun LessonInfoSection(
 
                 InfoRow(
                     iconRes = R.drawable.ic_location_16,
-                    text = location,
+                    text =  state.location,
                 )
             }
         }
 
         Image(
-            painter = painterResource(id = R.drawable.img_ski),
+            painter = painterResource(id = R.drawable.img_ski_66),
             contentDescription = null,
-            modifier = Modifier.size(86.dp),
+            modifier = Modifier.size(66.dp),
         )
     }
 }
@@ -225,14 +232,27 @@ private fun LocalDateTime.ssingDateFormatter(): String {
 
 @Preview
 @Composable
-private fun SsingHomeLessonCardPreview() {
+private fun SsingHomeLessonEmptyCardPreview() {
+    SSINGTheme {
+        SsingHomeLessonCard(
+            state = HomeLessonCardState.Empty,
+            onClick = {},
+            modifier = Modifier.width(320.dp),
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun SsingHomeLessonMatchingCardPreview() {
     SSINGTheme {
         SsingHomeLessonCard(
             state = HomeLessonCardState.Reservation(
-                title = "text",
+                chip = "Now",
+                title = "매칭중",
                 date = LocalDateTime.of(2025, 7, 15, 19, 0),
                 location = "하이원",
-                dDay = 2,
+                status = Status.Matching
             ),
             onClick = {},
             modifier = Modifier.width(320.dp),
@@ -242,10 +262,34 @@ private fun SsingHomeLessonCardPreview() {
 
 @Preview
 @Composable
-private fun SsingHomeLessonEmptyCardPreview() {
+private fun SsingHomeLessonMatchedCardPreview() {
     SSINGTheme {
         SsingHomeLessonCard(
-            state = HomeLessonCardState.Empty,
+            state = HomeLessonCardState.Reservation(
+                chip = "Now",
+                title = "김OO",
+                date = LocalDateTime.of(2025, 7, 15, 19, 0),
+                location = "하이원",
+                status = Status.Matched(member = 3),
+            ),
+            onClick = {},
+            modifier = Modifier.width(320.dp),
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun SsingHomeLessonCardPreview() {
+    SSINGTheme {
+        SsingHomeLessonCard(
+            state = HomeLessonCardState.Reservation(
+                chip = "D-2",
+                title = "김OO",
+                date = LocalDateTime.of(2025, 7, 15, 19, 0),
+                location = "하이원",
+                status = Status.Default(member = 3)
+            ),
             onClick = {},
             modifier = Modifier.width(320.dp),
         )
