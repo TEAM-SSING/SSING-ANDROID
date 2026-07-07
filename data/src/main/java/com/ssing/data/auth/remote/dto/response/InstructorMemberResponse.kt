@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class MemberResponse(
+data class InstructorMemberResponse(
     @SerialName("id") val id: Long,
     @SerialName("nickname") val nickname: String,
     @SerialName("role") val role: String,

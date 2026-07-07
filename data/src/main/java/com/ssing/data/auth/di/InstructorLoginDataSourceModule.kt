@@ -1,7 +1,7 @@
-package com.ssing.data.instructorlogin.di
+package com.ssing.data.auth.di
 
-import com.ssing.data.instructorlogin.remote.datasource.api.InstructorLoginDataSource
-import com.ssing.data.instructorlogin.remote.datasource.impl.InstructorLoginDataSourceImpl
+import com.ssing.data.auth.remote.datasource.api.InstructorLoginDataSource
+import com.ssing.data.auth.remote.datasource.impl.InstructorLoginDataSourceImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

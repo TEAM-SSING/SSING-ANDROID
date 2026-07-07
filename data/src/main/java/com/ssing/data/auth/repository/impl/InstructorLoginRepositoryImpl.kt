@@ -1,14 +1,14 @@
-package com.ssing.data.instructorlogin.repository.impl
+package com.ssing.data.auth.repository.impl
 
 import com.ssing.core.network.extension.mapApiException
 import com.ssing.core.network.token.TokenAccessManager
 import com.ssing.core.network.util.ApiResponseHandler
 import com.ssing.core.network.util.suspendRunCatching
-import com.ssing.data.instructorlogin.exception.InstructorLoginException
-import com.ssing.data.instructorlogin.model.InstructorLoginResult
-import com.ssing.data.instructorlogin.remote.datasource.api.InstructorLoginDataSource
-import com.ssing.data.instructorlogin.remote.dto.response.KakaoLoginResponse
-import com.ssing.data.instructorlogin.repository.api.InstructorLoginRepository
+import com.ssing.data.auth.exception.InstructorLoginException
+import com.ssing.data.auth.model.InstructorLoginResult
+import com.ssing.data.auth.remote.datasource.api.InstructorLoginDataSource
+import com.ssing.data.auth.remote.dto.response.InstructorKakaoLoginResponse
+import com.ssing.data.auth.repository.api.InstructorLoginRepository
 import javax.inject.Inject
 
 class InstructorLoginRepositoryImpl @Inject constructor(
@@ -45,7 +45,7 @@ class InstructorLoginRepositoryImpl @Inject constructor(
                 }
             }
 
-    private fun KakaoLoginResponse.toInstructorLoginResult() = InstructorLoginResult(
+    private fun InstructorKakaoLoginResponse.toInstructorLoginResult() = InstructorLoginResult(
         id = this.member.id,
         nickname = this.member.nickname,
         role = this.member.role,

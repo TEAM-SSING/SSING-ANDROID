@@ -1,7 +1,7 @@
-package com.ssing.data.instructorlogin.di
+package com.ssing.data.auth.di
 
-import com.ssing.data.instructorlogin.repository.api.InstructorLoginRepository
-import com.ssing.data.instructorlogin.repository.impl.InstructorLoginRepositoryImpl
+import com.ssing.data.auth.repository.api.InstructorLoginRepository
+import com.ssing.data.auth.repository.impl.InstructorLoginRepositoryImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

@@ -1,4 +1,4 @@
-package com.ssing.data.instructorlogin.exception
+package com.ssing.data.auth.exception
 
 import com.ssing.core.network.exception.BusinessException
 

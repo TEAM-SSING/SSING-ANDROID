@@ -1,4 +1,4 @@
-package com.ssing.data.instructorlogin.model
+package com.ssing.data.auth.model
 
 data class InstructorLoginResult(
     val id: Long,
