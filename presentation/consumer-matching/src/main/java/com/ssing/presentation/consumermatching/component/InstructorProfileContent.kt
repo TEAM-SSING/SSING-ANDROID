@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
@@ -421,42 +422,56 @@ private fun ReviewSection(
             }
         }
 
-        Box(modifier = Modifier.fillMaxWidth()) {
-            var reviewCardHeight by remember { mutableStateOf(0.dp) }
+        if (reviews.isNotEmpty()) {
+            Box(modifier = Modifier.fillMaxWidth()) {
+                var reviewCardHeight by remember { mutableStateOf(0.dp) }
 
-            SubcomposeLayout(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
-            ) { constraints ->
-                val cardConstraints = constraints.copy(
-                    minHeight = 0,
-                    maxHeight = Constraints.Infinity,
-                )
-
-                val maxHeightPx = reviews.indices.maxOfOrNull { index ->
-                    subcompose(index) {
-                        ReviewCard(review = reviews[index], modifier = Modifier.fillMaxWidth())
-                    }.first().measure(cardConstraints).height
-                } ?: 0
-
-                reviewCardHeight = maxHeightPx.toDp()
-
-                layout(0, 0) {}
-            }
-
-            HorizontalPager(
-                state = rememberPagerState(pageCount = { reviews.size }),
-                contentPadding = PaddingValues(horizontal = 16.dp),
-                pageSpacing = 2.dp,
-            ) { page ->
-                ReviewCard(
-                    review = reviews[page],
+                SubcomposeLayout(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(reviewCardHeight),
-                )
+                        .padding(horizontal = 16.dp),
+                ) { constraints ->
+                    val cardConstraints = constraints.copy(
+                        minHeight = 0,
+                        maxHeight = Constraints.Infinity,
+                    )
+
+                    val maxHeightPx = reviews.indices.maxOfOrNull { index ->
+                        subcompose(index) {
+                            ReviewCard(review = reviews[index], modifier = Modifier.fillMaxWidth())
+                        }.first().measure(cardConstraints).height
+                    } ?: 0
+
+                    reviewCardHeight = maxHeightPx.toDp()
+
+                    layout(0, 0) {}
+                }
+
+                HorizontalPager(
+                    state = rememberPagerState(pageCount = { reviews.size }),
+                    contentPadding = PaddingValues(horizontal = 16.dp),
+                    pageSpacing = 2.dp,
+                ) { page ->
+                    ReviewCard(
+                        review = reviews[page],
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(reviewCardHeight),
+                    )
+                }
             }
+        } else {
+            Text(
+                text = "아직 강습 후기가 없어요",
+                color = SSINGTheme.colors.textDisabled,
+                style = SSINGTheme.typography.body.sb16,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
+                    .grayRoundedBorder()
+                    .heightIn(min = 177.dp)
+                    .wrapContentSize(Alignment.Center),
+            )
         }
     }
 }
@@ -588,11 +603,10 @@ private fun Modifier.grayRoundedBorder(): Modifier =
     )
 
 private class InstructorProfileContentPreviewProvider :
-    PreviewParameterProvider<@Composable (ColumnScope.() -> Unit)?> {
-    override val values: Sequence<@Composable (ColumnScope.() -> Unit)?>
-        get() = sequenceOf(
-            null,
-            {
+    PreviewParameterProvider<Pair<@Composable (ColumnScope.() -> Unit)?, ImmutableList<InstructorReview>>> {
+    override val values: Sequence<Pair<@Composable (ColumnScope.() -> Unit)?, ImmutableList<InstructorReview>>>
+        get() {
+            val headerContent: @Composable (ColumnScope.() -> Unit) = {
                 SsingHeader(
                     title = "이 강사님이 매칭되었어요",
                     modifier = Modifier
@@ -601,13 +615,49 @@ private class InstructorProfileContentPreviewProvider :
                     subText = "3분 이내에 수락하지 않으면 강습연결이 취소돼요"
                 )
             }
-        )
+
+            return sequenceOf(
+                null to persistentListOf(),
+                headerContent to persistentListOf(
+                    InstructorReview(
+                        profileImageUrl = "",
+                        nickname = "text",
+                        gender = "gender",
+                        age = 5,
+                        rating = 5,
+                        tags = persistentListOf("스노보드", "처음타요"),
+                        content = "최근 후기 내용입니다. 강사님이 잘생겼고 스키가 정말 재밌고 다음에도 또 씽을 이용하고 싶고 앞으로 스키와 사랑에 빠질 것 같고 스노보드도 언젠가 도전해보고싶으네요 하하",
+                        date = "OOOO.OO.OO",
+                    ),
+                    InstructorReview(
+                        profileImageUrl = "",
+                        nickname = "text",
+                        gender = "gender",
+                        age = 5,
+                        rating = 4,
+                        tags = persistentListOf("스노보드", "처음타요"),
+                        content = "최근 후기 내용입니다.",
+                        date = "OOOO.OO.OO",
+                    ),
+                    InstructorReview(
+                        profileImageUrl = "",
+                        nickname = "text",
+                        gender = "gender",
+                        age = 5,
+                        rating = 1,
+                        tags = persistentListOf("스노보드", "처음타요"),
+                        content = "최근 후기 내용입니다. 강사님이 잘생겼고 스키가 정말 재밌고 다음에도 또 씽을 이용하고 싶고 앞으로 스키와 사랑에 빠질 것 같고 스노보드도 언젠가 도전해보고싶으네요 하하",
+                        date = "OOOO.OO.OO",
+                    ),
+                ),
+            )
+        }
 }
 
 @Preview(showBackground = true)
 @Composable
 private fun InstructorProfileContentPreview(
-    @PreviewParameter(InstructorProfileContentPreviewProvider::class) header: @Composable (ColumnScope.() -> Unit)?,
+    @PreviewParameter(InstructorProfileContentPreviewProvider::class) pair: Pair<@Composable (ColumnScope.() -> Unit)?, ImmutableList<InstructorReview>>,
 ) {
     SSINGTheme {
         InstructorProfileContent(
@@ -627,39 +677,8 @@ private fun InstructorProfileContentPreview(
             ),
             totalReviewCount = 128,
             onReviewClick = {},
-            reviews = persistentListOf(
-                InstructorReview(
-                    profileImageUrl = "",
-                    nickname = "text",
-                    gender = "gender",
-                    age = 5,
-                    rating = 5,
-                    tags = persistentListOf("스노보드", "처음타요"),
-                    content = "최근 후기 내용입니다. 강사님이 잘생겼고 스키가 정말 재밌고 다음에도 또 씽을 이용하고 싶고 앞으로 스키와 사랑에 빠질 것 같고 스노보드도 언젠가 도전해보고싶으네요 하하",
-                    date = "OOOO.OO.OO",
-                ),
-                InstructorReview(
-                    profileImageUrl = "",
-                    nickname = "text",
-                    gender = "gender",
-                    age = 5,
-                    rating = 4,
-                    tags = persistentListOf("스노보드", "처음타요"),
-                    content = "최근 후기 내용입니다.",
-                    date = "OOOO.OO.OO",
-                ),
-                InstructorReview(
-                    profileImageUrl = "",
-                    nickname = "text",
-                    gender = "gender",
-                    age = 5,
-                    rating = 1,
-                    tags = persistentListOf("스노보드", "처음타요"),
-                    content = "최근 후기 내용입니다. 강사님이 잘생겼고 스키가 정말 재밌고 다음에도 또 씽을 이용하고 싶고 앞으로 스키와 사랑에 빠질 것 같고 스노보드도 언젠가 도전해보고싶으네요 하하",
-                    date = "OOOO.OO.OO",
-                )
-            ),
-            header = header,
+            reviews = pair.second,
+            header = pair.first,
         )
     }
 }
