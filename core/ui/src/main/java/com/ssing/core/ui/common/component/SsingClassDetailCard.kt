@@ -3,7 +3,6 @@ package com.ssing.core.ui.common.component
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -267,7 +266,6 @@ private fun SsingPriceRow(label: String, isPaid: Boolean, price: Int) {
     }
 }
 
-@OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun SsingParticipantsRow(label: String, participants: ImmutableList<String>) {
     val verticalAlignment = if (participants.size <= 3) {
