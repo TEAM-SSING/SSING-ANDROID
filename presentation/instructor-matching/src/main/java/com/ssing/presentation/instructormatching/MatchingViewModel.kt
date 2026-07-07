@@ -28,8 +28,8 @@ internal class MatchingViewModel @Inject constructor() :
     }
 
     fun toggleSport(sport: SportOption) = updateState {
-        if (condition.availableSports.size <= 1) this
-        else copy(condition = condition.copy(selectedSports = setOf(sport)))
+        if (condition.availableSports.size <= 1) return@updateState this
+        copy(condition = condition.copy(selectedSports = condition.selectedSports.toggle(sport)))
     }
 
     fun toggleLevel(level: LevelOption) = updateState {
