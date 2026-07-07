@@ -25,6 +25,7 @@ import com.ssing.core.ui.designsystem.theme.SSINGTheme
 import com.ssing.core.ui.extension.roundedBackgroundWithBorder
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import java.util.Locale
 
 sealed interface HomeLessonCardState {
     data class Reservation(
@@ -215,8 +216,8 @@ private fun EmptyLessonInfoSection(
     }
 }
 
-fun LocalDateTime.ssingDateFormatter(): String {
-    return this.format(DateTimeFormatter.ofPattern("yyyy. MM. dd (E) HH:mm"))
+private fun LocalDateTime.ssingDateFormatter(): String {
+    return this.format(DateTimeFormatter.ofPattern("yyyy. MM. dd (E) HH:mm", Locale.KOREAN))
 }
 
 @Preview
