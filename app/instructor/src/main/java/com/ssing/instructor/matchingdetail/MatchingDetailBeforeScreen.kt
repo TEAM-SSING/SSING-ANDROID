@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -159,25 +158,42 @@ fun InstructorClassPreparationScreen(
             }
 
             item {
-                SectionTitle(text = "강습 정보")
-                Spacer(modifier = Modifier.height(8.dp))
-                ClassInfoCard(
-                    tags = tags,
-                    classTitle = classTitle,
-                    location = location,
-                    duration = duration,
-                    price = price,
-                )
-            }
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp)
+                        .background(
+                            SSINGTheme.colors.backgroundNormal,shape = RoundedCornerShape(
+                                topStart = 12.dp,
+                                topEnd = 12.dp,
+                                bottomStart = 0.dp,
+                                bottomEnd = 0.dp,
+                            )
+                        ),
+                ) {
+                    Column {
+                        SectionTitle(text = "강습 정보")
+                        Spacer(modifier = Modifier.height(8.dp))
+                        ClassInfoCard(
+                            tags = tags,
+                            classTitle = classTitle,
+                            location = location,
+                            duration = duration,
+                            price = price,
+                        )
+                    }
 
-            item {
-                SectionTitle(text = "강습생 정보")
-                Spacer(modifier = Modifier.height(8.dp))
-            }
-
-            items(teams) { team ->
-                TeamParticipantsCard(team = team)
-                Spacer(modifier = Modifier.height(8.dp))
+                    Column(modifier = Modifier.padding(start = 16.dp)) {
+                        SectionTitle(text = "강습생 정보")
+                        Spacer(modifier = Modifier.height(8.dp))
+                        teams.forEachIndexed { index, team ->
+                            TeamParticipantsCard(team = team)
+                            if (index != teams.lastIndex) {
+                                Spacer(modifier = Modifier.height(8.dp))
+                            }
+                        }
+                    }
+                }
             }
         }
     }
@@ -195,8 +211,7 @@ private fun PreparationHeader(progress: Int, totalProgress: Int) {
         modifier = Modifier
             .fillMaxWidth()
             .background(
-                color = SSINGTheme.colors.backgroundNormal,
-                shape = RoundedCornerShape(12.dp),
+                color = Blue50,
             )
             .padding(16.dp),
     ) {
@@ -218,8 +233,11 @@ private fun PreparationHeader(progress: Int, totalProgress: Int) {
 
         Row(
             verticalAlignment = Alignment.Bottom,
-            modifier = Modifier.height(IntrinsicSize.Min),
-            horizontalArrangement = Arrangement.End) {
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(IntrinsicSize.Min),
+            horizontalArrangement = Arrangement.End
+        ) {
 
             Text(
                 text = "$progress / $totalProgress",
@@ -240,8 +258,8 @@ private fun PreparationHeader(progress: Int, totalProgress: Int) {
                 contentDescription = "강사 준비 완료 여부",
                 modifier = Modifier
                     .onSizeChanged { size ->
-                    instructorImageHeightPx = size.height
-                },
+                        instructorImageHeightPx = size.height
+                    },
             )
 
             Spacer(modifier = Modifier.width(8.dp))
