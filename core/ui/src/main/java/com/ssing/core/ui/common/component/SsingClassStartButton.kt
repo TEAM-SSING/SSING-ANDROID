@@ -21,7 +21,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -29,25 +28,34 @@ import androidx.compose.ui.unit.dp
 import com.ssing.core.ui.R
 import com.ssing.core.ui.designsystem.theme.SSINGTheme
 
+/**
+ * 강습 시작 버튼용 카드.
+ *
+ * @param badgeText 상단 배지 텍스트
+ * @param title 타이틀
+ * @param description 설명 텍스트
+ * @param background 카드 배경 (단색/그라데이션 등 카드마다 다르므로 파라미터로 받음)
+ * @param tone 아이콘/텍스트 색상 세트 (라이트/다크 두 가지로 닫혀 있어 enum으로 관리)
+ * @param chipStyle 배지 칩 스타일
+ */
+
 @Composable
 fun SsingStartClassCard(
     badgeText: String,
     title: String,
     description: String,
     background: Brush,
-    @DrawableRes iconRes: Int,
-    titleColor: Color,
-    descriptionColor: Color,
+    tone: SsingStartClassCardTone,
     chipStyle: SsingChipStyle,
     modifier: Modifier = Modifier,
 ) {
     Box(
         modifier = modifier
             .clip(RoundedCornerShape(12.dp))
-            .background(brush = background), // aspectRatio(...)
+            .background(brush = background),
     ) {
         Image(
-            painter = painterResource(id = iconRes),
+            painter = painterResource(id = tone.iconRes),
             contentDescription = null,
             modifier = Modifier
                 .size(width = 90.dp, height = 143.dp)
@@ -64,19 +72,49 @@ fun SsingStartClassCard(
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            Text(text = title, style = SSINGTheme.typography.body.sb16, color = titleColor)
+            Text(
+                text = title,
+                style = SSINGTheme.typography.body.sb16,
+                color = tone.titleColor(),
+            )
 
             Spacer(modifier = Modifier.height(4.dp))
 
             Text(
                 text = description,
                 style = SSINGTheme.typography.caption.sb12,
-                color = descriptionColor
+                color = tone.descriptionColor(),
             )
         }
     }
 }
 
+/** 카드의 아이콘/텍스트 색상 세트 */
+enum class SsingStartClassCardTone(
+    @param: DrawableRes val iconRes: Int,
+) {
+    Light(iconRes = R.drawable.img_fast) {
+        @Composable
+        override fun titleColor(): Color = SSINGTheme.colors.textNormal
+
+        @Composable
+        override fun descriptionColor(): Color = SSINGTheme.colors.textAlternative
+    },
+    Dark(iconRes = R.drawable.img_fast_dark) {
+        @Composable
+        override fun titleColor(): Color = SSINGTheme.colors.backgroundNormal
+
+        @Composable
+        override fun descriptionColor(): Color = SSINGTheme.colors.primaryAlternative
+    },
+    ;
+
+    @Composable
+    abstract fun titleColor(): Color
+
+    @Composable
+    abstract fun descriptionColor(): Color
+}
 
 @Preview
 @Composable
@@ -89,9 +127,7 @@ private fun SsingStartClassCardPreview() {
                 SsingStartClassCard(
                     badgeText = "text", title = "title", description = "text",
                     background = Brush.linearGradient(listOf(Color.White, Color(0xFFEFF2F8))),
-                    iconRes = R.drawable.img_fast,
-                    titleColor = SSINGTheme.colors.textNormal,
-                    descriptionColor = SSINGTheme.colors.textAlternative,
+                    tone = SsingStartClassCardTone.Light,
                     chipStyle = SsingChipStyle.BLUE,
                     modifier = Modifier.weight(1f),
                 )
@@ -99,9 +135,7 @@ private fun SsingStartClassCardPreview() {
                 SsingStartClassCard(
                     badgeText = "text", title = "title", description = "text",
                     background = SolidColor(SSINGTheme.colors.borderDisabled),
-                    iconRes = R.drawable.img_fast,
-                    titleColor = SSINGTheme.colors.textNormal,
-                    descriptionColor = SSINGTheme.colors.textAlternative,
+                    tone = SsingStartClassCardTone.Light,
                     chipStyle = SsingChipStyle.BLUE,
                     modifier = Modifier.weight(1f),
                 )
@@ -113,12 +147,10 @@ private fun SsingStartClassCardPreview() {
                         listOf(
                             Color(0xFF64AAFF),
                             Color(0xFF3184EA),
-                            Color(0xFF357DD5)
+                            Color(0xFF357DD5),
                         )
                     ),
-                    iconRes = R.drawable.img_fast_dark,
-                    titleColor = SSINGTheme.colors.backgroundNormal,
-                    descriptionColor = SSINGTheme.colors.primaryAlternative,
+                    tone = SsingStartClassCardTone.Dark,
                     chipStyle = SsingChipStyle.BLUE,
                     modifier = Modifier.weight(1f),
                 )
@@ -126,9 +158,7 @@ private fun SsingStartClassCardPreview() {
                 SsingStartClassCard(
                     badgeText = "text", title = "title", description = "text",
                     background = SolidColor(Color(0xFF2E6BF0)),
-                    iconRes = R.drawable.img_fast_dark,
-                    titleColor = SSINGTheme.colors.backgroundNormal,
-                    descriptionColor = SSINGTheme.colors.primaryAlternative,
+                    tone = SsingStartClassCardTone.Dark,
                     chipStyle = SsingChipStyle.BLUE,
                     modifier = Modifier.weight(1f),
                 )
