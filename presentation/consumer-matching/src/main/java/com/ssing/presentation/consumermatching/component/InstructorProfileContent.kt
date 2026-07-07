@@ -397,7 +397,7 @@ private fun ReviewSection(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
-                text = "최근 후기",
+                text = "강습 후기",
                 color = SSINGTheme.colors.textNormal,
                 style = SSINGTheme.typography.caption.sb14,
             )
