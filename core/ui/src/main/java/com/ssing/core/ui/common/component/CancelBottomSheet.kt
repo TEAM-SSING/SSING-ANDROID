@@ -1,6 +1,5 @@
 package com.ssing.core.ui.common.component
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -10,16 +9,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.SheetState
-import androidx.compose.material3.SheetValue
 import androidx.compose.material3.Text
-import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -34,7 +27,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.ssing.core.ui.R
 import com.ssing.core.ui.designsystem.theme.SSINGTheme
@@ -44,7 +36,7 @@ enum class UserRole {
     CONSUMER,
 }
 
-private enum class CancelReason(val label: String) {
+enum class CancelReason(val label: String) {
     SCHEDULE_CHANGE("일정 변경"),
     INSTRUCTOR_NO_SHOW("강사를 못 만났어요"),
     CONSUMER_NO_SHOW("강습생을 못 만났어요"),
@@ -58,8 +50,6 @@ private enum class CancelReason(val label: String) {
  * @param onConfirmClick 강습 취소하기 버튼 클릭 시 호출하는 콜백.
  * @param onDismissRequest 바텀시트를 닫을 때 호출하는 콜백.
  * @param modifier Composable에 적용할 Modifier.
- * @param bottomSheetState 바텀시트의 열림 상태를 제어하는 [SheetState].
- * @param showScrim 바텀시트 뒤 dimmed 처리 여부.
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -68,13 +58,23 @@ fun CancelBottomSheet(
     onConfirmClick: () -> Unit,
     onDismissRequest: () -> Unit,
     modifier: Modifier = Modifier,
-    bottomSheetState: SheetState = rememberModalBottomSheetState(
-        skipPartiallyExpanded = true,
-        confirmValueChange = { targetValue ->
-            targetValue != SheetValue.Hidden
-        }
-    ),
-    showScrim: Boolean = true,
+) {
+    SsingBasicBottomSheet(
+        onDismissRequest = onDismissRequest,
+    ) {
+        CancelBottomSheetContent(
+            userRole = userRole,
+            onConfirmClick = onConfirmClick,
+            onDismissRequest = onDismissRequest,
+        )
+    }
+}
+
+@Composable
+private fun CancelBottomSheetContent(
+    userRole: UserRole,
+    onConfirmClick: () -> Unit,
+    onDismissRequest: () -> Unit,
 ) {
     val noShowReason = if (userRole == UserRole.CONSUMER) {
         CancelReason.INSTRUCTOR_NO_SHOW
@@ -86,154 +86,121 @@ fun CancelBottomSheet(
 
     val etcState = rememberTextFieldState()
 
-    ModalBottomSheet(
-        onDismissRequest = onDismissRequest,
-        modifier = modifier,
-        sheetState = bottomSheetState,
-        sheetMaxWidth = Dp.Unspecified,
-        shape = RoundedCornerShape(
-            topStart = 12.dp,
-            topEnd = 12.dp,
-        ),
-        containerColor = SSINGTheme.colors.backgroundNormal,
-        scrimColor = if (showScrim) Color(0x73000000) else Color.Transparent,
-        dragHandle = { CustomDragHandle() },
-        content = {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(16.dp),
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+    ) {
+        Icon(
+            imageVector = ImageVector.vectorResource(R.drawable.ic_exclamation_mark),
+            contentDescription = null,
+            tint = Color.Unspecified,
+        )
+
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            Text(
+                text = "강습을 취소할까요?",
+                color = SSINGTheme.colors.textNormal,
+                style = SSINGTheme.typography.body.sb16,
+                textAlign = TextAlign.Center,
+            )
+            Text(
+                text = "취소 사유를 남겨주세요.\n환불은 결제수단에 따라 최대 3일 걸릴 수 있어요.",
+                color = SSINGTheme.colors.textAlternative,
+                style = SSINGTheme.typography.caption.md14,
+                textAlign = TextAlign.Center,
+            )
+        }
+
+        Column(
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+        ) {
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
             ) {
-                Icon(
-                    imageVector = ImageVector.vectorResource(R.drawable.ic_exclamation_mark),
-                    contentDescription = null,
-                    tint = Color.Unspecified,
-                )
-
-                Column(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalArrangement = Arrangement.spacedBy(8.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                ) {
-                    Text(
-                        text = "강습을 취소할까요?",
-                        color = SSINGTheme.colors.textNormal,
-                        style = SSINGTheme.typography.body.sb16,
-                        textAlign = TextAlign.Center,
-                    )
-                    Text(
-                        text = "취소 사유를 남겨주세요.\n환불은 결제수단에 따라 최대 3일 걸릴 수 있어요.",
-                        color = SSINGTheme.colors.textAlternative,
-                        style = SSINGTheme.typography.caption.md14,
-                        textAlign = TextAlign.Center,
-                    )
-                }
-
-                Column(
-                    verticalArrangement = Arrangement.spacedBy(8.dp),
-                ) {
-                    Row(
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    ) {
-                        Text(
-                            text = "취소 사유",
-                            color = SSINGTheme.colors.textAlternative,
-                            style = SSINGTheme.typography.caption.sb12,
-                        )
-
-                        Text(
-                            text = "*취소 사유를 반드시 선택해주세요",
-                            color = SSINGTheme.colors.accentRedNormal,
-                            style = SSINGTheme.typography.caption.sb12,
-                        )
-                    }
-
-                    Column(
-                        verticalArrangement = Arrangement.spacedBy(4.dp)
-                    ) {
-                        Row(
-                            horizontalArrangement = Arrangement.spacedBy(4.dp),
-                        ) {
-                            SsingSelectButton(
-                                text = CancelReason.SCHEDULE_CHANGE.label,
-                                isSelected = selectedReason == CancelReason.SCHEDULE_CHANGE,
-                                onClick = { selectedReason = CancelReason.SCHEDULE_CHANGE },
-                                modifier = Modifier.weight(1f),
-                            )
-                            SsingSelectButton(
-                                text = noShowReason.label,
-                                isSelected = selectedReason == noShowReason,
-                                onClick = { selectedReason = noShowReason },
-                                modifier = Modifier.weight(1f),
-                            )
-                        }
-
-                        SsingSelectButton(
-                            text = CancelReason.ETC.label,
-                            isSelected = selectedReason == CancelReason.ETC,
-                            onClick = { selectedReason = CancelReason.ETC },
-                            modifier = Modifier.fillMaxWidth(),
-                        )
-
-                        if (selectedReason == CancelReason.ETC) {
-                            Spacer(modifier = Modifier.height(4.dp))
-
-                            SsingTextField(
-                                state = etcState,
-                                placeholder = "직접 입력",
-                            )
-                        }
-                    }
-                }
-
                 Text(
-                    text = "반복적인 취소가 확인되면 향후 이용에 제한이 있을 수 있어요",
-                    color = SSINGTheme.colors.accentRedNormal,
+                    text = "취소 사유",
+                    color = SSINGTheme.colors.textAlternative,
                     style = SSINGTheme.typography.caption.sb12,
                 )
 
-                Row (
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                Text(
+                    text = "*취소 사유를 반드시 선택해주세요",
+                    color = SSINGTheme.colors.accentRedNormal,
+                    style = SSINGTheme.typography.caption.sb12,
+                )
+            }
+
+            Column(
+                verticalArrangement = Arrangement.spacedBy(4.dp)
+            ) {
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(4.dp),
                 ) {
-                    SsingButton(
-                        text = "강습 취소하기",
-                        onClick = onConfirmClick,
-                        style = if (selectedReason == null) SsingButtonStyle.GRAY else SsingButtonStyle.RED,
-                        enabled = selectedReason != null &&
-                                (selectedReason != CancelReason.ETC || etcState.text.isNotBlank()),
+                    SsingSelectButton(
+                        text = CancelReason.SCHEDULE_CHANGE.label,
+                        isSelected = selectedReason == CancelReason.SCHEDULE_CHANGE,
+                        onClick = { selectedReason = CancelReason.SCHEDULE_CHANGE },
                         modifier = Modifier.weight(1f),
                     )
-
-                    SsingButton(
-                        text = "계속 이용하기",
-                        onClick = onDismissRequest,
-                        style = SsingButtonStyle.GRAY,
+                    SsingSelectButton(
+                        text = noShowReason.label,
+                        isSelected = selectedReason == noShowReason,
+                        onClick = { selectedReason = noShowReason },
                         modifier = Modifier.weight(1f),
+                    )
+                }
+
+                SsingSelectButton(
+                    text = CancelReason.ETC.label,
+                    isSelected = selectedReason == CancelReason.ETC,
+                    onClick = { selectedReason = CancelReason.ETC },
+                    modifier = Modifier.fillMaxWidth(),
+                )
+
+                if (selectedReason == CancelReason.ETC) {
+                    Spacer(modifier = Modifier.height(4.dp))
+
+                    SsingTextField(
+                        state = etcState,
+                        placeholder = "직접 입력",
                     )
                 }
             }
         }
-    )
-}
 
-@Composable
-private fun CustomDragHandle(
-    modifier: Modifier = Modifier,
-) {
-    Box(
-        modifier = modifier
-            .padding(top = 16.dp)
-            .size(
-                width = 70.dp,
-                height = 3.dp
+        Text(
+            text = "반복적인 취소가 확인되면 향후 이용에 제한이 있을 수 있어요",
+            color = SSINGTheme.colors.accentRedNormal,
+            style = SSINGTheme.typography.caption.sb12,
+        )
+
+        Row (
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            SsingButton(
+                text = "강습 취소하기",
+                onClick = onConfirmClick,
+                style = if (selectedReason == null) SsingButtonStyle.GRAY else SsingButtonStyle.RED,
+                enabled = selectedReason != null &&
+                        (selectedReason != CancelReason.ETC || etcState.text.isNotBlank()),
+                modifier = Modifier.weight(1f),
             )
-            .background(
-                color = SSINGTheme.colors.borderAlternative,
-                shape = RoundedCornerShape(100.dp)
+
+            SsingButton(
+                text = "계속 이용하기",
+                onClick = onDismissRequest,
+                style = SsingButtonStyle.GRAY,
+                modifier = Modifier.weight(1f),
             )
-    )
+        }
+    }
 }
 
 private class CancelBottomSheetPreviewProvider : PreviewParameterProvider<UserRole> {
