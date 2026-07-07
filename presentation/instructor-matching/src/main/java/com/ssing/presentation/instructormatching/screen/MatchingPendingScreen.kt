@@ -40,6 +40,7 @@ internal fun MatchingPendingScreen(
             title = "강습 확정 대기",
             onBack = onBackClick,
         )
+
         SsingHeader(
             title = "강습생의 확정을 기다리고 있어요",
             subText = "강습생에게 최종 확인 요청을 보냈어요\n강습생이 확인하면 강습이 확정돼요",
@@ -49,9 +50,7 @@ internal fun MatchingPendingScreen(
         // TODO(매칭-그래픽): 대기 그래픽 에셋 확정 시 추가
 
         Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(all = 16.dp),
+            modifier = Modifier.padding(horizontal = 16.dp)
         ) {
             SsingMatchingDetailCard(
                 stepLabel = "수락 완료",
@@ -68,7 +67,7 @@ internal fun MatchingPendingScreen(
             )
 
             Spacer(modifier = Modifier.height(23.dp))
-
+            
             SsingButton(
                 text = "대기중",
                 onClick = {},
@@ -79,6 +78,7 @@ internal fun MatchingPendingScreen(
         }
     }
 }
+
 
 @Preview(showBackground = true)
 @Composable
