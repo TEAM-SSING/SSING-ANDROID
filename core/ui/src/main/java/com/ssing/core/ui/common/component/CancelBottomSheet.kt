@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -55,15 +56,22 @@ enum class CancelReason(val label: String) {
 @Composable
 fun CancelBottomSheet(
     userRole: UserRole,
+    selectedReason: CancelReason?,
+    onReasonClick: (CancelReason) -> Unit,
+    etcState: TextFieldState,
     onConfirmClick: () -> Unit,
     onDismissRequest: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     SsingBasicBottomSheet(
         onDismissRequest = onDismissRequest,
+        modifier = modifier,
     ) {
         CancelBottomSheetContent(
             userRole = userRole,
+            selectedReason = selectedReason,
+            onReasonClick = onReasonClick,
+            etcState = etcState,
             onConfirmClick = onConfirmClick,
             onDismissRequest = onDismissRequest,
         )
@@ -73,6 +81,9 @@ fun CancelBottomSheet(
 @Composable
 private fun CancelBottomSheetContent(
     userRole: UserRole,
+    selectedReason: CancelReason?,
+    onReasonClick: (CancelReason) -> Unit,
+    etcState: TextFieldState,
     onConfirmClick: () -> Unit,
     onDismissRequest: () -> Unit,
 ) {
@@ -82,9 +93,8 @@ private fun CancelBottomSheetContent(
         CancelReason.CONSUMER_NO_SHOW
     }
 
-    var selectedReason by remember { mutableStateOf<CancelReason?>(null)}
-
-    val etcState = rememberTextFieldState()
+    val enabled = selectedReason != null &&
+            (selectedReason != CancelReason.ETC || etcState.text.isNotBlank())
 
     Column(
         modifier = Modifier
@@ -146,13 +156,13 @@ private fun CancelBottomSheetContent(
                     SsingSelectButton(
                         text = CancelReason.SCHEDULE_CHANGE.label,
                         isSelected = selectedReason == CancelReason.SCHEDULE_CHANGE,
-                        onClick = { selectedReason = CancelReason.SCHEDULE_CHANGE },
+                        onClick = { onReasonClick(CancelReason.SCHEDULE_CHANGE) },
                         modifier = Modifier.weight(1f),
                     )
                     SsingSelectButton(
                         text = noShowReason.label,
                         isSelected = selectedReason == noShowReason,
-                        onClick = { selectedReason = noShowReason },
+                        onClick = { onReasonClick(noShowReason) },
                         modifier = Modifier.weight(1f),
                     )
                 }
@@ -160,7 +170,7 @@ private fun CancelBottomSheetContent(
                 SsingSelectButton(
                     text = CancelReason.ETC.label,
                     isSelected = selectedReason == CancelReason.ETC,
-                    onClick = { selectedReason = CancelReason.ETC },
+                    onClick = { onReasonClick(CancelReason.ETC) },
                     modifier = Modifier.fillMaxWidth(),
                 )
 
@@ -187,9 +197,8 @@ private fun CancelBottomSheetContent(
             SsingButton(
                 text = "강습 취소하기",
                 onClick = onConfirmClick,
-                style = if (selectedReason == null) SsingButtonStyle.GRAY else SsingButtonStyle.RED,
-                enabled = selectedReason != null &&
-                        (selectedReason != CancelReason.ETC || etcState.text.isNotBlank()),
+                style = if (enabled) SsingButtonStyle.RED else SsingButtonStyle.GRAY,
+                enabled = enabled,
                 modifier = Modifier.weight(1f),
             )
 
@@ -216,6 +225,8 @@ private fun CancelBottomSheetPreview(
 ) {
     SSINGTheme {
         var showSheet by remember { mutableStateOf(true) }
+        var selectedReason by remember { mutableStateOf<CancelReason?>(null) }
+        val etcState = rememberTextFieldState()
 
         Box(
             modifier = Modifier.fillMaxSize(),
@@ -223,6 +234,9 @@ private fun CancelBottomSheetPreview(
             if (showSheet) {
                 CancelBottomSheet(
                     userRole = userRole,
+                    selectedReason = selectedReason,
+                    onReasonClick = { selectedReason = it },
+                    etcState = etcState,
                     onConfirmClick = { showSheet = false },
                     onDismissRequest = { showSheet = false },
                 )
