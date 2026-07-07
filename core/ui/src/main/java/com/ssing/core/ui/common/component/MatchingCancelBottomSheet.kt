@@ -89,6 +89,16 @@ fun MatchingCancelBottomSheet(
         }
     ),
 ) {
+    val scope = rememberCoroutineScope()
+
+    fun dismiss(onDismissed: () -> Unit) {
+        scope.launch {
+            bottomSheetState.hide()
+        }.invokeOnCompletion {
+            onDismissed()
+        }
+    }
+
     SsingBasicBottomSheet(
         onDismissRequest = onDismissRequest,
         bottomSheetState = bottomSheetState,
@@ -98,8 +108,8 @@ fun MatchingCancelBottomSheet(
             selectedReason = selectedReason,
             onReasonClick = onReasonClick,
             etcState = etcState,
-            onConfirmClick = onConfirmClick,
-            onDismissRequest = onDismissRequest,
+            onConfirmClick = { dismiss(onConfirmClick) },
+            onDismissRequest = { dismiss(onDismissRequest) },
         )
     }
 }
@@ -277,21 +287,6 @@ private fun CancelBottomSheetPreview(
         var showSheet by remember { mutableStateOf(true) }
         var selectedReason by remember { mutableStateOf<CancelReason?>(null) }
         val etcState = rememberTextFieldState()
-        val bottomSheetState = rememberModalBottomSheetState(
-            skipPartiallyExpanded = true,
-            confirmValueChange = { it != SheetValue.Hidden }
-        )
-        val scope = rememberCoroutineScope()
-
-        fun dismissSheet() {
-            scope.launch {
-                bottomSheetState.hide()
-            }.invokeOnCompletion {
-                if (!bottomSheetState.isVisible) {
-                    showSheet = false
-                }
-            }
-        }
 
         Box(
             modifier = Modifier.fillMaxSize(),
@@ -311,8 +306,8 @@ private fun CancelBottomSheetPreview(
                     selectedReason = selectedReason,
                     onReasonClick = { selectedReason = it },
                     etcState = etcState,
-                    onConfirmClick = { dismissSheet() },
-                    onDismissRequest = { dismissSheet() },
+                    onConfirmClick = { showSheet = false },
+                    onDismissRequest = { showSheet = false },
                 )
             }
         }
