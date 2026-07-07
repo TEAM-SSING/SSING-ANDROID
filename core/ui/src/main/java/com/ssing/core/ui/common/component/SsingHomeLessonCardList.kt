@@ -93,15 +93,17 @@ fun SsingHomeLessonCardRow(
                 .fillMaxWidth(),
             horizontalArrangement = Arrangement.Center,
         ) {
-            repeat(pagerState.pageCount) { iteration ->
-                val color = if (pagerState.currentPage == iteration) SSINGTheme.colors.borderStrong else SSINGTheme.colors.borderAlternative
-                Box(
-                    modifier = Modifier
-                        .padding(horizontal = 2.dp)
-                        .clip(CircleShape)
-                        .background(color)
-                        .size(5.dp)
-                )
+            if (pagerState.pageCount > 1) {
+                repeat(pagerState.pageCount) { iteration ->
+                    val color = if (pagerState.currentPage == iteration) SSINGTheme.colors.borderStrong else SSINGTheme.colors.borderAlternative
+                    Box(
+                        modifier = Modifier
+                            .padding(horizontal = 2.dp)
+                            .clip(CircleShape)
+                            .background(color)
+                            .size(5.dp)
+                    )
+                }
             }
         }
     }
@@ -363,9 +365,15 @@ private class HomeLessonCardPreviewProvider : PreviewParameterProvider<Immutable
                 title = "김OO",
                 location = "하이원",
                 date = LocalDateTime.of(2025, 7, 15, 19, 0),
+                status = Status.Matching,
+            ),
+            HomeLessonCardState.Reservation(
+                chip = "Now",
+                title = "김OO",
+                location = "하이원",
+                date = LocalDateTime.of(2025, 7, 15, 19, 0),
                 status = Status.Default(member = 3),
             ),
-
         ),
     )
 }
