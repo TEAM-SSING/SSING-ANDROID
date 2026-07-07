@@ -78,7 +78,7 @@ fun SsingMatchingDetailCard(
             color = SSINGTheme.colors.textAlternative,
             modifier = Modifier.padding(bottom = 12.dp),
         )
-        SsingTagChipRow(tags = tags)
+        SsingTagChipRow(tags = tags, style = SsingChipStyle.DEEP_BLUE)
 
         Spacer(modifier = Modifier.height(4.dp))
 
@@ -155,7 +155,7 @@ fun SsingMatchingDetailCardSmall(
             )
             .padding(16.dp),
     ) {
-        SsingTagChipRowSmall(tags = tags)
+        SsingTagChipRow(tags = tags, style = SsingChipStyle.GRAY)
 
         Spacer(modifier = Modifier.height(4.dp))
 
@@ -209,19 +209,13 @@ private fun SsingInfoRow(label: String, value: String) {
 
 /** 태그 칩 한 줄 나열. 기존 공용 Chip 컴포넌트 있으면 이걸로 교체. */
 @Composable
-private fun SsingTagChipRow(tags: ImmutableList<String>) {
+private fun SsingTagChipRow(
+    tags: ImmutableList<String>,
+    style: SsingChipStyle,
+) {
     Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
         tags.forEach { text ->
-            SsingChip(text = text, style = SsingChipStyle.DEEP_BLUE)
-        }
-    }
-}
-
-@Composable
-private fun SsingTagChipRowSmall(tags: ImmutableList<String>) {
-    Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-        tags.forEach { text ->
-            SsingChip(text = text, style = SsingChipStyle.GRAY)
+            SsingChip(text = text, style = style)
         }
     }
 }
