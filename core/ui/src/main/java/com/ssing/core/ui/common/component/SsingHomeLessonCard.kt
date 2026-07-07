@@ -1,13 +1,11 @@
 package com.ssing.core.ui.common.component
 
-import android.R.attr.bottom
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -25,13 +23,15 @@ import androidx.compose.ui.unit.dp
 import com.ssing.core.ui.R
 import com.ssing.core.ui.designsystem.theme.SSINGTheme
 import com.ssing.core.ui.extension.roundedBackgroundWithBorder
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 sealed interface HomeLessonCardState {
     data class Reservation(
         val title: String,
         val location: String,
-        val dDay: String,
-        val date: String,
+        val dDay: Int,
+        val date: LocalDateTime,
     ): HomeLessonCardState
 
     data object Empty: HomeLessonCardState
@@ -60,7 +60,8 @@ fun SsingHomeLessonCard(
                 LessonInfoSection(
                     title = state.title,
                     location = state.location,
-                    date = state.date,
+                    date = state.date.detailFormatter(),
+                    dDay = state.dDay,
                 )
 
                 SsingButton(
@@ -100,7 +101,6 @@ fun SsingHomeLessonCard(
             }
         }
     }
-
 }
 
 @Composable
@@ -108,6 +108,7 @@ private fun LessonInfoSection(
     title: String,
     location: String,
     date: String,
+    dDay: Int,
     modifier: Modifier = Modifier,
 ) {
     Row(
@@ -120,7 +121,7 @@ private fun LessonInfoSection(
             verticalArrangement = Arrangement.spacedBy(4.dp),
         ) {
             SsingChip(
-                text = "D-2", // 임시 텍스트
+                text = "D-${dDay}",
                 style = SsingChipStyle.BLUE,
             )
 
@@ -218,6 +219,10 @@ private fun EmptyLessonInfoSection(
     }
 }
 
+fun LocalDateTime.detailFormatter(): String {
+    return this.format(DateTimeFormatter.ofPattern("yyyy. MM. dd (E) HH:mm"))
+}
+
 @Preview
 @Composable
 private fun SsingHomeLessonCardPreview() {
@@ -225,9 +230,9 @@ private fun SsingHomeLessonCardPreview() {
         SsingHomeLessonCard(
             state = HomeLessonCardState.Reservation(
                 title = "text",
-                date = "2025.07.15 (화) 19:00",
+                date = LocalDateTime.of(2025, 7, 15, 19, 0),
                 location = "하이원",
-                dDay = "D-2",
+                dDay = 2,
             ),
             onClick = {},
             modifier = Modifier.width(320.dp),
