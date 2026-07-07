@@ -1,5 +1,6 @@
 package com.ssing.instructor.matchingdetail
 
+import android.graphics.Color.blue
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -150,8 +151,8 @@ fun InstructorClassPreparationScreen(
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
+                .background(color = Blue50)
                 .padding(innerPadding),
-            verticalArrangement = Arrangement.spacedBy(24.dp),
         ) {
             item {
                 PreparationHeader(progress = progress, totalProgress = totalProgress)
@@ -161,9 +162,8 @@ fun InstructorClassPreparationScreen(
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 16.dp)
-                        .background(
-                            SSINGTheme.colors.backgroundNormal,shape = RoundedCornerShape(
+                        .background(color = SSINGTheme.colors.backgroundNormal,
+                            shape = RoundedCornerShape(
                                 topStart = 12.dp,
                                 topEnd = 12.dp,
                                 bottomStart = 0.dp,
@@ -171,7 +171,9 @@ fun InstructorClassPreparationScreen(
                             )
                         ),
                 ) {
-                    Column {
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    Column(modifier = Modifier.padding(horizontal = 16.dp)) {
                         SectionTitle(text = "강습 정보")
                         Spacer(modifier = Modifier.height(8.dp))
                         ClassInfoCard(
@@ -183,7 +185,9 @@ fun InstructorClassPreparationScreen(
                         )
                     }
 
-                    Column(modifier = Modifier.padding(start = 16.dp)) {
+                    Spacer(modifier = Modifier.height(24.dp))
+
+                    Column(modifier = Modifier.padding(horizontal = 16.dp)) {
                         SectionTitle(text = "강습생 정보")
                         Spacer(modifier = Modifier.height(8.dp))
                         teams.forEachIndexed { index, team ->
