@@ -24,12 +24,16 @@ import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.semantics.ProgressBarRangeInfo
+import androidx.compose.ui.semantics.progressBarRangeInfo
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ssing.core.ui.designsystem.theme.SSINGTheme
 import kotlin.math.roundToInt
 
-private val SliderTouchAreaHeight = 20.dp
+private val SliderTouchAreaHeight = 48.dp
 private val TrackHeight = 4.dp
 private val MarkerWidth = 6.dp
 private val MarkerHeight = 12.dp
@@ -67,6 +71,13 @@ internal fun MatchingStepSlider(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(SliderTouchAreaHeight)
+                .semantics {
+                    progressBarRangeInfo = ProgressBarRangeInfo(
+                        current = coercedValue.toFloat(),
+                        range = valueRange.first.toFloat()..valueRange.last.toFloat(),
+                    )
+                    stateDescription = label(coercedValue)
+                }
                 .pointerInput(valueRange) {
                     fun stepFrom(x: Float): Int {
                         val trackOffset = MarkerWidth.toPx() / 2
