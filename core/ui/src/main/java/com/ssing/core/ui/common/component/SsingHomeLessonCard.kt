@@ -1,5 +1,6 @@
 package com.ssing.core.ui.common.component
 
+import android.R.attr.top
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -47,14 +48,14 @@ fun SsingHomeLessonCard(
         is HomeLessonCardState.Reservation -> {
             Column(
                 modifier = modifier
+                    .fillMaxWidth()
                     .roundedBackgroundWithBorder(
                         shape = RoundedCornerShape(12.dp),
                         backgroundColor = SSINGTheme.colors.backgroundNormal,
                         borderColor = SSINGTheme.colors.borderAlternative,
                         borderWidth = 1.dp,
                     )
-                    .padding(16.dp)
-                    .fillMaxWidth(),
+                    .padding(16.dp),
                 verticalArrangement = Arrangement.spacedBy(24.dp),
             ) {
                 LessonInfoSection(
@@ -76,6 +77,7 @@ fun SsingHomeLessonCard(
         HomeLessonCardState.Empty -> {
             Row(
                 modifier = modifier
+                    .fillMaxWidth()
                     .roundedBackgroundWithBorder(
                         shape = RoundedCornerShape(12.dp),
                         backgroundColor = SSINGTheme.colors.backgroundNormal,
@@ -85,8 +87,7 @@ fun SsingHomeLessonCard(
                     .padding(
                         vertical = 24.dp,
                         horizontal = 16.dp
-                    )
-                    .fillMaxWidth(),
+                    ),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 EmptyLessonInfoSection(
@@ -128,8 +129,8 @@ private fun LessonInfoSection(
                 text = title,
                 style = SSINGTheme.typography.body.sb20,
                 modifier = Modifier
-                    .padding(top = 8.dp)
-                    .fillMaxWidth(),
+                    .fillMaxWidth()
+                    .padding(top = 8.dp),
             )
 
             Row(
@@ -200,8 +201,7 @@ private fun EmptyLessonInfoSection(
             imageVector = ImageVector.vectorResource(R.drawable.ic_reservation_24),
             contentDescription = null,
             tint = SSINGTheme.colors.textAlternative,
-            modifier = Modifier
-                .padding(bottom = 6.dp),
+            modifier = Modifier.padding(bottom = 6.dp),
         )
 
         Text(
