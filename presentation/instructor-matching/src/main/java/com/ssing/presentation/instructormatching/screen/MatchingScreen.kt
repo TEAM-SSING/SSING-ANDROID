@@ -14,6 +14,7 @@ import com.ssing.presentation.instructormatching.MatchingContract
 import com.ssing.presentation.instructormatching.MatchingContract.MatchingDialog
 import com.ssing.presentation.instructormatching.MatchingContract.MatchingPhase
 import com.ssing.presentation.instructormatching.MatchingViewModel
+import com.ssing.presentation.instructormatching.model.ConditionUiState
 import com.ssing.presentation.instructormatching.model.DurationOption
 import com.ssing.presentation.instructormatching.model.LevelOption
 import com.ssing.presentation.instructormatching.model.SportOption
@@ -89,6 +90,8 @@ private fun MatchingScreen(
         )
 
         MatchingPhase.Waiting -> MatchingWaitingScreen(
+            condition = state.condition,
+            waiting = state.waiting,
             onBackClick = onBackClick,
             onEditConditionClick = onEditConditionClick,
             onStopWaitingClick = onStopWaitingClick,
