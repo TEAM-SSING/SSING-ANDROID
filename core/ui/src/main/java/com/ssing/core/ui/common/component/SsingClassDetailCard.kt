@@ -89,7 +89,7 @@ fun SsingMatchingDetailCard(
         )
 
         HorizontalDivider(
-            color = SSINGTheme.colors.backgroundAlternative,
+            color = SSINGTheme.colors.borderDisabled,
             modifier = Modifier.padding(vertical = 8.dp),
         )
 
@@ -176,7 +176,7 @@ fun SsingMatchingDetailCardSmall(
             SsingPriceRow(label = "예상 가격", isPaid = isPaid, price = price)
 
             HorizontalDivider(
-                color = SSINGTheme.colors.backgroundAlternative,
+                color = SSINGTheme.colors.borderDisabled,
                 modifier = Modifier.padding(vertical = 6.dp)
             )
 
