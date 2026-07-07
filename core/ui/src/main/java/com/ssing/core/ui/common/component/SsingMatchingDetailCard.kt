@@ -56,7 +56,7 @@ fun SsingMatchingDetailCard(
     location: String,
     duration: String,
     maxCapacity: Int,
-    participants: ImmutableList<String>,
+    participants: ImmutableList<Participant>,
     isPaid: Boolean,
     price: Int,
     equipmentStatus: String,
@@ -261,7 +261,7 @@ private fun SsingPriceRow(isPaid: Boolean, price: Int) {
 }
 
 @Composable
-private fun SsingParticipantsRow(participants: ImmutableList<String>) {
+private fun SsingParticipantsRow(participants: ImmutableList<Participant>) {
     val verticalAlignment = if (participants.size <= 3) {
         Alignment.CenterVertically
     } else {
@@ -288,11 +288,20 @@ private fun SsingParticipantsRow(participants: ImmutableList<String>) {
             maxItemsInEachRow = maxItemsInEachRow,
         ) {
             participants.forEach { participant ->
-                SsingChip(text = participant, style = SsingChipStyle.GRAY)
+                SsingChip(
+                    text = "${participant.age}세 ${participant.gender.label}",
+                    style = SsingChipStyle.GRAY,
+                )
             }
         }
     }
 }
+
+private val Gender.label: String
+    get() = when (this) {
+        Gender.MALE -> "남"
+        Gender.FEMALE -> "여"
+    }
 
 @Composable
 private fun SsingClassTitleRow(title: String, totalCount: Int) {
@@ -342,6 +351,14 @@ data class TeamNickname(
     val teamCount: Int,
 )
 
+@Immutable
+data class Participant(
+    val age: Int,
+    val gender: Gender,
+)
+
+enum class Gender { MALE, FEMALE }
+
 @Preview
 @Composable
 private fun SsingClassDetailCardPreview() {
@@ -356,7 +373,11 @@ private fun SsingClassDetailCardPreview() {
             location = "OOO 리조트",
             duration = "0시간",
             maxCapacity = 0,
-            participants = persistentListOf("11세 남", "11세 남", "9세 여"),
+            participants = persistentListOf(
+                Participant(11, Gender.MALE),
+                Participant(11, Gender.MALE),
+                Participant(9, Gender.FEMALE),
+            ),
             isPaid = true,
             price = 0, // 수정
             equipmentStatus = "착용 완료",
