@@ -15,6 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.ssing.core.ui.common.component.MatchingConditionInformationCard
 import com.ssing.core.ui.common.component.SsingButton
 import com.ssing.core.ui.common.component.SsingButtonStyle
 import com.ssing.core.ui.common.component.SsingHeader
@@ -22,7 +23,6 @@ import com.ssing.core.ui.common.component.SsingSelectButton
 import com.ssing.core.ui.common.component.SsingTopBar
 import com.ssing.core.ui.designsystem.theme.SSINGTheme
 import com.ssing.presentation.instructormatching.component.MatchingConditionFixedResortField
-import com.ssing.presentation.instructormatching.component.MatchingConditionNoticeSection
 import com.ssing.presentation.instructormatching.component.MatchingConditionSection
 import com.ssing.presentation.instructormatching.component.MatchingStepSlider
 import com.ssing.presentation.instructormatching.component.MultiSelectBadge
@@ -147,7 +147,7 @@ internal fun MatchingConditionScreen(
                     )
                 }
 
-                MatchingConditionNoticeSection(
+                MatchingConditionInformationCard(
                     isChecked = condition.isNoticeChecked,
                     onCheckedChange = onNoticeCheckedChange,
                 )
