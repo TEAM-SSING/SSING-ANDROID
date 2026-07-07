@@ -46,7 +46,6 @@ fun ConsumerInfoCard(
     ) {
         if (isReady) {
             Row (
-                modifier = Modifier,
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(4.dp),
             ) {
@@ -65,7 +64,6 @@ fun ConsumerInfoCard(
         }
 
         Column(
-            modifier = Modifier,
             verticalArrangement = Arrangement.spacedBy(4.dp),
         ) {
             Text(
