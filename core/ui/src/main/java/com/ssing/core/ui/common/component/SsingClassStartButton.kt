@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
@@ -43,7 +44,7 @@ fun SsingStartClassCard(
     Box(
         modifier = modifier
             .clip(RoundedCornerShape(12.dp))
-            .background(brush = background),
+            .background(brush = background), // aspectRatio(...)
     ) {
         Image(
             painter = painterResource(id = iconRes),
@@ -56,7 +57,8 @@ fun SsingStartClassCard(
         Column(
             modifier = Modifier
                 .align(Alignment.TopStart)
-                .padding(12.dp),
+                .padding(12.dp)
+                .aspectRatio(0.8f),
         ) {
             SsingChip(text = badgeText, style = chipStyle)
 
@@ -91,6 +93,7 @@ private fun SsingStartClassCardPreview() {
                     titleColor = SSINGTheme.colors.textNormal,
                     descriptionColor = SSINGTheme.colors.textAlternative,
                     chipStyle = SsingChipStyle.BLUE,
+                    modifier = Modifier.weight(1f),
                 )
 
                 SsingStartClassCard(
@@ -100,6 +103,7 @@ private fun SsingStartClassCardPreview() {
                     titleColor = SSINGTheme.colors.textNormal,
                     descriptionColor = SSINGTheme.colors.textAlternative,
                     chipStyle = SsingChipStyle.BLUE,
+                    modifier = Modifier.weight(1f),
                 )
             }
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -116,6 +120,7 @@ private fun SsingStartClassCardPreview() {
                     titleColor = SSINGTheme.colors.backgroundNormal,
                     descriptionColor = SSINGTheme.colors.primaryAlternative,
                     chipStyle = SsingChipStyle.BLUE,
+                    modifier = Modifier.weight(1f),
                 )
 
                 SsingStartClassCard(
@@ -125,6 +130,7 @@ private fun SsingStartClassCardPreview() {
                     titleColor = SSINGTheme.colors.backgroundNormal,
                     descriptionColor = SSINGTheme.colors.primaryAlternative,
                     chipStyle = SsingChipStyle.BLUE,
+                    modifier = Modifier.weight(1f),
                 )
             }
         }
