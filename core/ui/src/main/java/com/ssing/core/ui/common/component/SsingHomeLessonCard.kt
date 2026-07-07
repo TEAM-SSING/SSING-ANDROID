@@ -1,11 +1,13 @@
 package com.ssing.core.ui.common.component
 
+import android.R.attr.bottom
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -24,40 +26,81 @@ import com.ssing.core.ui.R
 import com.ssing.core.ui.designsystem.theme.SSINGTheme
 import com.ssing.core.ui.extension.roundedBackgroundWithBorder
 
+sealed interface HomeLessonCardState {
+    data class Reservation(
+        val title: String,
+        val location: String,
+        val dDay: String,
+        val date: String,
+    ): HomeLessonCardState
+
+    data object Empty: HomeLessonCardState
+}
+
 @Composable
 fun SsingHomeLessonCard(
-    title: String,
-    location: String,
-    date: String,
+    state: HomeLessonCardState,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    hasLesson: Boolean = true,
 ) {
-    Column(
-        modifier = modifier
-            .roundedBackgroundWithBorder(
-                shape = RoundedCornerShape(12.dp),
-                backgroundColor = SSINGTheme.colors.backgroundNormal,
-                borderColor = SSINGTheme.colors.borderAlternative,
-                borderWidth = 1.dp,
-            )
-            .padding(16.dp)
-            .fillMaxWidth(),
-        verticalArrangement = Arrangement.spacedBy(24.dp),
-    ) {
-        LessonInfoSection(
-            title = title,
-            location = location,
-            date = date,
-        )
+    when (state) {
+        is HomeLessonCardState.Reservation -> {
+            Column(
+                modifier = modifier
+                    .roundedBackgroundWithBorder(
+                        shape = RoundedCornerShape(12.dp),
+                        backgroundColor = SSINGTheme.colors.backgroundNormal,
+                        borderColor = SSINGTheme.colors.borderAlternative,
+                        borderWidth = 1.dp,
+                    )
+                    .padding(16.dp)
+                    .fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(24.dp),
+            ) {
+                LessonInfoSection(
+                    title = state.title,
+                    location = state.location,
+                    date = state.date,
+                )
 
-        SsingButton(
-            text = "강습 상세보기",
-            onClick = onClick,
-            style = SsingButtonStyle.GRAY,
-            modifier = Modifier.fillMaxWidth(),
-        )
+                SsingButton(
+                    text = "강습 상세보기",
+                    onClick = onClick,
+                    style = SsingButtonStyle.GRAY,
+                    modifier = Modifier.fillMaxWidth(),
+                )
+            }
+        }
+
+        HomeLessonCardState.Empty -> {
+            Row(
+                modifier = modifier
+                    .roundedBackgroundWithBorder(
+                        shape = RoundedCornerShape(12.dp),
+                        backgroundColor = SSINGTheme.colors.backgroundNormal,
+                        borderColor = SSINGTheme.colors.borderAlternative,
+                        borderWidth = 1.dp,
+                    )
+                    .padding(
+                        vertical = 24.dp,
+                        horizontal = 16.dp
+                    )
+                    .fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                EmptyLessonInfoSection(
+                    modifier = Modifier.weight(1f)
+                )
+
+                Image(
+                    painter = painterResource(id = R.drawable.img_ski),
+                    contentDescription = null,
+                    modifier = Modifier.size(86.dp),
+                )
+            }
+        }
     }
+
 }
 
 @Composable
@@ -117,7 +160,6 @@ private fun LessonInfoSection(
             contentDescription = null,
             modifier = Modifier.size(86.dp),
         )
-
     }
 }
 
@@ -146,16 +188,61 @@ private fun InfoRow(
     }
 }
 
+@Composable
+private fun EmptyLessonInfoSection(
+    modifier: Modifier = Modifier,
+) {
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(2.dp),
+    ) {
+        Icon(
+            imageVector = ImageVector.vectorResource(R.drawable.ic_reservation_24),
+            contentDescription = null,
+            tint = SSINGTheme.colors.textAlternative,
+            modifier = Modifier
+                .padding(bottom = 6.dp),
+        )
+
+        Text(
+            text = "아직 예약된 강습이 없어요.",
+            style = SSINGTheme.typography.body.sb16,
+            color = SSINGTheme.colors.textAlternative,
+        )
+
+        Text(
+            text = "새 강습을 예약해보세요!",
+            style = SSINGTheme.typography.caption.md14,
+            color = SSINGTheme.colors.textDisabled,
+        )
+    }
+}
+
 @Preview
 @Composable
 private fun SsingHomeLessonCardPreview() {
     SSINGTheme {
         SsingHomeLessonCard(
-            title = "text",
-            date = "2025.07.15 (화) 19:00",
-            location = "하이원",
+            state = HomeLessonCardState.Reservation(
+                title = "text",
+                date = "2025.07.15 (화) 19:00",
+                location = "하이원",
+                dDay = "D-2",
+            ),
             onClick = {},
-            modifier = Modifier.width(328.dp)
+            modifier = Modifier.width(320.dp),
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun SsingHomeLessonEmptyCardPreview() {
+    SSINGTheme {
+        SsingHomeLessonCard(
+            state = HomeLessonCardState.Empty,
+            onClick = {},
+            modifier = Modifier.width(320.dp),
         )
     }
 }
