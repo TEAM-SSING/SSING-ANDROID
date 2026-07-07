@@ -99,8 +99,8 @@ fun SsingMatchingDetailCard(
             SsingInfoRow(label = "강습 장소", value = location)
             SsingInfoRow(label = "강습 시간", value = duration)
             SsingInfoRow(label = "최대 인원", value = "${maxCapacity}명")
-            SsingParticipantsRow(label = "강습 인원", participants = participants)
-            SsingPriceRow(label = "예상 가격", isPaid = isPaid, price = price)
+            SsingParticipantsRow(participants = participants)
+            SsingPriceRow(isPaid = isPaid, price = price)
             SsingInfoRow(label = "장비상태", value = equipmentStatus)
         }
 
@@ -172,7 +172,7 @@ fun SsingMatchingDetailCardSmall(
             SsingInfoRow(label = "강습 인원", value = "총 ${teamCount}명")
             SsingInfoRow(label = "강습 시간", value = duration)
             SsingInfoRow(label = "실제 강습 시간", value = actualTimeRange)
-            SsingPriceRow(label = "예상 가격", isPaid = isPaid, price = price)
+            SsingPriceRow(isPaid = isPaid, price = price)
 
             HorizontalDivider(
                 color = SSINGTheme.colors.borderDisabled,
@@ -228,14 +228,14 @@ private fun SsingTagChipRowSmall(tags: ImmutableList<String>) {
 
 /** "결제완료" 뱃지 + 가격 표시 row. */
 @Composable
-private fun SsingPriceRow(label: String, isPaid: Boolean, price: Int) {
+private fun SsingPriceRow(isPaid: Boolean, price: Int) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(
-            label,
+            text = "예상가격",
             style = SSINGTheme.typography.caption.sb12,
             color = SSINGTheme.colors.textAlternative
         )
@@ -267,7 +267,7 @@ private fun SsingPriceRow(label: String, isPaid: Boolean, price: Int) {
 }
 
 @Composable
-private fun SsingParticipantsRow(label: String, participants: ImmutableList<String>) {
+private fun SsingParticipantsRow(participants: ImmutableList<String>) {
     val verticalAlignment = if (participants.size <= 3) {
         Alignment.CenterVertically
     } else {
@@ -283,7 +283,7 @@ private fun SsingParticipantsRow(label: String, participants: ImmutableList<Stri
         verticalAlignment = verticalAlignment,
     ) {
         Text(
-            text = label,
+            text = "강습 인원",
             style = SSINGTheme.typography.caption.sb12,
             color = SSINGTheme.colors.textAlternative,
         )
