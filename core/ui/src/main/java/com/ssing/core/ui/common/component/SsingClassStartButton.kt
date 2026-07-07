@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
@@ -27,12 +28,11 @@ import com.ssing.core.ui.R
 import com.ssing.core.ui.designsystem.theme.SSINGTheme
 
 @Composable
-fun SsingStartClassCard(
+fun SsingStartClassCardFast(
     badgeText: String,
     title: String,
     description: String,
     background: Brush,
-    iconTint: Color,
     titleColor: Color,
     descriptionColor: Color,
     chipStyle: SsingChipStyle,
@@ -46,11 +46,56 @@ fun SsingStartClassCard(
         Image(
             painter = painterResource(id = R.drawable.img_fast),
             contentDescription = null,
-            colorFilter = ColorFilter.tint(iconTint),
             modifier = Modifier
+                .size(width = 90.dp, height = 143.dp)
                 .align(Alignment.BottomEnd)
-                .size(width = 160.dp, height = 200.dp)
-                .offset(x = 24.dp, y = 24.dp),
+                .offset(x = 20.dp, y = 27.dp),
+        )
+        Column(
+            modifier = Modifier
+                .align(Alignment.TopStart)
+                .padding(12.dp),
+        ) {
+            SsingChip(text = badgeText, style = chipStyle)
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Text(text = title, style = SSINGTheme.typography.body.sb16, color = titleColor)
+
+            Spacer(modifier = Modifier.height(4.dp))
+
+            Text(
+                text = description,
+                style = SSINGTheme.typography.caption.sb12,
+                color = descriptionColor
+            )
+        }
+    }
+}
+
+@Composable
+fun SsingStartClassCardFastDark(
+    badgeText: String,
+    title: String,
+    description: String,
+    background: Brush,
+    titleColor: Color,
+    descriptionColor: Color,
+    chipStyle: SsingChipStyle,
+    modifier: Modifier = Modifier,
+) {
+    Box(
+        modifier = modifier
+            .clip(RoundedCornerShape(12.dp))
+            .background(brush = background),
+    ) {
+        Image(
+            painter = painterResource(id = R.drawable.img_fast_dark),
+            contentDescription = null,
+            modifier = Modifier
+                .size(width = 90.dp, height = 143.dp)
+                .align(Alignment.BottomEnd)
+                .offset(x = 20.dp, y = 27.dp),
         )
         Column(
             modifier = Modifier
@@ -81,47 +126,46 @@ private fun SsingStartClassCardPreview() {
         Column(
             verticalArrangement = Arrangement.spacedBy(17.dp),
         ) {
-            SsingStartClassCard(
-                badgeText = "text", title = "title", description = "text",
-                background = Brush.linearGradient(listOf(Color.White, Color(0xFFEFF2F8))),
-                iconTint = SSINGTheme.colors.primaryAlternative,
-                titleColor = SSINGTheme.colors.textNormal,
-                descriptionColor = SSINGTheme.colors.textAlternative,
-                chipStyle = SsingChipStyle.BLUE,
-            )
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                SsingStartClassCardFast(
+                    badgeText = "text", title = "title", description = "text",
+                    background = Brush.linearGradient(listOf(Color.White, Color(0xFFEFF2F8))),
+                    titleColor = SSINGTheme.colors.textNormal,
+                    descriptionColor = SSINGTheme.colors.textAlternative,
+                    chipStyle = SsingChipStyle.BLUE,
+                )
 
-            SsingStartClassCard(
-                badgeText = "text", title = "title", description = "text",
-                background = SolidColor(SSINGTheme.colors.borderDisabled),
-                iconTint = SSINGTheme.colors.primaryAlternative,
-                titleColor = SSINGTheme.colors.textNormal,
-                descriptionColor = SSINGTheme.colors.textAlternative,
-                chipStyle = SsingChipStyle.BLUE,
-            )
+                SsingStartClassCardFast(
+                    badgeText = "text", title = "title", description = "text",
+                    background = SolidColor(SSINGTheme.colors.borderDisabled),
+                    titleColor = SSINGTheme.colors.textNormal,
+                    descriptionColor = SSINGTheme.colors.textAlternative,
+                    chipStyle = SsingChipStyle.BLUE,
+                )
+            }
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                SsingStartClassCardFastDark(
+                    badgeText = "text", title = "title", description = "text",
+                    background = Brush.linearGradient(
+                        listOf(
+                            Color(0xFF64AAFF),
+                            Color(0xFF3184EA),
+                            Color(0xFF357DD5)
+                        )
+                    ),
+                    titleColor = SSINGTheme.colors.backgroundNormal,
+                    descriptionColor = SSINGTheme.colors.primaryAlternative,
+                    chipStyle = SsingChipStyle.BLUE,
+                )
 
-            SsingStartClassCard(
-                badgeText = "text", title = "title", description = "text",
-                background = Brush.linearGradient(
-                    listOf(
-                        Color(0xFF64AAFF),
-                        Color(0xFF3184EA),
-                        Color(0xFF357DD5)
-                    )
-                ),
-                iconTint = Color(0xFF529FFF),
-                titleColor = SSINGTheme.colors.backgroundNormal,
-                descriptionColor = SSINGTheme.colors.primaryAlternative,
-                chipStyle = SsingChipStyle.BLUE,
-            )
-
-            SsingStartClassCard(
-                badgeText = "text", title = "title", description = "text",
-                background = SolidColor(Color(0xFF2E6BF0)),
-                iconTint = Color(0xFF529FFF),
-                titleColor = SSINGTheme.colors.backgroundNormal,
-                descriptionColor = SSINGTheme.colors.primaryAlternative,
-                chipStyle = SsingChipStyle.BLUE,
-            )
+                SsingStartClassCardFastDark(
+                    badgeText = "text", title = "title", description = "text",
+                    background = SolidColor(Color(0xFF2E6BF0)),
+                    titleColor = SSINGTheme.colors.backgroundNormal,
+                    descriptionColor = SSINGTheme.colors.primaryAlternative,
+                    chipStyle = SsingChipStyle.BLUE,
+                )
+            }
         }
     }
 }
