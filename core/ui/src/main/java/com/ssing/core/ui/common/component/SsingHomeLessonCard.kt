@@ -1,7 +1,5 @@
 package com.ssing.core.ui.common.component
 
-import android.R.attr.text
-import android.system.Os.stat
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
