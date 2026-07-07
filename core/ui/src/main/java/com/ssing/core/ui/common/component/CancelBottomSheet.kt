@@ -1,19 +1,28 @@
 package com.ssing.core.ui.common.component
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.SheetState
@@ -30,6 +39,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.input.ImeAction
@@ -114,19 +124,22 @@ private fun CancelBottomSheetContent(
 
     val focusManager = LocalFocusManager.current
 
+    val isKeyboardVisible = WindowInsets.ime.getBottom(LocalDensity.current) > 0
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .padding(16.dp)
             .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         Icon(
             imageVector = ImageVector.vectorResource(R.drawable.ic_exclamation_mark),
             contentDescription = null,
             tint = Color.Unspecified,
         )
+
+        Spacer(modifier = Modifier.height(16.dp))
 
         Column(
             modifier = Modifier.fillMaxWidth(),
@@ -146,6 +159,8 @@ private fun CancelBottomSheetContent(
                 textAlign = TextAlign.Center,
             )
         }
+
+        Spacer(modifier = Modifier.height(16.dp))
 
         Column(
             verticalArrangement = Arrangement.spacedBy(8.dp),
@@ -206,29 +221,43 @@ private fun CancelBottomSheetContent(
             }
         }
 
-        Text(
-            text = "반복적인 취소가 확인되면 향후 이용에 제한이 있을 수 있어요",
-            color = SSINGTheme.colors.accentRedNormal,
-            style = SSINGTheme.typography.caption.sb12,
-        )
+        if (!isKeyboardVisible) Spacer(modifier = Modifier.height(16.dp))
 
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        AnimatedVisibility(
+            visible = !isKeyboardVisible,
+            enter = fadeIn(tween(200)) + expandVertically(),
+            exit = fadeOut(tween(200)) + shrinkVertically(),
         ) {
-            SsingButton(
-                text = "강습 취소하기",
-                onClick = onConfirmClick,
-                style = if (enabled) SsingButtonStyle.RED else SsingButtonStyle.GRAY,
-                enabled = enabled,
-                modifier = Modifier.weight(1f),
-            )
+            Column(
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                Text(
+                    text = "반복적인 취소가 확인되면 향후 이용에 제한이 있을 수 있어요",
+                    color = SSINGTheme.colors.accentRedNormal,
+                    style = SSINGTheme.typography.caption.sb12,
+                )
 
-            SsingButton(
-                text = "계속 이용하기",
-                onClick = onDismissRequest,
-                style = SsingButtonStyle.GRAY,
-                modifier = Modifier.weight(1f),
-            )
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    SsingButton(
+                        text = "강습 취소하기",
+                        onClick = onConfirmClick,
+                        style = if (enabled) SsingButtonStyle.RED else SsingButtonStyle.GRAY,
+                        enabled = enabled,
+                        modifier = Modifier.weight(1f),
+                    )
+
+                    SsingButton(
+                        text = "계속 이용하기",
+                        onClick = onDismissRequest,
+                        style = SsingButtonStyle.GRAY,
+                        modifier = Modifier.weight(1f),
+                    )
+                }
+            }
+
         }
     }
 }
@@ -266,7 +295,16 @@ private fun CancelBottomSheetPreview(
 
         Box(
             modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center,
         ) {
+            Button(
+                onClick = { showSheet = true }
+            ) {
+                Text(
+                    text = "바텀시트 열기",
+                )
+            }
+
             if (showSheet) {
                 CancelBottomSheet(
                     userRole = userRole,
