@@ -60,7 +60,7 @@ fun SsingHomeLessonCard(
                 LessonInfoSection(
                     title = state.title,
                     location = state.location,
-                    date = state.date.detailFormatter(),
+                    date = state.date.ssingDateFormatter(),
                     dDay = state.dDay,
                 )
 
@@ -114,7 +114,6 @@ private fun LessonInfoSection(
     Row(
         modifier = modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween
-
     ) {
         Column(
             modifier = Modifier.weight(1f),
@@ -219,7 +218,7 @@ private fun EmptyLessonInfoSection(
     }
 }
 
-fun LocalDateTime.detailFormatter(): String {
+fun LocalDateTime.ssingDateFormatter(): String {
     return this.format(DateTimeFormatter.ofPattern("yyyy. MM. dd (E) HH:mm"))
 }
 
