@@ -62,7 +62,11 @@ internal data class ConditionUiState(
     ): ConditionUiState = copy(
         availableSports = availableSports,
         resortName = resortName,
-        selectedSports = if (availableSports.size == 1) availableSports else selectedSports,
+        selectedSports = if (availableSports.size == 1) {
+            availableSports
+        } else {
+            selectedSports.intersect(availableSports)
+        },
     )
 }
 
