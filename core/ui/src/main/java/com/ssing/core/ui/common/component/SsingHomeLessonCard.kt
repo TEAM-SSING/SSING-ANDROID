@@ -5,7 +5,9 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -123,12 +125,12 @@ private fun LessonInfoSection(
                 style = SsingChipStyle.BLUE,
             )
 
+            Spacer(modifier = Modifier.height(8.dp))
+
             Text(
                 text = title,
                 style = SSINGTheme.typography.body.sb20,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 8.dp),
+                modifier = Modifier.fillMaxWidth()
             )
 
             Row(
@@ -199,8 +201,9 @@ private fun EmptyLessonInfoSection(
             imageVector = ImageVector.vectorResource(R.drawable.ic_reservation_24),
             contentDescription = null,
             tint = SSINGTheme.colors.textAlternative,
-            modifier = Modifier.padding(bottom = 6.dp),
         )
+
+        Spacer(modifier = Modifier.height(6.dp))
 
         Text(
             text = "아직 예약된 강습이 없어요.",
