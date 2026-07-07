@@ -1,4 +1,4 @@
-package com.ssing.instructor.matchingdetail
+package com.ssing.presentation.instructormatching.instructormatchingdetail.screen
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
