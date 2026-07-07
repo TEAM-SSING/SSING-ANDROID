@@ -52,10 +52,14 @@ object NetworkModule {
         HttpLoggingInterceptor { message ->
             when {
                 message.isJsonObject() ->
-                    Timber.tag(LOGGING_TAG).d(JSONObject(message).toString(4))
+                    runCatching { JSONObject(message).toString(4) }
+                        .onSuccess { Timber.tag(LOGGING_TAG).d(it) }
+                        .onFailure { Timber.tag(LOGGING_TAG).d(message) }
 
                 message.isJsonArray() ->
-                    Timber.tag(LOGGING_TAG).d(JSONArray(message).toString(4))
+                    runCatching { JSONArray(message).toString(4) }
+                        .onSuccess { Timber.tag(LOGGING_TAG).d(it) }
+                        .onFailure { Timber.tag(LOGGING_TAG).d(message) }
 
                 else -> {
                     Timber.tag(LOGGING_TAG).d("CONNECTION INFO -> $message")
