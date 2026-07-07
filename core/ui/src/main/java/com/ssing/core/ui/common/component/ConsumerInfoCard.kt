@@ -25,6 +25,15 @@ import com.ssing.core.ui.extension.roundedBackgroundWithBorder
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 
+/**
+ * 강습생별 정보 카드 컴포넌트입니다.
+ *
+ * @param isReady 준비 완료 여부.
+ * @param nickname 예약자 이름.
+ * @param participants 참가자 목록.
+ * @param price 결제 금액.
+ * @param modifier Composable에 적용할 modifier.
+ */
 @Composable
 fun ConsumerInfoCard(
     isReady: Boolean,
