@@ -25,21 +25,11 @@ import com.ssing.core.ui.extension.roundedBackgroundWithBorder
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 
-data class Participant(
-    val age: Int,
-    val gender: Gender,
-)
-
-enum class Gender(val label: String) {
-    MALE("남"),
-    FEMALE("여"),
-}
-
 @Composable
 fun ConsumerInfoCard(
     isReady: Boolean,
     nickname: String,
-    participants: ImmutableList<Participant>,
+    participants: ImmutableList<String>,
     modifier: Modifier = Modifier,
 ) {
     Column (
@@ -90,7 +80,7 @@ fun ConsumerInfoCard(
             ) {
                 participants.forEach { participant ->
                     SsingChip(
-                        text = "${participant.age}세 ${participant.gender.label}",
+                        text = participant,
                         style = SsingChipStyle.GRAY,
                     )
                 }
@@ -118,9 +108,9 @@ private fun ConsumerInfoCardPreview(
                 isReady = isReady,
                 nickname = "김OO",
                 participants = persistentListOf(
-                    Participant(age = 38, gender = Gender.MALE),
-                    Participant(age = 12, gender = Gender.FEMALE),
-                    Participant(age = 9, gender = Gender.MALE),
+                    "38세 남",
+                    "12세 여",
+                    "9세 남",
                 ),
             )
         }
