@@ -67,7 +67,7 @@ import kotlinx.collections.immutable.persistentListOf
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun InstructorClassPreparationScreen(
+fun MatchingDetailBeforeScreen(
     isInstructorReady: Boolean,
     participantReadyCount: Int,
     participantTotalCount: Int,
@@ -142,12 +142,12 @@ fun InstructorClassPreparationScreen(
                 }
                 Spacer(modifier = Modifier.height(8.dp))
                 SsingButton(
-                    text = if (isReadyState) "강습 준비 완료" else "강습 대기중",
+                    text = if (isReadyState) "강습 대기중" else "강습 준비 완료",
                     onClick = {
                         isReadyState = !isReadyState
                         onReadyClick()
                     },
-                    style = if (isReadyState) SsingButtonStyle.BLUE else SsingButtonStyle.GRAY,
+                    style = if (isReadyState) SsingButtonStyle.GRAY else SsingButtonStyle.BLUE,
                     modifier = Modifier.fillMaxWidth(),
                 )
             }
@@ -400,9 +400,9 @@ private fun InfoRow(label: String, value: String) {
 
 @Preview
 @Composable
-private fun InstructorClassPreparationScreenPreview() {
+private fun MatchingDetailBeforeScreenPreview() {
     SSINGTheme {
-        InstructorClassPreparationScreen(
+        MatchingDetailBeforeScreen(
             isInstructorReady = true,
             participantReadyCount = 2,
             participantTotalCount = 5,
