@@ -142,12 +142,12 @@ fun InstructorClassPreparationScreen(
                 }
                 Spacer(modifier = Modifier.height(8.dp))
                 SsingButton(
-                    text = if (isReadyState) "강습 대기중" else "강습 준비 완료",
+                    text = if (isReadyState) "강습 준비 완료" else "강습 대기중",
                     onClick = {
                         isReadyState = !isReadyState
                         onReadyClick()
                     },
-                    style = if (isReadyState) SsingButtonStyle.GRAY else SsingButtonStyle.BLUE,
+                    style = if (isReadyState) SsingButtonStyle.BLUE else SsingButtonStyle.GRAY,
                     modifier = Modifier.fillMaxWidth(),
                 )
             }
