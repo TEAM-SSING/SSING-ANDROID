@@ -166,6 +166,9 @@ private fun LessonBeforeContent(
                 modifier = Modifier
                     .clip(RoundedCornerShape(100.dp))
                     .fillMaxHeight()
+                    .padding(
+                        vertical = 4.dp
+                    )
             )
 
             repeat(lessonBannerState.participantTotalCount) { index ->
