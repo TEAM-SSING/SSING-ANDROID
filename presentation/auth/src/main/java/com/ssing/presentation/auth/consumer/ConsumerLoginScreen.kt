@@ -36,7 +36,6 @@ import com.ssing.core.ui.extension.toast
 import com.ssing.core.ui.util.HandleUiEffects
 import com.ssing.presentation.auth.KakaoLoginEntryPoint
 import com.ssing.presentation.auth.LoginContract
-import com.ssing.presentation.auth.LoginViewModel
 import dagger.hilt.android.EntryPointAccessors
 
 
@@ -44,7 +43,7 @@ import dagger.hilt.android.EntryPointAccessors
 internal fun ConsumerLoginRoute(
     navigateToHome: () -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: LoginViewModel = hiltViewModel(),
+    viewModel: ConsumerLoginViewModel = hiltViewModel(),
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val context = LocalContext.current
