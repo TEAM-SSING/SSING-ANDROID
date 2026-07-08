@@ -65,9 +65,7 @@ fun SsingHomeLessonCardList(
     onCardClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Column(
-        modifier = modifier
-    ) {
+    Column(){
        val pagerState = rememberPagerState(
            pageCount = { states.size }
        )
@@ -189,7 +187,6 @@ private fun LessonInfoSection(
             )
 
             Row(
-                modifier = Modifier,
                 horizontalArrangement = Arrangement.spacedBy(4.dp),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
@@ -223,10 +220,8 @@ private fun LessonInfoSection(
 private fun InfoRow(
     @DrawableRes iconRes: Int,
     text: String,
-    modifier: Modifier = Modifier,
 ) {
     Row(
-        modifier = modifier,
         horizontalArrangement = Arrangement.spacedBy(2.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
@@ -249,7 +244,6 @@ private fun EmptyLessonInfoSection(
     modifier: Modifier = Modifier,
 ) {
     Column(
-        modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(2.dp),
     ) {
         Icon(
