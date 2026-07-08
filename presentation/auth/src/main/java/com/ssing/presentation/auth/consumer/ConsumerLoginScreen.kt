@@ -103,8 +103,7 @@ private fun ConsumerLoginScreen(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .background(color = SSINGTheme.colors.backgroundNormal)
-            .padding(horizontal = 16.dp),
+            .background(color = SSINGTheme.colors.backgroundNormal),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
     ) {
