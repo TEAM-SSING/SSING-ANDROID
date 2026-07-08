@@ -180,7 +180,7 @@ private fun MatchingDialogHost(
 private val previewCondition = ConditionUiState(
     availableSports = SportOption.entries.toSet(),
     resortName = "하이원 리조트",
-    selectedSports = setOf(SportOption.SKI),
+    selectedSports = SportOption.SKI,
     selectedLevels = setOf(LevelOption.BEGINNER),
     selectedDurations = setOf(DurationOption.HOUR_3),
     maxHeadcount = 4,
