@@ -10,8 +10,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ssing.core.ui.common.component.KakaoButton
+import com.ssing.core.ui.designsystem.theme.SSINGTheme
 
 @Composable
 internal fun LoginSection(
@@ -50,5 +52,18 @@ internal fun LoginSection(
                 onClick = onServiceCenterClick,
             )
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun LoginSectionPreview(){
+    SSINGTheme {
+        LoginSection(
+            onKakaoClick = {},
+            onConditionClick = {},
+            onPersonalInfoClick = {},
+            onServiceCenterClick = {},
+        )
     }
 }
