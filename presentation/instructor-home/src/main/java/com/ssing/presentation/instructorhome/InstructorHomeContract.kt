@@ -1,5 +1,6 @@
 package com.ssing.presentation.instructorhome
 
+import androidx.annotation.DrawableRes
 import androidx.compose.runtime.Immutable
 import com.ssing.core.ui.R
 
@@ -15,32 +16,33 @@ internal interface InstructorHomeContract {
         data object NavigateToMatching : Effect
     }
 }
+
 sealed interface Grade {
     val label: String
-    val icon: Int
+    @get:DrawableRes val icon: Int
 
-    data class Grade1(
-        override val label: String = "Grade1",
-        override val icon: Int = R.drawable.img_grade1_badge
-    ) : Grade
+    data object Grade1 : Grade {
+        override val label = "Grade1"
+        override val icon = R.drawable.img_grade1_badge
+    }
 
-    data class Grade2(
-        override val label: String = "Grade2",
-        override val icon: Int = R.drawable.img_grade2_badge
-    ) : Grade
+    data object Grade2 : Grade {
+        override val label = "Grade2"
+        override val icon = R.drawable.img_grade2_badge
+    }
 
-    data class Grade3(
-        override val label: String = "Grade3",
-        override val icon: Int = R.drawable.img_grade3_badge
-    ) : Grade
+    data object Grade3 : Grade {
+        override val label = "Grade3"
+        override val icon = R.drawable.img_grade3_badge
+    }
 
-    data class Grade4(
-        override val label: String = "Grade4",
-        override val icon: Int = R.drawable.img_grade4_badge
-    ) : Grade
+    data object Grade4 : Grade {
+        override val label = "Grade4"
+        override val icon = R.drawable.img_grade4_badge
+    }
 
-    data class Grade5(
-        override val label: String = "Grade5",
-        override val icon: Int = R.drawable.img_grade5_badge
-    ) : Grade
+    data object Grade5 : Grade {
+        override val label = "Grade5"
+        override val icon = R.drawable.img_grade5_badge
+    }
 }
