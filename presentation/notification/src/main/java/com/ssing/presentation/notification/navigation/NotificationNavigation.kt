@@ -1,6 +1,5 @@
 package com.ssing.presentation.notification.navigation
 
-import android.app.Notification
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.ui.Modifier
