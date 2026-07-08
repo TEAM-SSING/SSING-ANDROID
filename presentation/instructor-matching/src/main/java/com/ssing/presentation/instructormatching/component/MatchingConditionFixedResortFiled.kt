@@ -15,7 +15,7 @@ import com.ssing.core.ui.extension.roundedBackgroundWithBorder
 
 
 @Composable
-fun MatchingConditionFixedResortField(
+internal fun MatchingConditionFixedResortField(
     resortName: String,
     modifier: Modifier = Modifier,
 ) {
