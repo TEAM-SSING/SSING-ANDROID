@@ -12,6 +12,7 @@ internal interface LessonDetailContract {
     data class State(
         val phase: LessonDetailPhase = LessonDetailPhase.Loading,
         val dialog: LessonDetailDialog? = null,
+        val showReadyDialog:Boolean=false,
     )
 
     sealed interface LessonDetailPhase {
