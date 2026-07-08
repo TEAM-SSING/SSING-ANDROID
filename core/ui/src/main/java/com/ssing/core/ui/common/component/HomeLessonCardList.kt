@@ -66,10 +66,10 @@ fun HomeLessonCardList(
 ) {
     Column(
         modifier = modifier,
-    ){
-       val pagerState = rememberPagerState(
-           pageCount = { states.size }
-       )
+    ) {
+        val pagerState = rememberPagerState(
+            pageCount = { states.size }
+        )
 
         HorizontalPager(
             modifier = Modifier.fillMaxWidth(),
@@ -97,7 +97,8 @@ fun HomeLessonCardList(
         ) {
             if (pagerState.pageCount > 1) {
                 repeat(pagerState.pageCount) { iteration ->
-                    val color = if (pagerState.currentPage == iteration) SSINGTheme.colors.borderStrong else SSINGTheme.colors.borderAlternative
+                    val color =
+                        if (pagerState.currentPage == iteration) SSINGTheme.colors.borderStrong else SSINGTheme.colors.borderAlternative
                     Box(
                         modifier = Modifier
                             .clip(CircleShape)
@@ -113,7 +114,7 @@ fun HomeLessonCardList(
 @Composable
 private fun HomeLessonEmptyCard(
     modifier: Modifier = Modifier,
-){
+) {
     Row(
         modifier = modifier
             .lessonCardBackground()
@@ -142,7 +143,7 @@ private fun HomeLessonReservationCard(
     state: HomeLessonCardState.Reservation,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
-){
+) {
     Column(
         modifier = modifier
             .lessonCardBackground()
@@ -172,6 +173,7 @@ private fun HomeLessonCard(
                 modifier = modifier,
             )
         }
+
         is HomeLessonCardState.Reservation -> {
             HomeLessonReservationCard(
                 state = state,
@@ -366,7 +368,8 @@ private fun HomeLessonCardPreview() {
     }
 }
 
-private class HomeLessonCardPreviewProvider : PreviewParameterProvider<ImmutableList<HomeLessonCardState>> {
+private class HomeLessonCardPreviewProvider :
+    PreviewParameterProvider<ImmutableList<HomeLessonCardState>> {
     override val values = sequenceOf(
         persistentListOf(HomeLessonCardState.Empty),
         persistentListOf(
