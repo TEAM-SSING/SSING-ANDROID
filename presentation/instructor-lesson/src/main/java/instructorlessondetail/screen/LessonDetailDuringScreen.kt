@@ -24,6 +24,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -41,6 +42,7 @@ import com.ssing.core.ui.common.component.SsingButton
 import com.ssing.core.ui.common.component.SsingButtonStyle
 import com.ssing.core.ui.common.component.SsingChip
 import com.ssing.core.ui.common.component.SsingChipStyle
+import com.ssing.core.ui.common.component.SsingModal
 import com.ssing.core.ui.designsystem.theme.Blue50
 import com.ssing.core.ui.designsystem.theme.SSINGTheme
 import kotlinx.collections.immutable.ImmutableList
@@ -63,6 +65,7 @@ fun LessonDetailDuringScreen(
 ) {
     val density = LocalDensity.current
     var headerHeightPx by remember { mutableIntStateOf(0) }
+    var showReadyDialog by remember { mutableStateOf(false) }
 
     Scaffold(
         modifier = modifier,
@@ -200,6 +203,17 @@ fun LessonDetailDuringScreen(
                 }
             }
         }
+    }
+    if (showReadyDialog) {
+        SsingModal(
+            onDismissRequest = { showReadyDialog = false },
+            title = "강습을 종료할까요?",
+            text = "강습을 종료하면 모든 참여자의 강습이\n종료 상태로 변경되어요",
+            primaryText = "계속 진행하기",
+            onPrimary = { showReadyDialog = false },
+            secondaryText = "강습 종료하기",
+            onSecondary = { showReadyDialog = false },  // 화면 넘어가도록 수정
+        )
     }
 }
 
@@ -345,6 +359,22 @@ private fun LessonDetailDuringScreenPreview() {
             onCancelClassClick = {},
             onChatRoomClick = {},
             onEndClick = {},
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun ReadyConfirmModalPreview() {
+    SSINGTheme {
+        SsingModal(
+            onDismissRequest = {},
+            title = "강습을 종료할까요?",
+            text = "강습을 종료하면 모든 참여자의 강습이\n종료 상태로 변경되어요",
+            primaryText = "계속 진행하기",
+            secondaryText = "강습 종료하기",
+            onPrimary = {},
+            onSecondary = {},
         )
     }
 }
