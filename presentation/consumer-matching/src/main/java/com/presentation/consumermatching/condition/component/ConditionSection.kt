@@ -18,7 +18,7 @@ internal sealed class ConditionSectionStyle(
 ) {
     data object Default : ConditionSectionStyle(arrangement = Arrangement.Start)
     data object MultipleSelect : ConditionSectionStyle(arrangement = Arrangement.spacedBy(8.dp))
-    data class PartipicantCount(
+    data class ParticipantCount(
         val currentCount: Int,
         val totalCount: Int,
     ) : ConditionSectionStyle(arrangement = Arrangement.SpaceBetween)
@@ -54,7 +54,7 @@ internal fun ConditionSection(
                 )
             }
 
-            if (style is ConditionSectionStyle.PartipicantCount) {
+            if (style is ConditionSectionStyle.ParticipantCount) {
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(2.dp),
                 ) {
