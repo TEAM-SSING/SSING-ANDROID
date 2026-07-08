@@ -60,12 +60,14 @@ sealed interface HomeLessonCardState {
 }
 
 @Composable
-fun SsingHomeLessonCardList(
+fun HomeLessonCardList(
     states: ImmutableList<HomeLessonCardState>,
     onCardClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Column(){
+    Column(
+        modifier = modifier,
+    ){
        val pagerState = rememberPagerState(
            pageCount = { states.size }
        )
@@ -76,7 +78,7 @@ fun SsingHomeLessonCardList(
             contentPadding = PaddingValues(horizontal = 16.dp),
             pageSpacing = 8.dp,
         ) { page ->
-            SsingHomeLessonCard(
+            HomeLessonCard(
                 state = states[page],
                 onClick = onCardClick,
                 modifier = Modifier.fillMaxWidth()
@@ -110,7 +112,7 @@ fun SsingHomeLessonCardList(
 }
 
 @Composable
-private fun SsingHomeLessonCard(
+private fun HomeLessonCard(
     state: HomeLessonCardState,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -280,9 +282,9 @@ private fun Modifier.lessonCardBackground() = this
 
 @Preview
 @Composable
-private fun SsingHomeLessonEmptyCardPreview() {
+private fun HomeLessonEmptyCardPreview() {
     SSINGTheme {
-        SsingHomeLessonCard(
+        HomeLessonCard(
             state = HomeLessonCardState.Empty,
             onClick = {},
             modifier = Modifier.width(328.dp),
@@ -292,9 +294,9 @@ private fun SsingHomeLessonEmptyCardPreview() {
 
 @Preview
 @Composable
-private fun SsingHomeLessonMatchingCardPreview() {
+private fun HomeLessonMatchingCardPreview() {
     SSINGTheme {
-        SsingHomeLessonCard(
+        HomeLessonCard(
             state = HomeLessonCardState.Reservation(
                 chip = "Now",
                 displayText = "매칭중",
@@ -310,9 +312,9 @@ private fun SsingHomeLessonMatchingCardPreview() {
 
 @Preview
 @Composable
-private fun SsingHomeLessonMatchedCardPreview() {
+private fun HomeLessonMatchedCardPreview() {
     SSINGTheme {
-        SsingHomeLessonCard(
+        HomeLessonCard(
             state = HomeLessonCardState.Reservation(
                 chip = "Now",
                 displayText = "김OO님 팀 3명",
@@ -328,9 +330,9 @@ private fun SsingHomeLessonMatchedCardPreview() {
 
 @Preview
 @Composable
-private fun SsingHomeLessonCardPreview() {
+private fun HomeLessonCardPreview() {
     SSINGTheme {
-        SsingHomeLessonCard(
+        HomeLessonCard(
             state = HomeLessonCardState.Reservation(
                 chip = "D-2",
                 displayText = "김OO님 팀 3명",
@@ -368,11 +370,11 @@ private class HomeLessonCardPreviewProvider : PreviewParameterProvider<Immutable
 
 @Preview
 @Composable
-private fun SsingHomeLessonCardListPreview(
+private fun HomeLessonCardListPreview(
     @PreviewParameter(HomeLessonCardPreviewProvider::class) states: ImmutableList<HomeLessonCardState>,
 ) {
     SSINGTheme {
-        SsingHomeLessonCardList(
+        HomeLessonCardList(
             states = states,
             onCardClick = {},
             modifier = Modifier,
