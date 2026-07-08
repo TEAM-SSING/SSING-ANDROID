@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -164,11 +165,11 @@ private fun LessonBeforeContent(
                 thickness = 2.dp,
                 color = Blue100,
                 modifier = Modifier
-                    .clip(RoundedCornerShape(100.dp))
                     .fillMaxHeight()
                     .padding(
                         vertical = 4.dp
                     )
+                    .clip(CircleShape),
             )
 
             repeat(lessonBannerState.participantTotalCount) { index ->
