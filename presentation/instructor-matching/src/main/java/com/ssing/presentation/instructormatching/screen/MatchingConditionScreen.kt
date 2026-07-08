@@ -67,7 +67,7 @@ internal fun MatchingConditionScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(all = 16.dp),
-                verticalArrangement = Arrangement.spacedBy(24.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp),
             ) {
                 MatchingConditionSection(label = "강습 장소") {
                     MatchingConditionFixedResortField(resortName = condition.resortName)
@@ -77,7 +77,7 @@ internal fun MatchingConditionScreen(
                     label = "강습 종목",
                     labelSuffix = { MultiSelectBadge() },
                 ) {
-                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
                         condition.availableSports.sortedBy { it.ordinal }.forEach { sport ->
                             SsingSelectButton(
                                 text = sport.label,
@@ -99,7 +99,7 @@ internal fun MatchingConditionScreen(
                     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                         LevelOption.entries.chunked(LEVEL_OPTION_COLUMN_COUNT)
                             .forEach { rowOptions ->
-                                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                                Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
                                     rowOptions.forEach { level ->
                                         SsingSelectButton(
                                             text = level.label,
@@ -117,7 +117,7 @@ internal fun MatchingConditionScreen(
                     label = "강습 시간",
                     labelSuffix = { MultiSelectBadge() },
                 ) {
-                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
                         DurationOption.entries.forEach { duration ->
                             SsingSelectButton(
                                 text = duration.label,
