@@ -1,13 +1,17 @@
 package com.ssing.presentation.instructorhome.component
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Text
@@ -37,7 +41,13 @@ fun InstructorReviewCard(
     modifier: Modifier = Modifier,
 ) {
     Column(
-        modifier = modifier.fillMaxWidth(),
+        modifier = modifier
+            .fillMaxWidth()
+            .background(
+                color = SSINGTheme.colors.backgroundNormal,
+                shape = RoundedCornerShape(12.dp),
+            )
+            .padding(12.dp),
     ) {
         ReviewSection(
             averageRating = averageRating
@@ -133,20 +143,28 @@ private fun RatingSection(
 
             Spacer(modifier = Modifier.weight(1f))
 
-            LinearProgressIndicator(
-                progress = { targetProgress },
-                color = SSINGTheme.colors.primaryNormal,
-                trackColor = SSINGTheme.colors.borderDisabled,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(10.dp),
-                drawStopIndicator = {},
-                gapSize = (-10).dp,
-            )
+            LinearProgressBar()
         }
     }
 }
-@Preview(showBackground = true)
+
+@Composable
+private fun LinearProgressBar(
+    modifier: Modifier = Modifier,
+) {
+    Box(
+        modifier = modifier,
+    ) {
+        Box(
+            modifier = Modifier,
+        ) {
+
+
+        }
+    }
+}
+
+@Preview
 @Composable
 private fun InstructorReviewCardPreview() {
     SSINGTheme {
