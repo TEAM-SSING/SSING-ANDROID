@@ -51,7 +51,7 @@ internal fun MatchingWaitingScreen(
         SsingHeader(
             title = "조건에 맞는 강습요청을 찾고 있어요",
             subText = "조건에 맞는 강습요청이 들어오면 바로 확인할 수 있어요",
-            modifier = Modifier.padding(top = 24.dp),
+            modifier = Modifier.padding(top =16.dp),
         )
 
         // TODO(매칭-그래픽): 로딩 그래픽 에셋 확정 시 이 위치에 추가

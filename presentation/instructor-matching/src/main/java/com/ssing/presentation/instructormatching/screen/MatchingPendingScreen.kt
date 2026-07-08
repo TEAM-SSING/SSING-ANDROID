@@ -54,8 +54,7 @@ internal fun MatchingPendingScreen(
                 stepLabel = "수락 완료",
             )
 
-            Spacer(modifier = Modifier.height(23.dp))
-
+            Spacer(modifier = Modifier.weight(1f))
             SsingButton(
                 text = "대기중",
                 onClick = {},
