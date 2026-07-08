@@ -66,11 +66,8 @@ internal fun MatchingWaitingScreen(
             classDateTime = waiting.classDateTime,
             location = condition.resortName,
             duration = condition.selectedDurations.joinToString(" / ") { it.label },
-            maxCapacity = condition.maxHeadcount,
             participants = waiting.participants.map { it.toParticipant() }.toPersistentList(),
-            isPaid = waiting.isPaid,
             price = waiting.price,
-            equipmentStatus = waiting.equipmentStatus,
             modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp),
         )
 
