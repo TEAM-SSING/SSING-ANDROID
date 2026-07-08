@@ -23,36 +23,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ssing.core.ui.designsystem.theme.SSINGTheme
 import com.ssing.core.ui.R
-
-sealed interface Grade {
-    val label: String
-    val icon: Int
-
-    data class Grade1(
-        override val label: String = "Grade1",
-        override val icon: Int = R.drawable.img_grade1_badge
-    ) : Grade
-
-    data class Grade2(
-        override val label: String = "Grade2",
-        override val icon: Int = R.drawable.img_grade2_badge
-    ) : Grade
-
-    data class Grade3(
-        override val label: String = "Grade3",
-        override val icon: Int = R.drawable.img_grade3_badge
-    ) : Grade
-
-    data class Grade4(
-        override val label: String = "Grade4",
-        override val icon: Int = R.drawable.img_grade4_badge
-    ) : Grade
-
-    data class Grade5(
-        override val label: String = "Grade5",
-        override val icon: Int = R.drawable.img_grade5_badge
-    ) : Grade
-}
+import com.ssing.presentation.instructorhome.Grade
 
 @Composable
 fun InstructorReviewCard(
@@ -168,8 +139,6 @@ private fun RatingSection(
                 gapSize = (-10).dp,
             )
         }
-
-
     }
 }
 
