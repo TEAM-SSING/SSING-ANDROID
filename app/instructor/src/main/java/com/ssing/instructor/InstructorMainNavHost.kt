@@ -11,6 +11,7 @@ import com.ssing.presentation.auth.navigation.authNavGraph
 import com.ssing.presentation.instructorhome.navigation.InstructorHome
 import com.ssing.presentation.instructorhome.navigation.instructorHomeNavGraph
 import com.ssing.presentation.notification.navigation.notificationNavGraph
+import com.ssing.presentation.instructormatching.navigation.instructorMatchingNavGraph
 
 @Composable
 internal fun InstructorMainNavHost(
@@ -34,6 +35,10 @@ internal fun InstructorMainNavHost(
         )
         instructorHomeNavGraph(paddingValues = paddingValues)
         notificationNavGraph(
+            paddingValues = paddingValues,
+            navController = navController,
+        )
+        instructorMatchingNavGraph(
             paddingValues = paddingValues,
             navController = navController,
         )
