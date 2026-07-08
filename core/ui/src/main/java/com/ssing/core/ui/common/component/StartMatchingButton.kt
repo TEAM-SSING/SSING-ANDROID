@@ -43,23 +43,15 @@ enum class StartMatchingCardStyle {
 private val StartMatchingCardStyle.defaultBrush: Brush
     @Composable
     get() = when (this) {
-        StartMatchingCardStyle.WHITE -> Brush.linearGradient(
-            listOf(Color.White, Color(0xFFEFF2F8))
-        )
+        StartMatchingCardStyle.WHITE -> SSINGTheme.colors.whiteGradient
 
-        StartMatchingCardStyle.BLUE -> Brush.linearGradient(
-            listOf(
-                Color(0xFF64AAFF),
-                Color(0xFF3184EA),
-                Color(0xFF357DD5),
-            )
-        )
+        StartMatchingCardStyle.BLUE -> SSINGTheme.colors.blueGradient
     }
 
 private val StartMatchingCardStyle.pressedBrush: Color
     @Composable
     get() = when (this) {
-        StartMatchingCardStyle.WHITE -> SSINGTheme.colors.borderAlternative
+        StartMatchingCardStyle.WHITE -> SSINGTheme.colors.backgroundAlternative
         StartMatchingCardStyle.BLUE -> Blue600
     }
 
@@ -90,7 +82,7 @@ private val StartMatchingCardStyle.descriptionColor: Color
  */
 
 @Composable
-fun StartMatchingCard(
+fun StartMatchingButton(
     badgeText: String,
     title: String,
     description: String,
@@ -158,47 +150,25 @@ fun StartMatchingCard(
 @Composable
 private fun SsingStartClassCardPreview() {
     SSINGTheme {
-        Column(
-            verticalArrangement = Arrangement.spacedBy(17.dp),
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
         ) {
-            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                StartMatchingCard(
-                    badgeText = "text", title = "title", description = "text",
-                    iconRes = R.drawable.img_fast,
-                    style = StartMatchingCardStyle.WHITE,
-                    chipStyle = SsingChipStyle.BLUE,
-                    onClick = {},
-                    modifier = Modifier.weight(1f),
-                )
-
-                StartMatchingCard(
-                    badgeText = "text", title = "title", description = "text",
-                    iconRes = R.drawable.img_fast,
-                    style = StartMatchingCardStyle.WHITE,
-                    chipStyle = SsingChipStyle.BLUE,
-                    onClick = {},
-                    modifier = Modifier.weight(1f),
-                )
-            }
-            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                StartMatchingCard(
-                    badgeText = "text", title = "title", description = "text",
-                    iconRes = R.drawable.img_fast_dark,
-                    style = StartMatchingCardStyle.BLUE,
-                    chipStyle = SsingChipStyle.BLUE,
-                    onClick = {},
-                    modifier = Modifier.weight(1f),
-                )
-
-                StartMatchingCard(
-                    badgeText = "text", title = "title", description = "text",
-                    iconRes = R.drawable.img_fast_dark,
-                    style = StartMatchingCardStyle.BLUE,
-                    chipStyle = SsingChipStyle.BLUE,
-                    onClick = {},
-                    modifier = Modifier.weight(1f),
-                )
-            }
+            StartMatchingButton(
+                badgeText = "text", title = "title", description = "text",
+                iconRes = R.drawable.img_fast,
+                style = StartMatchingCardStyle.WHITE,
+                chipStyle = SsingChipStyle.BLUE,
+                onClick = {},
+                modifier = Modifier.weight(1f),
+            )
+            StartMatchingButton(
+                badgeText = "text", title = "title", description = "text",
+                iconRes = R.drawable.img_fast_dark,
+                style = StartMatchingCardStyle.BLUE,
+                chipStyle = SsingChipStyle.BLUE,
+                onClick = {},
+                modifier = Modifier.weight(1f),
+            )
         }
     }
 }
