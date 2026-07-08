@@ -1,5 +1,6 @@
 package instructorlessondetail.screen
 
+import android.R.attr.duration
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -45,18 +46,14 @@ import com.ssing.core.ui.common.component.SsingChipStyle
 import com.ssing.core.ui.common.component.SsingModal
 import com.ssing.core.ui.designsystem.theme.Blue50
 import com.ssing.core.ui.designsystem.theme.SSINGTheme
+import instructorlessondetail.model.LessonDetailDuringUiModel
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LessonDetailDuringScreen(
-    tags: ImmutableList<String>,
-    classTitle: String,
-    location: String,
-    duration: String,
-    price: Int,
-    teams: ImmutableList<TeamParticipantsInfo>,
+internal fun LessonDetailDuringScreen(
+    during: LessonDetailDuringUiModel,
     onBackClick: () -> Unit,
     onCancelClassClick: () -> Unit,
     onChatRoomClick: () -> Unit,
@@ -174,11 +171,11 @@ fun LessonDetailDuringScreen(
                             SectionTitle(text = "강습 정보")
                             Spacer(modifier = Modifier.height(8.dp))
                             ClassInfoCard(
-                                tags = tags,
-                                classTitle = classTitle,
-                                location = location,
-                                duration = duration,
-                                price = price,
+                                tags = during.tags,
+                                classTitle = during.classTitle,
+                                location = during.location,
+                                duration = during.duration,
+                                price = during.price,
                             )
 
                             Spacer(modifier = Modifier.height(24.dp))
@@ -186,14 +183,14 @@ fun LessonDetailDuringScreen(
                             Column {
                                 SectionTitle(text = "강습생 정보")
                                 Spacer(modifier = Modifier.height(8.dp))
-                                teams.forEachIndexed { index, team ->
+                                during.teams.forEachIndexed { index, team ->
                                     ConsumerInfoCard(
                                         isReady = team.isReady,
                                         nickname = team.teamNickname,
                                         participants = team.participants,
                                         price = team.price,
                                     )
-                                    if (index != teams.lastIndex) {
+                                    if (index != during.teams.lastIndex) {
                                         Spacer(modifier = Modifier.height(8.dp))
                                     }
                                 }
@@ -334,25 +331,27 @@ private fun InfoRow(label: String, value: String) {
 private fun LessonDetailDuringScreenPreview() {
     SSINGTheme {
         LessonDetailDuringScreen(
-            tags = persistentListOf("스노보드", "자격증이 있어요"),
-            classTitle = "김OO님 팀, 홍지민님 팀 총 5명",
-            location = "OOO 리조트",
-            duration = "0시간",
-            price = 0,
-            teams = persistentListOf(
-                TeamParticipantsInfo(
-                    teamNickname = "김OO",
-                    teamCount = 0,
-                    participants = persistentListOf("38세 남", "12세 여", "9세 남"),
-                    price = 0,
-                    isReady = false,
-                ),
-                TeamParticipantsInfo(
-                    teamNickname = "김OO",
-                    teamCount = 0,
-                    participants = persistentListOf("38세 남", "12세 여", "9세 남"),
-                    price = 0,
-                    isReady = false,
+            during = LessonDetailDuringUiModel(
+                tags = persistentListOf("스노보드", "자격증이 있어요"),
+                classTitle = "김OO님 팀, 홍지민님 팀 총 5명",
+                location = "OOO 리조트",
+                duration = "0시간",
+                price = 0,
+                teams = persistentListOf(
+                    TeamParticipantsInfo(
+                        teamNickname = "김OO",
+                        teamCount = 0,
+                        participants = persistentListOf("38세 남", "12세 여", "9세 남"),
+                        price = 0,
+                        isReady = false,
+                    ),
+                    TeamParticipantsInfo(
+                        teamNickname = "김OO",
+                        teamCount = 0,
+                        participants = persistentListOf("38세 남", "12세 여", "9세 남"),
+                        price = 0,
+                        isReady = false,
+                    ),
                 ),
             ),
             onBackClick = {},
