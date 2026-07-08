@@ -129,7 +129,9 @@ private fun HomeLessonCard(
                 verticalAlignment = Alignment.Bottom,
             ) {
                 EmptyLessonInfoSection(
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(bottom = 5.dp),
                 )
 
                 Image(
@@ -167,7 +169,6 @@ private fun LessonInfoSection(
 ) {
     Row(
         modifier = modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.Bottom
     ) {
         Column(
@@ -246,6 +247,7 @@ private fun EmptyLessonInfoSection(
     modifier: Modifier = Modifier,
 ) {
     Column(
+        modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(2.dp),
     ) {
         Icon(
