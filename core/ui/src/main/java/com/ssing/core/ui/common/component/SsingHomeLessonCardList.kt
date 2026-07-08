@@ -92,14 +92,16 @@ fun SsingHomeLessonCardList(
             Modifier
                 .wrapContentHeight()
                 .fillMaxWidth(),
-            horizontalArrangement = Arrangement.Center,
+            horizontalArrangement = Arrangement.spacedBy(
+                space = 4.dp,
+                alignment = Alignment.CenterHorizontally,
+            ),
         ) {
             if (pagerState.pageCount > 1) {
                 repeat(pagerState.pageCount) { iteration ->
                     val color = if (pagerState.currentPage == iteration) SSINGTheme.colors.borderStrong else SSINGTheme.colors.borderAlternative
                     Box(
                         modifier = Modifier
-                            .padding(horizontal = 2.dp)
                             .clip(CircleShape)
                             .background(color)
                             .size(5.dp)
