@@ -1,7 +1,7 @@
-package com.ssing.data.consumerlogin.di
+package com.ssing.data.auth.di
 
-import com.ssing.data.consumerlogin.repository.api.ConsumerAuthRepository
-import com.ssing.data.consumerlogin.repository.impl.ConsumerAuthRepositoryImpl
+import com.ssing.data.auth.repository.api.ConsumerAuthRepository
+import com.ssing.data.auth.repository.impl.ConsumerAuthRepositoryImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

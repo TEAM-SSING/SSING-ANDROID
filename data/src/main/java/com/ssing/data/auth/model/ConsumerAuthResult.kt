@@ -1,4 +1,4 @@
-package com.ssing.data.consumerlogin.model
+package com.ssing.data.auth.model
 
 data class ConsumerAuthResult(
     val accessToken: String,

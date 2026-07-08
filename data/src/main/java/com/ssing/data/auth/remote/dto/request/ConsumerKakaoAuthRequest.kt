@@ -1,4 +1,4 @@
-package com.ssing.data.consumerlogin.remote.dto.request
+package com.ssing.data.auth.remote.dto.request
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

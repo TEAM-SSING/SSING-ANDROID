@@ -1,6 +1,6 @@
-package com.ssing.data.consumerlogin.di
+package com.ssing.data.auth.di
 
-import com.ssing.data.consumerlogin.remote.service.ConsumerAuthService
+import com.ssing.data.auth.remote.service.ConsumerAuthService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

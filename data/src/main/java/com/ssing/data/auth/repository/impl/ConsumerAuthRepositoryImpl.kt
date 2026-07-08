@@ -1,12 +1,12 @@
-package com.ssing.data.consumerlogin.repository.impl
+package com.ssing.data.auth.repository.impl
 
 import com.ssing.core.network.extension.mapApiException
 import com.ssing.core.network.token.TokenAccessManager
 import com.ssing.core.network.util.ApiResponseHandler
 import com.ssing.core.network.util.suspendRunCatching
-import com.ssing.data.consumerlogin.exception.ConsumerAuthException
-import com.ssing.data.consumerlogin.remote.datasource.api.ConsumerAuthDataSource
-import com.ssing.data.consumerlogin.repository.api.ConsumerAuthRepository
+import com.ssing.data.auth.exception.ConsumerAuthException
+import com.ssing.data.auth.remote.datasource.api.ConsumerAuthDataSource
+import com.ssing.data.auth.repository.api.ConsumerAuthRepository
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -30,7 +30,7 @@ internal class ConsumerAuthRepositoryImpl @Inject constructor(
                     tokenAccessManager.withLock {
                         clearTokens()
                     }
-                }.onFailure { Timber.e(it, "clearTokens 실패") }
+                }.onFailure { Timber.Forest.e(it, "clearTokens 실패") }
                 throw throwable
             }
         }.map { }

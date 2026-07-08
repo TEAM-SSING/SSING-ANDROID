@@ -1,4 +1,4 @@
-package com.ssing.data.consumerlogin.repository.api
+package com.ssing.data.auth.repository.api
 
 interface ConsumerAuthRepository {
     suspend fun postConsumerKakaoAuth(
