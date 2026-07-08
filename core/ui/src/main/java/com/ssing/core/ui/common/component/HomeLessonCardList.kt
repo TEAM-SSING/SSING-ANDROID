@@ -275,11 +275,9 @@ private fun EmptyLessonInfoSection(
 @Composable
 private fun Modifier.lessonCardBackground() = this
     .fillMaxWidth()
-    .roundedBackgroundWithBorder(
+    .background(
         shape = RoundedCornerShape(12.dp),
-        backgroundColor = SSINGTheme.colors.backgroundNormal,
-        borderColor = SSINGTheme.colors.borderAlternative,
-        borderWidth = 1.dp,
+        color = SSINGTheme.colors.backgroundNormal,
     )
 
 @Preview
