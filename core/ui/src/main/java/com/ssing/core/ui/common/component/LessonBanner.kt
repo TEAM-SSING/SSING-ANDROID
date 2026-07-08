@@ -221,6 +221,7 @@ private fun LessonOngoingContent(
             painter = painterResource(R.drawable.img_clock),
             contentDescription = null,
             tint = Color.Unspecified,
+            modifier = Modifier.align(Alignment.Bottom)
         )
     }
 }
@@ -234,6 +235,14 @@ private fun LessonCompletedContent(
         modifier = modifier
             .fillMaxWidth(),
     ) {
+        Icon(
+            painter = painterResource(R.drawable.img_lesson_end),
+            contentDescription = null,
+            tint = Color.Unspecified,
+            modifier = Modifier
+                .align(Alignment.BottomEnd),
+        )
+
         Column(
             verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
@@ -249,14 +258,6 @@ private fun LessonCompletedContent(
                 style = SSINGTheme.typography.caption.md14,
             )
         }
-
-        Icon(
-            painter = painterResource(R.drawable.img_lesson_end),
-            contentDescription = null,
-            tint = Color.Unspecified,
-            modifier = Modifier
-                .align(Alignment.BottomEnd),
-        )
     }
 }
 
@@ -268,6 +269,14 @@ private fun LessonCanceledContent(
         modifier = modifier
             .fillMaxWidth(),
     ) {
+        Icon(
+            painter = painterResource(R.drawable.img_lesson_cancel),
+            contentDescription = null,
+            tint = Color.Unspecified,
+            modifier = Modifier
+                .align(Alignment.BottomEnd),
+        )
+
         Column(
             verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
@@ -283,14 +292,6 @@ private fun LessonCanceledContent(
                 style = SSINGTheme.typography.caption.md14,
             )
         }
-
-        Icon(
-            painter = painterResource(R.drawable.img_lesson_cancel),
-            contentDescription = null,
-            tint = Color.Unspecified,
-            modifier = Modifier
-                .align(Alignment.BottomEnd),
-        )
     }
 }
 
