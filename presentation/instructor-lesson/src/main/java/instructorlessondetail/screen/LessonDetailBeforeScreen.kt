@@ -48,6 +48,7 @@ import com.ssing.core.ui.common.component.SsingChipStyle
 import com.ssing.core.ui.common.component.SsingModal
 import com.ssing.core.ui.designsystem.theme.Blue50
 import com.ssing.core.ui.designsystem.theme.SSINGTheme
+import instructorlessondetail.LessonDetailContract
 import instructorlessondetail.model.LessonDetailBeforeUiModel
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
@@ -75,7 +76,17 @@ internal fun LessonDetailBeforeScreen(
     var isReadyState by remember { mutableStateOf(before.isInstructorReady) }
     val density = LocalDensity.current
     var headerHeightPx by remember { mutableIntStateOf(0) }
-    var showReadyDialog by remember { mutableStateOf(false) }
+    var showReadyDialog by remember { mutableStateOf(false) }  // 뷰모델으로
+
+//    val state = LessonDetailContract.State()
+//
+//    if (state.showReadyDialog) {
+//        SsingModal (
+//
+//        )
+//    }
+
+
 
     Scaffold(
         modifier = modifier,
