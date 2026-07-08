@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ssing.core.ui.common.component.KakaoButton
@@ -22,6 +23,7 @@ internal fun LoginSection(
     onPersonalInfoClick: () -> Unit,
     onServiceCenterClick: () -> Unit,
     modifier: Modifier = Modifier,
+    infoTextColor: Color = SSINGTheme.colors.textAlternative,
 ) {
     Column(
         modifier = modifier.padding(16.dp),
@@ -40,16 +42,19 @@ internal fun LoginSection(
             InfoText(
                 text = "이용 약관",
                 onClick = onConditionClick,
+                color = infoTextColor,
             )
 
             InfoText(
                 text = "개인정보 처리방침",
                 onClick = onPersonalInfoClick,
+                color = infoTextColor,
             )
 
             InfoText(
                 text = "고객센터",
                 onClick = onServiceCenterClick,
+                color = infoTextColor,
             )
         }
     }
