@@ -1,11 +1,11 @@
-package com.ssing.presentation.instructormatching.instructormatchingdetail
+package instructorlessondetail
 
 import androidx.compose.runtime.Immutable
-import com.ssing.presentation.instructormatching.instructormatchingdetail.screen.TeamParticipantsInfo
+import instructorlessondetail.screen.TeamParticipantsInfo
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 
-internal interface MatchingDetailContract {
+internal interface LessonDetailContract {
 
     @Immutable
     data class State(

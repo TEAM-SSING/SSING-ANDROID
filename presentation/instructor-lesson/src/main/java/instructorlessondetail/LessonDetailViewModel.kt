@@ -1,4 +1,4 @@
-package com.ssing.presentation.instructormatching.instructormatchingdetail
+package instructorlessondetail
 
 import androidx.lifecycle.SavedStateHandle
 import com.ssing.core.ui.base.BaseViewModel
@@ -6,10 +6,10 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-internal class MatchingDetailViewModel @Inject constructor(
+internal class LessonDetailViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-) : BaseViewModel<MatchingDetailContract.State, MatchingDetailContract.Effect>(
-    MatchingDetailContract.State()
+) : BaseViewModel<LessonDetailContract.State, LessonDetailContract.Effect>(
+    LessonDetailContract.State()
 ) {
 
     init {
@@ -22,21 +22,21 @@ internal class MatchingDetailViewModel @Inject constructor(
         updateState { copy(isLoading = true) }
     }
 
-    fun onBack() = sendEffect(MatchingDetailContract.Effect.NavigateBack)
+    fun onBack() = sendEffect(LessonDetailContract.Effect.NavigateBack)
 
     fun onRequestMatchingClick() {
         if (uiState.value.isRequesting) return
         updateState { copy(isRequesting = true) }
     }
 
-    fun onBackClick() = sendEffect(MatchingDetailContract.Effect.NavigateBack)
+    fun onBackClick() = sendEffect(LessonDetailContract.Effect.NavigateBack)
 
     fun onCancelClassClick() {
-        sendEffect(MatchingDetailContract.Effect.ShowCancelClassDialog)
+        sendEffect(LessonDetailContract.Effect.ShowCancelClassDialog)
     }
 
     fun onChatRoomClick() {
-        sendEffect(MatchingDetailContract.Effect.NavigateToChatRoom)
+        sendEffect(LessonDetailContract.Effect.NavigateToChatRoom)
     }
 
     fun onReadyClick() {

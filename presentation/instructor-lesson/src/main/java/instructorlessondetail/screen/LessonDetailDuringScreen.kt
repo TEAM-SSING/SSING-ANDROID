@@ -1,19 +1,16 @@
-package com.ssing.presentation.instructormatching.instructormatchingdetail.screen
+package instructorlessondetail.screen
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -24,17 +21,9 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.Immutable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.layout.onSizeChanged
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -62,15 +51,11 @@ import kotlinx.collections.immutable.persistentListOf
  * @param onBackClick 뒤로가기 클릭
  * @param onCancelClassClick 강습 취소 클릭
  * @param onChatRoomClick 채팅방 클릭
- * @param onReadyClick 강습 준비 완료 클릭
  */
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MatchingDetailBeforeScreen(
-    isInstructorReady: Boolean,
-    participantReadyCount: Int,
-    participantTotalCount: Int,
+fun MatchingDetailDuringScreen(
     tags: ImmutableList<String>,
     classTitle: String,
     location: String,
@@ -80,11 +65,9 @@ fun MatchingDetailBeforeScreen(
     onBackClick: () -> Unit,
     onCancelClassClick: () -> Unit,
     onChatRoomClick: () -> Unit,
-    onReadyClick: () -> Unit,
+    onEndClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    var isReadyState by remember { mutableStateOf(isInstructorReady) }
-
     Scaffold(
         modifier = modifier.background(Blue50),
         topBar = {
@@ -128,7 +111,7 @@ fun MatchingDetailBeforeScreen(
                     modifier = Modifier.fillMaxWidth(),
                 ) {
                     SsingButton(
-                        text = "강습 취소",
+                        text = "문제 신고",
                         onClick = onCancelClassClick,
                         style = SsingButtonStyle.RED,
                         modifier = Modifier.weight(1f),
@@ -142,12 +125,9 @@ fun MatchingDetailBeforeScreen(
                 }
                 Spacer(modifier = Modifier.height(8.dp))
                 SsingButton(
-                    text = if (isReadyState) "강습 대기중" else "강습 준비 완료",
-                    onClick = {
-                        isReadyState = !isReadyState
-                        onReadyClick()
-                    },
-                    style = if (isReadyState) SsingButtonStyle.GRAY else SsingButtonStyle.BLUE,
+                    text = "강습 종료",
+                    onClick = { onEndClick() },
+                    style = SsingButtonStyle.BLUE,
                     modifier = Modifier.fillMaxWidth(),
                 )
             }
@@ -160,11 +140,7 @@ fun MatchingDetailBeforeScreen(
                 .padding(innerPadding),
         ) {
             item {
-                PreparationHeader(
-                    isInstructorReady = isReadyState,
-                    participantReadyCount = participantReadyCount,
-                    participantTotalCount = participantTotalCount
-                )
+                TimeHeader()
             }
 
             item {
@@ -220,101 +196,38 @@ fun MatchingDetailBeforeScreen(
 }
 
 @Composable
-private fun PreparationHeader(
-    isInstructorReady: Boolean,
-    participantReadyCount: Int,
-    participantTotalCount: Int,
-) {
-    val density = LocalDensity.current
-    var instructorImageHeightPx by remember { mutableIntStateOf(0) }
-    val totalReady = (if (isInstructorReady) 1 else 0) + participantReadyCount
-    val totalCount = 1 + participantTotalCount
-
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(color = Blue50)
-            .padding(16.dp),
-    ) {
-        Text(
-            text = "강습을 준비해주세요",
-            style = SSINGTheme.typography.body.sb20,
-            color = SSINGTheme.colors.textNormal,
-        )
-
-        Spacer(modifier = Modifier.height(4.dp))
-
-        Text(
-            text = "강습생과 강사가 모두 강습 시작을 선택하면\n강습중 상태로 변경돼요",
-            style = SSINGTheme.typography.caption.md14,
-            color = SSINGTheme.colors.textAlternative,
-        )
-
-        Spacer(modifier = Modifier.height(20.dp))
-
-        Row(
-            verticalAlignment = Alignment.Bottom,
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(IntrinsicSize.Min),
-            horizontalArrangement = Arrangement.End
+private fun TimeHeader() {
+    Row(modifier = Modifier.padding(16.dp)) {
+        Column(
+            modifier = Modifier.background(color = Blue50)
         ) {
+            Text(
+                text = "남은 시간",
+                style = SSINGTheme.typography.body.sb16,
+                color = SSINGTheme.colors.textNormal,
+            )
 
             Text(
-                text = "$totalReady / $totalCount",
-                style = SSINGTheme.typography.caption.sb14,
-                color = SSINGTheme.colors.primaryNormal,
+                text = "02:59:59", // 수정
+                style = SSINGTheme.typography.title.sb32,
+                color = SSINGTheme.colors.textNormal,
             )
 
-            Spacer(modifier = Modifier.width(8.dp))
+            Text(
+                text = "강습 시작 후 59분 경과", // 수정
+                style = SSINGTheme.typography.caption.md14,
+                color = SSINGTheme.colors.textAlternative,
+            )
+        }
 
+        Row(
+            horizontalArrangement = Arrangement.End,
+            modifier = Modifier.fillMaxWidth()
+        ) {
             Image(
-                painter = painterResource(
-                    id = if (isInstructorReady) {
-                        R.drawable.img_instructor_ready
-                    } else {
-                        R.drawable.img_instructor_default
-                    }
-                ),
-                contentDescription = "강사 준비 완료 여부",
-                modifier = Modifier
-                    .onSizeChanged { size ->
-                        instructorImageHeightPx = size.height
-                    },
+                painter = painterResource(R.drawable.img_clock),
+                contentDescription = null,
             )
-
-            Spacer(modifier = Modifier.width(8.dp))
-
-            Box(
-                modifier = Modifier
-                    .width(1.dp)
-                    .height(
-                        with(density) {
-                            (instructorImageHeightPx.toDp() - 8.dp).coerceAtLeast(0.dp)
-                        }
-                    )
-                    .background(SSINGTheme.colors.primaryAlternative)
-                    .align(Alignment.CenterVertically),
-            )
-
-            Spacer(modifier = Modifier.width(8.dp))
-
-            Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-                repeat(participantTotalCount) { index ->
-                    val isParticipantDone = index < participantReadyCount
-
-                    Image(
-                        painter = painterResource(
-                            id = if (isParticipantDone) {
-                                R.drawable.img_waiting_ready
-                            } else {
-                                R.drawable.img_waiting_default
-                            }
-                        ),
-                        contentDescription = "강습생 준비 완료 여부",
-                    )
-                }
-            }
         }
     }
 }
@@ -368,16 +281,6 @@ private fun ClassInfoCard(
     }
 }
 
-/** 강습생 정보 화면에서 팀 단위로 보여줄 데이터. */
-@Immutable
-data class TeamParticipantsInfo(
-    val teamNickname: String,
-    val teamCount: Int,
-    val participants: ImmutableList<String>,
-    val price: Int,
-    val isReady: Boolean? = false,
-)
-
 @Composable
 private fun InfoRow(label: String, value: String) {
     Row(
@@ -400,12 +303,9 @@ private fun InfoRow(label: String, value: String) {
 
 @Preview
 @Composable
-private fun MatchingDetailBeforeScreenPreview() {
+private fun MatchingDetailDuringScreenPreview() {
     SSINGTheme {
-        MatchingDetailBeforeScreen(
-            isInstructorReady = true,
-            participantReadyCount = 2,
-            participantTotalCount = 5,
+        MatchingDetailDuringScreen(
             tags = persistentListOf("스노보드", "자격증이 있어요"),
             classTitle = "김OO님 팀, 홍지민님 팀 총 5명",
             location = "OOO 리조트",
@@ -417,7 +317,7 @@ private fun MatchingDetailBeforeScreenPreview() {
                     teamCount = 0,
                     participants = persistentListOf("38세 남", "12세 여", "9세 남"),
                     price = 0,
-                    isReady = true,
+                    isReady = false,
                 ),
                 TeamParticipantsInfo(
                     teamNickname = "김OO",
@@ -430,7 +330,7 @@ private fun MatchingDetailBeforeScreenPreview() {
             onBackClick = {},
             onCancelClassClick = {},
             onChatRoomClick = {},
-            onReadyClick = {},
+            onEndClick = {},
         )
     }
 }
