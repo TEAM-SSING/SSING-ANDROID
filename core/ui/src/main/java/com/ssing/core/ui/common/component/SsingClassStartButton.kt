@@ -3,6 +3,7 @@ package com.ssing.core.ui.common.component
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -26,6 +27,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ssing.core.ui.R
+import com.ssing.core.ui.designsystem.theme.Blue200
 import com.ssing.core.ui.designsystem.theme.SSINGTheme
 
 /**
@@ -40,19 +42,20 @@ import com.ssing.core.ui.designsystem.theme.SSINGTheme
  */
 
 @Composable
-fun SsingStartClassCard(
+fun StartMatchingCard(
     badgeText: String,
     title: String,
     description: String,
     background: Brush,
     tone: SsingStartClassCardTone,
-    chipStyle: SsingChipStyle,
     modifier: Modifier = Modifier,
+    chipStyle: SsingChipStyle = SsingChipStyle.BLUE,
 ) {
     Box(
         modifier = modifier
             .clip(RoundedCornerShape(12.dp))
-            .background(brush = background),
+            .background(brush = background)
+            .border(1.dp, Blue200, RoundedCornerShape(12.dp)),
     ) {
         Image(
             painter = painterResource(id = tone.iconRes),
@@ -124,7 +127,7 @@ private fun SsingStartClassCardPreview() {
             verticalArrangement = Arrangement.spacedBy(17.dp),
         ) {
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                SsingStartClassCard(
+                StartMatchingCard(
                     badgeText = "text", title = "title", description = "text",
                     background = Brush.linearGradient(listOf(Color.White, Color(0xFFEFF2F8))),
                     tone = SsingStartClassCardTone.Light,
@@ -132,7 +135,7 @@ private fun SsingStartClassCardPreview() {
                     modifier = Modifier.weight(1f),
                 )
 
-                SsingStartClassCard(
+                StartMatchingCard(
                     badgeText = "text", title = "title", description = "text",
                     background = SolidColor(SSINGTheme.colors.borderDisabled),
                     tone = SsingStartClassCardTone.Light,
@@ -141,7 +144,7 @@ private fun SsingStartClassCardPreview() {
                 )
             }
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                SsingStartClassCard(
+                StartMatchingCard(
                     badgeText = "text", title = "title", description = "text",
                     background = Brush.linearGradient(
                         listOf(
@@ -155,7 +158,7 @@ private fun SsingStartClassCardPreview() {
                     modifier = Modifier.weight(1f),
                 )
 
-                SsingStartClassCard(
+                StartMatchingCard(
                     badgeText = "text", title = "title", description = "text",
                     background = SolidColor(Color(0xFF2E6BF0)),
                     tone = SsingStartClassCardTone.Dark,
