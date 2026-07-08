@@ -141,7 +141,6 @@ private class NotificationStatePreviewProvider :
     PreviewParameterProvider<NotificationContract.State> {
     override val values: Sequence<NotificationContract.State>
         get() = sequenceOf(
-            // 다양한 알림 유형 + 읽음/안읽음 혼합
             NotificationContract.State(
                 alarms = persistentListOf(
                     AlarmUiModel(
@@ -175,7 +174,6 @@ private class NotificationStatePreviewProvider :
                     ),
                 ),
             ),
-            // 빈 알림 목록
             NotificationContract.State(),
         )
 }
