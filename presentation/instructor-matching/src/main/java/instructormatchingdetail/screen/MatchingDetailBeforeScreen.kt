@@ -242,7 +242,7 @@ private fun PreparationHeader(
             color = SSINGTheme.colors.textNormal,
         )
 
-        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(4.dp))
 
         Text(
             text = "강습생과 강사가 모두 강습 시작을 선택하면\n강습중 상태로 변경돼요",
