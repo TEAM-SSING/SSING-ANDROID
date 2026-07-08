@@ -1,7 +1,6 @@
 package com.ssing.presentation.consumerpayment
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -20,7 +19,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ssing.core.ui.common.component.Gender
-import com.ssing.core.ui.common.component.LessonBanner
 import com.ssing.core.ui.common.component.Participant
 import com.ssing.core.ui.common.component.SsingButton
 import com.ssing.core.ui.common.component.SsingButtonStyle
@@ -28,7 +26,6 @@ import com.ssing.core.ui.common.component.SsingHeader
 import com.ssing.core.ui.common.component.SsingMatchingDetailCard
 import com.ssing.core.ui.common.component.SsingTopBar
 import com.ssing.core.ui.designsystem.theme.SSINGTheme
-import com.ssing.core.ui.extension.roundedBackgroundWithBorder
 import kotlinx.collections.immutable.persistentListOf
 
 @Composable
@@ -36,8 +33,6 @@ internal fun PaymentRoute(
     modifier: Modifier = Modifier,
     viewModel: PaymentViewModel = hiltViewModel(),
 ) {
-    val state by viewModel.uiState.collectAsStateWithLifecycle()
-
     PaymentScreen(
         modifier = modifier,
     )
@@ -88,7 +83,7 @@ private fun PayInfoSection(
         modifier = modifier.padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
-        SsingMatchingDetailCard(
+         SsingMatchingDetailCard(
             nickname = "김OO",
             stepLabel = "결제 정보",
             stepLabelColor = SSINGTheme.colors.textAlternative,
