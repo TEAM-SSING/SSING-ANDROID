@@ -45,7 +45,6 @@ sealed interface HomeLessonCardState {
         val displayText: String,
         val location: String,
         val date: LocalDateTime,
-        val onButtonClick: (Reservation) -> Unit,
         val status: Status,
     ) : HomeLessonCardState {
         sealed interface Status {
@@ -61,6 +60,7 @@ sealed interface HomeLessonCardState {
 @Composable
 fun HomeLessonCardList(
     states: ImmutableList<HomeLessonCardState>,
+    onButtonClick: (HomeLessonCardState.Reservation) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -78,6 +78,7 @@ fun HomeLessonCardList(
         ) { page ->
             HomeLessonCard(
                 state = states[page],
+                onButtonClick = onButtonClick,
                 modifier = Modifier.fillMaxWidth()
             )
         }
@@ -137,6 +138,7 @@ private fun HomeLessonEmptyCard(
 @Composable
 private fun HomeLessonReservationCard(
     state: HomeLessonCardState.Reservation,
+    onButtonClick: (HomeLessonCardState.Reservation) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -149,7 +151,7 @@ private fun HomeLessonReservationCard(
 
         SsingButton(
             text = if (state.status is Status.Default) "강습 상세보기" else "이어보기",
-            onClick = { state.onButtonClick(state) },
+            onClick = { onButtonClick(state) },
             style = SsingButtonStyle.GRAY,
             modifier = Modifier.fillMaxWidth(),
         )
@@ -159,6 +161,7 @@ private fun HomeLessonReservationCard(
 @Composable
 private fun HomeLessonCard(
     state: HomeLessonCardState,
+    onButtonClick: (HomeLessonCardState.Reservation) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     when (state) {
@@ -171,6 +174,7 @@ private fun HomeLessonCard(
         is HomeLessonCardState.Reservation -> {
             HomeLessonReservationCard(
                 state = state,
+                onButtonClick = onButtonClick,
                 modifier = modifier,
             )
         }
@@ -303,6 +307,7 @@ private fun HomeLessonEmptyCardPreview() {
     SSINGTheme {
         HomeLessonCard(
             state = HomeLessonCardState.Empty,
+            onButtonClick = {},
             modifier = Modifier.width(328.dp),
         )
     }
@@ -318,9 +323,9 @@ private fun HomeLessonMatchingCardPreview() {
                 displayText = "매칭중",
                 date = LocalDateTime.of(2025, 7, 15, 19, 0),
                 location = "하이원",
-                onButtonClick = {},
                 status = Status.Matching
             ),
+            onButtonClick = {},
             modifier = Modifier.width(328.dp),
         )
     }
@@ -336,9 +341,9 @@ private fun HomeLessonMatchedCardPreview() {
                 displayText = "김OO님 팀 3명",
                 date = LocalDateTime.of(2025, 7, 15, 19, 0),
                 location = "하이원",
-                onButtonClick = {},
                 status = Status.Matched,
             ),
+            onButtonClick = {},
             modifier = Modifier.width(328.dp),
         )
     }
@@ -354,9 +359,9 @@ private fun HomeLessonCardPreview() {
                 displayText = "김OO님 팀 3명",
                 date = LocalDateTime.of(2025, 7, 15, 19, 0),
                 location = "하이원",
-                onButtonClick = {},
                 status = Status.Default
             ),
+            onButtonClick = {},
             modifier = Modifier.width(328.dp),
         )
     }
@@ -372,7 +377,6 @@ private class HomeLessonCardPreviewProvider :
                 displayText = "김OO님 팀 3명",
                 location = "하이원",
                 date = LocalDateTime.of(2025, 7, 15, 19, 0),
-                onButtonClick = {},
                 status = Status.Matching,
             ),
             HomeLessonCardState.Reservation(
@@ -380,7 +384,6 @@ private class HomeLessonCardPreviewProvider :
                 displayText = "김OO님 팀 3명",
                 location = "지산리조트",
                 date = LocalDateTime.of(2026, 7, 11, 19, 0),
-                onButtonClick = {},
                 status = Status.Default,
             ),
         ),
@@ -395,6 +398,7 @@ private fun HomeLessonCardListPreview(
     SSINGTheme {
         HomeLessonCardList(
             states = states,
+            onButtonClick = {},
             modifier = Modifier,
         )
     }
