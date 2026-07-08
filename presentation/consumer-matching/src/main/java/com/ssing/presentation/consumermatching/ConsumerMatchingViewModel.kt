@@ -12,7 +12,7 @@ internal class ConsumerMatchingViewModel @Inject constructor() :
     fun showCancelModal() =
         updateState { copy(showCancelModal = true) }
 
-    fun closeCancelModel() =
+    fun closeCancelModal() =
         updateState { copy(showCancelModal = false) }
 
     fun confirmCancel() {
@@ -23,7 +23,7 @@ internal class ConsumerMatchingViewModel @Inject constructor() :
     fun abortCancel() =
         updateState { copy(showCancelModal = false) }
 
-    fun requsetRematching() {
+    fun requestRematching() {
         sendEffect(ConsumerMatchingContract.Effect.Result.PopBackStack)
     }
 

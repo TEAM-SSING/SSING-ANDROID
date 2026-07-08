@@ -53,7 +53,7 @@ internal fun ConsumerMatchingResultRoute(
 
     if (state.showCancelModal) {
         SsingModal(
-            onDismissRequest = viewModel::closeCancelModel,
+            onDismissRequest = viewModel::closeCancelModal,
             title = "매칭을 취소할까요?",
             text = "홈으로 이동하면 현재 매칭된 강사와의 연결이 취소됩니다",
             primaryText = "계속 보기",
@@ -68,7 +68,7 @@ internal fun ConsumerMatchingResultRoute(
     ConsumerMatchingResultScreen(
         state = state,
         onBack = viewModel::showCancelModal,
-        onRematchingClick = viewModel::requsetRematching,
+        onRematchingClick = viewModel::requestRematching,
         onAcceptClick = viewModel::acceptMatching,
         onReviewClick = viewModel::navigateToReview,
         modifier = modifier,
