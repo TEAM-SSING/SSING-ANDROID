@@ -1,6 +1,7 @@
 package com.ssing.presentation.consumerpayment
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -17,12 +18,17 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.ssing.core.ui.common.component.Gender
+import com.ssing.core.ui.common.component.LessonBanner
+import com.ssing.core.ui.common.component.Participant
 import com.ssing.core.ui.common.component.SsingButton
 import com.ssing.core.ui.common.component.SsingButtonStyle
 import com.ssing.core.ui.common.component.SsingHeader
+import com.ssing.core.ui.common.component.SsingMatchingDetailCard
 import com.ssing.core.ui.common.component.SsingTopBar
 import com.ssing.core.ui.designsystem.theme.SSINGTheme
 import com.ssing.core.ui.extension.roundedBackgroundWithBorder
+import kotlinx.collections.immutable.persistentListOf
 
 @Composable
 internal fun PaymentRoute(
@@ -42,13 +48,14 @@ fun PaymentScreen(
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .background(color = SSINGTheme.colors.backgroundNormal),
+            .background(color = SSINGTheme.colors.backgroundAlternative),
         verticalArrangement = Arrangement.spacedBy(16.dp),
 
         ) {
         SsingTopBar(
             onBack = {},
             title = "결제",
+            backgroundColor = SSINGTheme.colors.backgroundAlternative,
         )
 
         SsingHeader(
@@ -66,7 +73,7 @@ fun PaymentScreen(
             style = SsingButtonStyle.BLUE,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp)
+                .padding(16.dp),
         )
     }
 }
@@ -76,73 +83,91 @@ private fun PayInfoSection(
     modifier: Modifier = Modifier,
 ) {
     Column(
-        modifier = modifier
-            .padding(horizontal = 16.dp)
-            .roundedBackgroundWithBorder(
-                shape = RoundedCornerShape(12.dp),
-                backgroundColor = SSINGTheme.colors.backgroundNormal,
-                borderColor = SSINGTheme.colors.borderAlternative,
-                borderWidth = 1.dp,
-            )
-            .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(14.dp),
+        modifier = modifier.padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Text(
-                text = "강습금액",
-                style = SSINGTheme.typography.caption.sb12,
-                color = SSINGTheme.colors.textNormal,
-            )
-
-            Text(
-                text = "60,000원",
-                style = SSINGTheme.typography.caption.sb14,
-                color = SSINGTheme.colors.textStrong,
-            )
-        }
-
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Text(
-                text = "리조트 패찰비",
-                style = SSINGTheme.typography.caption.sb12,
-                color = SSINGTheme.colors.textNormal,
-            )
-
-            Text(
-                text = "20,000원",
-                style = SSINGTheme.typography.caption.sb14,
-                color = SSINGTheme.colors.textStrong,
-            )
-        }
-
-        HorizontalDivider(
-            thickness = 1.dp,
-            color = SSINGTheme.colors.borderDisabled,
+        SsingMatchingDetailCard(
+            nickname = "김OO",
+//            totalCount = ,
+            stepLabel = "결제 정보",
+            stepLabelColor = SSINGTheme.colors.textAlternative,
+            tags = persistentListOf("스노보드", "처음타요"),
+            classDateTime = "7월 9일 오전 06:10",
+            location = "지산리조트",
+            duration = "3시간",
+            participants = persistentListOf(
+                Participant(11, Gender.MALE),
+                Participant(11, Gender.MALE),
+                Participant(9, Gender.FEMALE),
+            ),
+            equipmentStatus = "착용 완료",
         )
 
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
+        Column(
+            modifier = Modifier
+                .background(
+                    color = SSINGTheme.colors.backgroundNormal,
+                    shape = RoundedCornerShape(12.dp),
+                )
+                .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(14.dp),
         ) {
-            Text(
-                text = "총 결제금액",
-                style = SSINGTheme.typography.caption.sb14,
-                color = SSINGTheme.colors.textNormal,
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text(
+                    text = "강습금액",
+                    style = SSINGTheme.typography.caption.sb12,
+                    color = SSINGTheme.colors.textNormal,
+                )
+
+                Text(
+                    text = "60,000원",
+                    style = SSINGTheme.typography.caption.sb14,
+                    color = SSINGTheme.colors.textStrong,
+                )
+            }
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text(
+                    text = "리조트 패찰비",
+                    style = SSINGTheme.typography.caption.sb12,
+                    color = SSINGTheme.colors.textNormal,
+                )
+
+                Text(
+                    text = "20,000원",
+                    style = SSINGTheme.typography.caption.sb14,
+                    color = SSINGTheme.colors.textStrong,
+                )
+            }
+
+            HorizontalDivider(
+                thickness = 1.dp,
+                color = SSINGTheme.colors.borderDisabled,
             )
 
-            Text(
-                text = "80,000원",
-                style = SSINGTheme.typography.title.b16,
-                color = SSINGTheme.colors.primaryNormal,
-            )
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text(
+                    text = "총 결제금액",
+                    style = SSINGTheme.typography.caption.sb14,
+                    color = SSINGTheme.colors.textNormal,
+                )
+
+                Text(
+                    text = "80,000원",
+                    style = SSINGTheme.typography.title.b16,
+                    color = SSINGTheme.colors.primaryNormal,
+                )
+            }
         }
-
     }
 }
 
