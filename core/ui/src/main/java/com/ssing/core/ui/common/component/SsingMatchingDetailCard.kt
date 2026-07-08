@@ -229,7 +229,7 @@ private fun SsingPriceRow(isPaid: Boolean, price: Int) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             if (isPaid) {
                 Icon(
-                    imageVector = ImageVector.vectorResource(R.drawable.ic_check_cirlcle_filled_sm_12),
+                    imageVector = ImageVector.vectorResource(R.drawable.ic_check_circle_filled_sm_12),
                     contentDescription = null,
                     tint = SSINGTheme.colors.primaryNormal
                 )
