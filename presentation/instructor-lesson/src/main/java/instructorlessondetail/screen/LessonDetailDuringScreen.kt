@@ -48,7 +48,7 @@ import kotlinx.collections.immutable.persistentListOf
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MatchingDetailDuringScreen(
+fun LessonDetailDuringScreen(
     tags: ImmutableList<String>,
     classTitle: String,
     location: String,
@@ -317,9 +317,9 @@ private fun InfoRow(label: String, value: String) {
 
 @Preview
 @Composable
-private fun MatchingDetailDuringScreenPreview() {
+private fun LessonDetailDuringScreenPreview() {
     SSINGTheme {
-        MatchingDetailDuringScreen(
+        LessonDetailDuringScreen(
             tags = persistentListOf("스노보드", "자격증이 있어요"),
             classTitle = "김OO님 팀, 홍지민님 팀 총 5명",
             location = "OOO 리조트",
