@@ -47,7 +47,7 @@ fun StartMatchingCard(
     title: String,
     description: String,
     background: Brush,
-    tone: SsingStartClassCardTone,
+    tone: StartMatchingCardStyle,
     modifier: Modifier = Modifier,
     chipStyle: SsingChipStyle = SsingChipStyle.BLUE,
 ) {
@@ -93,7 +93,7 @@ fun StartMatchingCard(
 }
 
 /** 카드의 아이콘/텍스트 색상 세트 */
-enum class SsingStartClassCardTone(
+enum class StartMatchingCardStyle(
     @param: DrawableRes val iconRes: Int,
 ) {
     Light(iconRes = R.drawable.img_fast) {
@@ -130,7 +130,7 @@ private fun SsingStartClassCardPreview() {
                 StartMatchingCard(
                     badgeText = "text", title = "title", description = "text",
                     background = Brush.linearGradient(listOf(Color.White, Color(0xFFEFF2F8))),
-                    tone = SsingStartClassCardTone.Light,
+                    tone = StartMatchingCardStyle.Light,
                     chipStyle = SsingChipStyle.BLUE,
                     modifier = Modifier.weight(1f),
                 )
@@ -138,7 +138,7 @@ private fun SsingStartClassCardPreview() {
                 StartMatchingCard(
                     badgeText = "text", title = "title", description = "text",
                     background = SolidColor(SSINGTheme.colors.borderDisabled),
-                    tone = SsingStartClassCardTone.Light,
+                    tone = StartMatchingCardStyle.Light,
                     chipStyle = SsingChipStyle.BLUE,
                     modifier = Modifier.weight(1f),
                 )
@@ -153,7 +153,7 @@ private fun SsingStartClassCardPreview() {
                             Color(0xFF357DD5),
                         )
                     ),
-                    tone = SsingStartClassCardTone.Dark,
+                    tone = StartMatchingCardStyle.Dark,
                     chipStyle = SsingChipStyle.BLUE,
                     modifier = Modifier.weight(1f),
                 )
@@ -161,7 +161,7 @@ private fun SsingStartClassCardPreview() {
                 StartMatchingCard(
                     badgeText = "text", title = "title", description = "text",
                     background = SolidColor(Color(0xFF2E6BF0)),
-                    tone = SsingStartClassCardTone.Dark,
+                    tone = StartMatchingCardStyle.Dark,
                     chipStyle = SsingChipStyle.BLUE,
                     modifier = Modifier.weight(1f),
                 )
