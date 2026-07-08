@@ -27,6 +27,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -131,11 +132,11 @@ private fun LoginLogo(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Image(
-            painter = painterResource(R.drawable.img_consumer_logo),
+            painter = painterResource(R.drawable.img_consumer_login_logo),
             contentDescription = null,
             modifier =  Modifier.size(
-                width = 200.dp,
-                height = 49.dp
+                width = 163.dp,
+                height = 32.dp
             )
         )
 
@@ -143,11 +144,10 @@ private fun LoginLogo(
 
         Text(
             text = "스키 강습을 가장 쉽고 빠르게",
-            fontSize = 20.sp,
-            lineHeight = 24.sp,
-            fontFamily = FontFamily(Font(R.font.pretendard_bold)),
-            fontWeight = FontWeight.Bold,
-            textAlign = TextAlign.Center,
+            style = SSINGTheme.typography.title.b20.copy(
+                lineHeight = 1.2.em,
+            ),
+            color = SSINGTheme.colors.textStrong,
         )
     }
 }
