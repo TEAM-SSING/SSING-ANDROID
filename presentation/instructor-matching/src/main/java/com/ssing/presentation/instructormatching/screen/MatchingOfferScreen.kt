@@ -45,13 +45,13 @@ internal fun MatchingOfferScreen(
         SsingHeader(
             title = "새 강습이 도착했어요",
             subText = "조건에 맞는 강습 요청이에요\n수락하면 소비자에게 최종 확인 요청을 보내요",
-            modifier = Modifier.padding(top = 24.dp),
+            modifier = Modifier.padding(top = 16.dp),
         )
 
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 24.dp),
+                .padding(all = 16.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             MatchingOfferSummaryDetailCard(
