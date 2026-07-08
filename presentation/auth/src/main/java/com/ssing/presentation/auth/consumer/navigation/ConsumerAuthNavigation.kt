@@ -9,13 +9,13 @@ import com.ssing.presentation.auth.consumer.ConsumerLoginRoute
 import kotlinx.serialization.Serializable
 
 @Serializable
-data object Login
+data object ConsumerLogin
 
 fun NavGraphBuilder.authNavGraph(
     paddingValues: PaddingValues,
     navigateToHome: () -> Unit,
 ) {
-    composable<Login> {
+    composable<ConsumerLogin> {
         ConsumerLoginRoute(
             navigateToHome = navigateToHome,
             modifier = Modifier.padding(paddingValues),
