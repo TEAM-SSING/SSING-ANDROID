@@ -40,7 +40,7 @@ fun ConsumerInfoCard(
     participants: ImmutableList<String>,
     price: Int,
     modifier: Modifier = Modifier,
-    isReady: Boolean? = true,
+    isReady: Boolean? = false,
 ) {
     Column(
         modifier = modifier
@@ -54,7 +54,6 @@ fun ConsumerInfoCard(
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(6.dp)
     ) {
-
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(4.dp),
