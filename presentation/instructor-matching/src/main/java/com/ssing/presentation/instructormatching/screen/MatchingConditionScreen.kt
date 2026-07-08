@@ -34,7 +34,7 @@ import com.ssing.presentation.instructormatching.model.SportOption
 @Composable
 internal fun MatchingConditionScreen(
     condition: ConditionUiState,
-    onSportToggle: (SportOption) -> Unit,
+    onSportClick: (SportOption) -> Unit,
     onLevelToggle: (LevelOption) -> Unit,
     onDurationToggle: (DurationOption) -> Unit,
     onMaxHeadcountChange: (Int) -> Unit,
@@ -82,7 +82,7 @@ internal fun MatchingConditionScreen(
                             SsingSelectButton(
                                 text = sport.label,
                                 isSelected = sport in condition.selectedSports,
-                                onClick = { onSportToggle(sport) },
+                                onClick = { onSportClick(sport) },
                                 modifier = Modifier.weight(1f),
                             )
                         }
@@ -181,7 +181,7 @@ private fun MatchingConditionScreenPreview() {
                 availableSports = setOf(SportOption.SKI),
                 resortName = "하이원 리조트",
             ),
-            onSportToggle = {},
+            onSportClick = {},
             onLevelToggle = {},
             onDurationToggle = {},
             onMaxHeadcountChange = {},
