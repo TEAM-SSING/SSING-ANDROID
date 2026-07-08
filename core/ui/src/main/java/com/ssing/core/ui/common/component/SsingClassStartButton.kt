@@ -40,7 +40,7 @@ enum class StartMatchingCardStyle {
     WHITE, BLUE
 }
 
-private val StartMatchingCardStyle.background: Brush
+private val StartMatchingCardStyle.defaultBrush: Brush
     @Composable
     get() = when (this) {
         StartMatchingCardStyle.WHITE -> Brush.linearGradient(
@@ -56,7 +56,7 @@ private val StartMatchingCardStyle.background: Brush
         )
     }
 
-private val StartMatchingCardStyle.pressedColor: Color
+private val StartMatchingCardStyle.pressedBrush: Color
     @Composable
     get() = when (this) {
         StartMatchingCardStyle.WHITE -> SSINGTheme.colors.borderAlternative
@@ -107,7 +107,7 @@ fun StartMatchingCard(
     Box(
         modifier = modifier
             .clip(shape)
-            .background(brush = if (isPressed) SolidColor(style.pressedColor) else style.background)
+            .background(brush = if (isPressed) SolidColor(style.pressedBrush) else style.defaultBrush)
             .border(
                 width = 1.dp,
                 color = SSINGTheme.colors.primaryAlternative,
