@@ -7,7 +7,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import com.ssing.core.ui.extension.clearBackStackNavOptions
-import com.ssing.presentation.auth.navigation.authNavGraph
+import com.ssing.presentation.auth.instructor.navigation.instructorAuthNavGraph
 import com.ssing.presentation.instructorhome.navigation.InstructorHome
 import com.ssing.presentation.instructorhome.navigation.instructorHomeNavGraph
 import com.ssing.presentation.instructormatching.navigation.instructorMatchingNavGraph
@@ -23,7 +23,7 @@ internal fun InstructorMainNavHost(
         startDestination = InstructorHome,
         modifier = modifier.fillMaxSize(),
     ) {
-        authNavGraph(
+        instructorAuthNavGraph(
             paddingValues = paddingValues,
             navigateToHome = {
                 navController.navigate(
