@@ -141,7 +141,7 @@ fun LessonDetailBeforeScreen(
                         modifier = Modifier.weight(1f),
                     )
                 }
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(16.dp))
                 SsingButton(
                     text = if (isReadyState) "강습 대기중" else "강습 준비 완료",
                     onClick = {

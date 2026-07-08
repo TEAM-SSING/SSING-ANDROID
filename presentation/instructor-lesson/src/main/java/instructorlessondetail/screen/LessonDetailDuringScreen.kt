@@ -119,7 +119,7 @@ fun LessonDetailDuringScreen(
                         modifier = Modifier.weight(1f),
                     )
                 }
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(16.dp))
                 SsingButton(
                     text = "강습 종료",
                     onClick = { onEndClick() },
