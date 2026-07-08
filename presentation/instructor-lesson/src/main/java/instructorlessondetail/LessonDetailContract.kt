@@ -1,49 +1,40 @@
 package instructorlessondetail
 
 import androidx.compose.runtime.Immutable
-import instructorlessondetail.screen.TeamParticipantsInfo
-import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.persistentListOf
+import instructorlessondetail.model.LessonDetailAfterUiModel
+import instructorlessondetail.model.LessonDetailBeforeUiModel
+import instructorlessondetail.model.LessonDetailCanceledUiModel
+import instructorlessondetail.model.LessonDetailDuringUiModel
 
 internal interface LessonDetailContract {
 
     @Immutable
     data class State(
-        val phase: LessonDetailPhase = LessonDetailPhase.settingCondition,
-        val isLoading: Boolean = false,
-        val isRequesting: Boolean = false,
-        val instructorId: Long = 0L,
-        val instructorName: String = "",
-        val profileImageUrl: String = "",
-        val description: String = "",
-
-        val isInstructorReady: Boolean = false,
-        val participantReadyCount: Int = 0,
-        val participantTotalCount: Int = 0,
-        val tags: ImmutableList<String> = persistentListOf(),
-        val classTitle: String = "",
-        val location: String = "",
-        val duration: String = "",
-        val price: Int = 0,
-        val teams: ImmutableList<TeamParticipantsInfo> = persistentListOf(),
+        val phase: LessonDetailPhase = LessonDetailPhase.Loading,
+        val dialog: LessonDetailDialog? = null,
     )
 
     sealed interface LessonDetailPhase {
-        data object settingCondition : LessonDetailPhase
-        data object matching : LessonDetailPhase
-        data object lessonInProgress : LessonDetailPhase
+        data object Loading : LessonDetailPhase
+        data class LessonDetailBefore(val before: LessonDetailBeforeUiModel) : LessonDetailPhase
+        data class LessonDetailDuring(val during: LessonDetailDuringUiModel) : LessonDetailPhase
+        data class LessonDetailAfter(val after: LessonDetailAfterUiModel) : LessonDetailPhase
+        data class LessonDetailCanceled(val cancel: LessonDetailCanceledUiModel) : LessonDetailPhase
     }
 
     sealed interface LessonDetailDialog {
-        data object StopWaiting : LessonDetailDialog
-        data object ConsumerRejected : LessonDetailDialog
+        data object Chatting : LessonDetailDialog
+        data object InstructorReady : LessonDetailDialog
         data object LessonCanceled : LessonDetailDialog
+        data object ReportIssue : LessonDetailDialog
+        data object LessonEnd : LessonDetailDialog
+        data object Review : LessonDetailDialog
+        data object ViewLessonHistory : LessonDetailDialog
+        data object ViewEarnings : LessonDetailDialog
+        data object BackToMatching : LessonDetailDialog
     }
 
     sealed interface Effect {
         data object NavigateBack : Effect
-        data class ShowToast(val message: String) : Effect
-
-        data object ShowCancelClassDialog : Effect
     }
 }
