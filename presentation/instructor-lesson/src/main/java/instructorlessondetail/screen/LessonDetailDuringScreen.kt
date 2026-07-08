@@ -4,6 +4,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -21,9 +22,15 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -38,20 +45,6 @@ import com.ssing.core.ui.designsystem.theme.Blue50
 import com.ssing.core.ui.designsystem.theme.SSINGTheme
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
-
-/**
- * 강습 상세 (강습 전) 화면.
- *
- * @param tags 강습 태그
- * @param classTitle 팀 타이틀 (예: "김OO님 팀, 홍지민님 팀 총 5명")
- * @param location 강습 장소
- * @param duration 강습 시간
- * @param price 강습 가격
- * @param teams 강습생 정보 (팀별 카드 리스트)
- * @param onBackClick 뒤로가기 클릭
- * @param onCancelClassClick 강습 취소 클릭
- * @param onChatRoomClick 채팅방 클릭
- */
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -68,8 +61,11 @@ fun MatchingDetailDuringScreen(
     onEndClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val density = LocalDensity.current
+    var headerHeightPx by remember { mutableIntStateOf(0) }
+
     Scaffold(
-        modifier = modifier.background(Blue50),
+        modifier = modifier,
         topBar = {
             CenterAlignedTopAppBar(
                 title = {
@@ -133,59 +129,71 @@ fun MatchingDetailDuringScreen(
             }
         },
     ) { innerPadding ->
-        LazyColumn(
+        Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(color = Blue50)
                 .padding(innerPadding),
         ) {
-            item {
-                TimeHeader()
-            }
-
-            item {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(
-                            color = SSINGTheme.colors.backgroundNormal,
-                            shape = RoundedCornerShape(
-                                topStart = 12.dp,
-                                topEnd = 12.dp,
-                                bottomStart = 0.dp,
-                                bottomEnd = 0.dp,
-                            )
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Blue50),
+            )
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(top = with(density) { headerHeightPx.toDp() })
+                    .background(
+                        color = SSINGTheme.colors.backgroundNormal,
+                        shape = RoundedCornerShape(
+                            topStart = 12.dp,
+                            topEnd = 12.dp,
                         ),
-                ) {
-                    Spacer(modifier = Modifier.height(16.dp))
+                    ),
+            )
 
-                    Column(modifier = Modifier.padding(horizontal = 16.dp)) {
-                        SectionTitle(text = "강습 정보")
-                        Spacer(modifier = Modifier.height(8.dp))
-                        ClassInfoCard(
-                            tags = tags,
-                            classTitle = classTitle,
-                            location = location,
-                            duration = duration,
-                            price = price,
-                        )
+            LazyColumn(
+                modifier = Modifier.fillMaxSize(),
+            ) {
+                item {
+                    TimeHeader(
+                        modifier = Modifier.onSizeChanged { size ->
+                            headerHeightPx = size.height
+                        },
+                    )
+                }
 
-                    }
+                item {
+                    Column(modifier = Modifier.fillMaxWidth()) {
+                        Spacer(modifier = Modifier.height(16.dp))
 
-                    Spacer(modifier = Modifier.height(24.dp))
-
-                    Column(modifier = Modifier.padding(horizontal = 16.dp)) {
-                        SectionTitle(text = "강습생 정보")
-                        Spacer(modifier = Modifier.height(8.dp))
-                        teams.forEachIndexed { index, team ->
-                            ConsumerInfoCard(
-                                isReady = team.isReady,
-                                nickname = team.teamNickname,
-                                participants = team.participants,
-                                price = team.price,
+                        Column(modifier = Modifier.padding(horizontal = 16.dp)) {
+                            SectionTitle(text = "강습 정보")
+                            Spacer(modifier = Modifier.height(8.dp))
+                            ClassInfoCard(
+                                tags = tags,
+                                classTitle = classTitle,
+                                location = location,
+                                duration = duration,
+                                price = price,
                             )
-                            if (index != teams.lastIndex) {
+
+                            Spacer(modifier = Modifier.height(24.dp))
+
+                            Column {
+                                SectionTitle(text = "강습생 정보")
                                 Spacer(modifier = Modifier.height(8.dp))
+                                teams.forEachIndexed { index, team ->
+                                    ConsumerInfoCard(
+                                        isReady = team.isReady,
+                                        nickname = team.teamNickname,
+                                        participants = team.participants,
+                                        price = team.price,
+                                    )
+                                    if (index != teams.lastIndex) {
+                                        Spacer(modifier = Modifier.height(8.dp))
+                                    }
+                                }
                             }
                         }
                     }
@@ -196,38 +204,44 @@ fun MatchingDetailDuringScreen(
 }
 
 @Composable
-private fun TimeHeader() {
-    Row(modifier = Modifier.padding(16.dp)) {
-        Column(
-            modifier = Modifier.background(color = Blue50)
-        ) {
-            Text(
-                text = "남은 시간",
-                style = SSINGTheme.typography.body.sb16,
-                color = SSINGTheme.colors.textNormal,
-            )
+private fun TimeHeader(modifier: Modifier = Modifier) {
+    Row(
+        modifier = modifier
+            .background(color = Blue50)
+            .fillMaxWidth()
+    ) {
+        Box(modifier = Modifier.padding(16.dp)) {
+            Column(
+                modifier = Modifier.background(color = Blue50)
+            ) {
+                Text(
+                    text = "남은 시간",
+                    style = SSINGTheme.typography.body.sb16,
+                    color = SSINGTheme.colors.textNormal,
+                )
 
-            Text(
-                text = "02:59:59", // 수정
-                style = SSINGTheme.typography.title.sb32,
-                color = SSINGTheme.colors.textNormal,
-            )
+                Text(
+                    text = "02:59:59", // 수정
+                    style = SSINGTheme.typography.title.sb32,
+                    color = SSINGTheme.colors.textNormal,
+                )
 
-            Text(
-                text = "강습 시작 후 59분 경과", // 수정
-                style = SSINGTheme.typography.caption.md14,
-                color = SSINGTheme.colors.textAlternative,
-            )
-        }
+                Text(
+                    text = "강습 시작 후 59분 경과", // 수정
+                    style = SSINGTheme.typography.caption.md14,
+                    color = SSINGTheme.colors.textAlternative,
+                )
+            }
 
-        Row(
-            horizontalArrangement = Arrangement.End,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Image(
-                painter = painterResource(R.drawable.img_clock),
-                contentDescription = null,
-            )
+            Row(
+                horizontalArrangement = Arrangement.End,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Image(
+                    painter = painterResource(R.drawable.img_clock),
+                    contentDescription = null,
+                )
+            }
         }
     }
 }

@@ -64,7 +64,6 @@ import kotlinx.collections.immutable.persistentListOf
  * @param onChatRoomClick 채팅방 클릭
  * @param onReadyClick 강습 준비 완료 클릭
  */
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LessonDetailBeforeScreen(
@@ -84,9 +83,11 @@ fun LessonDetailBeforeScreen(
     modifier: Modifier = Modifier,
 ) {
     var isReadyState by remember { mutableStateOf(isInstructorReady) }
+    val density = LocalDensity.current
+    var headerHeightPx by remember { mutableIntStateOf(0) }
 
     Scaffold(
-        modifier = modifier.background(Blue50),
+        modifier = modifier,
         topBar = {
             CenterAlignedTopAppBar(
                 title = {
@@ -153,63 +154,79 @@ fun LessonDetailBeforeScreen(
             }
         },
     ) { innerPadding ->
-        LazyColumn(
+        Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(color = Blue50)
                 .padding(innerPadding),
         ) {
-            item {
-                PreparationHeader(
-                    isInstructorReady = isReadyState,
-                    participantReadyCount = participantReadyCount,
-                    participantTotalCount = participantTotalCount
-                )
-            }
+            // 1) 배경 레이어: 전체 파란색
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Blue50),
+            )
 
-            item {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(
-                            color = SSINGTheme.colors.backgroundNormal,
-                            shape = RoundedCornerShape(
-                                topStart = 12.dp,
-                                topEnd = 12.dp,
-                                bottomStart = 0.dp,
-                                bottomEnd = 0.dp,
-                            )
+            // 2) 헤더 아래부터 화면 끝까지: 흰색 + 상단 라운드
+            //    콘텐츠가 짧아도 fillMaxSize라서 항상 화면 끝까지 이어짐
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(top = with(density) { headerHeightPx.toDp() })
+                    .background(
+                        color = SSINGTheme.colors.backgroundNormal,
+                        shape = RoundedCornerShape(
+                            topStart = 12.dp,
+                            topEnd = 12.dp,
                         ),
-                ) {
-                    Spacer(modifier = Modifier.height(16.dp))
+                    ),
+            )
 
-                    Column(modifier = Modifier.padding(horizontal = 16.dp)) {
-                        SectionTitle(text = "강습 정보")
-                        Spacer(modifier = Modifier.height(8.dp))
-                        ClassInfoCard(
-                            tags = tags,
-                            classTitle = classTitle,
-                            location = location,
-                            duration = duration,
-                            price = price,
-                        )
+            // 3) 실제 콘텐츠: 배경은 위 레이어들이 대신 그려주므로 투명하게 얹기만 함
+            LazyColumn(
+                modifier = Modifier.fillMaxSize(),
+            ) {
+                item {
+                    PreparationHeader(
+                        isInstructorReady = isReadyState,
+                        participantReadyCount = participantReadyCount,
+                        participantTotalCount = participantTotalCount,
+                        modifier = Modifier.onSizeChanged { size ->
+                            headerHeightPx = size.height
+                        },
+                    )
+                }
 
-                    }
+                item {
+                    Column(modifier = Modifier.fillMaxWidth()) {
+                        Spacer(modifier = Modifier.height(16.dp))
 
-                    Spacer(modifier = Modifier.height(24.dp))
-
-                    Column(modifier = Modifier.padding(horizontal = 16.dp)) {
-                        SectionTitle(text = "강습생 정보")
-                        Spacer(modifier = Modifier.height(8.dp))
-                        teams.forEachIndexed { index, team ->
-                            ConsumerInfoCard(
-                                isReady = team.isReady,
-                                nickname = team.teamNickname,
-                                participants = team.participants,
-                                price = team.price,
+                        Column(modifier = Modifier.padding(horizontal = 16.dp)) {
+                            SectionTitle(text = "강습 정보")
+                            Spacer(modifier = Modifier.height(8.dp))
+                            ClassInfoCard(
+                                tags = tags,
+                                classTitle = classTitle,
+                                location = location,
+                                duration = duration,
+                                price = price,
                             )
-                            if (index != teams.lastIndex) {
-                                Spacer(modifier = Modifier.height(8.dp))
+                        }
+
+                        Spacer(modifier = Modifier.height(24.dp))
+
+                        Column(modifier = Modifier.padding(horizontal = 16.dp)) {
+                            SectionTitle(text = "강습생 정보")
+                            Spacer(modifier = Modifier.height(8.dp))
+                            teams.forEachIndexed { index, team ->
+                                ConsumerInfoCard(
+                                    isReady = team.isReady,
+                                    nickname = team.teamNickname,
+                                    participants = team.participants,
+                                    price = team.price,
+                                )
+                                if (index != teams.lastIndex) {
+                                    Spacer(modifier = Modifier.height(8.dp))
+                                }
                             }
                         }
                     }
@@ -224,6 +241,7 @@ private fun PreparationHeader(
     isInstructorReady: Boolean,
     participantReadyCount: Int,
     participantTotalCount: Int,
+    modifier: Modifier = Modifier,
 ) {
     val density = LocalDensity.current
     var instructorImageHeightPx by remember { mutableIntStateOf(0) }
@@ -231,7 +249,7 @@ private fun PreparationHeader(
     val totalCount = 1 + participantTotalCount
 
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .background(color = Blue50)
             .padding(16.dp),
@@ -255,6 +273,7 @@ private fun PreparationHeader(
         Row(
             verticalAlignment = Alignment.Bottom,
             modifier = Modifier
+                .background(color = Blue50)
                 .fillMaxWidth()
                 .height(IntrinsicSize.Min),
             horizontalArrangement = Arrangement.End
