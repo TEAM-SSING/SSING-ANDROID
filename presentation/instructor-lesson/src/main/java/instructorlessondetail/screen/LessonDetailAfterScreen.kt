@@ -43,18 +43,14 @@ import com.ssing.core.ui.common.component.SsingChip
 import com.ssing.core.ui.common.component.SsingChipStyle
 import com.ssing.core.ui.designsystem.theme.Blue50
 import com.ssing.core.ui.designsystem.theme.SSINGTheme
+import instructorlessondetail.model.LessonDetailAfterUiModel
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LessonDetailAfterScreen(
-    tags: ImmutableList<String>,
-    classTitle: String,
-    location: String,
-    duration: String,
-    price: Int,
-    teams: ImmutableList<TeamParticipantsInfo>,
+internal fun LessonDetailAfterScreen(
+    after: LessonDetailAfterUiModel,
     onBackClick: () -> Unit,
     onCancelClassClick: () -> Unit,
     onChatRoomClick: () -> Unit,
@@ -171,11 +167,11 @@ fun LessonDetailAfterScreen(
                             SectionTitle(text = "강습 정보")
                             Spacer(modifier = Modifier.height(8.dp))
                             ClassInfoCard(
-                                tags = tags,
-                                classTitle = classTitle,
-                                location = location,
-                                duration = duration,
-                                price = price,
+                                tags = after.tags,
+                                classTitle = after.classTitle,
+                                location = after.location,
+                                duration = after.duration,
+                                price = after.price,
                             )
 
                             Spacer(modifier = Modifier.height(24.dp))
@@ -183,14 +179,14 @@ fun LessonDetailAfterScreen(
                             Column {
                                 SectionTitle(text = "강습생 정보")
                                 Spacer(modifier = Modifier.height(8.dp))
-                                teams.forEachIndexed { index, team ->
+                                after.teams.forEachIndexed { index, team ->
                                     ConsumerInfoCard(
                                         isReady = team.isReady,
                                         nickname = team.teamNickname,
                                         participants = team.participants,
                                         price = team.price,
                                     )
-                                    if (index != teams.lastIndex) {
+                                    if (index != after.teams.lastIndex) {
                                         Spacer(modifier = Modifier.height(8.dp))
                                     }
                                 }
@@ -318,25 +314,27 @@ private fun InfoRow(label: String, value: String) {
 private fun LessonDetailAfterScreenPreview() {
     SSINGTheme {
         LessonDetailAfterScreen(
-            tags = persistentListOf("스노보드", "자격증이 있어요"),
-            classTitle = "김OO님 팀, 홍지민님 팀 총 5명",
-            location = "OOO 리조트",
-            duration = "0시간",
-            price = 0,
-            teams = persistentListOf(
-                TeamParticipantsInfo(
-                    teamNickname = "김OO",
-                    teamCount = 0,
-                    participants = persistentListOf("38세 남", "12세 여", "9세 남"),
-                    price = 0,
-                    isReady = false,
-                ),
-                TeamParticipantsInfo(
-                    teamNickname = "김OO",
-                    teamCount = 0,
-                    participants = persistentListOf("38세 남", "12세 여", "9세 남"),
-                    price = 0,
-                    isReady = false,
+            after = LessonDetailAfterUiModel(
+                tags = persistentListOf("스노보드", "자격증이 있어요"),
+                classTitle = "김OO님 팀, 홍지민님 팀 총 5명",
+                location = "OOO 리조트",
+                duration = "0시간",
+                price = 0,
+                teams = persistentListOf(
+                    TeamParticipantsInfo(
+                        teamNickname = "김OO",
+                        teamCount = 0,
+                        participants = persistentListOf("38세 남", "12세 여", "9세 남"),
+                        price = 0,
+                        isReady = false,
+                    ),
+                    TeamParticipantsInfo(
+                        teamNickname = "김OO",
+                        teamCount = 0,
+                        participants = persistentListOf("38세 남", "12세 여", "9세 남"),
+                        price = 0,
+                        isReady = false,
+                    ),
                 ),
             ),
             onBackClick = {},
