@@ -12,13 +12,19 @@ internal class LessonDetailViewModel @Inject constructor() :
 
     fun onBackClick() = sendEffect(LessonDetailContract.Effect.NavigateBack)
 
+    fun onCancelClassClick() {
+        updateState {
+            copy(dialog = null)
+        }
+    }
+
     fun onReadyButtonClick() {
         updateState {
             copy(dialog = LessonDetailContract.LessonDetailDialog.InstructorReady)
         }
     }
 
-    fun onReadyDialogConfirm() {
+    fun onReadyClick() {
         val before =
             (uiState.value.phase as? LessonDetailContract.LessonDetailPhase.LessonDetailBefore)
                 ?.before ?: return
@@ -32,21 +38,21 @@ internal class LessonDetailViewModel @Inject constructor() :
         }
     }
 
-    fun onEndButtonClick() {
-        updateState {
-            copy(dialog = LessonDetailContract.LessonDetailDialog.LessonEnd)
-        }
-    }
-
-    fun onEndDialogConfirm() {
-        updateState {
-            copy(dialog = null)
-        }
-    }
-
     fun onDialogDismiss() {
         updateState {
             copy(dialog = null)
+        }
+    }
+
+    fun onChatRoomClick() {
+        updateState {
+            copy(dialog = null)
+        }
+    }
+
+    fun onEndClick() {
+        updateState {
+            copy(dialog = LessonDetailContract.LessonDetailDialog.LessonEnd)
         }
     }
 }
