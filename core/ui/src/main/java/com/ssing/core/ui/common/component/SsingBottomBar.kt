@@ -9,14 +9,11 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -32,7 +29,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
-import com.ssing.core.ui.R
 import com.ssing.core.ui.designsystem.theme.SSINGTheme
 import com.ssing.core.ui.navigation.MainTab
 import kotlinx.collections.immutable.ImmutableList
@@ -115,24 +111,11 @@ private fun SsingBottomBarItem(
             .padding(top = 8.dp, bottom = 12.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        Box {
-            Icon(
-                imageVector = ImageVector.vectorResource(iconRes),
-                contentDescription = stringResource(tab.titleRes),
-                tint = textColor,
-            )
-            if (showNewMessageBadge) {
-                Icon(
-                    imageVector = ImageVector.vectorResource(R.drawable.ic_chat_new_message),
-                    contentDescription = null,
-                    modifier = Modifier
-                        .size(width = 26.dp, height = 15.dp)
-                        .align(Alignment.TopEnd)
-                        .offset(x = 12.dp, y = (-3).dp),
-                    tint = Color.Unspecified,
-                )
-            }
-        }
+        Icon(
+            imageVector = ImageVector.vectorResource(iconRes),
+            contentDescription = stringResource(tab.titleRes),
+            tint = textColor,
+        )
         Text(
             text = stringResource(tab.titleRes),
             style = SSINGTheme.typography.caption.md11,
