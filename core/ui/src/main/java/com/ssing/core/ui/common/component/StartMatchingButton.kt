@@ -115,7 +115,7 @@ fun StartMatchingButton(
             painter = painterResource(id = iconRes),
             contentDescription = null,
             modifier = Modifier
-                .size(width = 90.dp, height = 143.dp)
+                .size(width = 100.dp, height = 150.dp)
                 .align(Alignment.BottomEnd)
                 .offset(x = 20.dp, y = 27.dp)
         )
