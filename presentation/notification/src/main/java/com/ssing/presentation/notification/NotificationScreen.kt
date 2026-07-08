@@ -122,19 +122,15 @@ private fun NotificationEmptyContent(
 private fun NotificationFooter(
     modifier: Modifier = Modifier,
 ) {
-    Box(
+    Text(
         modifier = modifier
             .fillMaxWidth()
             .padding(16.dp),
-        contentAlignment = Alignment.TopCenter,
-    ) {
-        Text(
-            text = "7일 전 알림까지 확인할 수 있어요",
-            style = SSINGTheme.typography.caption.sb12,
-            color = SSINGTheme.colors.textAlternative,
-            textAlign = TextAlign.Center,
-        )
-    }
+        text = "7일 전 알림까지 확인할 수 있어요",
+        style = SSINGTheme.typography.caption.sb12,
+        color = SSINGTheme.colors.textAlternative,
+        textAlign = TextAlign.Center,
+    )
 }
 
 private class NotificationStatePreviewProvider :
