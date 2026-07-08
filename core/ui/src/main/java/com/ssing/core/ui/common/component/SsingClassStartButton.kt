@@ -1,9 +1,13 @@
 package com.ssing.core.ui.common.component
 
+import android.R.attr.enabled
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -17,6 +21,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -42,6 +48,12 @@ import com.ssing.core.ui.designsystem.theme.SSINGTheme
  * @param chipStyle 배지 칩 스타일
  */
 
+enum class StartMatchingCardStyle {
+    WHITE, BLUE
+}
+
+private val SsingButtonStyle.defaultColor: Color
+
 @Composable
 fun StartMatchingCard(
     badgeText: String,
@@ -49,14 +61,29 @@ fun StartMatchingCard(
     description: String,
     background: Brush,
     tone: StartMatchingCardStyle,
+    pressedColor: Color,
+    onClick: () -> Unit,
     modifier: Modifier = Modifier,
     chipStyle: SsingChipStyle = SsingChipStyle.BLUE,
 ) {
+    val interactionSource = remember { MutableInteractionSource() }
+    val isPressed by interactionSource.collectIsPressedAsState()
+    val shape = RoundedCornerShape(12.dp)
+
     Box(
         modifier = modifier
-            .clip(RoundedCornerShape(12.dp))
-            .background(brush = background)
-            .border(1.dp, Blue200, RoundedCornerShape(12.dp)),
+            .clip(shape)
+            .background(brush = if (isPressed) SolidColor(pressedColor) else background)
+            .border(
+                width = 1.dp,
+                color = SSINGTheme.colors.primaryAlternative,
+                shape = shape,
+            )
+            .clickable(
+                onClick = onClick,
+                interactionSource = interactionSource,
+                indication = null,
+            ),
     ) {
         Image(
             painter = painterResource(id = tone.iconRes),
@@ -64,7 +91,7 @@ fun StartMatchingCard(
             modifier = Modifier
                 .size(width = 90.dp, height = 143.dp)
                 .align(Alignment.BottomEnd)
-                .offset(x = 20.dp, y = 27.dp),
+                .offset(x = 20.dp, y = 27.dp)
         )
         Column(
             modifier = Modifier
@@ -93,33 +120,6 @@ fun StartMatchingCard(
     }
 }
 
-/** 카드의 아이콘/텍스트 색상 세트 */
-enum class StartMatchingCardStyle(
-    @param: DrawableRes val iconRes: Int,
-) {
-    Light(iconRes = R.drawable.img_fast) {
-        @Composable
-        override fun titleColor(): Color = SSINGTheme.colors.textNormal
-
-        @Composable
-        override fun descriptionColor(): Color = SSINGTheme.colors.textAlternative
-    },
-    Dark(iconRes = R.drawable.img_fast_dark) {
-        @Composable
-        override fun titleColor(): Color = SSINGTheme.colors.backgroundNormal
-
-        @Composable
-        override fun descriptionColor(): Color = SSINGTheme.colors.primaryAlternative
-    },
-    ;
-
-    @Composable
-    abstract fun titleColor(): Color
-
-    @Composable
-    abstract fun descriptionColor(): Color
-}
-
 @Preview
 @Composable
 private fun SsingStartClassCardPreview() {
@@ -131,7 +131,7 @@ private fun SsingStartClassCardPreview() {
                 StartMatchingCard(
                     badgeText = "text", title = "title", description = "text",
                     background = Brush.linearGradient(listOf(Color.White, Color(0xFFEFF2F8))),
-                    tone = StartMatchingCardStyle.Light,
+                    tone = StartMatchingCardStyle.WHITE,
                     chipStyle = SsingChipStyle.BLUE,
                     modifier = Modifier.weight(1f),
                 )
@@ -139,7 +139,7 @@ private fun SsingStartClassCardPreview() {
                 StartMatchingCard(
                     badgeText = "text", title = "title", description = "text",
                     background = SolidColor(SSINGTheme.colors.borderDisabled),
-                    tone = StartMatchingCardStyle.Light,
+                    tone = StartMatchingCardStyle.WHITE,
                     chipStyle = SsingChipStyle.BLUE,
                     modifier = Modifier.weight(1f),
                 )
@@ -154,7 +154,7 @@ private fun SsingStartClassCardPreview() {
                             Color(0xFF357DD5),
                         )
                     ),
-                    tone = StartMatchingCardStyle.Dark,
+                    tone = StartMatchingCardStyle.BLUE,
                     chipStyle = SsingChipStyle.BLUE,
                     modifier = Modifier.weight(1f),
                 )
@@ -162,7 +162,7 @@ private fun SsingStartClassCardPreview() {
                 StartMatchingCard(
                     badgeText = "text", title = "title", description = "text",
                     background = SolidColor(Blue600),
-                    tone = StartMatchingCardStyle.Dark,
+                    tone = StartMatchingCardStyle.BLUE,
                     chipStyle = SsingChipStyle.BLUE,
                     modifier = Modifier.weight(1f),
                 )
