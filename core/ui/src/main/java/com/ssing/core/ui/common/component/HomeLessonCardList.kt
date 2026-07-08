@@ -83,21 +83,20 @@ fun HomeLessonCardList(
             )
         }
 
-        Spacer(modifier = Modifier.height(12.dp))
+        if (pagerState.pageCount > 1) {
+            Spacer(modifier = Modifier.height(12.dp))
 
-        Row(
-            Modifier
-                .wrapContentHeight()
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(
-                space = 4.dp,
-                alignment = Alignment.CenterHorizontally,
-            ),
-        ) {
-            if (pagerState.pageCount > 1) {
+            Row(
+                Modifier
+                    .wrapContentHeight()
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(
+                    space = 4.dp,
+                    alignment = Alignment.CenterHorizontally,
+                ),
+            ) {
                 repeat(pagerState.pageCount) { iteration ->
-                    val color =
-                        if (pagerState.currentPage == iteration) SSINGTheme.colors.borderStrong else SSINGTheme.colors.borderAlternative
+                    val color = if (pagerState.currentPage == iteration) SSINGTheme.colors.borderStrong else SSINGTheme.colors.borderAlternative
                     Box(
                         modifier = Modifier
                             .clip(CircleShape)
@@ -373,7 +372,7 @@ private class HomeLessonCardPreviewProvider :
                 displayText = "김OO님 팀 3명",
                 location = "하이원",
                 date = LocalDateTime.of(2025, 7, 15, 19, 0),
-                onButtonClick ={},
+                onButtonClick = {},
                 status = Status.Matching,
             ),
             HomeLessonCardState.Reservation(
