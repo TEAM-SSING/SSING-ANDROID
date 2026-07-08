@@ -41,7 +41,7 @@ internal enum class DurationOption(val label: String, val hours: Int) {
 internal data class ConditionUiState(
     val availableSports: Set<SportOption> = SportOption.entries.toSet(),
     val resortName: String = "",
-    val selectedSports: Set<SportOption> = emptySet(),
+    val selectedSports: SportOption? = null,
     val selectedLevels: Set<LevelOption> = emptySet(),
     val selectedDurations: Set<DurationOption> = emptySet(),
     val maxHeadcount: Int = 3,
@@ -50,7 +50,7 @@ internal data class ConditionUiState(
     val isSubmitting: Boolean = false,
 ) {
     val isStartEnabled: Boolean
-        get() = selectedSports.isNotEmpty() &&
+        get() = selectedSports != null &&
             selectedLevels.isNotEmpty() &&
             selectedDurations.isNotEmpty() &&
             isNoticeChecked &&
@@ -63,9 +63,9 @@ internal data class ConditionUiState(
         availableSports = availableSports,
         resortName = resortName,
         selectedSports = if (availableSports.size == 1) {
-            availableSports
+            availableSports.first()
         } else {
-            selectedSports.intersect(availableSports)
+            selectedSports?.takeIf { it in availableSports }
         },
     )
 }

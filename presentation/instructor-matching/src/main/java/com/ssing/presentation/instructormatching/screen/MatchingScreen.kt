@@ -47,7 +47,7 @@ internal fun MatchingRoute(
 
     MatchingScreen(
         state = state,
-        onSportClick = viewModel::toggleSport,
+        onSportClick = viewModel::selectSport,
         onLevelToggle = viewModel::toggleLevel,
         onDurationToggle = viewModel::toggleDuration,
         onMaxHeadcountChange = viewModel::changeMaxHeadcount,
@@ -234,7 +234,7 @@ private fun MatchingFlowConditionPreview() {
     SSINGTheme {
         MatchingScreen(
             state = state,
-            onSportClick = { state = state.copy(condition = state.condition.copy(selectedSports = state.condition.selectedSports.toggle(it))) },
+            onSportClick = { state = state.copy(condition = state.condition.copy(selectedSports = it)) },
             onLevelToggle = { state = state.copy(condition = state.condition.copy(selectedLevels = state.condition.selectedLevels.toggle(it))) },
             onDurationToggle = { state = state.copy(condition = state.condition.copy(selectedDurations = state.condition.selectedDurations.toggle(it))) },
             onMaxHeadcountChange = { state = state.copy(condition = state.condition.copy(maxHeadcount = it)) },

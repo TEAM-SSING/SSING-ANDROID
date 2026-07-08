@@ -73,15 +73,12 @@ internal fun MatchingConditionScreen(
                     MatchingConditionFixedResortField(resortName = condition.resortName)
                 }
 
-                MatchingConditionSection(
-                    label = "강습 종목",
-                    labelSuffix = { MultiSelectBadge() },
-                ) {
+                MatchingConditionSection(label = "강습 종목") {
                     Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
                         condition.availableSports.sortedBy { it.ordinal }.forEach { sport ->
                             SsingSelectButton(
                                 text = sport.label,
-                                isSelected = sport in condition.selectedSports,
+                                isSelected = sport == condition.selectedSports,
                                 onClick = { onSportClick(sport) },
                                 modifier = Modifier.weight(1f),
                             )

@@ -57,7 +57,7 @@ internal fun MatchingWaitingScreen(
         // TODO(매칭-그래픽): 로딩 그래픽 에셋 확정 시 이 위치에 추가
 
         SsingMatchingDetailCard(
-            stepLabel = "씽 매칭 대기중",
+            stepLabel = "현재 매칭 조건",
             tags = (condition.selectedSports.map { it.label } + condition.selectedLevels.map { it.label })
                 .toPersistentList(),
             nickname = waiting.nickname,
