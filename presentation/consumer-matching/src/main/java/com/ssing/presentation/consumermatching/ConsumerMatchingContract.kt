@@ -27,11 +27,11 @@ internal interface ConsumerMatchingContract {
     )
 
     sealed interface Effect {
-        sealed interface ResultEffect : Effect {
-            data object PopBackStack : ResultEffect
-            data object NavigateToHome : ResultEffect
-            data object NavigateToPayment : ResultEffect
-            data class ShowToast(val message: String) : ResultEffect
+        sealed interface Result : Effect {
+            data object PopBackStack : Result
+            data object NavigateToHome : Result
+            data object NavigateToPayment : Result
+            data class ShowToast(val message: String) : Result
         }
     }
 }

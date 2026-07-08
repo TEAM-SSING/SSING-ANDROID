@@ -17,20 +17,20 @@ internal class ConsumerMatchingViewModel @Inject constructor() :
 
     fun confirmCancel() {
         updateState { copy(showCancelModal = false) }
-        sendEffect(ConsumerMatchingContract.Effect.ResultEffect.NavigateToHome)
+        sendEffect(ConsumerMatchingContract.Effect.Result.NavigateToHome)
     }
 
     fun abortCancel() =
         updateState { copy(showCancelModal = false) }
 
     fun requsetRematching() {
-        sendEffect(ConsumerMatchingContract.Effect.ResultEffect.PopBackStack)
+        sendEffect(ConsumerMatchingContract.Effect.Result.PopBackStack)
     }
 
     fun acceptMatching() {
-        sendEffect(ConsumerMatchingContract.Effect.ResultEffect.NavigateToPayment)
+        sendEffect(ConsumerMatchingContract.Effect.Result.NavigateToPayment)
     }
 
     fun navigateToReview() =
-        sendEffect(ConsumerMatchingContract.Effect.ResultEffect.ShowToast("준비 중인 기능이에요."))
+        sendEffect(ConsumerMatchingContract.Effect.Result.ShowToast("준비 중인 기능이에요."))
 }

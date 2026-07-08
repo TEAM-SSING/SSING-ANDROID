@@ -37,12 +37,12 @@ internal fun ConsumerMatchingResultRoute(
     val context = LocalContext.current
 
     HandleUiEffects(viewModel.uiEffect) { effect ->
-        if (effect is ConsumerMatchingContract.Effect.ResultEffect) {
+        if (effect is ConsumerMatchingContract.Effect.Result) {
             when (effect) {
-                ConsumerMatchingContract.Effect.ResultEffect.NavigateToHome -> navigateToHome()
-                ConsumerMatchingContract.Effect.ResultEffect.NavigateToPayment -> navigateToPayment()
-                ConsumerMatchingContract.Effect.ResultEffect.PopBackStack -> popBackStack()
-                is ConsumerMatchingContract.Effect.ResultEffect.ShowToast -> context.toast(effect.message)
+                ConsumerMatchingContract.Effect.Result.NavigateToHome -> navigateToHome()
+                ConsumerMatchingContract.Effect.Result.NavigateToPayment -> navigateToPayment()
+                ConsumerMatchingContract.Effect.Result.PopBackStack -> popBackStack()
+                is ConsumerMatchingContract.Effect.Result.ShowToast -> context.toast(effect.message)
             }
         }
     }
