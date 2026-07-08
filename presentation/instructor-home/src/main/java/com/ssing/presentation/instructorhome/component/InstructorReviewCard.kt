@@ -3,6 +3,7 @@ package com.ssing.presentation.instructorhome.component
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -15,9 +16,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -71,7 +75,7 @@ private fun ReviewSection(
             }
 
             Icon(
-                imageVector = ImageVector.vectorResource(iconRes),
+                painter = painterResource(iconRes),
                 contentDescription = null,
                 tint = iconColor,
             )
@@ -93,6 +97,7 @@ private fun RatingSection(
 
         Row(
             modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
                 text = "강사 등급",
@@ -103,7 +108,7 @@ private fun RatingSection(
             Spacer(modifier = Modifier.weight(1f))
 
             Icon(
-                imageVector = ImageVector.vectorResource(grade.icon),
+                painter = painterResource(grade.icon),
                 contentDescription = null,
                 tint = Color.Unspecified
             )
@@ -113,7 +118,7 @@ private fun RatingSection(
             Text(
                 text = grade.label,
                 style = SSINGTheme.typography.caption.md14,
-                color = SSINGTheme.colors.textAlternative
+                color = SSINGTheme.colors.textNormal
             )
         }
 
@@ -141,14 +146,13 @@ private fun RatingSection(
         }
     }
 }
-
 @Preview(showBackground = true)
 @Composable
 private fun InstructorReviewCardPreview() {
     SSINGTheme {
         InstructorReviewCard(
             averageRating = 3f,
-            grade = Grade.Grade4(),
+            grade = Grade.Grade4,
             achievementRate = 0.88f,
         )
     }
