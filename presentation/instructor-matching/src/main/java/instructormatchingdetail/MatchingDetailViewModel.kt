@@ -28,4 +28,19 @@ internal class MatchingDetailViewModel @Inject constructor(
         if (uiState.value.isRequesting) return
         updateState { copy(isRequesting = true) }
     }
+
+    fun onBackClick() = sendEffect(MatchingDetailContract.Effect.NavigateBack)
+
+    fun onCancelClassClick() {
+        sendEffect(MatchingDetailContract.Effect.ShowCancelClassDialog)
+    }
+
+    fun onChatRoomClick() {
+        sendEffect(MatchingDetailContract.Effect.NavigateToChatRoom)
+    }
+
+    fun onReadyClick() {
+        val current = uiState.value.isInstructorReady
+        updateState { copy(isInstructorReady = !current) }
+    }
 }
