@@ -1,6 +1,5 @@
 package com.ssing.core.ui.common.component
 
-import android.R.attr.enabled
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -33,7 +32,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ssing.core.ui.R
-import com.ssing.core.ui.designsystem.theme.Blue200
 import com.ssing.core.ui.designsystem.theme.Blue600
 import com.ssing.core.ui.designsystem.theme.SSINGTheme
 
@@ -43,10 +41,9 @@ import com.ssing.core.ui.designsystem.theme.SSINGTheme
  * @param badgeText 상단 배지 텍스트
  * @param title 타이틀
  * @param description 설명 텍스트
- * @param iconRes 카드 우측 하단에 배치할 아이콘 리소스
- * @param background 카드 기본 배경 (단색/그라데이션 등 카드마다 다르므로 파라미터로 받음)
- * @param pressedColor 눌렸을 때 배경/테두리 색
- * @param tone 텍스트 색상 톤 (WHITE/BLUE)
+ * @param iconRes 카드 우측 하단에 배치할 아이콘
+ * @param style 카드 색상 스타일 (배경/테두리/텍스트 색상을 함께 결정)
+ * @param onClick 클릭 시 실행될 콜백
  * @param chipStyle 배지 칩 스타일
  */
 
@@ -58,11 +55,15 @@ private val StartMatchingCardStyle.background: Brush
     @Composable
     get() = when (this) {
         StartMatchingCardStyle.WHITE -> Brush.linearGradient(
-            listOf(Color.White, Color(0xFFEFF2F8)))
+            listOf(Color.White, Color(0xFFEFF2F8))
+        )
+
         StartMatchingCardStyle.BLUE -> Brush.linearGradient(
-            listOf(Color(0xFF64AAFF),
+            listOf(
+                Color(0xFF64AAFF),
                 Color(0xFF3184EA),
-                Color(0xFF357DD5),)
+                Color(0xFF357DD5),
+            )
         )
     }
 
@@ -94,7 +95,6 @@ fun StartMatchingCard(
     description: String,
     @DrawableRes iconRes: Int,
     style: StartMatchingCardStyle,
-    pressedColor: Color,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     chipStyle: SsingChipStyle = SsingChipStyle.BLUE,
@@ -106,7 +106,7 @@ fun StartMatchingCard(
     Box(
         modifier = modifier
             .clip(shape)
-            .background(brush = if (isPressed) SolidColor(pressedColor) else style.background)
+            .background(brush = if (isPressed) SolidColor(style.pressedColor) else style.background)
             .border(
                 width = 1.dp,
                 color = SSINGTheme.colors.primaryAlternative,
@@ -139,7 +139,7 @@ fun StartMatchingCard(
             Text(
                 text = title,
                 style = SSINGTheme.typography.body.sb16,
-                color = style.titleColor(),
+                color = style.titleColor,
             )
 
             Spacer(modifier = Modifier.height(4.dp))
@@ -147,7 +147,7 @@ fun StartMatchingCard(
             Text(
                 text = description,
                 style = SSINGTheme.typography.caption.sb12,
-                color = style.descriptionColor(),
+                color = style.descriptionColor,
             )
         }
     }
@@ -163,7 +163,7 @@ private fun SsingStartClassCardPreview() {
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 StartMatchingCard(
                     badgeText = "text", title = "title", description = "text",
-                    background = Brush.linearGradient(listOf(Color.White, Color(0xFFEFF2F8))),
+                    iconRes = R.drawable.img_fast,
                     style = StartMatchingCardStyle.WHITE,
                     chipStyle = SsingChipStyle.BLUE,
                     onClick = {},
@@ -172,7 +172,7 @@ private fun SsingStartClassCardPreview() {
 
                 StartMatchingCard(
                     badgeText = "text", title = "title", description = "text",
-                    background = SolidColor(SSINGTheme.colors.borderDisabled),
+                    iconRes = R.drawable.img_fast,
                     style = StartMatchingCardStyle.WHITE,
                     chipStyle = SsingChipStyle.BLUE,
                     onClick = {},
@@ -182,23 +182,19 @@ private fun SsingStartClassCardPreview() {
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 StartMatchingCard(
                     badgeText = "text", title = "title", description = "text",
-                    background = Brush.linearGradient(
-                        listOf(
-                            Color(0xFF64AAFF),
-                            Color(0xFF3184EA),
-                            Color(0xFF357DD5),
-                        )
-                    ),
+                    iconRes = R.drawable.img_fast_dark,
                     style = StartMatchingCardStyle.BLUE,
                     chipStyle = SsingChipStyle.BLUE,
+                    onClick = {},
                     modifier = Modifier.weight(1f),
                 )
 
                 StartMatchingCard(
                     badgeText = "text", title = "title", description = "text",
-                    background = SolidColor(Blue600),
+                    iconRes = R.drawable.img_fast_dark,
                     style = StartMatchingCardStyle.BLUE,
                     chipStyle = SsingChipStyle.BLUE,
+                    onClick = {},
                     modifier = Modifier.weight(1f),
                 )
             }
