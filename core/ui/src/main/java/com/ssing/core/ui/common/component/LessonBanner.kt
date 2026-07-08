@@ -53,7 +53,7 @@ sealed interface LessonBannerState {
         val lessonDate: String,
     ) : LessonBannerState
 
-    object Canceled : LessonBannerState
+    data object Canceled : LessonBannerState
 }
 
 @Composable
