@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
@@ -37,7 +38,7 @@ import com.ssing.presentation.instructorhome.Grade
 fun InstructorReviewCard(
     averageRating: Float,
     grade: Grade,
-    achievementRate: Float,
+    achievementRate: Int,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -95,12 +96,10 @@ private fun ReviewSection(
 
 @Composable
 private fun RatingSection(
-    progress: Float,
+    progress: Int,
     grade: Grade,
     modifier: Modifier = Modifier,
 ) {
-    var targetProgress by remember { mutableFloatStateOf(progress) }
-
     Column(
         modifier = modifier,
     ) {
@@ -112,7 +111,7 @@ private fun RatingSection(
             Text(
                 text = "강사 등급",
                 color = SSINGTheme.colors.textAlternative,
-                style = SSINGTheme.typography.caption.sb12
+                style = SSINGTheme.typography.caption.sb12,
             )
 
             Spacer(modifier = Modifier.weight(1f))
@@ -120,7 +119,7 @@ private fun RatingSection(
             Icon(
                 painter = painterResource(grade.icon),
                 contentDescription = null,
-                tint = Color.Unspecified
+                tint = Color.Unspecified,
             )
 
             Spacer(modifier = Modifier.width(2.dp))
@@ -128,39 +127,62 @@ private fun RatingSection(
             Text(
                 text = grade.label,
                 style = SSINGTheme.typography.caption.md14,
-                color = SSINGTheme.colors.textNormal
+                color = SSINGTheme.colors.textNormal,
             )
         }
 
         Row(
-            modifier = Modifier,
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
-                text = "강사 등급",
+                text = "달성률",
                 color = SSINGTheme.colors.textAlternative,
-                style = SSINGTheme.typography.caption.sb12
+                style = SSINGTheme.typography.caption.sb12,
             )
 
             Spacer(modifier = Modifier.weight(1f))
 
-            LinearProgressBar()
+            LinearProgressBar(
+                progress = progress,
+            )
+
+            Spacer(modifier = Modifier.width(8.dp))
+
+            Text(
+                text = "${progress}%",
+                style = SSINGTheme.typography.caption.md14,
+                color = SSINGTheme.colors.textNormal,
+            )
         }
     }
 }
 
 @Composable
 private fun LinearProgressBar(
+    progress: Int,
     modifier: Modifier = Modifier,
 ) {
+    val progressBarLength = 207f
+
     Box(
-        modifier = modifier,
+        modifier = modifier
+            .height(10.dp)
+            .width(progressBarLength.dp)
+            .background(
+                color = SSINGTheme.colors.borderDisabled,
+                shape = CircleShape,
+            ),
     ) {
         Box(
-            modifier = Modifier,
-        ) {
-
-
-        }
+            modifier = Modifier
+                .height(10.dp)
+                .width(((progressBarLength/100)*progress).dp)
+                .background(
+                    color = SSINGTheme.colors.primaryNormal,
+                    shape = CircleShape,
+                ),
+        ) {}
     }
 }
 
@@ -171,7 +193,7 @@ private fun InstructorReviewCardPreview() {
         InstructorReviewCard(
             averageRating = 3f,
             grade = Grade.Grade4,
-            achievementRate = 0.88f,
+            achievementRate = 88,
         )
     }
 }
