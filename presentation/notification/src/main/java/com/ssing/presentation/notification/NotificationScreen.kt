@@ -92,9 +92,10 @@ private fun NotificationScreen(
                         onClick = { onAlarmClick(alarm) },
                     )
                 }
+                item {
+                    NotificationFooter()
+                }
             }
-
-            NotificationFooter(modifier = Modifier.weight(1f))
         }
     }
 }
