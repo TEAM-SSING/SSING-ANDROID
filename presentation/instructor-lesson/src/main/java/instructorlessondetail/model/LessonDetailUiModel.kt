@@ -6,44 +6,44 @@ import kotlinx.collections.immutable.ImmutableList
 
 
 @Immutable
-internal data class LessonDetailBeforeUiState(
+internal data class LessonDetailBeforeUiModel(
+    val teams: ImmutableList<TeamParticipantsInfo>,
+    val tags: ImmutableList<String>,
     val isInstructorReady: Boolean = false,
     val participantReadyCount: Int = 0,
     val participantTotalCount: Int = 0,
-    val tags: ImmutableList<String>,
     val classTitle: String = "",
     val location: String = "",
     val duration: String = "",
     val price: Int = 0,
-    val teams: ImmutableList<TeamParticipantsInfo>,
 )
 
 @Immutable
-internal data class LessonDetailDuringUiState(
+internal data class LessonDetailDuringUiModel(
+    val teams: ImmutableList<TeamParticipantsInfo>,
     val tags: ImmutableList<String>,
     val classTitle: String = "",
     val location: String = "",
     val duration: String = "",
     val price: Int = 0,
-    val teams: ImmutableList<TeamParticipantsInfo>,
 )
 
 @Immutable
-internal data class LessonDetailAfterUiState(
+internal data class LessonDetailAfterUiModel(
+    val teams: ImmutableList<TeamParticipantsInfo>,
     val tags: ImmutableList<String>,
     val classTitle: String = "",
     val location: String = "",
     val duration: String = "",
     val price: Int = 0,
-    val teams: ImmutableList<TeamParticipantsInfo>,
 )
 
 @Immutable
-internal data class LessonDetailCanceledUiState(
+internal data class LessonDetailCanceledUiModel(
+    val teams: ImmutableList<TeamParticipantsInfo>,
     val tags: ImmutableList<String>,
     val classTitle: String = "",
     val location: String = "",
     val duration: String = "",
     val price: Int = 0,
-    val teams: ImmutableList<TeamParticipantsInfo>,
 )
