@@ -58,14 +58,14 @@ internal fun MatchingWaitingScreen(
 
         SsingMatchingDetailCard(
             stepLabel = "현재 매칭 조건",
-            tags = (condition.selectedSports.map { it.label } + condition.selectedLevels.map { it.label })
+            tags = (listOfNotNull(condition.selectedSports?.label) + condition.selectedLevels.map { it.label })
                 .toPersistentList(),
             nickname = waiting.nickname,
             teamCount = waiting.teamCount,
             totalCount = condition.maxHeadcount,
             classDateTime = waiting.classDateTime,
             location = condition.resortName,
-            duration = condition.selectedDurations.firstOrNull()?.label ?: "",
+            duration = condition.selectedDurations.joinToString(" / ") { it.label },
             maxCapacity = condition.maxHeadcount,
             participants = waiting.participants.map { it.toParticipant() }.toPersistentList(),
             isPaid = waiting.isPaid,
@@ -105,7 +105,7 @@ private fun MatchingWaitingScreenPreview() {
         MatchingWaitingScreen(
             condition = ConditionUiState(
                 resortName = "하이원 리조트",
-                selectedSports = setOf(SportOption.SKI),
+                selectedSports = SportOption.SKI,
                 selectedLevels = setOf(LevelOption.BEGINNER),
                 selectedDurations = setOf(DurationOption.HOUR_3),
                 maxHeadcount = 4,
