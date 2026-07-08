@@ -38,6 +38,7 @@ import com.ssing.core.ui.extension.toast
 import com.ssing.core.ui.util.HandleUiEffects
 import com.ssing.presentation.auth.KakaoLoginEntryPoint
 import com.ssing.presentation.auth.LoginContract
+import com.ssing.presentation.auth.component.LoginSection
 import dagger.hilt.android.EntryPointAccessors
 
 
@@ -150,61 +151,6 @@ private fun LoginLogo(
             color = SSINGTheme.colors.textStrong,
         )
     }
-}
-
-@Composable
-private fun LoginSection(
-    onKakaoClick: () -> Unit,
-    onConditionClick: () -> Unit,
-    onPersonalInfoClick: () -> Unit,
-    onServiceCenterClick: () -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    Column(
-        modifier = modifier.padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        KakaoButton(
-            onClick = onKakaoClick,
-            modifier = Modifier.fillMaxWidth()
-        )
-
-        Spacer(modifier = Modifier.height(12.dp))
-
-        Row(
-            modifier = Modifier,
-            horizontalArrangement = Arrangement.spacedBy(16.dp),
-        ) {
-            InfoText(
-                text = "이용 약관",
-                onClick = onConditionClick,
-            )
-
-            InfoText(
-                text = "개인정보 처리방침",
-                onClick = onPersonalInfoClick,
-            )
-
-            InfoText(
-                text = "고객센터",
-                onClick = onServiceCenterClick,
-            )
-        }
-    }
-}
-
-@Composable
-private fun InfoText(
-    text: String,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    Text(
-        text = text,
-        style = SSINGTheme.typography.caption.md12,
-        color = SSINGTheme.colors.textAlternative,
-        modifier = modifier.clickable(onClick = onClick)
-    )
 }
 
 @Preview(showBackground = true)
