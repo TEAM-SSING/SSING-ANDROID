@@ -37,10 +37,9 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
+import com.ssing.core.ui.util.ssingDateFormatter
 import kotlinx.collections.immutable.persistentListOf
 import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
-import java.util.Locale
 
 sealed interface HomeLessonCardState {
     data class Reservation(
@@ -273,11 +272,6 @@ private fun EmptyLessonInfoSection(
             color = SSINGTheme.colors.textDisabled,
         )
     }
-}
-
-
-private fun LocalDateTime.ssingDateFormatter(): String {
-    return this.format(DateTimeFormatter.ofPattern("yyyy. MM. dd (E) HH:mm", Locale.KOREAN))
 }
 
 @Composable
