@@ -94,7 +94,8 @@ fun HomeLessonCardList(
                 ),
             ) {
                 repeat(pagerState.pageCount) { iteration ->
-                    val color = if (pagerState.currentPage == iteration) SSINGTheme.colors.borderStrong else SSINGTheme.colors.borderAlternative
+                    val color =
+                        if (pagerState.currentPage == iteration) SSINGTheme.colors.borderStrong else SSINGTheme.colors.borderAlternative
                     Box(
                         modifier = Modifier
                             .clip(CircleShape)
