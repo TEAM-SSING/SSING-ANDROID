@@ -35,17 +35,6 @@ import com.ssing.core.ui.R
 import com.ssing.core.ui.designsystem.theme.Blue600
 import com.ssing.core.ui.designsystem.theme.SSINGTheme
 
-/**
- * 강습 시작 버튼용 카드.
- *
- * @param badgeText 상단 배지 텍스트
- * @param title 타이틀
- * @param description 설명 텍스트
- * @param iconRes 카드 우측 하단에 배치할 아이콘
- * @param style 카드 색상 스타일 (배경/테두리/텍스트 색상을 함께 결정)
- * @param onClick 클릭 시 실행될 콜백
- * @param chipStyle 배지 칩 스타일
- */
 
 enum class StartMatchingCardStyle {
     WHITE, BLUE
@@ -87,6 +76,18 @@ private val StartMatchingCardStyle.descriptionColor: Color
         StartMatchingCardStyle.WHITE -> SSINGTheme.colors.textAlternative
         StartMatchingCardStyle.BLUE -> SSINGTheme.colors.primaryAlternative
     }
+
+/**
+ * 강습 시작 버튼용 카드.
+ *
+ * @param badgeText 상단 배지 텍스트
+ * @param title 타이틀
+ * @param description 설명 텍스트
+ * @param iconRes 카드 우측 하단에 배치할 아이콘
+ * @param style 카드 색상 스타일 (배경/테두리/텍스트 색상을 함께 결정)
+ * @param onClick 클릭 시 실행될 콜백
+ * @param chipStyle 배지 칩 스타일
+ */
 
 @Composable
 fun StartMatchingCard(
