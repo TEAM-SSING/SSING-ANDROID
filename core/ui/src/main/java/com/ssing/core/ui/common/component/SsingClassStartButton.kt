@@ -28,6 +28,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ssing.core.ui.R
 import com.ssing.core.ui.designsystem.theme.Blue200
+import com.ssing.core.ui.designsystem.theme.Blue600
 import com.ssing.core.ui.designsystem.theme.SSINGTheme
 
 /**
@@ -160,7 +161,7 @@ private fun SsingStartClassCardPreview() {
 
                 StartMatchingCard(
                     badgeText = "text", title = "title", description = "text",
-                    background = SolidColor(Color(0xFF2E6BF0)),
+                    background = SolidColor(Blue600),
                     tone = StartMatchingCardStyle.Dark,
                     chipStyle = SsingChipStyle.BLUE,
                     modifier = Modifier.weight(1f),
