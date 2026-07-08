@@ -47,7 +47,7 @@ internal fun MatchingRoute(
 
     MatchingScreen(
         state = state,
-        onSportToggle = viewModel::toggleSport,
+        onSportClick = viewModel::toggleSport,
         onLevelToggle = viewModel::toggleLevel,
         onDurationToggle = viewModel::toggleDuration,
         onMaxHeadcountChange = viewModel::changeMaxHeadcount,
@@ -69,7 +69,7 @@ internal fun MatchingRoute(
 @Composable
 private fun MatchingScreen(
     state: MatchingContract.State,
-    onSportToggle: (SportOption) -> Unit,
+    onSportClick: (SportOption) -> Unit,
     onLevelToggle: (LevelOption) -> Unit,
     onDurationToggle: (DurationOption) -> Unit,
     onMaxHeadcountChange: (Int) -> Unit,
@@ -89,7 +89,7 @@ private fun MatchingScreen(
     when (val phase = state.phase) {
         MatchingPhase.SettingCondition -> MatchingConditionScreen(
             condition = state.condition,
-            onSportToggle = onSportToggle,
+            onSportClick = onSportClick,
             onLevelToggle = onLevelToggle,
             onDurationToggle = onDurationToggle,
             onMaxHeadcountChange = onMaxHeadcountChange,
@@ -234,7 +234,7 @@ private fun MatchingFlowConditionPreview() {
     SSINGTheme {
         MatchingScreen(
             state = state,
-            onSportToggle = { state = state.copy(condition = state.condition.copy(selectedSports = state.condition.selectedSports.toggle(it))) },
+            onSportClick = { state = state.copy(condition = state.condition.copy(selectedSports = state.condition.selectedSports.toggle(it))) },
             onLevelToggle = { state = state.copy(condition = state.condition.copy(selectedLevels = state.condition.selectedLevels.toggle(it))) },
             onDurationToggle = { state = state.copy(condition = state.condition.copy(selectedDurations = state.condition.selectedDurations.toggle(it))) },
             onMaxHeadcountChange = { state = state.copy(condition = state.condition.copy(maxHeadcount = it)) },
@@ -267,7 +267,7 @@ private fun MatchingFlowOfferPreview() {
     SSINGTheme {
         MatchingScreen(
             state = state,
-            onSportToggle = {},
+            onSportClick = {},
             onLevelToggle = {},
             onDurationToggle = {},
             onMaxHeadcountChange = {},
