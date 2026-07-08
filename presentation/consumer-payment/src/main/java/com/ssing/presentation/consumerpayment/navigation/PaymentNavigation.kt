@@ -6,6 +6,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.ssing.core.ui.navigation.MainTabRoute
+import com.ssing.presentation.consumerpayment.PaymentRoute
 import kotlinx.serialization.Serializable
 
 @Serializable
