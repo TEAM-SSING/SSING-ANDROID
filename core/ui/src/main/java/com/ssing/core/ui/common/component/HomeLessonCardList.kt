@@ -87,9 +87,7 @@ fun HomeLessonCardList(
             Spacer(modifier = Modifier.height(12.dp))
 
             Row(
-                Modifier
-                    .wrapContentHeight()
-                    .fillMaxWidth(),
+                Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(
                     space = 4.dp,
                     alignment = Alignment.CenterHorizontally,
@@ -203,7 +201,6 @@ private fun LessonInfoSection(
                 text = state.displayText,
                 style = SSINGTheme.typography.body.sb20,
                 color = SSINGTheme.colors.textNormal,
-                modifier = Modifier.fillMaxWidth()
             )
 
             Row(
@@ -224,6 +221,7 @@ private fun LessonInfoSection(
                 InfoRow(
                     iconRes = R.drawable.ic_location_16,
                     text = state.location,
+                    hasGap = false,
                 )
             }
         }
@@ -240,9 +238,9 @@ private fun LessonInfoSection(
 private fun InfoRow(
     @DrawableRes iconRes: Int,
     text: String,
+    hasGap: Boolean = true,
 ) {
     Row(
-        horizontalArrangement = Arrangement.spacedBy(2.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Icon(
@@ -250,6 +248,8 @@ private fun InfoRow(
             contentDescription = null,
             tint = SSINGTheme.colors.textAlternative,
         )
+
+        if (hasGap) Spacer(modifier = Modifier.width(2.dp))
 
         Text(
             text = text,
