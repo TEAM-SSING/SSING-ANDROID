@@ -45,6 +45,7 @@ import com.ssing.core.ui.common.component.SsingButton
 import com.ssing.core.ui.common.component.SsingButtonStyle
 import com.ssing.core.ui.common.component.SsingChip
 import com.ssing.core.ui.common.component.SsingChipStyle
+import com.ssing.core.ui.common.component.SsingModal
 import com.ssing.core.ui.designsystem.theme.Blue50
 import com.ssing.core.ui.designsystem.theme.SSINGTheme
 import kotlinx.collections.immutable.ImmutableList
@@ -85,6 +86,7 @@ fun LessonDetailBeforeScreen(
     var isReadyState by remember { mutableStateOf(isInstructorReady) }
     val density = LocalDensity.current
     var headerHeightPx by remember { mutableIntStateOf(0) }
+    var showReadyDialog by remember { mutableStateOf(false) }
 
     Scaffold(
         modifier = modifier,
@@ -146,8 +148,7 @@ fun LessonDetailBeforeScreen(
                     text = if (isReadyState) "강습 대기중" else "강습 준비 완료",
                     onClick = {
                         if (!isReadyState) {
-                            isReadyState = true
-                            onReadyClick()
+                            showReadyDialog = true
                         }
                     },
                     style = if (isReadyState) SsingButtonStyle.GRAY else SsingButtonStyle.BLUE,
@@ -162,15 +163,12 @@ fun LessonDetailBeforeScreen(
                 .fillMaxSize()
                 .padding(innerPadding),
         ) {
-            // 1) 배경 레이어: 전체 파란색
             Box(
                 modifier = Modifier
                     .fillMaxSize()
                     .background(Blue50),
             )
 
-            // 2) 헤더 아래부터 화면 끝까지: 흰색 + 상단 라운드
-            //    콘텐츠가 짧아도 fillMaxSize라서 항상 화면 끝까지 이어짐
             Box(
                 modifier = Modifier
                     .fillMaxSize()
@@ -184,7 +182,6 @@ fun LessonDetailBeforeScreen(
                     ),
             )
 
-            // 3) 실제 콘텐츠: 배경은 위 레이어들이 대신 그려주므로 투명하게 얹기만 함
             LazyColumn(
                 modifier = Modifier.fillMaxSize(),
             ) {
@@ -236,6 +233,21 @@ fun LessonDetailBeforeScreen(
                 }
             }
         }
+    }
+    if (showReadyDialog) {
+        SsingModal(
+            onDismissRequest = { showReadyDialog = false },
+            title = "강습 준비를 완료할까요?",
+            text = "준비 완료 시 변경이 불가능해요",
+            primaryText = "준비 완료",
+            onPrimary = {
+                isReadyState = true
+                onReadyClick()
+                showReadyDialog = false
+            },
+            secondaryText = "취소",
+            onSecondary = { showReadyDialog = false },
+        )
     }
 }
 
@@ -453,6 +465,22 @@ private fun LessonDetailBeforeScreenPreview() {
             onCancelClassClick = {},
             onChatRoomClick = {},
             onReadyClick = {},
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun ReadyConfirmModalPreview() {
+    SSINGTheme {
+        SsingModal(
+            onDismissRequest = {},
+            title = "강습 준비를 완료할까요?",
+            text = "준비 완료 시 변경이 불가능해요",
+            primaryText = "취소",
+            secondaryText = "준비 완료",
+            onPrimary = {},
+            onSecondary = {},
         )
     }
 }
