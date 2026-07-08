@@ -61,7 +61,7 @@ sealed interface HomeLessonCardState {
 }
 
 @Composable
-fun SsingHomeLessonCardRow(
+fun SsingHomeLessonCardList(
     states: ImmutableList<HomeLessonCardState>,
     modifier: Modifier = Modifier,
 ) {
@@ -380,11 +380,11 @@ private class HomeLessonCardPreviewProvider : PreviewParameterProvider<Immutable
 
 @Preview
 @Composable
-private fun SsingHomeLessonCardRowPreview(
+private fun SsingHomeLessonCardListPreview(
     @PreviewParameter(HomeLessonCardPreviewProvider::class) states: ImmutableList<HomeLessonCardState>,
 ) {
     SSINGTheme {
-        SsingHomeLessonCardRow(
+        SsingHomeLessonCardList(
             states = states,
             modifier = Modifier,
         )
