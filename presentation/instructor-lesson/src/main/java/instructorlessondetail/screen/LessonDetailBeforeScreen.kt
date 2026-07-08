@@ -48,42 +48,31 @@ import com.ssing.core.ui.common.component.SsingChipStyle
 import com.ssing.core.ui.common.component.SsingModal
 import com.ssing.core.ui.designsystem.theme.Blue50
 import com.ssing.core.ui.designsystem.theme.SSINGTheme
+import instructorlessondetail.model.LessonDetailBeforeUiModel
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 
 /**
  * 강습 상세 (강습 전) 화면.
  *
- * @param tags 강습 태그
- * @param classTitle 팀 타이틀 (예: "김OO님 팀, 홍지민님 팀 총 5명")
- * @param location 강습 장소
- * @param duration 강습 시간
- * @param price 강습 가격
- * @param teams 강습생 정보 (팀별 카드 리스트)
+ * @param before 강습 전 화면에 필요한 데이터
  * @param onBackClick 뒤로가기 클릭
  * @param onCancelClassClick 강습 취소 클릭
  * @param onChatRoomClick 채팅방 클릭
  * @param onReadyClick 강습 준비 완료 클릭
  */
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LessonDetailBeforeScreen(
-    isInstructorReady: Boolean,
-    participantReadyCount: Int,
-    participantTotalCount: Int,
-    tags: ImmutableList<String>,
-    classTitle: String,
-    location: String,
-    duration: String,
-    price: Int,
-    teams: ImmutableList<TeamParticipantsInfo>,
+internal fun LessonDetailBeforeScreen(
+    before: LessonDetailBeforeUiModel,
     onBackClick: () -> Unit,
     onCancelClassClick: () -> Unit,
     onChatRoomClick: () -> Unit,
     onReadyClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    var isReadyState by remember { mutableStateOf(isInstructorReady) }
+    var isReadyState by remember { mutableStateOf(before.isInstructorReady) }
     val density = LocalDensity.current
     var headerHeightPx by remember { mutableIntStateOf(0) }
     var showReadyDialog by remember { mutableStateOf(false) }
@@ -188,8 +177,8 @@ fun LessonDetailBeforeScreen(
                 item {
                     PreparationHeader(
                         isInstructorReady = isReadyState,
-                        participantReadyCount = participantReadyCount,
-                        participantTotalCount = participantTotalCount,
+                        participantReadyCount = before.participantReadyCount,
+                        participantTotalCount = before.participantTotalCount,
                         modifier = Modifier.onSizeChanged { size ->
                             headerHeightPx = size.height
                         },
@@ -204,11 +193,11 @@ fun LessonDetailBeforeScreen(
                             SectionTitle(text = "강습 정보")
                             Spacer(modifier = Modifier.height(8.dp))
                             ClassInfoCard(
-                                tags = tags,
-                                classTitle = classTitle,
-                                location = location,
-                                duration = duration,
-                                price = price,
+                                tags = before.tags,
+                                classTitle = before.classTitle,
+                                location = before.location,
+                                duration = before.duration,
+                                price = before.price,
                             )
                         }
 
@@ -217,14 +206,14 @@ fun LessonDetailBeforeScreen(
                         Column(modifier = Modifier.padding(horizontal = 16.dp)) {
                             SectionTitle(text = "강습생 정보")
                             Spacer(modifier = Modifier.height(8.dp))
-                            teams.forEachIndexed { index, team ->
+                            before.teams.forEachIndexed { index, team ->
                                 ConsumerInfoCard(
                                     isReady = team.isReady,
                                     nickname = team.teamNickname,
                                     participants = team.participants,
                                     price = team.price,
                                 )
-                                if (index != teams.lastIndex) {
+                                if (index != before.teams.lastIndex) {
                                     Spacer(modifier = Modifier.height(8.dp))
                                 }
                             }
@@ -437,28 +426,30 @@ private fun InfoRow(label: String, value: String) {
 private fun LessonDetailBeforeScreenPreview() {
     SSINGTheme {
         LessonDetailBeforeScreen(
-            isInstructorReady = false,
-            participantReadyCount = 2,
-            participantTotalCount = 5,
-            tags = persistentListOf("스노보드", "자격증이 있어요"),
-            classTitle = "김OO님 팀, 홍지민님 팀 총 5명",
-            location = "OOO 리조트",
-            duration = "0시간",
-            price = 0,
-            teams = persistentListOf(
-                TeamParticipantsInfo(
-                    teamNickname = "김OO",
-                    teamCount = 0,
-                    participants = persistentListOf("38세 남", "12세 여", "9세 남"),
-                    price = 0,
-                    isReady = true,
-                ),
-                TeamParticipantsInfo(
-                    teamNickname = "김OO",
-                    teamCount = 0,
-                    participants = persistentListOf("38세 남", "12세 여", "9세 남"),
-                    price = 0,
-                    isReady = false,
+            before = LessonDetailBeforeUiModel(
+                isInstructorReady = false,
+                participantReadyCount = 2,
+                participantTotalCount = 5,
+                tags = persistentListOf("스노보드", "자격증이 있어요"),
+                classTitle = "김OO님 팀, 홍지민님 팀 총 5명",
+                location = "OOO 리조트",
+                duration = "0시간",
+                price = 0,
+                teams = persistentListOf(
+                    TeamParticipantsInfo(
+                        teamNickname = "김OO",
+                        teamCount = 0,
+                        participants = persistentListOf("38세 남", "12세 여", "9세 남"),
+                        price = 0,
+                        isReady = true,
+                    ),
+                    TeamParticipantsInfo(
+                        teamNickname = "김OO",
+                        teamCount = 0,
+                        participants = persistentListOf("38세 남", "12세 여", "9세 남"),
+                        price = 0,
+                        isReady = false,
+                    ),
                 ),
             ),
             onBackClick = {},
