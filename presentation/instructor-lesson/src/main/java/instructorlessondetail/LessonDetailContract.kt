@@ -24,15 +24,8 @@ internal interface LessonDetailContract {
     }
 
     sealed interface LessonDetailDialog {
-        data object Chatting : LessonDetailDialog
         data object InstructorReady : LessonDetailDialog
-        data object LessonCanceled : LessonDetailDialog
-        data object ReportIssue : LessonDetailDialog
         data object LessonEnd : LessonDetailDialog
-        data object Review : LessonDetailDialog
-        data object ViewLessonHistory : LessonDetailDialog
-        data object ViewEarnings : LessonDetailDialog
-        data object BackToMatching : LessonDetailDialog
     }
 
     sealed interface Effect {
