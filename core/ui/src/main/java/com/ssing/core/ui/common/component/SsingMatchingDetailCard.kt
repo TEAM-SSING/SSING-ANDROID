@@ -1,6 +1,8 @@
 package com.ssing.core.ui.common.component
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.ui.draw.clip
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
@@ -18,18 +20,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ssing.core.ui.R
+import com.ssing.core.ui.designsystem.theme.Blue200
 import com.ssing.core.ui.designsystem.theme.SSINGTheme
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 
 /**
- * 강습 상세 정보 카드 (Full).
- *
+
  * @param stepLabel 현재 단계 라벨
  * @param tags 강습 태그 목록
  * @param nickname 팀장 닉네임
@@ -43,76 +46,66 @@ import kotlinx.collections.immutable.persistentListOf
  * @param isPaid 결제 완료 여부
  * @param price 예상 가격
  * @param equipmentStatus 장비 상태
- * @param onContinueClick "이어보기" 버튼 클릭 콜백
  */
 @Composable
 fun SsingMatchingDetailCard(
-    stepLabel: String,
-    tags: ImmutableList<String>,
-    nickname: String,
-    teamCount: Int,
-    totalCount: Int,
-    classDateTime: String,
-    location: String,
-    duration: String,
-    maxCapacity: Int,
-    participants: ImmutableList<Participant>,
-    isPaid: Boolean,
-    price: Int,
-    equipmentStatus: String,
-    onContinueClick: () -> Unit,
     modifier: Modifier = Modifier,
-    isContinueEnabled: Boolean = true,
+    stepLabel: String? = null,
+    stepLabelColor: Color = SSINGTheme.colors.textAlternative,
+    tags: ImmutableList<String> = persistentListOf(),
+    nickname: String = "",
+    teamCount: Int? = null,
+    totalCount: Int? = null,
+    classDateTime: String = "",
+    location: String = "",
+    duration: String = "",
+    maxCapacity: Int? = null,
+    participants: ImmutableList<Participant> = persistentListOf(),
+    isPaid: Boolean = false,
+    price: Int? = null,
+    equipmentStatus: String = "",
 ) {
     Column(
         modifier = modifier
-            .background(
-                color = SSINGTheme.colors.backgroundNormal,
-                shape = RoundedCornerShape(12.dp),
-            )
+            .border(width = 1.dp, color = Blue200, shape = RoundedCornerShape(12.dp))
+            .clip(RoundedCornerShape(12.dp))
+            .background(color = SSINGTheme.colors.backgroundNormal)
             .padding(16.dp),
     ) {
-        Text(
-            text = stepLabel,
-            style = SSINGTheme.typography.caption.sb12,
-            color = SSINGTheme.colors.textAlternative,
-            modifier = Modifier.padding(bottom = 12.dp),
-        )
-        SsingTagChipRow(tags = tags, style = SsingChipStyle.DEEP_BLUE)
-
-        Spacer(modifier = Modifier.height(4.dp))
-
-        SsingClassTitleRow(
-            title = "${nickname}님 팀 ${teamCount}명",
-            totalCount = totalCount,
-        )
-
-        HorizontalDivider(
-            color = SSINGTheme.colors.borderDisabled,
-            modifier = Modifier.padding(vertical = 8.dp),
-        )
-
-        Column(
-            verticalArrangement = Arrangement.spacedBy(4.dp)
-        ) {
-            SsingInfoRow(label = "강습 일시", value = classDateTime)
-            SsingInfoRow(label = "강습 장소", value = location)
-            SsingInfoRow(label = "강습 시간", value = duration)
-            SsingInfoRow(label = "최대 인원", value = "${maxCapacity}명")
-            SsingParticipantsRow(participants = participants)
-            SsingPriceRow(isPaid = isPaid, price = price)
-            SsingInfoRow(label = "장비상태", value = equipmentStatus)
+        if (stepLabel != null) {
+            Text(
+                text = stepLabel,
+                style = SSINGTheme.typography.caption.sb12,
+                color = stepLabelColor,
+                modifier = Modifier.padding(bottom = 12.dp),
+            )
         }
 
-        Spacer(modifier = Modifier.height(16.dp))
+        if (tags.isNotEmpty()) {
+            SsingTagChipRow(tags = tags, style = SsingChipStyle.DEEP_BLUE)
+            Spacer(modifier = Modifier.height(4.dp))
+        }
 
-        SsingButton(
-            text = "이어보기",
-            onClick = onContinueClick,
-            enabled = isContinueEnabled,
-            style = SsingButtonStyle.BLUE,
-            modifier = Modifier.fillMaxWidth(),
-        )
+        if (nickname.isNotEmpty()) {
+            SsingClassTitleRow(
+                title = "${nickname}님 팀 ${teamCount ?: 0}명",
+                totalCount = totalCount ?: 0,
+            )
+            HorizontalDivider(
+                color = SSINGTheme.colors.borderDisabled,
+                modifier = Modifier.padding(vertical = 8.dp),
+            )
+        }
+
+        Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+            if (classDateTime.isNotEmpty()) SsingInfoRow(label = "강습 일시", value = classDateTime)
+            if (location.isNotEmpty()) SsingInfoRow(label = "강습 장소", value = location)
+            if (duration.isNotEmpty()) SsingInfoRow(label = "강습 시간", value = duration)
+            if (maxCapacity != null) SsingInfoRow(label = "최대 인원", value = "${maxCapacity}명")
+            if (participants.isNotEmpty()) SsingParticipantsRow(participants = participants)
+            if (price != null) SsingPriceRow(isPaid = isPaid, price = price)
+            if (equipmentStatus.isNotEmpty()) SsingInfoRow(label = "장비상태", value = equipmentStatus)
+        }
     }
 }
 
@@ -210,7 +203,10 @@ private fun SsingTagChipRow(
     tags: ImmutableList<String>,
     style: SsingChipStyle,
 ) {
-    Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+    FlowRow(
+        horizontalArrangement = Arrangement.spacedBy(4.dp),
+        verticalArrangement = Arrangement.spacedBy(4.dp)
+    ) {
         tags.forEach { text ->
             SsingChip(text = text, style = style)
         }
@@ -361,7 +357,6 @@ enum class Gender { MALE, FEMALE }
 private fun SsingClassDetailCardPreview() {
     SSINGTheme {
         SsingMatchingDetailCard(
-            stepLabel = "현재 단계",
             tags = persistentListOf("하이원", "스노보드", "처음타요"),
             nickname = "김OO",
             teamCount = 0,
@@ -376,9 +371,9 @@ private fun SsingClassDetailCardPreview() {
                 Participant(9, Gender.FEMALE),
             ),
             isPaid = true,
-            price = 0, // 수정
+            price = 0,
             equipmentStatus = "착용 완료",
-            onContinueClick = {},
+            stepLabel = "현재 단계",
         )
     }
 }

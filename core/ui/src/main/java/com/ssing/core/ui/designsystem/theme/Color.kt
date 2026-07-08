@@ -115,7 +115,7 @@ val defaultSsingColors = SSINGColors(
     primaryStrong = Blue600,
 
     accentRedNormal = Red500,
-    accentRedAlternative = Red100,
+    accentRedAlternative = Red50,
 
     accentOrangeNormal = Orange500,
     accentOrangeAlternative = Orange100,
