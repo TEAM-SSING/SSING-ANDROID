@@ -41,7 +41,7 @@ internal fun MatchingPendingScreen(
         SsingHeader(
             title = "강습생의 확정을 기다리고 있어요",
             subText = "강습생에게 최종 확인 요청을 보냈어요\n강습생이 확인하면 강습이 확정돼요",
-            modifier = Modifier.padding(top = 24.dp),
+            modifier = Modifier.padding(top = 16.dp),
         )
 
         // TODO(매칭-그래픽): 대기 그래픽 에셋 확정 시 추가
