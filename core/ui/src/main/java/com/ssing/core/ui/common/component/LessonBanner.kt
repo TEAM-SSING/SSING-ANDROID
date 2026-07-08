@@ -126,11 +126,27 @@ private fun LessonBeforeContent(
             horizontalArrangement = Arrangement.spacedBy(8.dp, alignment = Alignment.End),
             verticalAlignment = Alignment.Bottom,
         ) {
-            Text(
-                text = "${lessonBannerState.totalReadyCount}/${lessonBannerState.totalCount}",
-                color = SSINGTheme.colors.primaryNormal,
-                style = SSINGTheme.typography.caption.sb12,
-            )
+            Row (
+                horizontalArrangement = Arrangement.spacedBy(2.dp),
+            ){
+                Text(
+                    text = "${lessonBannerState.totalReadyCount}",
+                    color = SSINGTheme.colors.primaryNormal,
+                    style = SSINGTheme.typography.caption.sb12,
+                )
+
+                Text(
+                    text = "/",
+                    color = SSINGTheme.colors.primaryNormal,
+                    style = SSINGTheme.typography.caption.sb12,
+                )
+
+                Text(
+                    text = "${lessonBannerState.totalCount}",
+                    color = SSINGTheme.colors.primaryNormal,
+                    style = SSINGTheme.typography.caption.sb12,
+                )
+            }
 
             Icon(
                 painter = painterResource(
