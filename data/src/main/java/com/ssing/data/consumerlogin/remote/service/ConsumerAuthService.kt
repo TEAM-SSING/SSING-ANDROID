@@ -1,8 +1,8 @@
 package com.ssing.data.consumerlogin.remote.service
 
 import com.ssing.core.network.model.BaseResponse
-import com.ssing.data.consumerlogin.remote.dto.ConsumerKakaoAuthRequest
-import com.ssing.data.consumerlogin.remote.dto.ConsumerAuthResponse
+import com.ssing.data.consumerlogin.remote.dto.request.ConsumerKakaoAuthRequest
+import com.ssing.data.consumerlogin.remote.dto.response.ConsumerAuthResponse
 import retrofit2.http.Body
 import retrofit2.http.POST
 
