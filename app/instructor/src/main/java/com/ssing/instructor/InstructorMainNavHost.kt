@@ -35,9 +35,7 @@ internal fun InstructorMainNavHost(
         instructorHomeNavGraph(paddingValues = paddingValues)
         instructorMatchingNavGraph(
             paddingValues = paddingValues,
-            navigateBack = {
-                navController.popBackStack(InstructorHome, inclusive = false)
-            },
+            navController = navController,
         )
     }
 }
