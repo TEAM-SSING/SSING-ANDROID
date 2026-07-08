@@ -189,6 +189,7 @@ private fun LessonInfoSection(
                     is Status.Matched -> "${state.title}님 팀 ${state.status.member}명"
                 },
                 style = SSINGTheme.typography.body.sb20,
+                color = SSINGTheme.colors.textNormal,
                 modifier = Modifier.fillMaxWidth()
             )
 
