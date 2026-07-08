@@ -32,6 +32,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ssing.core.ui.designsystem.theme.SSINGTheme
 import com.ssing.core.ui.R
+import com.ssing.core.ui.common.component.SsingButton
+import com.ssing.core.ui.common.component.SsingButtonStyle
 import com.ssing.presentation.instructorhome.Grade
 
 @Composable
@@ -39,6 +41,7 @@ fun InstructorReviewCard(
     averageRating: Float,
     grade: Grade,
     achievementRate: Int,
+    onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -49,6 +52,7 @@ fun InstructorReviewCard(
                 shape = RoundedCornerShape(12.dp),
             )
             .padding(12.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         ReviewSection(
             averageRating = averageRating
@@ -57,6 +61,13 @@ fun InstructorReviewCard(
         RatingSection(
             progress = achievementRate,
             grade = grade
+        )
+
+        SsingButton(
+            text = "강습 후기 보러가기",
+            onClick = onClick,
+            style = SsingButtonStyle.GRAY,
+            modifier = Modifier.fillMaxWidth()
         )
     }
 }
@@ -98,10 +109,9 @@ private fun ReviewSection(
 private fun RatingSection(
     progress: Int,
     grade: Grade,
-    modifier: Modifier = Modifier,
 ) {
     Column(
-        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(4.dp),
     ) {
 
         Row(
@@ -190,9 +200,10 @@ private fun LinearProgressBar(
 private fun InstructorReviewCardPreview() {
     SSINGTheme {
         InstructorReviewCard(
-            averageRating = 3f,
+            averageRating = 4f,
             grade = Grade.Grade4,
             achievementRate = 88,
+            onClick = {},
         )
     }
 }
