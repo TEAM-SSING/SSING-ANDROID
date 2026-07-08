@@ -5,9 +5,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
 import com.ssing.core.ui.extension.clearBackStackNavOptions
-import com.ssing.presentation.auth.navigation.Login
+import com.ssing.core.ui.navigation.SsingNavHost
 import com.ssing.presentation.auth.navigation.authNavGraph
 import com.ssing.presentation.consumerhome.navigation.ConsumerHome
 import com.ssing.presentation.consumerhome.navigation.consumerHomeNavGraph
@@ -18,7 +17,7 @@ internal fun ConsumerMainNavHost(
     paddingValues: PaddingValues,
     modifier: Modifier = Modifier,
 ) {
-    NavHost(
+    SsingNavHost(
         navController = navController,
         startDestination = ConsumerHome,
         modifier = modifier.fillMaxSize(),
