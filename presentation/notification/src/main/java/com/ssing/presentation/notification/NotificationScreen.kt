@@ -81,7 +81,7 @@ private fun NotificationScreen(
         if (state.isEmpty) {
             NotificationEmptyContent(modifier = Modifier.weight(1f))
         } else {
-            LazyColumn {
+            LazyColumn(modifier = Modifier.weight(1f)) {
                 items(
                     items = state.alarms,
                     key = { alarm -> alarm.id },
@@ -96,7 +96,7 @@ private fun NotificationScreen(
                 }
             }
 
-            NotificationFooter(modifier = Modifier.weight(1f))
+            NotificationFooter()
         }
     }
 }
