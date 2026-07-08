@@ -36,9 +36,6 @@ internal fun InstructorMainNavHost(
         notificationNavGraph(
             paddingValues = paddingValues,
             navController = navController,
-            navigateToLessonArrival = {},
-            navigateToMatchingLoading = {},
-            navigateToLessonReady = {},
         )
     }
 }
