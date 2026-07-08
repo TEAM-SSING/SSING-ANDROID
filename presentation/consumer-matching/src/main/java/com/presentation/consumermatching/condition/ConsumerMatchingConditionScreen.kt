@@ -30,7 +30,6 @@ import com.ssing.core.ui.common.component.SsingTopBar
 import com.ssing.core.ui.designsystem.theme.SSINGTheme
 import com.ssing.core.ui.extension.toast
 import com.ssing.core.ui.util.HandleUiEffects
-import kotlinx.collections.immutable.toPersistentList
 
 @Composable
 internal fun ConsumerMatchingConditionRoute(
