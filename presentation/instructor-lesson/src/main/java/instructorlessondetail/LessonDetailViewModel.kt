@@ -1,36 +1,14 @@
 package instructorlessondetail
 
-import androidx.lifecycle.SavedStateHandle
 import com.ssing.core.ui.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import instructorlessondetail.model.LessonDetailBeforeUiModel
-import kotlinx.collections.immutable.persistentListOf
 import javax.inject.Inject
 
 @HiltViewModel
-internal class LessonDetailViewModel @Inject constructor(
-    savedStateHandle: SavedStateHandle,
-) : BaseViewModel<LessonDetailContract.State, LessonDetailContract.Effect>(
-    LessonDetailContract.State()
-) {
-
-    init {
-        val lessonId = savedStateHandle.get<Long>("lessonId") ?: 0L
-        loadLessonDetail(lessonId)
-    }
-
-    private fun loadLessonDetail(lessonId: Long) {
-        updateState {
-            copy(
-                phase = LessonDetailContract.LessonDetailPhase.LessonDetailBefore(
-                    before = LessonDetailBeforeUiModel(
-                        teams = persistentListOf(),
-                        tags = persistentListOf(),
-                    )
-                )
-            )
-        }
-    }
+internal class LessonDetailViewModel @Inject constructor() :
+    BaseViewModel<LessonDetailContract.State, LessonDetailContract.Effect>(
+        LessonDetailContract.State()
+    ) {
 
     fun onBackClick() = sendEffect(LessonDetailContract.Effect.NavigateBack)
 
