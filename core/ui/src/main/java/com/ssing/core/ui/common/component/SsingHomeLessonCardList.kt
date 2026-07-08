@@ -45,14 +45,14 @@ import java.util.Locale
 sealed interface HomeLessonCardState {
     data class Reservation(
         val chip: String,
-        val title: String,
+        val displayText: String,
         val location: String,
         val date: LocalDateTime,
         val status: Status
     ) : HomeLessonCardState {
         sealed interface Status {
-            data class Default(val member: Int) : Status
-            data class Matched(val member: Int) : Status
+            data object Default : Status
+            data object Matched : Status
             data object Matching : Status
         }
     }
@@ -183,11 +183,7 @@ private fun LessonInfoSection(
             Spacer(modifier = Modifier.height(8.dp))
 
             Text(
-                text = when (state.status) {
-                    is Status.Matching -> "매칭중"
-                    is Status.Default -> "${state.title}님 팀 ${state.status.member}명"
-                    is Status.Matched -> "${state.title}님 팀 ${state.status.member}명"
-                },
+                text = state.displayText,
                 style = SSINGTheme.typography.body.sb20,
                 color = SSINGTheme.colors.textNormal,
                 modifier = Modifier.fillMaxWidth()
@@ -313,7 +309,7 @@ private fun SsingHomeLessonMatchingCardPreview() {
         SsingHomeLessonCard(
             state = HomeLessonCardState.Reservation(
                 chip = "Now",
-                title = "매칭중",
+                displayText = "매칭중",
                 date = LocalDateTime.of(2025, 7, 15, 19, 0),
                 location = "하이원",
                 status = Status.Matching
@@ -331,10 +327,10 @@ private fun SsingHomeLessonMatchedCardPreview() {
         SsingHomeLessonCard(
             state = HomeLessonCardState.Reservation(
                 chip = "Now",
-                title = "김OO",
+                displayText = "김OO님 팀 3명",
                 date = LocalDateTime.of(2025, 7, 15, 19, 0),
                 location = "하이원",
-                status = Status.Matched(member = 3),
+                status = Status.Matched,
             ),
             onClick = {},
             modifier = Modifier.width(328.dp),
@@ -349,10 +345,10 @@ private fun SsingHomeLessonCardPreview() {
         SsingHomeLessonCard(
             state = HomeLessonCardState.Reservation(
                 chip = "D-2",
-                title = "김OO",
+                displayText = "김OO님 팀 3명",
                 date = LocalDateTime.of(2025, 7, 15, 19, 0),
                 location = "하이원",
-                status = Status.Default(member = 3)
+                status = Status.Default
             ),
             onClick = {},
             modifier = Modifier.width(328.dp),
@@ -366,17 +362,17 @@ private class HomeLessonCardPreviewProvider : PreviewParameterProvider<Immutable
         persistentListOf(
             HomeLessonCardState.Reservation(
                 chip = "Now",
-                title = "김OO",
+                displayText = "김OO님 팀 3명",
                 location = "하이원",
                 date = LocalDateTime.of(2025, 7, 15, 19, 0),
                 status = Status.Matching,
             ),
             HomeLessonCardState.Reservation(
                 chip = "Now",
-                title = "김OO",
+                displayText = "김OO님 팀 3명",
                 location = "하이원",
                 date = LocalDateTime.of(2025, 7, 15, 19, 0),
-                status = Status.Default(member = 3),
+                status = Status.Default,
             ),
         ),
     )
