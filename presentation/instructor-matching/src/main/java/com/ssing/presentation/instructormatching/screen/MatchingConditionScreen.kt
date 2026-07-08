@@ -147,23 +147,28 @@ internal fun MatchingConditionScreen(
                 MatchingConditionInformationCard(
                     isChecked = condition.isNoticeChecked,
                     onCheckedChange = onNoticeCheckedChange,
-                )
-
-                SsingButton(
-                    text = "씽 매칭 시작",
-                    onClick = onStartMatchingClick,
-                    style = SsingButtonStyle.BLUE,
-                    enabled = condition.isStartEnabled,
                     modifier = Modifier.fillMaxWidth(),
                 )
             }
         }
+
+        SsingButton(
+            text = "씽 매칭 시작",
+            onClick = onStartMatchingClick,
+            style = SsingButtonStyle.BLUE,
+            enabled = condition.isStartEnabled,
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(SSINGTheme.colors.backgroundNormal)
+                .padding(horizontal = 16.dp)
+                .padding(bottom = 16.dp),
+        )
     }
 }
 
 private const val LEVEL_OPTION_COLUMN_COUNT = 2
 
-@Preview(showBackground = true, heightDp = 1000)
+@Preview(showBackground = true)
 @Composable
 private fun MatchingConditionScreenPreview() {
     SSINGTheme {
