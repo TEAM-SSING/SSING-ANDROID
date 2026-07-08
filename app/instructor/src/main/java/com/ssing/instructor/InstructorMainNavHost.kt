@@ -10,6 +10,7 @@ import com.ssing.core.ui.extension.clearBackStackNavOptions
 import com.ssing.presentation.auth.navigation.authNavGraph
 import com.ssing.presentation.instructorhome.navigation.InstructorHome
 import com.ssing.presentation.instructorhome.navigation.instructorHomeNavGraph
+import com.ssing.presentation.notification.navigation.notificationNavGraph
 
 @Composable
 internal fun InstructorMainNavHost(
@@ -32,6 +33,12 @@ internal fun InstructorMainNavHost(
             },
         )
         instructorHomeNavGraph(paddingValues = paddingValues)
-        // TODO 나중에 각 presentation 모듈 navGraph 연결
+        notificationNavGraph(
+            paddingValues = paddingValues,
+            navController = navController,
+            navigateToLessonArrival = {},
+            navigateToMatchingLoading = {},
+            navigateToLessonReady = {},
+        )
     }
 }
