@@ -97,7 +97,7 @@ private fun ConsumerMatchingConditionScreen(
         }
     ) { innerPadding ->
         LazyColumn(
-            modifier = Modifier.padding(innerPadding),
+            contentPadding = innerPadding,
         ) {
             item {
                 SsingHeader(
