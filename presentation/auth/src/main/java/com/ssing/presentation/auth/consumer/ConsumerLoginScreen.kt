@@ -210,11 +210,13 @@ private fun InfoText(
 @Preview(showBackground = true)
 @Composable
 private fun ConsumerLoginScreenPreview() {
-    ConsumerLoginScreen(
-        state = LoginContract.State(),
-        onKakaoClick = {},
-        onConditionClick = {},
-        onPersonalInfoClick = {},
-        onServiceCenterClick = {},
-    )
+    SSINGTheme {
+        ConsumerLoginScreen(
+            state = LoginContract.State(),
+            onKakaoClick = {},
+            onConditionClick = {},
+            onPersonalInfoClick = {},
+            onServiceCenterClick = {},
+        )
+    }
 }
