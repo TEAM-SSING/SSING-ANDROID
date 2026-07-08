@@ -145,10 +145,13 @@ fun LessonDetailBeforeScreen(
                 SsingButton(
                     text = if (isReadyState) "강습 대기중" else "강습 준비 완료",
                     onClick = {
-                        isReadyState = !isReadyState
-                        onReadyClick()
+                        if (!isReadyState) {
+                            isReadyState = true
+                            onReadyClick()
+                        }
                     },
                     style = if (isReadyState) SsingButtonStyle.GRAY else SsingButtonStyle.BLUE,
+                    enabled = !isReadyState,
                     modifier = Modifier.fillMaxWidth(),
                 )
             }
@@ -422,7 +425,7 @@ private fun InfoRow(label: String, value: String) {
 private fun LessonDetailBeforeScreenPreview() {
     SSINGTheme {
         LessonDetailBeforeScreen(
-            isInstructorReady = true,
+            isInstructorReady = false,
             participantReadyCount = 2,
             participantTotalCount = 5,
             tags = persistentListOf("스노보드", "자격증이 있어요"),
