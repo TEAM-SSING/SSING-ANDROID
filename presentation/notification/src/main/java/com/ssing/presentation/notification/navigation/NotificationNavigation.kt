@@ -18,16 +18,14 @@ fun NavController.navigateToNotification(navOptions: NavOptions? = null) {
 fun NavGraphBuilder.notificationNavGraph(
     paddingValues: PaddingValues,
     navController: NavController,
-    navigateToLessonArrival: () -> Unit,
-    navigateToMatchingLoading: () -> Unit,
-    navigateToLessonReady: () -> Unit,
 ) {
     composable<Notification> {
         NotificationRoute(
-            navigateBack = { navController.popBackStack() },
-            navigateToLessonArrival = navigateToLessonArrival,
-            navigateToMatchingLoading = navigateToMatchingLoading,
-            navigateToLessonReady = navigateToLessonReady,
+            navigateBack = navController::popBackStack,
+            //TODO 네비 구현 완료시 navController 넣기
+            navigateToLessonArrival = { },
+            navigateToMatchingLoading = { },
+            navigateToLessonReady = { },
             modifier = Modifier.padding(paddingValues),
         )
     }
