@@ -1,0 +1,186 @@
+package com.ssing.presentation.instructorhome.component
+
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.width
+import androidx.compose.material3.Icon
+import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import com.ssing.core.ui.designsystem.theme.SSINGTheme
+import com.ssing.core.ui.R
+
+sealed interface Grade {
+    val label: String
+    val icon: Int
+
+    data class Grade1(
+        override val label: String = "Grade1",
+        override val icon: Int = R.drawable.img_grade1_badge
+    ) : Grade
+
+    data class Grade2(
+        override val label: String = "Grade2",
+        override val icon: Int = R.drawable.img_grade2_badge
+    ) : Grade
+
+    data class Grade3(
+        override val label: String = "Grade3",
+        override val icon: Int = R.drawable.img_grade3_badge
+    ) : Grade
+
+    data class Grade4(
+        override val label: String = "Grade4",
+        override val icon: Int = R.drawable.img_grade4_badge
+    ) : Grade
+
+    data class Grade5(
+        override val label: String = "Grade5",
+        override val icon: Int = R.drawable.img_grade5_badge
+    ) : Grade
+}
+
+@Composable
+fun InstructorReviewCard(
+    averageRating: Float,
+    grade: Grade,
+    achievementRate: Float,
+    modifier: Modifier = Modifier,
+) {
+    Column(
+        modifier = modifier.fillMaxWidth(),
+    ) {
+        ReviewSection(
+            averageRating = averageRating
+        )
+
+        RatingSection(
+            progress = achievementRate,
+            grade = grade
+        )
+    }
+}
+
+@Composable
+private fun ReviewSection(
+    averageRating: Float,
+    modifier: Modifier = Modifier,
+) {
+    Row(
+        modifier = Modifier,
+        horizontalArrangement = Arrangement.spacedBy(2.dp),
+    ) {
+        Text(
+            text = averageRating.toString(),
+            color = SSINGTheme.colors.textAlternative,
+            style = SSINGTheme.typography.body.sb16,
+        )
+
+        Spacer(modifier = Modifier.width(6.dp))
+
+        repeat(5) { index ->
+            val (iconRes, iconColor) = if (index < averageRating) {
+                R.drawable.ic_star_filled to Color.Unspecified
+            } else {
+                R.drawable.ic_star_empty to SSINGTheme.colors.borderDisabled
+            }
+
+            Icon(
+                imageVector = ImageVector.vectorResource(iconRes),
+                contentDescription = null,
+                tint = iconColor,
+            )
+        }
+    }
+}
+
+@Composable
+private fun RatingSection(
+    progress: Float,
+    grade: Grade,
+    modifier: Modifier = Modifier,
+) {
+    var targetProgress by remember { mutableFloatStateOf(progress) }
+
+    Column(
+        modifier = modifier,
+    ) {
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+        ) {
+            Text(
+                text = "강사 등급",
+                color = SSINGTheme.colors.textAlternative,
+                style = SSINGTheme.typography.caption.sb12
+            )
+
+            Spacer(modifier = Modifier.weight(1f))
+
+            Icon(
+                imageVector = ImageVector.vectorResource(grade.icon),
+                contentDescription = null,
+                tint = Color.Unspecified
+            )
+
+            Spacer(modifier = Modifier.width(2.dp))
+
+            Text(
+                text = grade.label,
+                style = SSINGTheme.typography.caption.md14,
+                color = SSINGTheme.colors.textAlternative
+            )
+        }
+
+        Row(
+            modifier = Modifier,
+        ) {
+            Text(
+                text = "강사 등급",
+                color = SSINGTheme.colors.textAlternative,
+                style = SSINGTheme.typography.caption.sb12
+            )
+
+            Spacer(modifier = Modifier.weight(1f))
+
+            LinearProgressIndicator(
+                progress = { targetProgress },
+                color = SSINGTheme.colors.primaryNormal,
+                trackColor = SSINGTheme.colors.borderDisabled,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(10.dp),
+                drawStopIndicator = {},
+                gapSize = (-10).dp,
+            )
+        }
+
+
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun InstructorReviewCardPreview() {
+    SSINGTheme {
+        InstructorReviewCard(
+            averageRating = 3f,
+            grade = Grade.Grade4(),
+            achievementRate = 0.88f,
+        )
+    }
+}
