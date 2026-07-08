@@ -66,7 +66,6 @@ fun InstructorReviewCard(
 @Composable
 private fun ReviewSection(
     averageRating: Float,
-    modifier: Modifier = Modifier,
 ) {
     Row(
         modifier = Modifier,
