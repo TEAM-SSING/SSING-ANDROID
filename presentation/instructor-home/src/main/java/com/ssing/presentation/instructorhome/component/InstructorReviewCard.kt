@@ -141,10 +141,11 @@ private fun RatingSection(
                 style = SSINGTheme.typography.caption.sb12,
             )
 
-            Spacer(modifier = Modifier.weight(1f))
+            Spacer(modifier = Modifier.width(34.dp))
 
             LinearProgressBar(
                 progress = progress,
+                modifier = Modifier.weight(1f),
             )
 
             Spacer(modifier = Modifier.width(8.dp))
@@ -163,12 +164,10 @@ private fun LinearProgressBar(
     progress: Int,
     modifier: Modifier = Modifier,
 ) {
-    val progressBarLength = 207f
-
     Box(
         modifier = modifier
             .height(10.dp)
-            .width(progressBarLength.dp)
+            .fillMaxWidth()
             .background(
                 color = SSINGTheme.colors.borderDisabled,
                 shape = CircleShape,
@@ -177,7 +176,7 @@ private fun LinearProgressBar(
         Box(
             modifier = Modifier
                 .height(10.dp)
-                .width((progressBarLength/100*progress).dp)
+                .fillMaxWidth(1f/100*progress)
                 .background(
                     color = SSINGTheme.colors.primaryNormal,
                     shape = CircleShape,
