@@ -114,7 +114,7 @@ private fun ConsumerMatchingConditionScreen(
                     SsingDropdownField(
                         selectedItem = state.selectedResort,
                         placeholder = "하이원 리조트",
-                        items = Resort.entries.toPersistentList(),
+                        items = Resort.persistentEntries,
                         onItemClick = onResortSelect,
                         itemToString = { it.displayName },
                         itemToKey = { it.displayName + it.api },

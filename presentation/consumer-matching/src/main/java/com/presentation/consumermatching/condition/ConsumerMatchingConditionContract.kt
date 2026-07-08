@@ -1,6 +1,7 @@
 package com.presentation.consumermatching.condition
 
 import androidx.compose.runtime.Immutable
+import kotlinx.collections.immutable.toPersistentList
 
 internal interface ConsumerMatchingConditionContract {
     @Immutable
@@ -68,7 +69,11 @@ internal enum class Resort(
     MUJU_DEOGYUSAN_RESORT(
         api = "MUJU_DEOGYUSAN_RESORT",
         displayName = "무주덕유산리조트",
-    ),
+    );
+
+    companion object {
+        val persistentEntries = entries.toPersistentList()
+    }
 }
 
 internal enum class Sport(
