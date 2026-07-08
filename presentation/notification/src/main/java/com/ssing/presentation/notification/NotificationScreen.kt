@@ -70,7 +70,7 @@ private fun NotificationScreen(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .background(SSINGTheme.colors.backgroundNormal)
+            .background(SSINGTheme.colors.backgroundAlternative)
             .statusBarsPadding(),
     ) {
         SsingTopBar(
@@ -126,7 +126,6 @@ private fun NotificationFooter(
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .background(SSINGTheme.colors.backgroundAlternative)
             .padding(16.dp),
         contentAlignment = Alignment.TopCenter,
     ) {
