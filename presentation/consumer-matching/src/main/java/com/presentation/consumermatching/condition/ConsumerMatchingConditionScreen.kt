@@ -119,9 +119,9 @@ private fun ConsumerMatchingConditionScreen(
                         itemToString = { it.displayName },
                         itemToKey = { it.displayName + it.api },
                     )
-
-                    Spacer(Modifier.height(24.dp))
                 }
+
+                Spacer(Modifier.height(24.dp))
             }
 
             item {
@@ -163,9 +163,9 @@ private fun ConsumerMatchingConditionScreen(
                             )
                         }
                     }
-
-                    Spacer(Modifier.height(24.dp))
                 }
+
+                Spacer(Modifier.height(24.dp))
             }
 
             item {
@@ -185,9 +185,9 @@ private fun ConsumerMatchingConditionScreen(
                             )
                         }
                     }
-
-                    Spacer(Modifier.height(24.dp))
                 }
+
+                Spacer(Modifier.height(24.dp))
             }
 
 
