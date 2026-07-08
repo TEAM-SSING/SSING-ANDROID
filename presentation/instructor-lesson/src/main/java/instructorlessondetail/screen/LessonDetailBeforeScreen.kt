@@ -48,7 +48,6 @@ import com.ssing.core.ui.common.component.SsingChipStyle
 import com.ssing.core.ui.common.component.SsingModal
 import com.ssing.core.ui.designsystem.theme.Blue50
 import com.ssing.core.ui.designsystem.theme.SSINGTheme
-import instructorlessondetail.LessonDetailContract
 import instructorlessondetail.model.LessonDetailBeforeUiModel
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
@@ -71,20 +70,14 @@ internal fun LessonDetailBeforeScreen(
     onCancelClassClick: () -> Unit,
     onChatRoomClick: () -> Unit,
     onReadyClick: () -> Unit,
+    onReadyButtonClick: () -> Unit,
+    showReadyDialog: Boolean,
     modifier: Modifier = Modifier,
+    onDialogDismiss: () -> Unit = {},
 ) {
     var isReadyState by remember { mutableStateOf(before.isInstructorReady) }
     val density = LocalDensity.current
     var headerHeightPx by remember { mutableIntStateOf(0) }
-    var showReadyDialog by remember { mutableStateOf(false) }  // 뷰모델으로
-
-//    val state = LessonDetailContract.State()
-//
-//    if (state.showReadyDialog) {
-//        SsingModal (
-//
-//        )
-//    }
 
 
 
@@ -148,7 +141,7 @@ internal fun LessonDetailBeforeScreen(
                     text = if (isReadyState) "강습 대기중" else "강습 준비 완료",
                     onClick = {
                         if (!isReadyState) {
-                            showReadyDialog = true
+                            onReadyButtonClick()
                         }
                     },
                     style = if (isReadyState) SsingButtonStyle.GRAY else SsingButtonStyle.BLUE,
@@ -236,17 +229,16 @@ internal fun LessonDetailBeforeScreen(
     }
     if (showReadyDialog) {
         SsingModal(
-            onDismissRequest = { showReadyDialog = false },
+            onDismissRequest = onDialogDismiss,
             title = "강습 준비를 완료할까요?",
             text = "준비 완료 시 변경이 불가능해요",
             primaryText = "준비 완료",
             onPrimary = {
                 isReadyState = true
                 onReadyClick()
-                showReadyDialog = false
             },
             secondaryText = "취소",
-            onSecondary = { showReadyDialog = false },
+            onSecondary = onDialogDismiss,
         )
     }
 }
@@ -467,22 +459,24 @@ private fun LessonDetailBeforeScreenPreview() {
             onCancelClassClick = {},
             onChatRoomClick = {},
             onReadyClick = {},
+            onReadyButtonClick = {},
+            showReadyDialog = false
         )
     }
 }
 
-@Preview
-@Composable
-private fun ReadyConfirmModalPreview() {
-    SSINGTheme {
-        SsingModal(
-            onDismissRequest = {},
-            title = "강습 준비를 완료할까요?",
-            text = "준비 완료 시 변경이 불가능해요",
-            primaryText = "취소",
-            secondaryText = "준비 완료",
-            onPrimary = {},
-            onSecondary = {},
-        )
-    }
-}
+//@Preview
+//@Composable
+//private fun ReadyConfirmModalPreview() {
+//    SSINGTheme {
+//        SsingModal(
+//            onDismissRequest = {},
+//            title = "강습 준비를 완료할까요?",
+//            text = "준비 완료 시 변경이 불가능해요",
+//            primaryText = "취소",
+//            secondaryText = "준비 완료",
+//            onPrimary = {},
+//            onSecondary = {},
+//        )
+//    }
+//}
