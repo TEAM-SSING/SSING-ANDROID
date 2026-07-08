@@ -177,7 +177,7 @@ private fun LinearProgressBar(
         Box(
             modifier = Modifier
                 .height(10.dp)
-                .width(((progressBarLength/100)*progress).dp)
+                .width((progressBarLength/100*progress).dp)
                 .background(
                     color = SSINGTheme.colors.primaryNormal,
                     shape = CircleShape,
