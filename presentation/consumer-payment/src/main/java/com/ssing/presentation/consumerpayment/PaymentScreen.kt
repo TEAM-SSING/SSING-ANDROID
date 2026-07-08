@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.HorizontalDivider
@@ -49,7 +50,6 @@ fun PaymentScreen(
         modifier = modifier
             .fillMaxWidth()
             .background(color = SSINGTheme.colors.backgroundAlternative),
-        verticalArrangement = Arrangement.spacedBy(16.dp),
 
         ) {
         SsingTopBar(
@@ -57,6 +57,8 @@ fun PaymentScreen(
             title = "결제",
             backgroundColor = SSINGTheme.colors.backgroundAlternative,
         )
+        
+        Spacer(modifier = Modifier.height(16.dp))
 
         SsingHeader(
             title = "결제 정보를 확인해요",
@@ -88,7 +90,6 @@ private fun PayInfoSection(
     ) {
         SsingMatchingDetailCard(
             nickname = "김OO",
-//            totalCount = ,
             stepLabel = "결제 정보",
             stepLabelColor = SSINGTheme.colors.textAlternative,
             tags = persistentListOf("스노보드", "처음타요"),
@@ -175,8 +176,6 @@ private fun PayInfoSection(
 @Composable
 private fun PaymentScreenPreview() {
     SSINGTheme {
-        PaymentScreen(
-
-        )
+        PaymentScreen()
     }
 }
