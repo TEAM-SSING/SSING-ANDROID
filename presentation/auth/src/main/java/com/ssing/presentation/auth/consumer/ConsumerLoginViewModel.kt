@@ -7,10 +7,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 internal class ConsumerLoginViewModel @Inject constructor() :
-    BaseViewModel<LoginContract.State, LoginContract.Effect>(
-        LoginContract.State()
-    ) {
-
+    BaseViewModel<LoginContract.State, LoginContract.Effect>(LoginContract.State()) {
     fun processIntent(intent: LoginContract.Intent) {
         when (intent) {
             LoginContract.Intent.OnKakaoClick -> {
