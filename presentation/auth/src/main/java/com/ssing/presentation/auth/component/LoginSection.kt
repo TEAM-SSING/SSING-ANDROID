@@ -33,7 +33,6 @@ internal fun LoginSection(
         Spacer(modifier = Modifier.height(12.dp))
 
         Row(
-            modifier = Modifier,
             horizontalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             InfoText(
