@@ -43,8 +43,10 @@ import com.ssing.core.ui.designsystem.theme.SSINGTheme
  * @param badgeText 상단 배지 텍스트
  * @param title 타이틀
  * @param description 설명 텍스트
- * @param background 카드 배경 (단색/그라데이션 등 카드마다 다르므로 파라미터로 받음)
- * @param tone 아이콘/텍스트 색상 세트 (라이트/다크 두 가지로 닫혀 있어 enum으로 관리)
+ * @param iconRes 카드 우측 하단에 배치할 아이콘 리소스
+ * @param background 카드 기본 배경 (단색/그라데이션 등 카드마다 다르므로 파라미터로 받음)
+ * @param pressedColor 눌렸을 때 배경/테두리 색
+ * @param tone 텍스트 색상 톤 (WHITE/BLUE)
  * @param chipStyle 배지 칩 스타일
  */
 
@@ -52,15 +54,46 @@ enum class StartMatchingCardStyle {
     WHITE, BLUE
 }
 
-private val SsingButtonStyle.defaultColor: Color
+private val StartMatchingCardStyle.background: Brush
+    @Composable
+    get() = when (this) {
+        StartMatchingCardStyle.WHITE -> Brush.linearGradient(
+            listOf(Color.White, Color(0xFFEFF2F8)))
+        StartMatchingCardStyle.BLUE -> Brush.linearGradient(
+            listOf(Color(0xFF64AAFF),
+                Color(0xFF3184EA),
+                Color(0xFF357DD5),)
+        )
+    }
+
+private val StartMatchingCardStyle.pressedColor: Color
+    @Composable
+    get() = when (this) {
+        StartMatchingCardStyle.WHITE -> SSINGTheme.colors.borderAlternative
+        StartMatchingCardStyle.BLUE -> Blue600
+    }
+
+private val StartMatchingCardStyle.titleColor: Color
+    @Composable
+    get() = when (this) {
+        StartMatchingCardStyle.WHITE -> SSINGTheme.colors.textNormal
+        StartMatchingCardStyle.BLUE -> SSINGTheme.colors.backgroundNormal
+    }
+
+private val StartMatchingCardStyle.descriptionColor: Color
+    @Composable
+    get() = when (this) {
+        StartMatchingCardStyle.WHITE -> SSINGTheme.colors.textAlternative
+        StartMatchingCardStyle.BLUE -> SSINGTheme.colors.primaryAlternative
+    }
 
 @Composable
 fun StartMatchingCard(
     badgeText: String,
     title: String,
     description: String,
-    background: Brush,
-    tone: StartMatchingCardStyle,
+    @DrawableRes iconRes: Int,
+    style: StartMatchingCardStyle,
     pressedColor: Color,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -73,7 +106,7 @@ fun StartMatchingCard(
     Box(
         modifier = modifier
             .clip(shape)
-            .background(brush = if (isPressed) SolidColor(pressedColor) else background)
+            .background(brush = if (isPressed) SolidColor(pressedColor) else style.background)
             .border(
                 width = 1.dp,
                 color = SSINGTheme.colors.primaryAlternative,
@@ -86,7 +119,7 @@ fun StartMatchingCard(
             ),
     ) {
         Image(
-            painter = painterResource(id = tone.iconRes),
+            painter = painterResource(id = iconRes),
             contentDescription = null,
             modifier = Modifier
                 .size(width = 90.dp, height = 143.dp)
@@ -106,7 +139,7 @@ fun StartMatchingCard(
             Text(
                 text = title,
                 style = SSINGTheme.typography.body.sb16,
-                color = tone.titleColor(),
+                color = style.titleColor(),
             )
 
             Spacer(modifier = Modifier.height(4.dp))
@@ -114,7 +147,7 @@ fun StartMatchingCard(
             Text(
                 text = description,
                 style = SSINGTheme.typography.caption.sb12,
-                color = tone.descriptionColor(),
+                color = style.descriptionColor(),
             )
         }
     }
@@ -131,16 +164,18 @@ private fun SsingStartClassCardPreview() {
                 StartMatchingCard(
                     badgeText = "text", title = "title", description = "text",
                     background = Brush.linearGradient(listOf(Color.White, Color(0xFFEFF2F8))),
-                    tone = StartMatchingCardStyle.WHITE,
+                    style = StartMatchingCardStyle.WHITE,
                     chipStyle = SsingChipStyle.BLUE,
+                    onClick = {},
                     modifier = Modifier.weight(1f),
                 )
 
                 StartMatchingCard(
                     badgeText = "text", title = "title", description = "text",
                     background = SolidColor(SSINGTheme.colors.borderDisabled),
-                    tone = StartMatchingCardStyle.WHITE,
+                    style = StartMatchingCardStyle.WHITE,
                     chipStyle = SsingChipStyle.BLUE,
+                    onClick = {},
                     modifier = Modifier.weight(1f),
                 )
             }
@@ -154,7 +189,7 @@ private fun SsingStartClassCardPreview() {
                             Color(0xFF357DD5),
                         )
                     ),
-                    tone = StartMatchingCardStyle.BLUE,
+                    style = StartMatchingCardStyle.BLUE,
                     chipStyle = SsingChipStyle.BLUE,
                     modifier = Modifier.weight(1f),
                 )
@@ -162,7 +197,7 @@ private fun SsingStartClassCardPreview() {
                 StartMatchingCard(
                     badgeText = "text", title = "title", description = "text",
                     background = SolidColor(Blue600),
-                    tone = StartMatchingCardStyle.BLUE,
+                    style = StartMatchingCardStyle.BLUE,
                     chipStyle = SsingChipStyle.BLUE,
                     modifier = Modifier.weight(1f),
                 )
