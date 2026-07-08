@@ -63,6 +63,7 @@ sealed interface HomeLessonCardState {
 @Composable
 fun SsingHomeLessonCardList(
     states: ImmutableList<HomeLessonCardState>,
+    onCardClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -80,7 +81,7 @@ fun SsingHomeLessonCardList(
         ) { page ->
             SsingHomeLessonCard(
                 state = states[page],
-                onClick = {},
+                onClick = onCardClick,
                 modifier = Modifier.fillMaxWidth()
             )
         }
@@ -386,6 +387,7 @@ private fun SsingHomeLessonCardListPreview(
     SSINGTheme {
         SsingHomeLessonCardList(
             states = states,
+            onCardClick = {},
             modifier = Modifier,
         )
     }
