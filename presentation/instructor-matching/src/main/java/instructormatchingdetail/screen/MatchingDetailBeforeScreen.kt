@@ -375,7 +375,7 @@ data class TeamParticipantsInfo(
     val teamCount: Int,
     val participants: ImmutableList<String>,
     val price: Int,
-    val isReady: Boolean,
+    val isReady: Boolean? = false,
 )
 
 @Composable
