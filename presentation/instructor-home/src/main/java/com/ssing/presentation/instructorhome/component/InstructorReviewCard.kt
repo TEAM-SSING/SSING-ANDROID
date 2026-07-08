@@ -26,6 +26,7 @@ import com.ssing.core.ui.R
 import com.ssing.core.ui.common.component.SsingButton
 import com.ssing.core.ui.common.component.SsingButtonStyle
 import com.ssing.presentation.instructorhome.Grade
+import kotlin.math.min
 
 @Composable
 fun InstructorReviewCard(
@@ -151,7 +152,7 @@ private fun RatingSection(
             Spacer(modifier = Modifier.width(8.dp))
 
             Text(
-                text = "${progress}%",
+                text = "${min(progress, 100)}%",
                 style = SSINGTheme.typography.caption.md14,
                 color = SSINGTheme.colors.textNormal,
             )
@@ -176,7 +177,7 @@ private fun LinearProgressBar(
         Box(
             modifier = Modifier
                 .height(10.dp)
-                .fillMaxWidth(1f/100*progress)
+                .fillMaxWidth(progress/100f)
                 .background(
                     color = SSINGTheme.colors.primaryNormal,
                     shape = CircleShape,
