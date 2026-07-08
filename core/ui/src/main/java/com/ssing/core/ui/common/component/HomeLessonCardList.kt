@@ -29,7 +29,6 @@ import androidx.compose.ui.unit.dp
 import com.ssing.core.ui.R
 import com.ssing.core.ui.common.component.HomeLessonCardState.Reservation.Status
 import com.ssing.core.ui.designsystem.theme.SSINGTheme
-import com.ssing.core.ui.extension.roundedBackgroundWithBorder
 import kotlinx.collections.immutable.ImmutableList
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
@@ -112,6 +111,56 @@ fun HomeLessonCardList(
 }
 
 @Composable
+private fun HomeLessonEmptyCard(
+    modifier: Modifier = Modifier,
+){
+    Row(
+        modifier = modifier
+            .lessonCardBackground()
+            .padding(
+                vertical = 24.dp,
+                horizontal = 16.dp
+            ),
+        verticalAlignment = Alignment.Bottom,
+    ) {
+        EmptyLessonInfoSection(
+            modifier = Modifier
+                .weight(1f)
+                .padding(bottom = 5.dp),
+        )
+
+        Image(
+            painter = painterResource(id = R.drawable.img_ski_66),
+            contentDescription = null,
+            modifier = Modifier.size(66.dp),
+        )
+    }
+}
+
+@Composable
+private fun HomeLessonReservationCard(
+    state: HomeLessonCardState.Reservation,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+){
+    Column(
+        modifier = modifier
+            .lessonCardBackground()
+            .padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(24.dp),
+    ) {
+        LessonInfoSection(state = state)
+
+        SsingButton(
+            text = if (state.status is Status.Default) "강습 상세보기" else "이어보기",
+            onClick = onClick,
+            style = SsingButtonStyle.GRAY,
+            modifier = Modifier.fillMaxWidth(),
+        )
+    }
+}
+
+@Composable
 private fun HomeLessonCard(
     state: HomeLessonCardState,
     onClick: () -> Unit,
@@ -119,45 +168,16 @@ private fun HomeLessonCard(
 ) {
     when (state) {
         is HomeLessonCardState.Empty -> {
-            Row(
-                modifier = modifier
-                    .lessonCardBackground()
-                    .padding(
-                        vertical = 24.dp,
-                        horizontal = 16.dp
-                    ),
-                verticalAlignment = Alignment.Bottom,
-            ) {
-                EmptyLessonInfoSection(
-                    modifier = Modifier
-                        .weight(1f)
-                        .padding(bottom = 5.dp),
-                )
-
-                Image(
-                    painter = painterResource(id = R.drawable.img_ski_66),
-                    contentDescription = null,
-                    modifier = Modifier.size(66.dp),
-                )
-            }
+            HomeLessonEmptyCard(
+                modifier = modifier,
+            )
         }
-
         is HomeLessonCardState.Reservation -> {
-            Column(
-                modifier = modifier
-                    .lessonCardBackground()
-                    .padding(16.dp),
-                verticalArrangement = Arrangement.spacedBy(24.dp),
-            ) {
-                LessonInfoSection(state = state)
-
-                SsingButton(
-                    text = if (state.status is Status.Default) "강습 상세보기" else "이어보기",
-                    onClick = onClick,
-                    style = SsingButtonStyle.GRAY,
-                    modifier = Modifier.fillMaxWidth(),
-                )
-            }
+            HomeLessonReservationCard(
+                state = state,
+                onClick = onClick,
+                modifier = modifier,
+            )
         }
     }
 }
