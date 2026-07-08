@@ -37,7 +37,7 @@ sealed interface LessonBannerState {
         val participantTotalCount: Int,
     ) : LessonBannerState {
         val totalReadyCount: Int
-            get() = participantReadyCount + if (isInstructorReady) 1 else 0
+            get() = (participantReadyCount + if (isInstructorReady) 1 else 0).coerceIn(0, totalCount)
 
         val totalCount: Int
             get() = participantTotalCount + 1
