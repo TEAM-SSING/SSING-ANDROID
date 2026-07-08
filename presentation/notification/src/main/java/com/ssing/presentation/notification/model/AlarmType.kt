@@ -6,9 +6,6 @@ package com.ssing.presentation.notification.model
  */
 internal enum class AlarmType(val label: String) {
 
-    /** 강습 후기 작성 알림. (앱잼 범위 외 — 이동 대상 없음) */
-    LESSON_REVIEW("강습 후기"),
-
     /** 씽 매칭으로 새로운 강습이 도착한 알림 → 강습 도착 화면 */
     LESSON_ARRIVAL("씽 매칭 강습 도착"),
 
