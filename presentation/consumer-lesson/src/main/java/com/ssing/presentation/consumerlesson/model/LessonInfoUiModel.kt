@@ -12,3 +12,9 @@ data class LessonInfoUiModel(
     val duration: String,
     val price: Int,
 )
+
+@Immutable
+data class CompletedLessonInfoUiModel(
+    val lessonInfo: LessonInfoUiModel,
+    val actualTimeRange: String,
+)

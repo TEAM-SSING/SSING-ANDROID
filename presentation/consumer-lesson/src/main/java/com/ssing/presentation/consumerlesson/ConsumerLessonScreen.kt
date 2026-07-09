@@ -11,8 +11,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.input.rememberTextFieldState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -39,6 +41,7 @@ import com.ssing.core.ui.common.component.UserRole
 import com.ssing.core.ui.designsystem.theme.Blue50
 import com.ssing.core.ui.designsystem.theme.SSINGTheme
 import com.ssing.core.ui.designsystem.theme.White
+import com.ssing.presentation.consumerlesson.model.CompletedLessonInfoUiModel
 import com.ssing.presentation.consumerlesson.model.InstructorProfileUiModel
 import com.ssing.presentation.consumerlesson.model.LessonInfoUiModel
 import com.ssing.presentation.consumerlesson.model.ParticipantTeamUiModel
@@ -89,27 +92,25 @@ private fun ConsumerLessonScreen(
             backgroundColor = Blue50,
         )
 
-        LazyColumn(
-            modifier = Modifier.weight(1f)
+        Column(
+            modifier = Modifier
+                .weight(1f)
+                .verticalScroll(rememberScrollState())
         ) {
-            item {
-                LessonBanner(
-                    lessonBannerState = state.lessonBannerState,
-                    beforeLessonText = "강사님과 만난 후\n강습시작을 눌러주세요",
+            LessonBanner(
+                lessonBannerState = state.lessonBannerState,
+                beforeLessonText = "강사님과 만난 후\n강습시작을 눌러주세요",
+            )
+
+            when (state.lessonBannerState) {
+                is LessonBannerState.Before -> BeforeLessonContent(
+                    state,
+                    onCancelClick = onCancelClick,
                 )
-            }
 
-            item {
-                when (state.lessonBannerState) {
-                    is LessonBannerState.Before -> BeforeLessonContent(
-                        state,
-                        onCancelClick = onCancelClick,
-                    )
-
-                    is LessonBannerState.Ongoing -> OngoingLessonContent(state)
-                    is LessonBannerState.Completed -> CompletedLessonContent(state)
-                    is LessonBannerState.Canceled -> CanceledLessonContent(state)
-                }
+                is LessonBannerState.Ongoing -> OngoingLessonContent(state)
+                is LessonBannerState.Completed -> CompletedLessonContent(state)
+                is LessonBannerState.Canceled -> CanceledLessonContent(state)
             }
         }
 
@@ -321,7 +322,68 @@ private fun CompletedLessonContent(
     state: ConsumerLessonContract.State,
     modifier: Modifier = Modifier,
 ) {
-    // TODO: 강습 진행 후 UI 구현
+    ContentBackground(
+        modifier = modifier,
+    ) {
+        ContentSection(
+            titleText = "강습 정보",
+        ) {
+            val completedLessonInfo = state.completedLessonInfo ?: return@ContentSection
+
+            SsingMatchingDetailCardSmall(
+                tags = completedLessonInfo.lessonInfo.tags,
+                teamNicknames = completedLessonInfo.lessonInfo.teamNicknames,
+                totalCount = completedLessonInfo.lessonInfo.totalCount,
+                place = completedLessonInfo.lessonInfo.place,
+                duration = completedLessonInfo.lessonInfo.duration,
+                actualTimeRange = completedLessonInfo.actualTimeRange,
+                price = completedLessonInfo.lessonInfo.price,
+            )
+        }
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        ContentSection(
+            titleText = "강사 프로필",
+        ) {
+            val instructorProfile = state.instructorProfile ?: return@ContentSection
+
+            InstructorProfileButton(
+                name = instructorProfile.name,
+                age = instructorProfile.age,
+                gender = instructorProfile.gender,
+                level = instructorProfile.level,
+                imageUrl = instructorProfile.imageUrl,
+                onClick = {},
+            )
+        }
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        ContentSection(
+            titleText = "강습 관리",
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+            ) {
+                SsingButton(
+                    text = "문제 신고",
+                    onClick = {},
+                    style = SsingButtonStyle.RED,
+                    modifier = Modifier.weight(1f),
+                )
+
+                SsingButton(
+                    text = "이 강사님 추가 예약",
+                    onClick = {},
+                    style = SsingButtonStyle.GRAY,
+                    modifier = Modifier.weight(1f),
+                )
+            }
+        }
+    }
 }
 
 @Composable
@@ -457,7 +519,7 @@ private fun ConsumerLessonScreenPreview(
                 teamNicknames = persistentListOf("김멍멍", "김야옹"),
                 totalCount = 2,
                 place = "000 리조트",
-                duration = "0시간",
+                duration = "2시간",
                 price = 500000,
             ),
             instructorProfile = InstructorProfileUiModel(
@@ -468,6 +530,17 @@ private fun ConsumerLessonScreenPreview(
                 imageUrl = "",
             ),
             participantTeams = participantTeams,
+            completedLessonInfo = CompletedLessonInfoUiModel(
+                lessonInfo = LessonInfoUiModel(
+                    tags = persistentListOf("스노보드", "자격증이 있어요"),
+                    teamNicknames = persistentListOf("김멍멍", "김야옹"),
+                    totalCount = 2,
+                    place = "000 리조트",
+                    duration = "2시간",
+                    price = 500000,
+                ),
+                actualTimeRange = "14:00 - 16:00 (2시간)",
+            ),
         )
 
         ConsumerLessonScreen(
