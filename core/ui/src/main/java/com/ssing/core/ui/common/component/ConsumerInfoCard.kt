@@ -15,6 +15,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import com.ssing.core.ui.R
 import com.ssing.core.ui.designsystem.theme.SSINGTheme
@@ -36,11 +38,11 @@ import kotlinx.collections.immutable.persistentListOf
 
 @Composable
 fun ConsumerInfoCard(
+    isReady: Boolean,
     nickname: String,
     participants: ImmutableList<String>,
     price: Int,
     modifier: Modifier = Modifier,
-    isReady: Boolean? = false,
 ) {
     Column(
         modifier = modifier
@@ -49,7 +51,7 @@ fun ConsumerInfoCard(
                 shape = RoundedCornerShape(12.dp),
                 backgroundColor = White,
                 borderWidth = 1.dp,
-                borderColor = if (isReady == true) SSINGTheme.colors.primaryNormal else SSINGTheme.colors.borderAlternative,
+                borderColor = if (isReady) SSINGTheme.colors.primaryNormal else SSINGTheme.colors.borderAlternative,
             )
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(6.dp)
@@ -58,7 +60,7 @@ fun ConsumerInfoCard(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(4.dp),
         ) {
-            if (isReady == true) {
+            if (isReady) {
                 Icon(
                     imageVector = ImageVector.vectorResource(R.drawable.ic_check_circle_filled_sm_12),
                     contentDescription = null,
@@ -113,9 +115,15 @@ fun ConsumerInfoCard(
     }
 }
 
+private class ConsumerInfoCardPreviewProvider : PreviewParameterProvider<Boolean> {
+    override val values: Sequence<Boolean>
+        get() = sequenceOf(true, false)
+}
+
 @Preview(showBackground = true)
 @Composable
 private fun ConsumerInfoCardPreview(
+    @PreviewParameter(ConsumerInfoCardPreviewProvider::class) isReady: Boolean
 ) {
     SSINGTheme {
         Column(
@@ -124,7 +132,7 @@ private fun ConsumerInfoCardPreview(
             verticalArrangement = Arrangement.spacedBy(20.dp)
         ) {
             ConsumerInfoCard(
-                isReady = true,
+                isReady = isReady,
                 nickname = "김OO",
                 participants = persistentListOf(
                     "38세 남",
@@ -135,7 +143,7 @@ private fun ConsumerInfoCardPreview(
             )
 
             ConsumerInfoCard(
-                isReady = false,
+                isReady = isReady,
                 nickname = "김OO",
                 participants = persistentListOf(
                     "38세 남",
