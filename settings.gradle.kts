@@ -1,3 +1,5 @@
+import org.gradle.api.initialization.resolve.RepositoriesMode
+
 pluginManagement {
     includeBuild("build-logic")
     repositories {
@@ -42,3 +44,5 @@ include(":presentation:instructor-matching")
 include(":app:consumer")
 include(":app:instructor")
 include(":core:notification")
+include(":presentation:consumer-profile")
+include(":presentation:instructor-profile")
