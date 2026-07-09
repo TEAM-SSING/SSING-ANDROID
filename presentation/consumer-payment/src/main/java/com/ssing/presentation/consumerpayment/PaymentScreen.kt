@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -13,6 +14,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -88,38 +90,46 @@ internal fun PaymentScreen(
     onBackClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .background(color = SSINGTheme.colors.backgroundAlternative),
+    Scaffold(
+        topBar = {
+            Column(
+                modifier = Modifier.background(
+                    color = SSINGTheme.colors.backgroundAlternative,
+                )
+            ) {
+                SsingTopBar(
+                    onBack = onBackClick,
+                    title = "결제",
+                    backgroundColor = SSINGTheme.colors.backgroundAlternative,
+                )
 
-        ) {
-        SsingTopBar(
-            onBack = onBackClick,
-            title = "결제",
-            backgroundColor = SSINGTheme.colors.backgroundAlternative,
-        )
-        
-        Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(16.dp))
 
-        SsingHeader(
-            title = "결제 정보를 확인해요",
-            subText = "강습은 강사님과 만나 양측 확인 후 시작돼요"
-        )
-
+                SsingHeader(
+                    title = "결제 정보를 확인해요",
+                    subText = "강습은 강사님과 만나 양측 확인 후 시작돼요",
+                )
+            }
+        },
+        bottomBar = {
+            Column(){
+                SsingButton(
+                    text = "결제하기",
+                    onClick = onPaymentClick,
+                    style = SsingButtonStyle.BLUE,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                )
+            }
+        }
+    ) { innerPadding ->
         PayInfoSection(
             state = state,
-        )
-
-        Spacer(modifier = Modifier.weight(1f))
-
-        SsingButton(
-            text = "결제하기",
-            onClick = onPaymentClick,
-            style = SsingButtonStyle.BLUE,
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
+                .fillMaxSize()
+                .background(color = SSINGTheme.colors.backgroundAlternative)
+                .padding(innerPadding),
         )
     }
 }
@@ -131,7 +141,8 @@ private fun PayInfoSection(
 ) {
     Column(
         modifier = modifier
-            .padding(16.dp)
+            .padding(top = 16.dp)
+            .padding(horizontal = 16.dp)
             .verticalScroll(state = rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
