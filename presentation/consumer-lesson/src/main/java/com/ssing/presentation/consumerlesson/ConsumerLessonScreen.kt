@@ -302,6 +302,7 @@ private fun InstructorProfileSection(
 ) {
     ContentSection(
         titleText = "강사 프로필",
+        spacer = 4,
     ) {
         val profile = instructorProfile ?: return@ContentSection
 
@@ -369,24 +370,20 @@ private fun ContentBackground(
     modifier: Modifier = Modifier,
     content: @Composable () -> Unit,
 ) {
-    Box(
-        modifier = modifier
-            .background(Blue50),
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(
-                    color = SSINGTheme.colors.backgroundNormal,
-                    shape = RoundedCornerShape(
-                        topStart = 12.dp,
-                        topEnd = 12.dp,
-                    )
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Blue50)
+            .background(
+                color = SSINGTheme.colors.backgroundNormal,
+                shape = RoundedCornerShape(
+                    topStart = 12.dp,
+                    topEnd = 12.dp,
                 )
-                .padding(16.dp),
-        ) {
-            content()
-        }
+            )
+            .padding(16.dp),
+    ) {
+        content()
     }
 }
 
