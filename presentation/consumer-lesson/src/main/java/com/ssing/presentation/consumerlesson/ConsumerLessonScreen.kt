@@ -12,6 +12,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -19,6 +20,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ssing.core.ui.common.component.LessonBanner
 import com.ssing.core.ui.common.component.LessonBannerState
+import com.ssing.core.ui.common.component.SsingButton
+import com.ssing.core.ui.common.component.SsingButtonStyle
 import com.ssing.core.ui.common.component.SsingTopBar
 import com.ssing.core.ui.designsystem.theme.Blue50
 import com.ssing.core.ui.designsystem.theme.SSINGTheme
@@ -74,6 +77,25 @@ private fun ConsumerLessonScreen(
                 }
             }
         }
+
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(
+                    start = 16.dp,
+                    end = 16.dp,
+                    bottom = 16.dp,
+                ),
+            contentAlignment = Alignment.BottomCenter,
+        ) {
+            BottomButton(
+                state = state,
+                onClick = {
+                    // TODO: LessonState 단계별 내비게이션
+                },
+            )
+        }
+
     }
 }
 
@@ -159,6 +181,31 @@ private fun BodySection(
 
         content()
     }
+}
+
+@Composable
+private fun BottomButton(
+    state: ConsumerLessonContract.State,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val buttonText = when (state.lessonBannerState) {
+        is LessonBannerState.Before -> if (state.isReady) {
+            "강습 대기중"
+        } else {
+            "강습 준비 완료"
+        }
+        is LessonBannerState.Ongoing -> "강습 종료"
+        is LessonBannerState.Completed -> "리뷰 쓰기"
+        is LessonBannerState.Canceled -> "홈으로 돌아가기"
+    }
+
+    SsingButton(
+        text = buttonText,
+        onClick = onClick,
+        style = SsingButtonStyle.BLUE,
+        modifier = Modifier.fillMaxWidth(),
+    )
 }
 
 @Preview(showBackground = true)
