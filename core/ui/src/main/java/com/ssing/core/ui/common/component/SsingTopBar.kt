@@ -9,6 +9,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -27,6 +28,7 @@ import com.ssing.core.ui.extension.noRippleClickable
  *
  * @param title 상단바 타이틀입니다.
  * @param modifier
+ * @param backgroundColor 상단바 배경색입니다.
  * @param onBack 뒤로가기 버튼 클릭 콜백입니다. null이면 뒤로가기 버튼이 표시되지 않습니다.
  */
 @Composable
@@ -34,11 +36,12 @@ fun SsingTopBar(
     title: String,
     modifier: Modifier = Modifier,
     onBack: (() -> Unit)? = null,
+    backgroundColor: Color = SSINGTheme.colors.backgroundNormal,
 ) {
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .background(color = SSINGTheme.colors.backgroundNormal)
+            .background(color = backgroundColor)
             .padding(horizontal = 16.dp, vertical = 12.dp),
     ) {
         if (onBack != null) {

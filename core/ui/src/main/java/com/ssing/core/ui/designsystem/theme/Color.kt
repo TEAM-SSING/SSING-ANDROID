@@ -1,7 +1,9 @@
 package com.ssing.core.ui.designsystem.theme
 
+import android.R.color.white
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.staticCompositionLocalOf
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 
 val Blue50 = Color(0xFFEFF4FF)
@@ -64,6 +66,10 @@ val Gray900 = Color(0xFF242527)
 val White = Color(0xFFFFFFFF)
 val Black = Color(0xFF000000)
 
+val blueGradient = Brush.linearGradient(listOf(Color(0xFF64AAFF), Color(0xFF3184EA), Color(0xFF357DD5)))
+val whiteGradient = Brush.linearGradient(listOf(Color(0xFFFFFFFF), Color(0xFFEFF2F8)))
+val blueStrokeGradient = Brush.linearGradient(listOf(Color(0xFFDCE8FF), Color(0xFFB3D0FF)))
+
 @Immutable
 data class SSINGColors(
     val backgroundNormal: Color,
@@ -94,6 +100,10 @@ data class SSINGColors(
 
     val statusError: Color,
     val statusSuccess: Color,
+
+    val blueGradient: Brush,
+    val whiteGradient: Brush,
+    val blueStrokeGradient: Brush
 )
 
 val defaultSsingColors = SSINGColors(
@@ -111,11 +121,11 @@ val defaultSsingColors = SSINGColors(
     borderDisabled = Gray75,
 
     primaryNormal = Blue500,
-    primaryAlternative = Blue100,
+    primaryAlternative = Blue200,
     primaryStrong = Blue600,
 
     accentRedNormal = Red500,
-    accentRedAlternative = Red100,
+    accentRedAlternative = Red50,
 
     accentOrangeNormal = Orange500,
     accentOrangeAlternative = Orange100,
@@ -125,6 +135,10 @@ val defaultSsingColors = SSINGColors(
 
     statusError = Red500,
     statusSuccess = Green600,
+
+    blueGradient = blueGradient,
+    whiteGradient = whiteGradient,
+    blueStrokeGradient = blueStrokeGradient,
 )
 
 val localSsingColors = staticCompositionLocalOf { defaultSsingColors }

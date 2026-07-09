@@ -47,9 +47,9 @@ fun SsingHomeTopBar(
     ) {
         logo()
         val bellIconRes = if (hasUnreadNotifications) {
-            R.drawable.ic_bell_filled
-        } else {
             R.drawable.ic_bell
+        } else {
+            R.drawable.ic_bell_none
         }
         Icon(
             painter = painterResource(bellIconRes),
