@@ -64,7 +64,6 @@ internal fun LessonDetailBeforeScreen(
     onChatRoomClick: () -> Unit,
     onReadyClick: () -> Unit,
     onReadyButtonClick: () -> Unit,
-    showReadyDialog: Boolean,
     modifier: Modifier = Modifier,
     onDialogDismiss: () -> Unit = {},
 ) {
@@ -208,18 +207,15 @@ internal fun LessonDetailBeforeScreen(
                     modifier = Modifier.fillMaxWidth()
                 )
             }
-            if (showReadyDialog) {
-                SsingModal(
-                    onDismissRequest = onDialogDismiss,
-                    title = "강습 준비를 완료할까요?",
-                    text = "준비 완료 시 변경이 불가능해요",
-                    primaryText = "준비 완료",
-                    onPrimary = onReadyClick,
-                    secondaryText = "취소",
-                    onSecondary = onDialogDismiss,
-                )
-            }
-
+            SsingModal(
+                onDismissRequest = onDialogDismiss,
+                title = "강습 준비를 완료할까요?",
+                text = "준비 완료 시 변경이 불가능해요",
+                primaryText = "취소",
+                onPrimary = onDialogDismiss,
+                secondaryText = "준비 완료",
+                onSecondary = onReadyClick,
+            )
         }
     }
 }
@@ -280,7 +276,6 @@ private fun LessonDetailBeforeScreenPreview() {
             onChatRoomClick = {},
             onReadyClick = {},
             onReadyButtonClick = {},
-            showReadyDialog = false,
             lessonBannerState = LessonBannerState.Before(
                 isInstructorReady = false,
                 participantReadyCount = 2,
