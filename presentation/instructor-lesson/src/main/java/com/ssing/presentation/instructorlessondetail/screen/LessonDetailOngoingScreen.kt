@@ -30,6 +30,7 @@ import com.ssing.core.ui.common.component.SsingTopBar
 import com.ssing.core.ui.common.component.TeamNickname
 import com.ssing.core.ui.designsystem.theme.Blue50
 import com.ssing.core.ui.designsystem.theme.SSINGTheme
+import com.ssing.presentation.instructorlessondetail.component.SectionTitle
 import com.ssing.presentation.instructorlessondetail.model.LessonDetailOngoingUiModel
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
@@ -167,21 +168,12 @@ internal fun LessonDetailOngoingScreen(
                 title = "강습을 종료할까요?",
                 text = "종료 시 변경이 불가능해요",
                 primaryText = "강습 종료",
-                onPrimary = onContinueClick,
+                onPrimary = onDialogDismiss,
                 secondaryText = "취소",
-                onSecondary = onDialogDismiss,
+                onSecondary = onContinueClick,
             )
         }
     }
-}
-
-@Composable
-private fun SectionTitle(text: String) {
-    Text(
-        text = text,
-        style = SSINGTheme.typography.caption.sb12,
-        color = SSINGTheme.colors.textAlternative,
-    )
 }
 
 

@@ -39,6 +39,7 @@ import com.ssing.core.ui.common.component.SsingTopBar
 import com.ssing.core.ui.common.component.UserRole
 import com.ssing.core.ui.designsystem.theme.Blue50
 import com.ssing.core.ui.designsystem.theme.SSINGTheme
+import com.ssing.presentation.instructorlessondetail.component.SectionTitle
 import com.ssing.presentation.instructorlessondetail.model.LessonDetailBeforeUiModel
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
@@ -202,24 +203,14 @@ internal fun LessonDetailBeforeScreen(
                 onDismissRequest = onDialogDismiss,
                 title = "강습 준비를 완료할까요?",
                 text = "준비 완료 시 변경이 불가능해요",
-                primaryText = "취소",
-                onPrimary = onDialogDismiss,
-                secondaryText = "준비 완료",
-                onSecondary = onReadyClick,
+                primaryText = "준비 완료",
+                onPrimary = onReadyClick,
+                secondaryText = "취소",
+                onSecondary = onDialogDismiss,
             )
         }
     }
 }
-
-@Composable
-private fun SectionTitle(text: String) {
-    Text(
-        text = text,
-        style = SSINGTheme.typography.caption.sb12,
-        color = SSINGTheme.colors.textAlternative,
-    )
-}
-
 
 /** 강습생 정보 화면에서 팀 단위로 보여줄 데이터. */
 @Immutable

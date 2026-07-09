@@ -29,6 +29,7 @@ import com.ssing.core.ui.common.component.SsingTopBar
 import com.ssing.core.ui.common.component.TeamNickname
 import com.ssing.core.ui.designsystem.theme.Blue50
 import com.ssing.core.ui.designsystem.theme.SSINGTheme
+import com.ssing.presentation.instructorlessondetail.component.SectionTitle
 import com.ssing.presentation.instructorlessondetail.model.LessonDetailCanceledUiModel
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
@@ -160,16 +161,6 @@ internal fun LessonDetailCanceledScreen(
         }
 
     }
-}
-
-
-@Composable
-private fun SectionTitle(text: String) {
-    Text(
-        text = text,
-        style = SSINGTheme.typography.caption.sb12,
-        color = SSINGTheme.colors.textAlternative,
-    )
 }
 
 @Preview
