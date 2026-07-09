@@ -70,12 +70,15 @@ fun ConsumerInfoInputCard(
                 modifier = Modifier.weight(1f),
             )
 
-            onDelete?.let {
+            onDelete?.let { delete ->
                 Icon(
                     imageVector = ImageVector.vectorResource(R.drawable.ic_trash_empty),
                     contentDescription = "delete consumer",
                     tint = SSINGTheme.colors.textAlternative,
-                    modifier = Modifier.noRippleClickable(onClick = it),
+                    modifier = Modifier.noRippleClickable(onClick = {
+                        focusManager.clearFocus(force = true)
+                        delete()
+                    }),
                 )
             }
         }
