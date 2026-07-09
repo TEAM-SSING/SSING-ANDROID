@@ -1,7 +1,13 @@
 package com.ssing.presentation.consumermatching.condition
 
+import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.runtime.Immutable
+import com.ssing.presentation.consumermatching.type.ConsumerGender
+import kotlinx.collections.immutable.PersistentList
+import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
+
+internal const val MAX_CONSUMER_COUNT = 5
 
 internal interface ConsumerMatchingConditionContract {
     @Immutable
@@ -10,10 +16,14 @@ internal interface ConsumerMatchingConditionContract {
         val selectedSport: Sport? = null,
         val selectedLevel: LessonLevel? = null,
         val selectedDurations: Set<LessonDuration> = setOf(),
+        val consumers: PersistentList<ConsumerInfo> = persistentListOf(ConsumerInfo(id = 0)),
         val isConfirmed: Boolean = false,
     ) {
         val isStartMatchingEnabled: Boolean =
-            selectedResort != null && selectedSport != null && selectedLevel != null && selectedDurations.isNotEmpty() && isConfirmed
+            selectedResort != null && selectedSport != null && selectedLevel != null && selectedDurations.isNotEmpty() && isConfirmed &&
+                consumers.all { it.gender != null && it.ageState.text.isNotEmpty() }
+
+        val showAddConsumer: Boolean = consumers.size < MAX_CONSUMER_COUNT
     }
 
     sealed interface Effect {
@@ -21,6 +31,14 @@ internal interface ConsumerMatchingConditionContract {
         data object NavigateToMatching : Effect
     }
 }
+
+@Immutable
+internal data class ConsumerInfo(
+    val id: Int,
+    val ageState: TextFieldState = TextFieldState(),
+    val gender: ConsumerGender? = null,
+    val isFocused: Boolean = false,
+)
 
 internal enum class Resort(
     val api: String,
