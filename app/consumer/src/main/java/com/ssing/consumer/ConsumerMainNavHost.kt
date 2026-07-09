@@ -5,11 +5,13 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
+import com.presentation.consumermatching.navigation.consumerMatchingNavGraph
 import com.ssing.core.ui.extension.clearBackStackNavOptions
 import com.ssing.core.ui.navigation.SsingNavHost
 import com.ssing.presentation.auth.navigation.authNavGraph
 import com.ssing.presentation.consumerhome.navigation.ConsumerHome
 import com.ssing.presentation.consumerhome.navigation.consumerHomeNavGraph
+import com.ssing.presentation.notification.navigation.notificationNavGraph
 
 @Composable
 internal fun ConsumerMainNavHost(
@@ -32,6 +34,14 @@ internal fun ConsumerMainNavHost(
             },
         )
         consumerHomeNavGraph(
+            paddingValues = paddingValues,
+        )
+        notificationNavGraph(
+            paddingValues = paddingValues,
+            navController = navController,
+        )
+        consumerMatchingNavGraph(
+            navController = navController,
             paddingValues = paddingValues,
         )
     }
