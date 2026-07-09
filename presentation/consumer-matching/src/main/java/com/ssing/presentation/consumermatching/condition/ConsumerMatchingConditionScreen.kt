@@ -218,7 +218,11 @@ private fun ConsumerMatchingConditionScreen(
                             isFocused = consumer.isFocused,
                             onGenderClick = { onConsumerGenderSelect(consumer.id, it) },
                             onFocus = { onConsumerFocusChange(consumer.id, it) },
-                            onDelete = { onConsumerDelete(consumer.id) },
+                            onDelete = if (state.consumers.size > 1) {
+                                { onConsumerDelete(consumer.id) }
+                            } else {
+                                null
+                            },
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(bottom = 10.dp),

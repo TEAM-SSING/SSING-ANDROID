@@ -38,10 +38,8 @@ internal class ConsumerMatchingConditionViewModel :
         }
     }
 
-    fun onConsumerDelete(id: Int) {
-        if (uiState.value.consumers.size == 1) return
+    fun onConsumerDelete(id: Int) =
         updateState { copy(consumers = consumers.removeAll { it.id == id }) }
-    }
 
     fun onConsumerGenderSelect(id: Int, gender: ConsumerGender) =
         updateState {
