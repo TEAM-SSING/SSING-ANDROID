@@ -80,7 +80,7 @@ internal fun LessonDetailBeforeScreen(
     ) {
         SsingTopBar(
             title = "강습 상세",
-            onBack = { onBack() },
+            onBack = onBack,
             backgroundColor = Blue50,
             modifier = Modifier
                 .background(Blue50)
