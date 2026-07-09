@@ -86,6 +86,12 @@ internal fun LessonDetailBeforeScreen(
                 .background(Blue50)
                 .statusBarsPadding(),
         )
+
+        LessonBanner(
+            lessonBannerState = lessonBannerState,
+            beforeLessonText = "강사님과 만난 후\n강습 시작을 눌러주세요",
+        )
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -100,13 +106,6 @@ internal fun LessonDetailBeforeScreen(
             LazyColumn(
                 modifier = Modifier.weight(1f),
             ) {
-                item {
-                    LessonBanner(
-                        lessonBannerState = lessonBannerState,
-                        beforeLessonText = "강사님과 만난 후\n강습 시작을 눌러주세요",
-                    )
-                }
-
                 item {
                     Column(modifier = Modifier.fillMaxWidth()) {
                         Spacer(modifier = Modifier.height(16.dp))
