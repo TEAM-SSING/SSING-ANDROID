@@ -105,7 +105,6 @@ private fun RatingSection(
     Column(
         verticalArrangement = Arrangement.spacedBy(4.dp),
     ) {
-
         Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
@@ -178,7 +177,7 @@ private fun LinearProgressBar(
         Box(
             modifier = Modifier
                 .height(10.dp)
-                .fillMaxWidth(progress/100f)
+                .fillMaxWidth(progress / 100f)
                 .background(
                     color = SSINGTheme.colors.primaryNormal,
                     shape = CircleShape,
