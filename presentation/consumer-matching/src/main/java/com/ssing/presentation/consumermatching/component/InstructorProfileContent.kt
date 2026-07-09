@@ -288,7 +288,7 @@ private fun LabelSection(
         Text(
             text = label,
             color = SSINGTheme.colors.textAlternative,
-            style = SSINGTheme.typography.caption.md12,
+            style = SSINGTheme.typography.caption.sb12,
         )
 
         content()
@@ -521,7 +521,7 @@ private fun ReviewCard(
                         Text(
                             text = review.gender,
                             color = SSINGTheme.colors.textAlternative,
-                            style = SSINGTheme.typography.caption.sb14,
+                            style = SSINGTheme.typography.caption.md14,
                         )
 
                         Icon(
@@ -532,7 +532,7 @@ private fun ReviewCard(
                         Text(
                             text = "${review.age}세",
                             color = SSINGTheme.colors.textAlternative,
-                            style = SSINGTheme.typography.caption.sb14,
+                            style = SSINGTheme.typography.caption.md14,
                         )
                     }
                 }
