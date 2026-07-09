@@ -44,6 +44,8 @@ import com.ssing.core.ui.designsystem.theme.SSINGTheme
 import instructorlessondetail.model.LessonDetailBeforeUiModel
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
+import kotlin.collections.forEachIndexed
+import kotlin.collections.lastIndex
 
 /**
  * 강습 상세 (강습 전) 화면.
@@ -67,7 +69,6 @@ internal fun LessonDetailBeforeScreen(
     modifier: Modifier = Modifier,
     onDialogDismiss: () -> Unit = {},
 ) {
-    var isReadyState by remember { mutableStateOf(before.isInstructorReady) }
     val density = LocalDensity.current
     var headerHeightPx by remember { mutableIntStateOf(0) }
 
@@ -122,14 +123,14 @@ internal fun LessonDetailBeforeScreen(
                 }
                 Spacer(modifier = Modifier.height(16.dp))
                 SsingButton(
-                    text = if (isReadyState) "강습 대기중" else "강습 준비 완료",
+                    text = if (before.isInstructorReady) "강습 대기중" else "강습 준비 완료",
                     onClick = {
-                        if (!isReadyState) {
+                        if (!before.isInstructorReady) {
                             onReadyButtonClick()
                         }
                     },
-                    style = if (isReadyState) SsingButtonStyle.GRAY else SsingButtonStyle.BLUE,
-                    enabled = !isReadyState,
+                    style = if (before.isInstructorReady) SsingButtonStyle.GRAY else SsingButtonStyle.BLUE,
+                    enabled = !before.isInstructorReady,
                     modifier = Modifier.fillMaxWidth(),
                 )
             }
@@ -222,10 +223,7 @@ internal fun LessonDetailBeforeScreen(
             title = "강습 준비를 완료할까요?",
             text = "준비 완료 시 변경이 불가능해요",
             primaryText = "준비 완료",
-            onPrimary = {
-                isReadyState = true
-                onReadyClick()
-            },
+            onPrimary = onReadyClick,
             secondaryText = "취소",
             onSecondary = onDialogDismiss,
         )
