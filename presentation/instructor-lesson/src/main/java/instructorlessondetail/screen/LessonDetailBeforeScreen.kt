@@ -72,7 +72,7 @@ internal fun LessonDetailBeforeScreen(
     val density = LocalDensity.current
     var headerHeightPx by remember { mutableIntStateOf(0) }
 
-    var showSheet by remember { mutableStateOf(true) }
+    var showSheet by remember { mutableStateOf(false) }
     var selectedReason by remember { mutableStateOf<CancelReason?>(null) }
     val etcState = rememberTextFieldState()
 
