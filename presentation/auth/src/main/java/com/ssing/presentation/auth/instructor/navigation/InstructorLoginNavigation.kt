@@ -18,8 +18,6 @@ fun NavGraphBuilder.instructorAuthNavGraph(
     composable<InstructorLogin> {
         InstructorLoginRoute(
             navigateToHome = navigateToHome,
-            modifier = Modifier
-                .padding(paddingValues),
         )
     }
 }

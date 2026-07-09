@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -92,7 +93,8 @@ private fun InstructorLoginScreen(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .background(color = SSINGTheme.colors.primaryNormal),
+            .background(color = SSINGTheme.colors.primaryNormal)
+            .systemBarsPadding(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
     ) {
@@ -142,7 +144,7 @@ private fun InstructorLoginLogo(
     }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, showSystemUi = true)
 @Composable
 private fun InstructorLoginScreenPreview() {
     SSINGTheme {
