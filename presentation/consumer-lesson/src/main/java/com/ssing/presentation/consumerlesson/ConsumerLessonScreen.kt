@@ -171,6 +171,7 @@ private fun BeforeLessonContent(
 
         ContentSection(
             titleText = "강사 프로필",
+            spacer = 4,
         ) {
             val instructorProfile = state.instructorProfile ?: return@ContentSection
 
