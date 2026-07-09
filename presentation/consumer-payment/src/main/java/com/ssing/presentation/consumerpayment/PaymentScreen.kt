@@ -16,6 +16,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -28,15 +29,30 @@ import com.ssing.core.ui.common.component.SsingHeader
 import com.ssing.core.ui.common.component.SsingMatchingDetailCard
 import com.ssing.core.ui.common.component.SsingTopBar
 import com.ssing.core.ui.designsystem.theme.SSINGTheme
+import com.ssing.core.ui.extension.toast
 import com.ssing.core.ui.util.DecimalFormatter
+import com.ssing.core.ui.util.HandleUiEffects
 import kotlinx.collections.immutable.persistentListOf
 
 @Composable
 internal fun PaymentRoute(
+    popBackStack: () -> Unit,
+    navigateToLesson: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: PaymentViewModel = hiltViewModel(),
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
+    val context = LocalContext.current
+
+    HandleUiEffects(viewModel.uiEffect) { effect ->
+        if (effect is PaymentContract.Effect.Result) {
+            when (effect) {
+                PaymentContract.Effect.Result.NavigateToLesson -> navigateToLesson()
+                PaymentContract.Effect.Result.PopBackStack -> popBackStack()
+                is PaymentContract.Effect.Result.ShowToast -> context.toast(effect.message)
+            }
+        }
+    }
 
     PaymentScreen(
         paymentInfo = state.paymentInfo,

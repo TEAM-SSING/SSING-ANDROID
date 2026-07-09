@@ -15,8 +15,11 @@ internal interface PaymentContract {
     )
 
     sealed interface Effect {
-        data class ShowToast(val message: String) : Effect
-        data object NavigateToLesson : Effect
+        sealed interface Result : Effect {
+            data object PopBackStack : Effect
+            data object NavigateToLesson : Effect
+            data class ShowToast(val message: String) : Effect
+        }
     }
 
 }
