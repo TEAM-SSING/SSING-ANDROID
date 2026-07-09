@@ -329,17 +329,17 @@ private fun SsingClassTitleRowSmall(title: String, totalCount: Int) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(8.dp),
-        verticalAlignment = Alignment.CenterVertically,
+        verticalAlignment = Alignment.Bottom,
     ) {
         Text(
             text = title,
             style = SSINGTheme.typography.caption.sb14,
             color = SSINGTheme.colors.textNormal,
-            modifier = Modifier.weight(1f),
+            modifier = Modifier.weight(1f, fill = false),
         )
         Text(
             text = "총 ${totalCount}명",
-            style = SSINGTheme.typography.caption.sb14,
+            style = SSINGTheme.typography.caption.sb12,
             color = SSINGTheme.colors.textAlternative,
         )
     }
@@ -394,10 +394,7 @@ private fun SsingClassDetailCardSmallPreview() {
             tags = persistentListOf("스노보드", "자격증이 있어요"),
             teamNicknames = persistentListOf(
                 TeamNickname("김남자", 1),
-                TeamNickname("김여자", 1),
-                TeamNickname("김야웅이", 1),
-                TeamNickname("강아지", 1),
-            ),
+                ),
             totalCount = 4,
             place = "000 리조트",
             duration = "0시간",
