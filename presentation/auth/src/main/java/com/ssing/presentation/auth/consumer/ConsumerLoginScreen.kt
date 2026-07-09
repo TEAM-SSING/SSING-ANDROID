@@ -39,7 +39,6 @@ internal fun ConsumerLoginRoute(
     modifier: Modifier = Modifier,
     viewModel: ConsumerLoginViewModel = hiltViewModel(),
 ) {
-    val state by viewModel.uiState.collectAsStateWithLifecycle()
     val context = LocalContext.current
     val activity = LocalActivity.current
 
