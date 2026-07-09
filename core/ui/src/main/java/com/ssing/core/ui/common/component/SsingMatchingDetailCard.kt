@@ -2,7 +2,6 @@ package com.ssing.core.ui.common.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.ui.draw.clip
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
@@ -20,13 +19,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ssing.core.ui.R
-import com.ssing.core.ui.designsystem.theme.Blue200
 import com.ssing.core.ui.designsystem.theme.SSINGTheme
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
@@ -67,10 +66,14 @@ fun SsingMatchingDetailCard(
 ) {
     Column(
         modifier = modifier
-            .border(width = 1.dp, color = Blue200, shape = RoundedCornerShape(12.dp))
+            .border(
+                width = 1.dp,
+                color = SSINGTheme.colors.borderAlternative,
+                shape = RoundedCornerShape(12.dp),
+            )
             .clip(RoundedCornerShape(12.dp))
             .background(color = SSINGTheme.colors.backgroundNormal)
-            .padding(16.dp),
+            .padding(16.dp)
     ) {
         if (stepLabel != null) {
             Text(
@@ -116,6 +119,7 @@ fun SsingMatchingDetailCard(
  * @param tags 강습 태그 목록
  * @param teamNicknames 팀별 닉네임/인원 목록
  * @param totalCount 전체 강습 인원 수
+ * @param place 강습 장소
  * @param duration 강습 시간
  * @param actualTimeRange 실제 강습 시간 범위
  * @param price 강습 가격
@@ -125,17 +129,17 @@ fun SsingMatchingDetailCard(
  */
 @Composable
 fun SsingMatchingDetailCardSmall(
-    tags: ImmutableList<String>,
-    teamNicknames: ImmutableList<TeamNickname>,
-    totalCount: Int,
-    place: String,
-    duration: String,
-    actualTimeRange: String,
-    price: Int,
-    cancelDateTime: String,
-    cancelSubject: String,
-    cancelReason: String,
     modifier: Modifier = Modifier,
+    tags: ImmutableList<String> = persistentListOf(),
+    teamNicknames: ImmutableList<TeamNickname> = persistentListOf(),
+    totalCount: Int? = null,
+    place: String = "",
+    duration: String = "",
+    actualTimeRange: String = "",
+    price: Int? = null,
+    cancelDateTime: String = "",
+    cancelSubject: String = "",
+    cancelReason: String = "",
 ) {
     Column(
         modifier = modifier
@@ -143,35 +147,43 @@ fun SsingMatchingDetailCardSmall(
                 color = SSINGTheme.colors.backgroundNormal,
                 shape = RoundedCornerShape(12.dp),
             )
+            .border(
+                width = 1.dp,
+                color = SSINGTheme.colors.borderAlternative,
+                shape = RoundedCornerShape(12.dp),
+            )
             .padding(16.dp),
     ) {
-        SsingTagChipRow(tags = tags, style = SsingChipStyle.GRAY)
-
-        Spacer(modifier = Modifier.height(4.dp))
-
-        val title = teamNicknames.joinToString(", ") {
-            "${it.nickname}님 팀 ${it.teamCount}명"
+        if (tags.isNotEmpty()) {
+            SsingTagChipRow(tags = tags, style = SsingChipStyle.GRAY)
+            Spacer(modifier = Modifier.height(4.dp))
         }
-        SsingClassTitleRowSmall(title = title, totalCount = totalCount)
 
-        Spacer(modifier = Modifier.height(4.dp))
+        if (teamNicknames.isNotEmpty()) {
+            val title = teamNicknames.joinToString(", ") {
+                "${it.nickname}님 팀 ${it.teamCount}명"
+            }
+            SsingClassTitleRowSmall(title = title, totalCount = totalCount ?: 0)
+            Spacer(modifier = Modifier.height(4.dp))
+        }
 
-        Column(
-            verticalArrangement = Arrangement.spacedBy(2.dp)
-        ) {
-            SsingInfoRow(label = "강습 장소", value = place)
-            SsingInfoRow(label = "강습 시간", value = duration)
-            SsingInfoRow(label = "실제 강습 시간", value = actualTimeRange)
-            SsingInfoRow(label = "강습 가격", value = "₩ ${"%,d".format(price)}")
+        Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
+            if (place.isNotEmpty()) SsingInfoRow(label = "강습 장소", value = place)
+            if (duration.isNotEmpty()) SsingInfoRow(label = "강습 시간", value = duration)
+            if (actualTimeRange.isNotEmpty()) SsingInfoRow(label = "실제 강습 시간", value = actualTimeRange)
+            if (price != null) SsingInfoRow(label = "강습 가격", value = "₩ ${"%,d".format(price)}")
 
-            HorizontalDivider(
-                color = SSINGTheme.colors.borderDisabled,
-                modifier = Modifier.padding(vertical = 6.dp)
-            )
+            val hasCancelInfo = cancelDateTime.isNotEmpty() || cancelSubject.isNotEmpty() || cancelReason.isNotEmpty()
+            if (hasCancelInfo) {
+                HorizontalDivider(
+                    color = SSINGTheme.colors.borderDisabled,
+                    modifier = Modifier.padding(vertical = 6.dp)
+                )
+            }
 
-            SsingInfoRow(label = "취소 일시", value = cancelDateTime)
-            SsingInfoRow(label = "취소 주체", value = cancelSubject)
-            SsingInfoRow(label = "취소 사유", value = cancelReason)
+            if (cancelDateTime.isNotEmpty()) SsingInfoRow(label = "취소 일시", value = cancelDateTime)
+            if (cancelSubject.isNotEmpty()) SsingInfoRow(label = "취소 주체", value = cancelSubject)
+            if (cancelReason.isNotEmpty()) SsingInfoRow(label = "취소 사유", value = cancelReason)
         }
     }
 }
