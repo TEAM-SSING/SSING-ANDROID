@@ -61,7 +61,7 @@ internal fun MatchingResultBottomBar(
                     Text(
                         text = "·",
                         color = SSINGTheme.colors.textAlternative,
-                        style = SSINGTheme.typography.caption.sb14,
+                        style = SSINGTheme.typography.body.sb16,
                     )
 
 
