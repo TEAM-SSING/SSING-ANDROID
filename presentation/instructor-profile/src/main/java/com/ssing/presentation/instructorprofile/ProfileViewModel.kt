@@ -28,7 +28,6 @@ internal class ProfileViewModel @Inject constructor(
                 }
 
             updateState { copy(isLoading = false) }
-            sendEffect(ProfileContract.Effect.NavigateToLogin)
         }
     }
 }
