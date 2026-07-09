@@ -386,6 +386,8 @@ private fun ReviewSection(
     reviews: ImmutableList<InstructorReview>,
     modifier: Modifier = Modifier,
 ) {
+    val isEmpty = reviews.isEmpty() || totalReviewCount <= 0
+
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(12.dp),
@@ -403,26 +405,28 @@ private fun ReviewSection(
                 style = SSINGTheme.typography.caption.sb14,
             )
 
-            Row(
-                modifier = Modifier.noRippleClickable(onClick = onReviewClick),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                Text(
-                    text = "${totalReviewCount}개 전체 보기",
-                    color = SSINGTheme.colors.textAlternative,
-                    style = SSINGTheme.typography.caption.md12,
-                )
+            if (isEmpty) {
+                Row(
+                    modifier = Modifier.noRippleClickable(onClick = onReviewClick),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Text(
+                        text = "${totalReviewCount}개 전체 보기",
+                        color = SSINGTheme.colors.textAlternative,
+                        style = SSINGTheme.typography.caption.md12,
+                    )
 
-                Icon(
-                    imageVector = ImageVector.vectorResource(R.drawable.ic_arrow_right),
-                    contentDescription = null,
-                    tint = SSINGTheme.colors.textAlternative,
-                    modifier = Modifier.size(16.dp),
-                )
+                    Icon(
+                        imageVector = ImageVector.vectorResource(R.drawable.ic_arrow_right),
+                        contentDescription = null,
+                        tint = SSINGTheme.colors.textAlternative,
+                        modifier = Modifier.size(16.dp),
+                    )
+                }
             }
         }
 
-        if (reviews.isNotEmpty()) {
+        if (isEmpty) {
             Box(modifier = Modifier.fillMaxWidth()) {
                 var reviewCardHeight by remember { mutableStateOf(0.dp) }
 
