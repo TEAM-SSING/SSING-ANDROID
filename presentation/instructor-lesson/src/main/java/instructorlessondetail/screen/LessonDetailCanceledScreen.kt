@@ -1,7 +1,6 @@
 package instructorlessondetail.screen
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -25,9 +24,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -38,12 +37,11 @@ import com.ssing.core.ui.common.component.LessonBanner
 import com.ssing.core.ui.common.component.LessonBannerState
 import com.ssing.core.ui.common.component.SsingButton
 import com.ssing.core.ui.common.component.SsingButtonStyle
-import com.ssing.core.ui.common.component.SsingChip
-import com.ssing.core.ui.common.component.SsingChipStyle
+import com.ssing.core.ui.common.component.SsingMatchingDetailCardSmall
+import com.ssing.core.ui.common.component.TeamNickname
 import com.ssing.core.ui.designsystem.theme.Blue50
 import com.ssing.core.ui.designsystem.theme.SSINGTheme
 import instructorlessondetail.model.LessonDetailCanceledUiModel
-import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -156,6 +154,9 @@ internal fun LessonDetailCanceledScreen(
                         lessonBannerState = lessonBannerState,
                         lessonText = "강습이 취소됐어요",
                         onBackClick = {},
+                        modifier = Modifier.onSizeChanged { size ->
+                            headerHeightPx = size.height
+                        },
                     )
                 }
 
@@ -166,12 +167,16 @@ internal fun LessonDetailCanceledScreen(
                         Column(modifier = Modifier.padding(horizontal = 16.dp)) {
                             SectionTitle(text = "강습 정보")
                             Spacer(modifier = Modifier.height(8.dp))
-                            ClassInfoCard(
-                                tags = cancel.tags,
-                                classTitle = cancel.classTitle,
-                                location = cancel.location,
-                                duration = cancel.duration,
-                                price = cancel.price,
+                            SsingMatchingDetailCardSmall(
+                                tags = persistentListOf("스노보드", "자격증이 있어요"),
+                                teamNicknames = persistentListOf(
+                                    TeamNickname("김OO", 1),
+                                    TeamNickname("홍지민", 1),
+                                ),
+                                totalCount = 4,
+                                place = "000 리조트",
+                                duration = "0시간",
+                                price = 0,
                             )
 
                             Spacer(modifier = Modifier.height(24.dp))
@@ -207,67 +212,6 @@ private fun SectionTitle(text: String) {
         style = SSINGTheme.typography.caption.sb12,
         color = SSINGTheme.colors.textAlternative,
     )
-}
-
-@Composable
-private fun ClassInfoCard(
-    tags: ImmutableList<String>,
-    classTitle: String,
-    location: String,
-    duration: String,
-    price: Int,
-) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(
-                color = SSINGTheme.colors.backgroundNormal,
-                shape = RoundedCornerShape(12.dp),
-            )
-            .border(
-                width = 1.dp,
-                color = SSINGTheme.colors.borderAlternative,
-                shape = RoundedCornerShape(12.dp),
-            )
-            .padding(16.dp),
-    ) {
-        Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-            tags.forEach { tag ->
-                SsingChip(text = tag, style = SsingChipStyle.GRAY)
-            }
-        }
-        Spacer(modifier = Modifier.height(8.dp))
-        Text(
-            text = classTitle,
-            style = SSINGTheme.typography.body.sb16,
-            color = SSINGTheme.colors.textNormal,
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-        InfoRow(label = "강습 장소", value = location)
-        InfoRow(label = "강습 시간", value = duration)
-        InfoRow(label = "실제 강습 시간", value = duration) // 수정
-        InfoRow(label = "강습 가격", value = "₩ ${"%,d".format(price)}")
-    }
-}
-
-@Composable
-private fun InfoRow(label: String, value: String) {
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        Text(
-            text = label,
-            style = SSINGTheme.typography.caption.sb12,
-            color = SSINGTheme.colors.textAlternative,
-        )
-        Text(
-            text = value,
-            style = SSINGTheme.typography.caption.sb14,
-            color = SSINGTheme.colors.textNormal,
-        )
-    }
 }
 
 @Preview
