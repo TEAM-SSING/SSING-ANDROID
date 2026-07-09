@@ -12,32 +12,19 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.layout.onSizeChanged
-import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.ssing.core.ui.R
 import com.ssing.core.ui.common.component.ConsumerInfoCard
 import com.ssing.core.ui.common.component.LessonBanner
 import com.ssing.core.ui.common.component.LessonBannerState
 import com.ssing.core.ui.common.component.SsingButton
 import com.ssing.core.ui.common.component.SsingButtonStyle
 import com.ssing.core.ui.common.component.SsingMatchingDetailCardSmall
+import com.ssing.core.ui.common.component.SsingTopBar
 import com.ssing.core.ui.common.component.TeamNickname
 import com.ssing.core.ui.designsystem.theme.Blue50
 import com.ssing.core.ui.designsystem.theme.SSINGTheme
@@ -50,94 +37,26 @@ import kotlinx.collections.immutable.toPersistentList
 internal fun LessonDetailCanceledScreen(
     cancel: LessonDetailCanceledUiModel,
     lessonBannerState: LessonBannerState,
-    onBackClick: () -> Unit,
+    onBack: () -> Unit,
     onCancelClassClick: () -> Unit,
     onChatRoomClick: () -> Unit,
     onEndClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val density = LocalDensity.current
-    var headerHeightPx by remember { mutableIntStateOf(0) }
-
-    Scaffold(
-        modifier = modifier,
-        topBar = {
-            CenterAlignedTopAppBar(
-                title = {
-                    Text(
-                        text = "강습 상세",
-                        style = SSINGTheme.typography.body.sb16,
-                        color = SSINGTheme.colors.textNormal,
-                    )
-                },
-                navigationIcon = {
-                    IconButton(onClick = onBackClick) {
-                        Icon(
-                            imageVector = ImageVector.vectorResource(R.drawable.ic_arrow_left),
-                            contentDescription = "뒤로가기",
-                            tint = SSINGTheme.colors.textNormal,
-                        )
-                    }
-                },
-                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                    containerColor = Blue50,
-                ),
-            )
-        },
-        bottomBar = {
+    Column {
+        SsingTopBar(
+            title = "강습 상세",
+            onBack = { onBack() },
+            backgroundColor = Blue50,
+        )
+        Box(
+            modifier = modifier
+                .fillMaxSize()
+                .background(Blue50),
+        ) {
             Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .background(SSINGTheme.colors.backgroundNormal)
-                    .padding(16.dp),
-            ) {
-                Text(
-                    text = "강습 관리",
-                    style = SSINGTheme.typography.caption.sb12,
-                    color = SSINGTheme.colors.textAlternative,
-                    modifier = Modifier.padding(bottom = 8.dp),
-                )
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    modifier = Modifier.fillMaxWidth(),
-                ) {
-                    SsingButton(
-                        text = "문제 신고",
-                        onClick = onCancelClassClick,
-                        style = SsingButtonStyle.RED,
-                        modifier = Modifier.weight(1f),
-                    )
-                    SsingButton(
-                        text = "강습 내역 보기",
-                        onClick = onChatRoomClick,
-                        style = SsingButtonStyle.GRAY,
-                        modifier = Modifier.weight(1f),
-                    )
-                }
-                Spacer(modifier = Modifier.height(16.dp))
-                SsingButton(
-                    text = "씽 매칭으로 돌아가기",
-                    onClick = { onEndClick() },
-                    style = SsingButtonStyle.BLUE,
-                    modifier = Modifier.fillMaxWidth(),
-                )
-            }
-        },
-    ) { innerPadding ->
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding),
-        ) {
-            Box(
-                modifier = Modifier
                     .fillMaxSize()
-                    .background(Blue50),
-            )
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(top = with(density) { headerHeightPx.toDp() })
                     .background(
                         color = SSINGTheme.colors.backgroundNormal,
                         shape = RoundedCornerShape(
@@ -145,44 +64,45 @@ internal fun LessonDetailCanceledScreen(
                             topEnd = 12.dp,
                         ),
                     ),
-            )
-
-            LazyColumn(
-                modifier = Modifier.fillMaxSize(),
             ) {
-                item {
-                    LessonBanner(
-                        lessonBannerState = lessonBannerState,
-                        modifier = Modifier.onSizeChanged { size ->
-                            headerHeightPx = size.height
-                        },
-                    )
-                }
+                LazyColumn(
+                    modifier = Modifier.weight(1f),
+                ) {
+                    item {
+                        LessonBanner(
+                            lessonBannerState = lessonBannerState
+                        )
+                    }
+                    item {
+                        Column(modifier = Modifier.fillMaxWidth()) {
+                            Spacer(modifier = Modifier.height(16.dp))
 
-                item {
-                    Column(modifier = Modifier.fillMaxWidth()) {
-                        Spacer(modifier = Modifier.height(16.dp))
-
-                        Column(modifier = Modifier.padding(horizontal = 16.dp)) {
-                            SectionTitle(text = "강습 정보")
-                            Spacer(modifier = Modifier.height(8.dp))
-                            SsingMatchingDetailCardSmall(
-                                tags = cancel.tags,
-                                teamNicknames = cancel.teams.map { TeamNickname(it.teamNickname, it.teamCount) }.toPersistentList(),
-                                totalCount = cancel.teams.size,
-                                place = cancel.location,
-                                duration = cancel.duration,
-                                price = cancel.price,
-                            )
+                            Column(modifier = Modifier.padding(horizontal = 16.dp)) {
+                                SectionTitle(text = "강습 정보")
+                                Spacer(modifier = Modifier.height(8.dp))
+                                SsingMatchingDetailCardSmall(
+                                    tags = cancel.tags,
+                                    teamNicknames = cancel.teams.map {
+                                        TeamNickname(
+                                            it.teamNickname,
+                                            it.teamCount
+                                        )
+                                    }.toPersistentList(),
+                                    totalCount = cancel.teams.size,
+                                    place = cancel.location,
+                                    duration = cancel.duration,
+                                    price = cancel.price,
+                                )
+                            }
 
                             Spacer(modifier = Modifier.height(24.dp))
 
-                            Column {
+                            Column(modifier = Modifier.padding(horizontal = 16.dp)) {
                                 SectionTitle(text = "강습생 정보")
                                 Spacer(modifier = Modifier.height(8.dp))
                                 cancel.teams.forEachIndexed { index, team ->
                                     ConsumerInfoCard(
-                                        isReady = team.isReady ?: false,
+                                        isReady = false,
                                         nickname = team.teamNickname,
                                         participants = team.participants,
                                         price = team.price,
@@ -192,13 +112,64 @@ internal fun LessonDetailCanceledScreen(
                                     }
                                 }
                             }
+
+                            Spacer(modifier = Modifier.height(24.dp))
+
+                            Column(modifier = Modifier.padding(horizontal = 16.dp)) {
+                                Text(
+                                    text = "강습 관리",
+                                    style = SSINGTheme.typography.caption.sb12,
+                                    color = SSINGTheme.colors.textAlternative,
+                                    modifier = Modifier.padding(bottom = 8.dp),
+                                )
+                                Row(
+                                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                    modifier = Modifier.fillMaxWidth(),
+                                ) {
+                                    SsingButton(
+                                        text = "문제 신고",
+                                        onClick = onCancelClassClick,
+                                        style = SsingButtonStyle.RED,
+                                        modifier = Modifier.weight(1f),
+                                    )
+                                    Spacer(modifier = Modifier.height(16.dp))
+                                    SsingButton(
+                                        text = "강습 내역 보기",
+                                        onClick = onChatRoomClick,
+                                        style = SsingButtonStyle.GRAY,
+                                        modifier = Modifier.weight(1f),
+                                    )
+                                }
+                            }
                         }
                     }
                 }
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(SSINGTheme.colors.backgroundNormal)
+                        .padding(16.dp),
+                ) {
+                    SsingButton(
+                        text = "씽 매칭으로 돌아가기",
+                        onClick = { onEndClick() },
+                        style = SsingButtonStyle.BLUE,
+                        modifier = Modifier.fillMaxWidth(),
+                    )
+                }
             }
         }
+
+        Spacer(modifier = Modifier.height(16.dp))
+        SsingButton(
+            text = "씽 매칭으로 돌아가기",
+            onClick = { onEndClick() },
+            style = SsingButtonStyle.BLUE,
+            modifier = Modifier.fillMaxWidth(),
+        )
     }
 }
+
 
 
 @Composable
@@ -238,8 +209,8 @@ private fun LessonDetailCanceledScreenPreview() {
                     ),
                 ),
             ),
-            onBackClick = {},
             onCancelClassClick = {},
+            onBack = {},
             onChatRoomClick = {},
             onEndClick = {},
             lessonBannerState = LessonBannerState.Canceled,

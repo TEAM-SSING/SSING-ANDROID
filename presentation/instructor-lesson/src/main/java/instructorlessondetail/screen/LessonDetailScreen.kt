@@ -28,14 +28,13 @@ internal fun LessonDetailRoute(
 
     LessonDetailScreen(
         state = state,
-        onBackClick = viewModel::onBackClick,
+        onBackClick = viewModel::onBackClick,  // 다 하면 onBack으로 수정
         onCancelClassClick = viewModel::onCancelClassClick,
         onReadyButtonClick = viewModel::onReadyButtonClick,
         onReadyClick = viewModel::onReadyClick,
         onDialogDismiss = viewModel::onDialogDismiss,
         onChatRoomClick = viewModel::onChatRoomClick,
         onEndClick = viewModel::onEndClick,
-        onReviewClick = viewModel::onReviewClick,
         onContinueClick = viewModel::onContinueClick,
         modifier = modifier,
     )
@@ -45,14 +44,13 @@ internal fun LessonDetailRoute(
 @Composable
 private fun LessonDetailScreen(
     state: LessonDetailContract.State,
-    onBackClick: () -> Unit,
+    onBackClick: () -> Unit,  // 다 하면 onBack으로 수정
     onCancelClassClick: () -> Unit,
     onChatRoomClick: () -> Unit,
     onReadyClick: () -> Unit,
     onDialogDismiss: () -> Unit,
     onReadyButtonClick: () -> Unit,
     onEndClick: () -> Unit,
-    onReviewClick: () -> Unit,
     onContinueClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -68,7 +66,7 @@ private fun LessonDetailScreen(
             ),
             showReadyDialog = state.showReadyDialog,
             onCancelClassClick = onCancelClassClick,
-            onBackClick = onBackClick,
+            onBack = onBackClick,
             onChatRoomClick = onChatRoomClick,
             onReadyClick = onReadyClick,
             onDialogDismiss = onDialogDismiss,
@@ -83,7 +81,7 @@ private fun LessonDetailScreen(
                 elapsedTime = phase.ongoing.elapsedTime,
             ),
             onCancelClassClick = onCancelClassClick,
-            onBackClick = onBackClick,
+            onBack = onBackClick,
             onChatRoomClick = onChatRoomClick,
             onEndClick = onEndClick,
             onContinueClick = onContinueClick,
@@ -97,8 +95,7 @@ private fun LessonDetailScreen(
             lessonBannerState = LessonBannerState.Completed(
                 lessonDate = phase.completed.lessonDate,
             ),
-            onReviewClick = onReviewClick,
-            onBackClick = onBackClick,
+            onBack = onBackClick,
             onChatRoomClick = onChatRoomClick,
             onEndClick = onEndClick,
             modifier = modifier,
@@ -107,7 +104,7 @@ private fun LessonDetailScreen(
         is LessonDetailPhase.LessonDetailCanceled -> LessonDetailCanceledScreen(
             cancel = phase.cancel,
             lessonBannerState = LessonBannerState.Canceled,
-            onBackClick = onBackClick,
+            onBack = onBackClick,
             onCancelClassClick = onCancelClassClick,
             onChatRoomClick = onChatRoomClick,
             onEndClick = onEndClick,
