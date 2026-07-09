@@ -55,4 +55,10 @@ internal class LessonDetailViewModel @Inject constructor() :
             copy(dialog = LessonDetailContract.LessonDetailDialog.LessonEnd)
         }
     }
+
+    fun onContinueClick() {
+        updateState {
+            copy(dialog = LessonDetailContract.LessonDetailDialog.LessonEnd)
+        }
+    }
 }

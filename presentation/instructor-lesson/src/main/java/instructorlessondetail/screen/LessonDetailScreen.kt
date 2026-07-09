@@ -35,6 +35,7 @@ internal fun LessonDetailRoute(
         onDialogDismiss = viewModel::onDialogDismiss,
         onChatRoomClick = viewModel::onChatRoomClick,
         onEndClick = viewModel::onEndClick,
+        onContinueClick = viewModel::onContinueClick,
         modifier = modifier,
     )
 }
@@ -50,6 +51,7 @@ private fun LessonDetailScreen(
     onDialogDismiss: () -> Unit,
     onReadyButtonClick: () -> Unit,
     onEndClick: () -> Unit,
+    onContinueClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     when (val phase = state.phase) {
@@ -80,8 +82,10 @@ private fun LessonDetailScreen(
             onCancelClassClick = onCancelClassClick,
             onChatRoomClick = onChatRoomClick,
             onEndClick = onEndClick,
+            onContinueClick = onContinueClick,
+            showReadyDialog = state.showReadyDialog,
             modifier = modifier,
-
+            onDialogDismiss = onDialogDismiss,
             )
 
         is LessonDetailPhase.LessonDetailCompleted -> LessonDetailCompletedScreen(

@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -27,14 +28,17 @@ import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.ssing.core.ui.common.component.CancelReason
 import com.ssing.core.ui.common.component.ConsumerInfoCard
 import com.ssing.core.ui.common.component.LessonBanner
 import com.ssing.core.ui.common.component.LessonBannerState
+import com.ssing.core.ui.common.component.MatchingCancelBottomSheet
 import com.ssing.core.ui.common.component.SsingButton
 import com.ssing.core.ui.common.component.SsingButtonStyle
 import com.ssing.core.ui.common.component.SsingMatchingDetailCardSmall
 import com.ssing.core.ui.common.component.SsingModal
 import com.ssing.core.ui.common.component.TeamNickname
+import com.ssing.core.ui.common.component.UserRole
 import com.ssing.core.ui.designsystem.theme.Blue50
 import com.ssing.core.ui.designsystem.theme.SSINGTheme
 import instructorlessondetail.model.LessonDetailBeforeUiModel
@@ -67,6 +71,9 @@ internal fun LessonDetailBeforeScreen(
     val density = LocalDensity.current
     var headerHeightPx by remember { mutableIntStateOf(0) }
 
+    var showSheet by remember { mutableStateOf(true) }
+    var selectedReason by remember { mutableStateOf<CancelReason?>(null) }
+    val etcState = rememberTextFieldState()
 
 
     Scaffold(
@@ -94,6 +101,18 @@ internal fun LessonDetailBeforeScreen(
                         style = SsingButtonStyle.RED,
                         modifier = Modifier.weight(1f),
                     )
+
+                    if (showSheet) {
+                        MatchingCancelBottomSheet(
+                            userRole = UserRole.INSTRUCTOR,
+                            selectedReason = selectedReason,
+                            onReasonClick = { selectedReason = it },
+                            etcState = etcState,
+                            onConfirmClick = { showSheet = false },
+                            onDismissRequest = { showSheet = false },
+                        )
+                    }
+
                     SsingButton(
                         text = "채팅방",
                         onClick = onChatRoomClick,
