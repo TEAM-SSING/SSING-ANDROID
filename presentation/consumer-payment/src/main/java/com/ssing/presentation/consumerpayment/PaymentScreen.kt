@@ -91,11 +91,13 @@ internal fun PaymentScreen(
     modifier: Modifier = Modifier,
 ) {
     Scaffold(
+        modifier = modifier,
         topBar = {
             Column(
-                modifier = Modifier.background(
-                    color = SSINGTheme.colors.backgroundAlternative,
-                )
+                modifier = Modifier
+                    .background(
+                        color = SSINGTheme.colors.backgroundAlternative,
+                    )
             ) {
                 SsingTopBar(
                     onBack = onBackClick,
