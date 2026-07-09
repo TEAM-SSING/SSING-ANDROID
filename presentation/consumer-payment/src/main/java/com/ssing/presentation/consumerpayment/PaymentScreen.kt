@@ -76,8 +76,8 @@ internal fun PaymentRoute(
 
     PaymentScreen(
         state = state,
-        onPaymentClick = { viewModel::navigateToLesson },
-        onBackClick = { viewModel::showCancelModal },
+        onPaymentClick = viewModel::navigateToLesson,
+        onBackClick = viewModel::showCancelModal,
         modifier = modifier,
     )
 }
