@@ -11,7 +11,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data object ConsumerLogin
 
-fun NavGraphBuilder.authNavGraph(
+fun NavGraphBuilder.consumerAuthNavGraph(
     paddingValues: PaddingValues,
     navigateToHome: () -> Unit,
 ) {
