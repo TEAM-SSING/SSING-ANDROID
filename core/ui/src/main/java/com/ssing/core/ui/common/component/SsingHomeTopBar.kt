@@ -40,7 +40,7 @@ fun SsingHomeTopBar(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .background(color = SSINGTheme.colors.backgroundNormal)
+            .background(color = SSINGTheme.colors.backgroundAlternative)
             .padding(start = 16.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
