@@ -200,7 +200,7 @@ internal fun LessonDetailBeforeScreen(
                             Spacer(modifier = Modifier.height(8.dp))
                             before.teams.forEachIndexed { index, team ->
                                 ConsumerInfoCard(
-                                    isReady = team.isReady,
+                                    isReady = team.isReady ?: false,
                                     nickname = team.teamNickname,
                                     participants = team.participants,
                                     price = team.price,
