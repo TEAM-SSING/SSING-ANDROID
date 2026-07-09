@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -15,6 +16,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ssing.core.ui.common.component.KakaoButton
 import com.ssing.core.ui.designsystem.theme.SSINGTheme
+import com.ssing.core.ui.extension.noRippleClickable
 
 @Composable
 internal fun LoginSection(
@@ -58,6 +60,21 @@ internal fun LoginSection(
             )
         }
     }
+}
+
+@Composable
+private fun InfoText(
+    text: String,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    color: Color = SSINGTheme.colors.textAlternative,
+) {
+    Text(
+        text = text,
+        style = SSINGTheme.typography.caption.md12,
+        modifier = modifier.noRippleClickable(onClick = onClick),
+        color = color,
+    )
 }
 
 @Preview(showBackground = true)
