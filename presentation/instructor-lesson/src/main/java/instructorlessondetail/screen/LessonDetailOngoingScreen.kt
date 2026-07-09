@@ -47,11 +47,14 @@ internal fun LessonDetailOngoingScreen(
     onCancelClassClick: () -> Unit,
     onChatRoomClick: () -> Unit,
     onEndClick: () -> Unit,
+    onContinueClick: () -> Unit,
+    showReadyDialog: Boolean,
     modifier: Modifier = Modifier,
+    onDialogDismiss: () -> Unit = {},
 ) {
     val density = LocalDensity.current
     var headerHeightPx by remember { mutableIntStateOf(0) }
-    var showReadyDialog by remember { mutableStateOf(false) }
+    var isContinueState by remember { mutableStateOf(ongoing.isContinue) }
 
     Scaffold(
         modifier = modifier,
@@ -88,7 +91,11 @@ internal fun LessonDetailOngoingScreen(
                 Spacer(modifier = Modifier.height(16.dp))
                 SsingButton(
                     text = "강습 종료",
-                    onClick = { onEndClick() },
+                    onClick = {
+                        if (!isContinueState) {
+                            onEndClick()
+                        }
+                    },
                     style = SsingButtonStyle.BLUE,
                     modifier = Modifier.fillMaxWidth(),
                 )
@@ -176,13 +183,16 @@ internal fun LessonDetailOngoingScreen(
     }
     if (showReadyDialog) {
         SsingModal(
-            onDismissRequest = { showReadyDialog = false },
-            title = "강습을 종료할까요?",
-            text = "강습을 종료하면 모든 참여자의 강습이\n종료 상태로 변경되어요",
-            primaryText = "계속 진행하기",
-            onPrimary = { showReadyDialog = false },
-            secondaryText = "강습 종료하기",
-            onSecondary = { showReadyDialog = false },  // 화면 넘어가도록 수정
+            onDismissRequest = onDialogDismiss,
+            title = "강습 준비를 완료할까요?",
+            text = "준비 완료 시 변경이 불가능해요",
+            primaryText = "준비 완료",
+            onPrimary = {
+                isContinueState = true
+                onContinueClick()
+            },
+            secondaryText = "취소",
+            onSecondary = onDialogDismiss,
         )
     }
 }
@@ -195,7 +205,6 @@ private fun SectionTitle(text: String) {
         color = SSINGTheme.colors.textAlternative,
     )
 }
-
 
 
 @Preview
@@ -229,6 +238,8 @@ private fun LessonDetailOngoingScreenPreview() {
             onCancelClassClick = {},
             onChatRoomClick = {},
             onEndClick = {},
+            onContinueClick = {},
+            showReadyDialog = false,
             lessonBannerState = LessonBannerState.Ongoing(
                 remainingTime = "2:59:59",
                 elapsedTime = "59분",

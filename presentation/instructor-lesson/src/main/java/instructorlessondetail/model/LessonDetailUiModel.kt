@@ -22,6 +22,7 @@ internal data class LessonDetailBeforeUiModel(
 internal data class LessonDetailOngoingUiModel(
     val teams: ImmutableList<TeamParticipantsInfo>,
     val tags: ImmutableList<String>,
+    val isContinue: Boolean = false,
     val classTitle: String = "",
     val remainingTime: String = "",
     val elapsedTime: String = "",
