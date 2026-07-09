@@ -18,8 +18,8 @@ fun NavGraphBuilder.profileNavGraph(
 ) {
     composable<InstructorProfile> {
         ProfileRoute(
-            navigateToLogin = navigateToLogin,
-            modifier = Modifier.padding(paddingValues),
+            navigateToLogin,
+            Modifier.padding(paddingValues),
         )
     }
 }
