@@ -29,7 +29,7 @@ import com.ssing.presentation.instructorhome.Grade
 import kotlin.math.min
 
 @Composable
-fun InstructorReviewCard(
+internal fun InstructorHomeReviewCard(
     averageRating: Float,
     grade: Grade,
     achievementRate: Int,
@@ -188,9 +188,9 @@ private fun LinearProgressBar(
 
 @Preview
 @Composable
-private fun InstructorReviewCardPreview() {
+private fun InstructorHomeReviewCardPreview() {
     SSINGTheme {
-        InstructorReviewCard(
+        InstructorHomeReviewCard(
             averageRating = 4f,
             grade = Grade.GRADE4,
             achievementRate = 88,
