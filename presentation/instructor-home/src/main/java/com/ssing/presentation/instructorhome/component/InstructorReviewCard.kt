@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
@@ -142,11 +143,11 @@ private fun RatingSection(
                 style = SSINGTheme.typography.caption.sb12,
             )
 
-            Spacer(modifier = Modifier.width(34.dp))
+            Spacer(modifier = Modifier.weight(1f))
 
             LinearProgressBar(
                 progress = progress,
-                modifier = Modifier.weight(1f),
+                modifier = Modifier.widthIn(max = 207.dp),
             )
 
             Spacer(modifier = Modifier.width(8.dp))
@@ -182,7 +183,7 @@ private fun LinearProgressBar(
                     color = SSINGTheme.colors.primaryNormal,
                     shape = CircleShape,
                 ),
-        ) {}
+        )
     }
 }
 
