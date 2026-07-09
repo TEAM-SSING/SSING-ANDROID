@@ -2,9 +2,12 @@ package com.ssing.presentation.consumermatching.condition
 
 import com.ssing.core.ui.base.BaseViewModel
 import com.ssing.presentation.consumermatching.type.ConsumerGender
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.toPersistentList
+import javax.inject.Inject
 
-internal class ConsumerMatchingConditionViewModel :
+@HiltViewModel
+internal class ConsumerMatchingConditionViewModel @Inject constructor() :
     BaseViewModel<ConsumerMatchingConditionContract.State, ConsumerMatchingConditionContract.Effect>(
         initialState = ConsumerMatchingConditionContract.State(),
     ) {
