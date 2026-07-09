@@ -71,6 +71,7 @@ private fun ReviewSection(
     Row(
         modifier = Modifier,
         horizontalArrangement = Arrangement.spacedBy(2.dp),
+        verticalAlignment = Alignment.Bottom,
     ) {
         Text(
             text = "%.1f".format(averageRating),
