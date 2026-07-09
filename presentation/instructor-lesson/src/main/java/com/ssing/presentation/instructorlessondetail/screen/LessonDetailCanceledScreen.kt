@@ -45,7 +45,7 @@ internal fun LessonDetailCanceledScreen(
     Column {
         SsingTopBar(
             title = "강습 상세",
-            onBack = { onBack() },
+            onBack = onBack,
             backgroundColor = Blue50,
         )
         Box(
