@@ -12,9 +12,9 @@ internal class PaymentViewModel @Inject constructor() :
         PaymentContract.State()
     ) {
 
-    fun onMatchingClick() {
+    fun onLessonClick() {
         viewModelScope.launch {
-            sendEffect(PaymentContract.Effect.NavigateToMatching)
+            sendEffect(PaymentContract.Effect.NavigateToLesson)
         }
     }
 }

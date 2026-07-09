@@ -12,12 +12,10 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ssing.core.ui.common.component.Gender
 import com.ssing.core.ui.common.component.Participant
 import com.ssing.core.ui.common.component.SsingButton
@@ -34,12 +32,14 @@ internal fun PaymentRoute(
     viewModel: PaymentViewModel = hiltViewModel(),
 ) {
     PaymentScreen(
+        onButtonClick = { viewModel.onLessonClick() },
         modifier = modifier,
     )
 }
 @Composable
 fun PaymentScreen(
-    modifier: Modifier = Modifier
+    onButtonClick: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     Column(
         modifier = modifier
@@ -66,7 +66,7 @@ fun PaymentScreen(
 
         SsingButton(
             text = "결제하기",
-            onClick = {},
+            onClick = onButtonClick,
             style = SsingButtonStyle.BLUE,
             modifier = Modifier
                 .fillMaxWidth()
@@ -171,6 +171,8 @@ private fun PayInfoSection(
 @Composable
 private fun PaymentScreenPreview() {
     SSINGTheme {
-        PaymentScreen()
+        PaymentScreen(
+            onButtonClick = {},
+        )
     }
 }
