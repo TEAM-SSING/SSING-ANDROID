@@ -19,6 +19,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -44,6 +45,12 @@ import com.ssing.presentation.instructorlessondetail.model.LessonDetailBeforeUiM
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 
+@Immutable
+data class CancelReasonState(
+    val selectedReason: CancelReason? = null,
+    val etcReasonText: String = "",
+)
+
 /**
  * 강습 상세 (강습 전) 화면.
  *
@@ -58,19 +65,23 @@ import kotlinx.collections.immutable.persistentListOf
 internal fun LessonDetailBeforeScreen(
     before: LessonDetailBeforeUiModel,
     lessonBannerState: LessonBannerState,
+    cancelReasonState: CancelReasonState,
     onBack: () -> Unit,
     onCancelClassClick: () -> Unit,
     onChatRoomClick: () -> Unit,
     onReadyClick: () -> Unit,
     onReadyButtonClick: () -> Unit,
+    onCancelReasonSelect: (CancelReason) -> Unit,
+    onEtcReasonTextChange: (String) -> Unit,
     modifier: Modifier = Modifier,
     onDialogDismiss: () -> Unit = {},
 ) {
 
     var showSheet by remember { mutableStateOf(false) }
-    var selectedReason by remember { mutableStateOf<CancelReason?>(null) }
-    val etcState = rememberTextFieldState()
-
+    val etcState = rememberTextFieldState(initialText = cancelReasonState.etcReasonText)
+    LaunchedEffect(etcState.text) {
+        onEtcReasonTextChange(etcState.text.toString())
+    }
 
     Column(
         modifier = modifier
@@ -172,8 +183,8 @@ internal fun LessonDetailBeforeScreen(
                     if (showSheet) {
                         MatchingCancelBottomSheet(
                             userRole = UserRole.INSTRUCTOR,
-                            selectedReason = selectedReason,
-                            onReasonClick = { selectedReason = it },
+                            selectedReason = cancelReasonState.selectedReason,
+                            onReasonClick = onCancelReasonSelect,
                             etcState = etcState,
                             onConfirmClick = { showSheet = false },
                             onDismissRequest = { showSheet = false },
@@ -258,6 +269,9 @@ private fun LessonDetailBeforeScreenPreview() {
             onChatRoomClick = {},
             onReadyClick = {},
             onReadyButtonClick = {},
+            onCancelReasonSelect = {},
+            onEtcReasonTextChange = {},
+            cancelReasonState = CancelReasonState(),
             lessonBannerState = LessonBannerState.Before(
                 isInstructorReady = false,
                 participantReadyCount = 2,
