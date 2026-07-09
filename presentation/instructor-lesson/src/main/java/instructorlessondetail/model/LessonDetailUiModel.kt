@@ -19,10 +19,12 @@ internal data class LessonDetailBeforeUiModel(
 )
 
 @Immutable
-internal data class LessonDetailDuringUiModel(
+internal data class LessonDetailOngoingUiModel(
     val teams: ImmutableList<TeamParticipantsInfo>,
     val tags: ImmutableList<String>,
     val classTitle: String = "",
+    val remainingTime: String = "",
+    val elapsedTime: String = "",
     val location: String = "",
     val duration: String = "",
     val price: Int = 0,
