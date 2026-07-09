@@ -6,11 +6,12 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
+import com.ssing.core.ui.navigation.Route
 import com.ssing.presentation.instructormatching.screen.MatchingRoute
 import kotlinx.serialization.Serializable
 
 @Serializable
-data object InstructorMatching
+data object InstructorMatching: Route
 
 fun NavGraphBuilder.instructorMatchingNavGraph(
     paddingValues: PaddingValues,
