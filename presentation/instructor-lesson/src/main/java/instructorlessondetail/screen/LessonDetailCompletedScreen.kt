@@ -134,7 +134,7 @@ internal fun LessonDetailCompletedScreen(
                                     Spacer(modifier = Modifier.height(16.dp))
                                     SsingButton(
                                         text = "강습 후기",
-                                        onClick = onChatRoomClick,
+                                        onClick = onEndClick,
                                         style = SsingButtonStyle.GRAY,
                                         modifier = Modifier.weight(1f),
                                     )

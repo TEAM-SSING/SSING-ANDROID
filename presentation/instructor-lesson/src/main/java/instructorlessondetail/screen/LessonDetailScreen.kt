@@ -106,7 +106,6 @@ private fun LessonDetailScreen(
             lessonBannerState = LessonBannerState.Canceled,
             onBack = onBackClick,
             onCancelClassClick = onCancelClassClick,
-            onChatRoomClick = onChatRoomClick,
             onEndClick = onEndClick,
             modifier = modifier,
         )

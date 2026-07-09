@@ -39,7 +39,6 @@ internal fun LessonDetailCanceledScreen(
     lessonBannerState: LessonBannerState,
     onBack: () -> Unit,
     onCancelClassClick: () -> Unit,
-    onChatRoomClick: () -> Unit,
     onEndClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -135,7 +134,7 @@ internal fun LessonDetailCanceledScreen(
                                     Spacer(modifier = Modifier.height(16.dp))
                                     SsingButton(
                                         text = "강습 내역 보기",
-                                        onClick = onChatRoomClick,
+                                        onClick = onEndClick,
                                         style = SsingButtonStyle.GRAY,
                                         modifier = Modifier.weight(1f),
                                     )
@@ -159,14 +158,6 @@ internal fun LessonDetailCanceledScreen(
                 }
             }
         }
-
-        Spacer(modifier = Modifier.height(16.dp))
-        SsingButton(
-            text = "씽 매칭으로 돌아가기",
-            onClick = { onEndClick() },
-            style = SsingButtonStyle.BLUE,
-            modifier = Modifier.fillMaxWidth(),
-        )
     }
 }
 
@@ -211,7 +202,6 @@ private fun LessonDetailCanceledScreenPreview() {
             ),
             onCancelClassClick = {},
             onBack = {},
-            onChatRoomClick = {},
             onEndClick = {},
             lessonBannerState = LessonBannerState.Canceled,
         )
