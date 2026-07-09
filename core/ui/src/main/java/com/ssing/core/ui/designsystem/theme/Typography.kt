@@ -20,6 +20,7 @@ object PretendardFont {
 sealed interface TypographyTokens {
     @Immutable
     data class Title(
+        val sb32: TextStyle,
         val b24: TextStyle,
         val sb24: TextStyle,
         val b22: TextStyle,
@@ -43,6 +44,8 @@ sealed interface TypographyTokens {
         val md14: TextStyle,
         val sb12: TextStyle,
         val md12: TextStyle,
+        val sb11: TextStyle,
+        val md11: TextStyle,
     ) : TypographyTokens
 }
 
@@ -70,6 +73,10 @@ data class SSINGTypography(
 
 val defaultSsingTypography = SSINGTypography(
     title = TypographyTokens.Title(
+        sb32 = ssingTextStyle(
+            fontFamily = PretendardFont.Semibold,
+            fontSize = 32.sp,
+        ),
         b24 = ssingTextStyle(
             fontFamily = PretendardFont.Bold,
             fontSize = 24.sp,
@@ -133,6 +140,14 @@ val defaultSsingTypography = SSINGTypography(
         md12 = ssingTextStyle(
             fontFamily = PretendardFont.Medium,
             fontSize = 12.sp,
+        ),
+        sb11 = ssingTextStyle(
+            fontFamily = PretendardFont.Semibold,
+            fontSize = 11.sp,
+        ),
+        md11 = ssingTextStyle(
+            fontFamily = PretendardFont.Medium,
+            fontSize = 11.sp,
         ),
     ),
 )

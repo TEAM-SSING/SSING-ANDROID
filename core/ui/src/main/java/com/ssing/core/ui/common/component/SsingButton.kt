@@ -21,10 +21,13 @@ enum class SsingButtonStyle {
 }
 
 @Composable
-private fun SsingButtonStyle.textColor(enabled: Boolean): Color = when (this) {
-    SsingButtonStyle.BLUE -> White
-    SsingButtonStyle.GRAY -> if (enabled) SSINGTheme.colors.textNormal else SSINGTheme.colors.textAlternative
-    SsingButtonStyle.RED -> SSINGTheme.colors.accentRedNormal
+private fun SsingButtonStyle.textColor(enabled: Boolean): Color {
+    if (!enabled) return SSINGTheme.colors.textAlternative
+    return when (this) {
+        SsingButtonStyle.BLUE -> White
+        SsingButtonStyle.GRAY -> SSINGTheme.colors.textNormal
+        SsingButtonStyle.RED -> SSINGTheme.colors.accentRedNormal
+    }
 }
 
 private val SsingButtonStyle.defaultColor: Color
@@ -59,9 +62,10 @@ fun SsingButton(
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
 ) {
+    val disabledColor = SSINGTheme.colors.borderDisabled
     SsingBasicButton(
-        defaultColor = style.defaultColor,
-        pressedColor = style.pressedColor,
+        defaultColor = if (enabled) style.defaultColor else disabledColor,
+        pressedColor = if (enabled) style.pressedColor else disabledColor,
         onClick = onClick,
         modifier = modifier,
         enabled = enabled
