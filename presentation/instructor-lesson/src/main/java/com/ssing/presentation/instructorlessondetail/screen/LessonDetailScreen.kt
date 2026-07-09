@@ -44,7 +44,7 @@ internal fun LessonDetailRoute(
 @Composable
 private fun LessonDetailScreen(
     state: LessonDetailContract.State,
-    onBackClick: () -> Unit,  // 다 하면 onBack으로 수정
+    onBackClick: () -> Unit,
     onCancelClassClick: () -> Unit,
     onChatRoomClick: () -> Unit,
     onReadyClick: () -> Unit,
@@ -132,20 +132,20 @@ private fun LessonDetailDialogHost(
             onDismissRequest = onDialogDismiss,
             title = "강습 준비를 완료할까요?",
             text = "준비 완료 시 변경이 불가능해요",
-            primaryText = "취소",
-            onPrimary = onStopWaitingConfirm,
-            secondaryText = "준비 완료",
-            onSecondary = onDialogDismiss,
+            primaryText = "준비 완료",
+            onPrimary = onDialogDismiss,
+            secondaryText = "취소",
+            onSecondary = onStopWaitingConfirm,
         )
 
         LessonDetailContract.LessonDetailDialog.LessonEnd -> SsingModal(
             onDismissRequest = onDialogDismiss,
             title = "강습을 종료할까요?",
             text = "강습을 종료하면 모든 참여자의 강습이\n종료 상태로 변경되어요",
-            primaryText = "계속 진행하기",
-            onPrimary = onContinueMatchingClick,
-            secondaryText = "강습 종료하기",
-            onSecondary = onStopWaitingConfirm,
+            primaryText = "강습 종료하기",
+            onPrimary = onStopWaitingConfirm,
+            secondaryText = "계속 진행하기",
+            onSecondary = onContinueMatchingClick,
         )
     }
 }
