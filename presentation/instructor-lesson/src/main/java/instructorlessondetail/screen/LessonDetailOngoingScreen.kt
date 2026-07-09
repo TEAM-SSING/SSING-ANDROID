@@ -167,7 +167,7 @@ internal fun LessonDetailOngoingScreen(
                                 Spacer(modifier = Modifier.height(8.dp))
                                 ongoing.teams.forEachIndexed { index, team ->
                                     ConsumerInfoCard(
-                                        isReady = team.isReady,
+                                        isReady = false,
                                         nickname = team.teamNickname,
                                         participants = team.participants,
                                         price = team.price,
