@@ -116,7 +116,7 @@ internal fun PaymentScreen(
             }
         },
         bottomBar = {
-            Column(){
+            Column{
                 SsingButton(
                     text = "결제하기",
                     onClick = onPaymentClick,
