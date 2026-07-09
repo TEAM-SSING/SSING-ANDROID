@@ -70,7 +70,7 @@ private fun ConsumerLessonScreen(
     onReadyClick: () -> Unit,
     onCancelClick: () -> Unit,
     onReasonSelected: (CancelReason) -> Unit,
-    onCancelConfirmed: () -> Unit,
+    onCancelConfirmed: (String?) -> Unit,
     onCancelDismiss: () -> Unit,
     modifier: Modifier = Modifier,
 ) {

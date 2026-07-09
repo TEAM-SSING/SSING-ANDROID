@@ -27,6 +27,7 @@ internal interface ConsumerLessonContract {
         val isReady: Boolean = false,
         val showCancelConfirmSheet: Boolean = false,
         val selectedReason: CancelReason? = null,
+        val etcReason: String? = null,
     )
 
     sealed interface Effect {
