@@ -7,8 +7,8 @@ import com.ssing.core.ui.R.drawable
 import com.ssing.core.ui.navigation.MainTab
 import com.ssing.core.ui.navigation.MainTabRoute
 import com.ssing.core.ui.navigation.Route
-import com.ssing.presentation.consumerprofile.navigation.Profile
 import com.ssing.presentation.consumerhome.navigation.ConsumerHome
+import com.ssing.presentation.consumerprofile.navigation.ConsumerProfile
 
 enum class ConsumerMainTab(
     @param:DrawableRes override val selectedIconRes: Int,
@@ -39,7 +39,7 @@ enum class ConsumerMainTab(
         selectedIconRes = drawable.ic_profile,
         unselectedIconRes = drawable.ic_profile,
         titleRes = R.string.consumer_profile,
-        route = Profile,
+        route = ConsumerProfile,
     );
 
     companion object {
