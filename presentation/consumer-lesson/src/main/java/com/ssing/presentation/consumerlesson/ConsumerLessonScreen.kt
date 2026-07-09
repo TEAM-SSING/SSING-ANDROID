@@ -259,24 +259,20 @@ private fun ContentBackground(
     modifier: Modifier = Modifier,
     content: @Composable () -> Unit,
 ) {
-    Box(
-        modifier = modifier
-            .background(Blue50),
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(
-                    color = SSINGTheme.colors.backgroundNormal,
-                    shape = RoundedCornerShape(
-                        topStart = 12.dp,
-                        topEnd = 12.dp,
-                    )
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Blue50)
+            .background(
+                color = SSINGTheme.colors.backgroundNormal,
+                shape = RoundedCornerShape(
+                    topStart = 12.dp,
+                    topEnd = 12.dp,
                 )
-                .padding(16.dp),
-        ) {
-            content()
-        }
+            )
+            .padding(16.dp),
+    ) {
+        content()
     }
 }
 
@@ -376,8 +372,12 @@ private fun ConsumerLessonScreenPreview() {
             onReadyClick = { state = state.copy(isReady = true) },
             onCancelClick = { state = state.copy(showCancelConfirmSheet = true) },
             onReasonSelected = { state = state.copy(selectedReason = it) },
-            onCancelConfirmed = { state = state.copy(showCancelConfirmSheet = false, selectedReason = null) },
-            onCancelDismiss = { state = state.copy(showCancelConfirmSheet = false, selectedReason = null) },
+            onCancelConfirmed = {
+                state = state.copy(showCancelConfirmSheet = false, selectedReason = null)
+            },
+            onCancelDismiss = {
+                state = state.copy(showCancelConfirmSheet = false, selectedReason = null)
+            },
         )
     }
 }
