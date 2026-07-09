@@ -1,4 +1,4 @@
-package com.presentation.consumermatching.condition
+package com.ssing.presentation.consumermatching.condition
 
 import com.ssing.core.ui.base.BaseViewModel
 

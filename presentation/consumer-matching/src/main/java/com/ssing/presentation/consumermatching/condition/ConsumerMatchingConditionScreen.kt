@@ -1,4 +1,4 @@
-package com.presentation.consumermatching.condition
+package com.ssing.presentation.consumermatching.condition
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -18,8 +18,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.presentation.consumermatching.condition.component.ConditionSection
-import com.presentation.consumermatching.condition.component.ConditionSectionStyle
+import com.ssing.presentation.consumermatching.condition.component.ConditionSection
+import com.ssing.presentation.consumermatching.condition.component.ConditionSectionStyle
 import com.ssing.core.ui.common.component.MatchingConditionInformationCard
 import com.ssing.core.ui.common.component.SsingButton
 import com.ssing.core.ui.common.component.SsingButtonStyle
