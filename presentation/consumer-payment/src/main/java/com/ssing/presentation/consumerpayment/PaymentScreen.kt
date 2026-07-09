@@ -37,15 +37,17 @@ internal fun PaymentRoute(
     val state by viewModel.uiState.collectAsStateWithLifecycle()
 
     PaymentScreen(
-        onButtonClick = { viewModel.onLessonClick() },
         paymentInfo = state.paymentInfo,
+        onPaymentClick = { viewModel.onLessonClick() },
+        onBackClick = {},
         modifier = modifier,
     )
 }
 @Composable
 fun PaymentScreen(
     paymentInfo: PaymentInfo,
-    onButtonClick: () -> Unit,
+    onPaymentClick: () -> Unit,
+    onBackClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -55,7 +57,7 @@ fun PaymentScreen(
 
         ) {
         SsingTopBar(
-            onBack = {},
+            onBack = onBackClick,
             title = "결제",
             backgroundColor = SSINGTheme.colors.backgroundAlternative,
         )
@@ -75,7 +77,7 @@ fun PaymentScreen(
 
         SsingButton(
             text = "결제하기",
-            onClick = onButtonClick,
+            onClick = onPaymentClick,
             style = SsingButtonStyle.BLUE,
             modifier = Modifier
                 .fillMaxWidth()
@@ -193,7 +195,8 @@ private fun PaymentScreenPreview() {
                 lessonCost = 60000,
                 resortCost = 20000,
             ),
-            onButtonClick = {},
+            onPaymentClick = {},
+            onBackClick = {},
         )
     }
 }
