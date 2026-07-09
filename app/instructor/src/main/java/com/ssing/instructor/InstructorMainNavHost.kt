@@ -12,7 +12,7 @@ import com.ssing.presentation.instructorhome.navigation.InstructorHome
 import com.ssing.presentation.instructorhome.navigation.instructorHomeNavGraph
 import com.ssing.presentation.notification.navigation.notificationNavGraph
 import com.ssing.presentation.instructormatching.navigation.instructorMatchingNavGraph
-import instructorlessondetail.navigation.instructorLessonNavGraph
+import com.ssing.presentation.instructorlessondetail.navigation.instructorLessonNavGraph
 
 @Composable
 internal fun InstructorMainNavHost(

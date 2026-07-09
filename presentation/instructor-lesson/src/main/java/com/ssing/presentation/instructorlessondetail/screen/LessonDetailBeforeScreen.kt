@@ -1,4 +1,4 @@
-package instructorlessondetail.screen
+package com.ssing.presentation.instructorlessondetail.screen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -38,7 +38,7 @@ import com.ssing.core.ui.common.component.TeamNickname
 import com.ssing.core.ui.common.component.UserRole
 import com.ssing.core.ui.designsystem.theme.Blue50
 import com.ssing.core.ui.designsystem.theme.SSINGTheme
-import instructorlessondetail.model.LessonDetailBeforeUiModel
+import com.ssing.presentation.instructorlessondetail.model.LessonDetailBeforeUiModel
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList

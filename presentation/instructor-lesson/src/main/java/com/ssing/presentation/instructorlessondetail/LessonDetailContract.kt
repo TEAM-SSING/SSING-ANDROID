@@ -1,10 +1,10 @@
-package instructorlessondetail
+package com.ssing.presentation.instructorlessondetail
 
 import androidx.compose.runtime.Immutable
-import instructorlessondetail.model.LessonDetailBeforeUiModel
-import instructorlessondetail.model.LessonDetailCanceledUiModel
-import instructorlessondetail.model.LessonDetailCompletedUiModel
-import instructorlessondetail.model.LessonDetailOngoingUiModel
+import com.ssing.presentation.instructorlessondetail.model.LessonDetailBeforeUiModel
+import com.ssing.presentation.instructorlessondetail.model.LessonDetailCanceledUiModel
+import com.ssing.presentation.instructorlessondetail.model.LessonDetailCompletedUiModel
+import com.ssing.presentation.instructorlessondetail.model.LessonDetailOngoingUiModel
 
 internal interface LessonDetailContract {
 

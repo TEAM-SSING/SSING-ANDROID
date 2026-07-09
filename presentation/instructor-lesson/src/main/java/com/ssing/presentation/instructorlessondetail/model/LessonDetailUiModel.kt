@@ -1,7 +1,7 @@
-package instructorlessondetail.model
+package com.ssing.presentation.instructorlessondetail.model
 
 import androidx.compose.runtime.Immutable
-import instructorlessondetail.screen.TeamParticipantsInfo
+import com.ssing.presentation.instructorlessondetail.screen.TeamParticipantsInfo
 import kotlinx.collections.immutable.ImmutableList
 
 

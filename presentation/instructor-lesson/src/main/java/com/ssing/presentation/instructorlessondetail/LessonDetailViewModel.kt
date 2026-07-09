@@ -1,4 +1,4 @@
-package instructorlessondetail
+package com.ssing.presentation.instructorlessondetail
 
 import com.ssing.core.ui.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel

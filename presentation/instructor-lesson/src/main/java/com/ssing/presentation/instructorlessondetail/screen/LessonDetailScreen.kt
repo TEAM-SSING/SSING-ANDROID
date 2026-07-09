@@ -1,4 +1,4 @@
-package instructorlessondetail.screen
+package com.ssing.presentation.instructorlessondetail.screen
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -8,9 +8,9 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ssing.core.ui.common.component.LessonBannerState
 import com.ssing.core.ui.common.component.SsingModal
 import com.ssing.core.ui.util.HandleUiEffects
-import instructorlessondetail.LessonDetailContract
-import instructorlessondetail.LessonDetailContract.LessonDetailPhase
-import instructorlessondetail.LessonDetailViewModel
+import com.ssing.presentation.instructorlessondetail.LessonDetailContract
+import com.ssing.presentation.instructorlessondetail.LessonDetailContract.LessonDetailPhase
+import com.ssing.presentation.instructorlessondetail.LessonDetailViewModel
 
 @Composable
 internal fun LessonDetailRoute(
