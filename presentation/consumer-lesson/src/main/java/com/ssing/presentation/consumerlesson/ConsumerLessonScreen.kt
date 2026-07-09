@@ -17,12 +17,11 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -44,6 +43,7 @@ import com.ssing.presentation.consumerlesson.model.InstructorProfileUiModel
 import com.ssing.presentation.consumerlesson.model.LessonInfoUiModel
 import com.ssing.presentation.consumerlesson.model.ParticipantTeamUiModel
 import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toPersistentList
 
 @Composable
 internal fun ConsumerLessonRoute(
@@ -235,7 +235,85 @@ private fun OngoingLessonContent(
     state: ConsumerLessonContract.State,
     modifier: Modifier = Modifier,
 ) {
-    // TODO: 강습 진행 중 UI 구현
+    ContentBackground(
+        modifier = modifier,
+    ) {
+        ContentSection(
+            titleText = "강습 정보",
+        ) {
+            val lessonInfo = state.lessonInfo ?: return@ContentSection
+
+            SsingMatchingDetailCardSmall(
+                tags = lessonInfo.tags,
+                teamNicknames = lessonInfo.teamNicknames,
+                totalCount = lessonInfo.totalCount,
+                place = lessonInfo.place,
+                duration = lessonInfo.duration,
+                price = lessonInfo.price,
+            )
+        }
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        ContentSection(
+            titleText = "강사 프로필",
+        ) {
+            val instructorProfile = state.instructorProfile ?: return@ContentSection
+
+            InstructorProfileButton(
+                name = instructorProfile.name,
+                age = instructorProfile.age,
+                gender = instructorProfile.gender,
+                level = instructorProfile.level,
+                imageUrl = instructorProfile.imageUrl,
+                onClick = {},
+            )
+        }
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        ContentSection(
+            titleText = "강습생 정보",
+        ) {
+            Column(
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+            ) {
+                state.participantTeams.forEach { team ->
+                    ConsumerInfoCard(
+                        isReady = team.isReady,
+                        nickname = team.nickname,
+                        participants = team.participants,
+                    )
+                }
+            }
+        }
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        ContentSection(
+            titleText = "강습 관리",
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+            ) {
+                SsingButton(
+                    text = "문제 신고",
+                    onClick = {},
+                    style = SsingButtonStyle.RED,
+                    modifier = Modifier.weight(1f),
+                )
+
+                SsingButton(
+                    text = "채팅방",
+                    onClick = {},
+                    style = SsingButtonStyle.GRAY,
+                    modifier = Modifier.weight(1f),
+                )
+            }
+        }
+    }
 }
 
 @Composable
@@ -328,56 +406,77 @@ private fun BottomButton(
     )
 }
 
-@Preview(showBackground = true)
+private class LessonBannerStatePreviewProvider : PreviewParameterProvider<LessonBannerState> {
+    override val values = sequenceOf(
+        LessonBannerState.Before(
+            isInstructorReady = false,
+            participantReadyCount = 2,
+            participantTotalCount = 5,
+        ),
+        LessonBannerState.Ongoing(
+            remainingTime = "2:59:59",
+            elapsedTime = "59분",
+        ),
+        LessonBannerState.Completed(
+            lessonDate = "2026년 12월 31일",
+        ),
+        LessonBannerState.Canceled,
+    )
+}
+
+@Preview(showBackground = true, heightDp = 800)
 @Composable
-private fun ConsumerLessonScreenPreview() {
+private fun ConsumerLessonScreenPreview(
+    @PreviewParameter(LessonBannerStatePreviewProvider::class) bannerState: LessonBannerState,
+) {
     SSINGTheme {
-        var state by remember {
-            mutableStateOf(
-                ConsumerLessonContract.State(
-                    lessonBannerState = LessonBannerState.Before(
-                        isInstructorReady = false,
-                        participantReadyCount = 2,
-                        participantTotalCount = 5,
-                    ),
-                    lessonInfo = LessonInfoUiModel(
-                        tags = persistentListOf("스노보드", "자격증이 있어요"),
-                        teamNicknames = persistentListOf("김멍멍", "김야옹"),
-                        totalCount = 2,
-                        place = "000 리조트",
-                        duration = "0시간",
-                        price = 500000,
-                    ),
-                    instructorProfile = InstructorProfileUiModel(
-                        name = "김어흥 강사",
-                        age = 27,
-                        gender = "남",
-                        level = "grade1",
-                        imageUrl = "",
-                    ),
-                    participantTeams = persistentListOf(
-                        ParticipantTeamUiModel(
-                            isReady = true,
-                            nickname = "김음메",
-                            participants = persistentListOf("38세 남", "12세 여", "9세 남"),
-                        ),
-                        ParticipantTeamUiModel(
-                            isReady = false,
-                            nickname = "김끼룩",
-                            participants = persistentListOf("38세 남", "12세 여", "9세 남"),
-                        ),
-                    )
-                )
-            )
+        val baseParticipantTeams = persistentListOf(
+            ParticipantTeamUiModel(
+                isReady = true,
+                nickname = "김음메",
+                participants = persistentListOf("38세 남", "12세 여", "9세 남"),
+            ),
+            ParticipantTeamUiModel(
+                isReady = false,
+                nickname = "김끼룩",
+                participants = persistentListOf("38세 남", "12세 여", "9세 남"),
+            ),
+        )
+
+        val participantTeams = if (bannerState is LessonBannerState.Before) {
+            baseParticipantTeams
+        } else {
+            baseParticipantTeams.map { it.copy(isReady = false) }.toPersistentList()
         }
+
+        val state = ConsumerLessonContract.State(
+            lessonBannerState = bannerState,
+            isReady = false,
+            lessonInfo = LessonInfoUiModel(
+                tags = persistentListOf("스노보드", "자격증이 있어요"),
+                teamNicknames = persistentListOf("김멍멍", "김야옹"),
+                totalCount = 2,
+                place = "000 리조트",
+                duration = "0시간",
+                price = 500000,
+            ),
+            instructorProfile = InstructorProfileUiModel(
+                name = "김어흥 강사",
+                age = 27,
+                gender = "남",
+                level = "grade1",
+                imageUrl = "",
+            ),
+            participantTeams = participantTeams,
+        )
 
         ConsumerLessonScreen(
             state = state,
-            onReadyClick = { state = state.copy(isReady = true) },
-            onCancelClick = { state = state.copy(showCancelConfirmSheet = true) },
-            onReasonSelected = { state = state.copy(selectedReason = it) },
-            onCancelConfirmed = { state = state.copy(showCancelConfirmSheet = false, selectedReason = null) },
-            onCancelDismiss = { state = state.copy(showCancelConfirmSheet = false, selectedReason = null) },
+            onReadyClick = {},
+            onCancelClick = {},
+            onReasonSelected = {},
+            onCancelConfirmed = {},
+            onCancelDismiss = {},
         )
     }
 }

@@ -5,6 +5,7 @@ import com.ssing.core.ui.base.BaseViewModel
 import com.ssing.core.ui.common.component.CancelReason
 import com.ssing.core.ui.common.component.LessonBannerState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -43,5 +44,19 @@ internal class ConsumerLessonViewModel @Inject constructor() :
 
     fun onCancelDismiss() {
         updateState { copy(showCancelConfirmSheet = false) }
+    }
+
+    fun onLessonStarted(remainingTime: String, elapsedTime: String) {
+        updateState {
+            copy(
+                lessonBannerState = LessonBannerState.Ongoing(
+                    remainingTime = remainingTime,
+                    elapsedTime = elapsedTime,
+                ),
+                participantTeams = participantTeams
+                    .map { it.copy(isReady = false) }
+                    .toPersistentList(),
+            )
+        }
     }
 }
