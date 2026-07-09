@@ -20,9 +20,6 @@ internal class ConsumerMatchingViewModel @Inject constructor() :
         sendEffect(ConsumerMatchingContract.Effect.Result.NavigateToHome)
     }
 
-    fun abortCancel() =
-        updateState { copy(showCancelModal = false) }
-
     fun requestRematching() {
         sendEffect(ConsumerMatchingContract.Effect.Result.PopBackStack)
     }
