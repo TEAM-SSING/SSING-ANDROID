@@ -131,7 +131,6 @@ internal fun LessonDetailOngoingScreen(
                 item {
                     LessonBanner(
                         lessonBannerState = lessonBannerState,
-                        lessonText = "남은 시간",
                         onBackClick = {},
                         modifier = Modifier.onSizeChanged { size ->
                             headerHeightPx = size.height

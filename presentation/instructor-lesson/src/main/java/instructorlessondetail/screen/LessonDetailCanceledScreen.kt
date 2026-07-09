@@ -153,7 +153,6 @@ internal fun LessonDetailCanceledScreen(
                 item {
                     LessonBanner(
                         lessonBannerState = lessonBannerState,
-                        lessonText = "강습이 취소됐어요",
                         onBackClick = {},
                         modifier = Modifier.onSizeChanged { size ->
                             headerHeightPx = size.height
@@ -184,7 +183,7 @@ internal fun LessonDetailCanceledScreen(
                                 Spacer(modifier = Modifier.height(8.dp))
                                 cancel.teams.forEachIndexed { index, team ->
                                     ConsumerInfoCard(
-                                        isReady = team.isReady,
+                                        isReady = team.isReady ?: false,
                                         nickname = team.teamNickname,
                                         participants = team.participants,
                                         price = team.price,

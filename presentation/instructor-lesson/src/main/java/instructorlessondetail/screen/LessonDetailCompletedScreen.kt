@@ -121,7 +121,6 @@ internal fun LessonDetailCompletedScreen(
                 item {
                     LessonBanner(
                         lessonBannerState = lessonBannerState,
-                        lessonText = "강습이 종료됐어요",
                         onBackClick = {},
                         modifier = Modifier.onSizeChanged { size ->
                             headerHeightPx = size.height
@@ -155,7 +154,7 @@ internal fun LessonDetailCompletedScreen(
                                 Spacer(modifier = Modifier.height(8.dp))
                                 completed.teams.forEachIndexed { index, team ->
                                     ConsumerInfoCard(
-                                        isReady = team.isReady,
+                                        isReady = team.isReady ?: false,
                                         nickname = team.teamNickname,
                                         participants = team.participants,
                                         price = team.price,
