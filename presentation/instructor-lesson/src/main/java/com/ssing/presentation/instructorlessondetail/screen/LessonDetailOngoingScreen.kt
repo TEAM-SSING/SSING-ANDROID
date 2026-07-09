@@ -43,7 +43,6 @@ internal fun LessonDetailOngoingScreen(
     onChatRoomClick: () -> Unit,
     onEndClick: () -> Unit,
     onContinueClick: () -> Unit,
-    showReadyDialog: Boolean,
     modifier: Modifier = Modifier,
     onDialogDismiss: () -> Unit = {},
 ) {
@@ -163,17 +162,15 @@ internal fun LessonDetailOngoingScreen(
                     modifier = Modifier.fillMaxWidth(),
                 )
             }
-            if (showReadyDialog) {
-                SsingModal(
-                    onDismissRequest = onDialogDismiss,
-                    title = "강습을 종료할까요?",
-                    text = "종료 시 변경이 불가능해요",
-                    primaryText = "강습 종료",
-                    onPrimary = onContinueClick,
-                    secondaryText = "취소",
-                    onSecondary = onDialogDismiss,
-                )
-            }
+            SsingModal(
+                onDismissRequest = onDialogDismiss,
+                title = "강습을 종료할까요?",
+                text = "종료 시 변경이 불가능해요",
+                primaryText = "강습 종료",
+                onPrimary = onContinueClick,
+                secondaryText = "취소",
+                onSecondary = onDialogDismiss,
+            )
         }
     }
 }
@@ -221,7 +218,6 @@ private fun LessonDetailOngoingScreenPreview() {
             onChatRoomClick = {},
             onEndClick = {},
             onContinueClick = {},
-            showReadyDialog = false,
             lessonBannerState = LessonBannerState.Ongoing(
                 remainingTime = "2:59:59",
                 elapsedTime = "59분",

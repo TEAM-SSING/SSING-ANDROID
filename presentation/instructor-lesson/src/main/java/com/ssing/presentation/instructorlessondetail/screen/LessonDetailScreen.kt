@@ -64,7 +64,6 @@ private fun LessonDetailScreen(
                 participantReadyCount = phase.before.participantReadyCount,
                 participantTotalCount = phase.before.participantTotalCount,
             ),
-            showReadyDialog = state.showReadyDialog,
             onCancelClassClick = onCancelClassClick,
             onBack = onBackClick,
             onChatRoomClick = onChatRoomClick,
@@ -85,7 +84,6 @@ private fun LessonDetailScreen(
             onChatRoomClick = onChatRoomClick,
             onEndClick = onEndClick,
             onContinueClick = onContinueClick,
-            showReadyDialog = state.showReadyDialog,
             modifier = modifier,
             onDialogDismiss = onDialogDismiss,
             )
