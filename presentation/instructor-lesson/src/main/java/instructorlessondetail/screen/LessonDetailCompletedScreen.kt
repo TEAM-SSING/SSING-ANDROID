@@ -71,13 +71,13 @@ internal fun LessonDetailCompletedScreen(
                 ) {
                     SsingButton(
                         text = "채팅방",
-                        onClick = onCancelClassClick,
+                        onClick = onChatRoomClick,
                         style = SsingButtonStyle.GRAY,
                         modifier = Modifier.weight(1f),
                     )
                     SsingButton(
                         text = "강습 후기",
-                        onClick = onChatRoomClick,
+                        onClick = onCancelClassClick,
                         style = SsingButtonStyle.GRAY,
                         modifier = Modifier.weight(1f),
                     )
