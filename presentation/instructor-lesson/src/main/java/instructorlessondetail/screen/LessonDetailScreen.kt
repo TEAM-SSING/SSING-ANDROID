@@ -18,7 +18,6 @@ internal fun LessonDetailRoute(
     viewModel: LessonDetailViewModel = hiltViewModel(),
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
-//    val context = LocalContext.current
 
     HandleUiEffects(viewModel.uiEffect) { effect ->
         when (effect) {
