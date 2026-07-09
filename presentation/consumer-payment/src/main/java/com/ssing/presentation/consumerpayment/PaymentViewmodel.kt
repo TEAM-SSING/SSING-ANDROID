@@ -1,22 +1,26 @@
 package com.ssing.presentation.consumerpayment
 
-import androidx.lifecycle.viewModelScope
 import com.ssing.core.ui.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 internal class PaymentViewModel @Inject constructor() :
     BaseViewModel<PaymentContract.State, PaymentContract.Effect>(
-        PaymentContract.State(
-            paymentInfo = PaymentInfo(),
-        )
+        initialState = PaymentContract.State()
     ) {
 
-    fun onLessonClick() {
-        viewModelScope.launch {
-            sendEffect(PaymentContract.Effect.NavigateToLesson)
-        }
+    fun navigateToLesson() =
+        sendEffect(PaymentContract.Effect.Result.NavigateToLesson)
+
+    fun showCancelModal() =
+        updateState { copy(showCancelModal = true) }
+
+    fun closeCancelModal() =
+        updateState { copy(showCancelModal = false) }
+
+    fun confirmCancel() {
+        updateState { copy(showCancelModal = false) }
+        sendEffect(PaymentContract.Effect.Result.NavigateToLesson)
     }
 }

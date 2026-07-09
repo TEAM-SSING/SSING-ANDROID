@@ -17,6 +17,8 @@ fun NavGraphBuilder.consumerPaymentNavGraph(
 ) {
     composable<ConsumerPayment> {
         PaymentRoute(
+            popBackStack = {},
+            navigateToLesson = {},
             modifier = Modifier.padding(paddingValues),
         )
     }

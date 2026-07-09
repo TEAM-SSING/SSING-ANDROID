@@ -1,5 +1,6 @@
 package com.ssing.presentation.consumerpayment
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -27,6 +28,7 @@ import com.ssing.core.ui.common.component.SsingButton
 import com.ssing.core.ui.common.component.SsingButtonStyle
 import com.ssing.core.ui.common.component.SsingHeader
 import com.ssing.core.ui.common.component.SsingMatchingDetailCard
+import com.ssing.core.ui.common.component.SsingModal
 import com.ssing.core.ui.common.component.SsingTopBar
 import com.ssing.core.ui.designsystem.theme.SSINGTheme
 import com.ssing.core.ui.extension.toast
@@ -54,16 +56,34 @@ internal fun PaymentRoute(
         }
     }
 
+    BackHandler {
+        viewModel.showCancelModal()
+    }
+
+    if (state.showCancelModal) {
+        SsingModal(
+            onDismissRequest = viewModel::closeCancelModal,
+            title = "매칭을 취소할까요?",
+            text = "결제창에서 벗어나면 매칭이 취소돼요",
+            primaryText = "대기 유지",
+            onPrimary = viewModel::closeCancelModal,
+            primaryStyle = SsingButtonStyle.GRAY,
+            secondaryText = "취소",
+            onSecondary = viewModel::confirmCancel,
+            secondaryStyle = SsingButtonStyle.RED,
+        )
+    }
+
     PaymentScreen(
-        paymentInfo = state.paymentInfo,
-        onPaymentClick = { viewModel.onLessonClick() },
-        onBackClick = {},
+        state = state,
+        onPaymentClick = { viewModel::navigateToLesson },
+        onBackClick = { viewModel::showCancelModal },
         modifier = modifier,
     )
 }
 @Composable
-fun PaymentScreen(
-    paymentInfo: PaymentInfo,
+internal fun PaymentScreen(
+    state: PaymentContract.State,
     onPaymentClick: () -> Unit,
     onBackClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -88,7 +108,7 @@ fun PaymentScreen(
         )
 
         PayInfoSection(
-            paymentInfo = paymentInfo,
+            state = state,
         )
 
         Spacer(modifier = Modifier.weight(1f))
@@ -106,7 +126,7 @@ fun PaymentScreen(
 
 @Composable
 private fun PayInfoSection(
-    paymentInfo: PaymentInfo,
+    state: PaymentContract.State,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -116,15 +136,15 @@ private fun PayInfoSection(
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
          SsingMatchingDetailCard(
-            nickname = paymentInfo.nickname,
+            nickname = state.nickname,
             stepLabel = "결제 정보",
             stepLabelColor = SSINGTheme.colors.textAlternative,
-            tags = paymentInfo.tags,
-            classDateTime = paymentInfo.classDateTime,
-            location = paymentInfo.location,
-            duration = paymentInfo.duration,
-            participants = paymentInfo.participants,
-            equipmentStatus = paymentInfo.equipmentStatus,
+            tags = state.tags,
+            classDateTime = state.classDateTime,
+            location = state.location,
+            duration = state.duration,
+            participants = state.participants,
+            equipmentStatus = state.equipmentStatus,
         )
 
         Column(
@@ -147,7 +167,7 @@ private fun PayInfoSection(
                 )
 
                 Text(
-                    text = "${paymentInfo.lessonCost.DecimalFormatter()}원",
+                    text = "${state.lessonCost.DecimalFormatter()}원",
                     style = SSINGTheme.typography.caption.sb14,
                     color = SSINGTheme.colors.textStrong,
                 )
@@ -164,7 +184,7 @@ private fun PayInfoSection(
                 )
 
                 Text(
-                    text = "${paymentInfo.resortCost.DecimalFormatter()}원",
+                    text = "${state.resortCost.DecimalFormatter()}원",
                     style = SSINGTheme.typography.caption.sb14,
                     color = SSINGTheme.colors.textStrong,
                 )
@@ -186,7 +206,7 @@ private fun PayInfoSection(
                 )
 
                 Text(
-                    text = "${(paymentInfo.lessonCost+paymentInfo.resortCost).DecimalFormatter()}원",
+                    text = "${(state.lessonCost+state.resortCost).DecimalFormatter()}원",
                     style = SSINGTheme.typography.title.b16,
                     color = SSINGTheme.colors.primaryNormal,
                 )
@@ -200,7 +220,7 @@ private fun PayInfoSection(
 private fun PaymentScreenPreview() {
     SSINGTheme {
         PaymentScreen(
-            paymentInfo = PaymentInfo(
+            state = PaymentContract.State(
                 nickname = "김OO",
                 tags = persistentListOf("스노보드", "처음타요"),
                 classDateTime = "7월 9일 오후 04:40",
