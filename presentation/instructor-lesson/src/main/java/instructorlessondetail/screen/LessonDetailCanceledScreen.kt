@@ -153,7 +153,6 @@ internal fun LessonDetailCanceledScreen(
                 item {
                     LessonBanner(
                         lessonBannerState = lessonBannerState,
-                        onBackClick = {},
                         modifier = Modifier.onSizeChanged { size ->
                             headerHeightPx = size.height
                         },

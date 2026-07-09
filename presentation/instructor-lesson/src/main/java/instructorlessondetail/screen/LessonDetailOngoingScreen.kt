@@ -12,19 +12,26 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.ssing.core.ui.R
 import com.ssing.core.ui.common.component.ConsumerInfoCard
 import com.ssing.core.ui.common.component.LessonBanner
 import com.ssing.core.ui.common.component.LessonBannerState
@@ -45,6 +52,7 @@ internal fun LessonDetailOngoingScreen(
     ongoing: LessonDetailOngoingUiModel,
     lessonBannerState: LessonBannerState,
     onCancelClassClick: () -> Unit,
+    onBackClick: () -> Unit,
     onChatRoomClick: () -> Unit,
     onEndClick: () -> Unit,
     onContinueClick: () -> Unit,
@@ -58,6 +66,29 @@ internal fun LessonDetailOngoingScreen(
 
     Scaffold(
         modifier = modifier,
+        topBar = {
+            CenterAlignedTopAppBar(
+                title = {
+                    Text(
+                        text = "강습 상세",
+                        style = SSINGTheme.typography.body.sb16,
+                        color = SSINGTheme.colors.textNormal,
+                    )
+                },
+                navigationIcon = {
+                    IconButton(onClick = onBackClick) {
+                        Icon(
+                            imageVector = ImageVector.vectorResource(R.drawable.ic_arrow_left),
+                            contentDescription = "뒤로가기",
+                            tint = SSINGTheme.colors.textNormal,
+                        )
+                    }
+                },
+                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+                    containerColor = Blue50,
+                ),
+            )
+        },
         bottomBar = {
             Column(
                 modifier = Modifier
@@ -131,7 +162,6 @@ internal fun LessonDetailOngoingScreen(
                 item {
                     LessonBanner(
                         lessonBannerState = lessonBannerState,
-                        onBackClick = {},
                         modifier = Modifier.onSizeChanged { size ->
                             headerHeightPx = size.height
                         },
@@ -234,6 +264,7 @@ private fun LessonDetailOngoingScreenPreview() {
                 ),
             ),
             onCancelClassClick = {},
+            onBackClick = {},
             onChatRoomClick = {},
             onEndClick = {},
             onContinueClick = {},
