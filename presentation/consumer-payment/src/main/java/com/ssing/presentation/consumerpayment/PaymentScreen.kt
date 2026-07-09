@@ -24,7 +24,10 @@ import com.ssing.core.ui.common.component.SsingHeader
 import com.ssing.core.ui.common.component.SsingMatchingDetailCard
 import com.ssing.core.ui.common.component.SsingTopBar
 import com.ssing.core.ui.designsystem.theme.SSINGTheme
+import com.ssing.core.ui.util.DecimalFormatter
+import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
+import kotlin.String
 
 @Composable
 internal fun PaymentRoute(
@@ -33,11 +36,33 @@ internal fun PaymentRoute(
 ) {
     PaymentScreen(
         onButtonClick = { viewModel.onLessonClick() },
+        nickname = "김OO",
+        tags = persistentListOf("스노보드", "처음타요"),
+        classDatetime = "7월 9일 오후 04:40",
+        location = "지산리조트",
+        duration = "3시간",
+        participants = persistentListOf(
+            Participant(11, Gender.MALE),
+            Participant(11, Gender.MALE),
+            Participant(9, Gender.FEMALE),
+        ),
+        equipmentStatus = "착용 완료",
+        lessonCost = 60000,
+        resortCost = 20000,
         modifier = modifier,
     )
 }
 @Composable
 fun PaymentScreen(
+    nickname: String,
+    tags: ImmutableList<String>,
+    classDatetime: String,
+    location: String,
+    duration: String,
+    participants: ImmutableList<Participant>,
+    equipmentStatus: String,
+    lessonCost: Int,
+    resortCost: Int,
     onButtonClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -60,7 +85,17 @@ fun PaymentScreen(
             subText = "강습은 강사님과 만나 양측 확인 후 시작돼요"
         )
 
-        PayInfoSection()
+        PayInfoSection(
+            nickname = nickname,
+            tags = tags,
+            classDatetime = classDatetime,
+            location = location,
+            duration = duration,
+            participants = participants,
+            equipmentStatus = equipmentStatus,
+            lessonCost = lessonCost,
+            resortCost = resortCost,
+        )
 
         Spacer(modifier = Modifier.weight(1f))
 
@@ -77,6 +112,15 @@ fun PaymentScreen(
 
 @Composable
 private fun PayInfoSection(
+    nickname: String,
+    tags: ImmutableList<String>,
+    classDatetime: String,
+    location: String,
+    duration: String,
+    participants: ImmutableList<Participant>,
+    equipmentStatus: String,
+    lessonCost: Int,
+    resortCost: Int,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -84,19 +128,15 @@ private fun PayInfoSection(
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
          SsingMatchingDetailCard(
-            nickname = "김OO",
+            nickname = nickname,
             stepLabel = "결제 정보",
             stepLabelColor = SSINGTheme.colors.textAlternative,
-            tags = persistentListOf("스노보드", "처음타요"),
-            classDateTime = "7월 9일 오전 06:10",
-            location = "지산리조트",
-            duration = "3시간",
-            participants = persistentListOf(
-                Participant(11, Gender.MALE),
-                Participant(11, Gender.MALE),
-                Participant(9, Gender.FEMALE),
-            ),
-            equipmentStatus = "착용 완료",
+            tags = tags,
+            classDateTime = classDatetime,
+            location = location,
+            duration = duration,
+            participants = participants,
+            equipmentStatus = equipmentStatus,
         )
 
         Column(
@@ -119,7 +159,7 @@ private fun PayInfoSection(
                 )
 
                 Text(
-                    text = "60,000원",
+                    text = "${lessonCost.DecimalFormatter()}원",
                     style = SSINGTheme.typography.caption.sb14,
                     color = SSINGTheme.colors.textStrong,
                 )
@@ -136,7 +176,7 @@ private fun PayInfoSection(
                 )
 
                 Text(
-                    text = "20,000원",
+                    text = "${resortCost.DecimalFormatter()}원",
                     style = SSINGTheme.typography.caption.sb14,
                     color = SSINGTheme.colors.textStrong,
                 )
@@ -158,7 +198,7 @@ private fun PayInfoSection(
                 )
 
                 Text(
-                    text = "80,000원",
+                    text = "${(lessonCost+resortCost).DecimalFormatter()}원",
                     style = SSINGTheme.typography.title.b16,
                     color = SSINGTheme.colors.primaryNormal,
                 )
@@ -172,6 +212,19 @@ private fun PayInfoSection(
 private fun PaymentScreenPreview() {
     SSINGTheme {
         PaymentScreen(
+            nickname = "김OO",
+            tags = persistentListOf("스노보드", "처음타요"),
+            classDatetime = "7월 9일 오후 04:40",
+            location = "지산리조트",
+            duration = "3시간",
+            participants = persistentListOf(
+                Participant(11, Gender.MALE),
+                Participant(11, Gender.MALE),
+                Participant(9, Gender.FEMALE),
+            ),
+            equipmentStatus = "착용 완료",
+            lessonCost = 60000,
+            resortCost = 20000,
             onButtonClick = {},
         )
     }
