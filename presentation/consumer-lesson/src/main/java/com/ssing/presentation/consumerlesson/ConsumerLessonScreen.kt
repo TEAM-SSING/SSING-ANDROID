@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.input.rememberTextFieldState
@@ -41,6 +40,7 @@ import com.ssing.core.ui.common.component.UserRole
 import com.ssing.core.ui.designsystem.theme.Blue50
 import com.ssing.core.ui.designsystem.theme.SSINGTheme
 import com.ssing.core.ui.designsystem.theme.White
+import com.ssing.presentation.consumerlesson.model.CanceledLessonInfoUiModel
 import com.ssing.presentation.consumerlesson.model.CompletedLessonInfoUiModel
 import com.ssing.presentation.consumerlesson.model.InstructorProfileUiModel
 import com.ssing.presentation.consumerlesson.model.LessonInfoUiModel
@@ -236,9 +236,7 @@ private fun OngoingLessonContent(
     state: ConsumerLessonContract.State,
     modifier: Modifier = Modifier,
 ) {
-    ContentBackground(
-        modifier = modifier,
-    ) {
+    ContentBackground {
         ContentSection(
             titleText = "강습 정보",
         ) {
@@ -322,9 +320,7 @@ private fun CompletedLessonContent(
     state: ConsumerLessonContract.State,
     modifier: Modifier = Modifier,
 ) {
-    ContentBackground(
-        modifier = modifier,
-    ) {
+    ContentBackground {
         ContentSection(
             titleText = "강습 정보",
         ) {
@@ -391,7 +387,68 @@ private fun CanceledLessonContent(
     state: ConsumerLessonContract.State,
     modifier: Modifier = Modifier,
 ) {
-    // TODO: 강습 취소 UI 구현
+    ContentBackground {
+        ContentSection(
+            titleText = "강습 정보",
+        ) {
+            val canceledLessonInfo = state.canceledLessonInfo ?: return@ContentSection
+
+            SsingMatchingDetailCardSmall(
+                tags = canceledLessonInfo.lessonInfo.tags,
+                teamNicknames = canceledLessonInfo.lessonInfo.teamNicknames,
+                totalCount = canceledLessonInfo.lessonInfo.totalCount,
+                place = canceledLessonInfo.lessonInfo.place,
+                duration = canceledLessonInfo.lessonInfo.duration,
+                price = canceledLessonInfo.lessonInfo.price,
+                cancelDateTime = canceledLessonInfo.cancelDateTime,
+                cancelSubject = canceledLessonInfo.cancelSubject,
+                cancelReason = canceledLessonInfo.cancelReason,
+            )
+        }
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        ContentSection(
+            titleText = "강사 프로필",
+        ) {
+            val instructorProfile = state.instructorProfile ?: return@ContentSection
+
+            InstructorProfileButton(
+                name = instructorProfile.name,
+                age = instructorProfile.age,
+                gender = instructorProfile.gender,
+                level = instructorProfile.level,
+                imageUrl = instructorProfile.imageUrl,
+                onClick = {},
+            )
+        }
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        ContentSection(
+            titleText = "강습 관리",
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+            ) {
+                SsingButton(
+                    text = "문제 신고",
+                    onClick = {},
+                    style = SsingButtonStyle.RED,
+                    modifier = Modifier.weight(1f),
+                )
+
+                SsingButton(
+                    text = "강습 내역 보기",
+                    onClick = {},
+                    style = SsingButtonStyle.GRAY,
+                    modifier = Modifier.weight(1f),
+                )
+            }
+        }
+    }
 }
 
 @Composable
@@ -540,6 +597,19 @@ private fun ConsumerLessonScreenPreview(
                     price = 500000,
                 ),
                 actualTimeRange = "14:00 - 16:00 (2시간)",
+            ),
+            canceledLessonInfo = CanceledLessonInfoUiModel(
+                lessonInfo = LessonInfoUiModel(
+                    tags = persistentListOf("스노보드", "자격증이 있어요"),
+                    teamNicknames = persistentListOf("김멍멍", "김야옹"),
+                    totalCount = 2,
+                    place = "000 리조트",
+                    duration = "2시간",
+                    price = 500000,
+                ),
+                cancelDateTime = "2026.07.10 14:00",
+                cancelSubject = "강습생",
+                cancelReason = "일정 변경",
             ),
         )
 

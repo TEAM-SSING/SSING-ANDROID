@@ -3,6 +3,7 @@ package com.ssing.presentation.consumerlesson
 import androidx.compose.runtime.Immutable
 import com.ssing.core.ui.common.component.CancelReason
 import com.ssing.core.ui.common.component.LessonBannerState
+import com.ssing.presentation.consumerlesson.model.CanceledLessonInfoUiModel
 import com.ssing.presentation.consumerlesson.model.CompletedLessonInfoUiModel
 import com.ssing.presentation.consumerlesson.model.InstructorProfileUiModel
 import com.ssing.presentation.consumerlesson.model.LessonInfoUiModel
@@ -23,6 +24,7 @@ internal interface ConsumerLessonContract {
 
         val lessonInfo: LessonInfoUiModel? = null,
         val completedLessonInfo: CompletedLessonInfoUiModel? = null,
+        val canceledLessonInfo: CanceledLessonInfoUiModel? = null,
         val instructorProfile: InstructorProfileUiModel? = null,
         val participantTeams: ImmutableList<ParticipantTeamUiModel> = persistentListOf(),
 
