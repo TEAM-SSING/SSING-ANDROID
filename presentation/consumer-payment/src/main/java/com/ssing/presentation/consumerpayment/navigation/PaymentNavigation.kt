@@ -21,6 +21,7 @@ fun NavGraphBuilder.consumerPaymentNavGraph(
         PaymentRoute(
             popBackStack = navController::popBackStack,
             navigateToLesson = {},
+            navigateToHome = {},
             modifier = Modifier.padding(paddingValues),
         )
     }

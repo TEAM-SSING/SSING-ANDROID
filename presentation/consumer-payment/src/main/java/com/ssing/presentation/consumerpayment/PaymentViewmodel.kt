@@ -21,6 +21,6 @@ internal class PaymentViewModel @Inject constructor() :
 
     fun confirmCancel() {
         updateState { copy(showCancelModal = false) }
-        sendEffect(PaymentContract.Effect.Result.NavigateToLesson)
+        sendEffect(PaymentContract.Effect.Result.NavigateToHome)
     }
 }

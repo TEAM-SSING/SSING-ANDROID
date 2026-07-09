@@ -31,6 +31,7 @@ internal interface PaymentContract {
         sealed interface Result : Effect {
             data object PopBackStack : Effect
             data object NavigateToLesson : Effect
+            data object NavigateToHome: Effect
             data class ShowToast(val message: String) : Effect
         }
     }

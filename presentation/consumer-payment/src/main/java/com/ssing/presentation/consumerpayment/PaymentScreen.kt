@@ -42,6 +42,7 @@ import kotlinx.collections.immutable.persistentListOf
 internal fun PaymentRoute(
     popBackStack: () -> Unit,
     navigateToLesson: () -> Unit,
+    navigateToHome: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: PaymentViewModel = hiltViewModel(),
 ) {
@@ -53,6 +54,7 @@ internal fun PaymentRoute(
             when (effect) {
                 PaymentContract.Effect.Result.NavigateToLesson -> navigateToLesson()
                 PaymentContract.Effect.Result.PopBackStack -> popBackStack()
+                PaymentContract.Effect.Result.NavigateToHome -> navigateToHome()
                 is PaymentContract.Effect.Result.ShowToast -> context.toast(effect.message)
             }
         }
