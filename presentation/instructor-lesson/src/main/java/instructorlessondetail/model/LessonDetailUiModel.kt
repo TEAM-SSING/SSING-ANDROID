@@ -31,10 +31,11 @@ internal data class LessonDetailOngoingUiModel(
 )
 
 @Immutable
-internal data class LessonDetailAfterUiModel(
+internal data class LessonDetailCompletedUiModel(
     val teams: ImmutableList<TeamParticipantsInfo>,
     val tags: ImmutableList<String>,
     val classTitle: String = "",
+    val lessonDate: String = "",
     val location: String = "",
     val duration: String = "",
     val price: Int = 0,

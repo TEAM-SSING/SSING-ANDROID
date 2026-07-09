@@ -5,6 +5,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.ssing.core.ui.common.component.LessonBannerState
 import com.ssing.core.ui.common.component.SsingModal
 import com.ssing.core.ui.util.HandleUiEffects
 import instructorlessondetail.LessonDetailContract
@@ -56,8 +57,12 @@ private fun LessonDetailScreen(
 
         is LessonDetailPhase.LessonDetailBefore -> LessonDetailBeforeScreen(
             before = phase.before,
+            lessonBannerState = LessonBannerState.Before(
+                isInstructorReady = phase.before.isInstructorReady,
+                participantReadyCount = phase.before.participantReadyCount,
+                participantTotalCount = phase.before.participantTotalCount,
+            ),
             showReadyDialog = state.showReadyDialog,
-            onBackClick = onBackClick,
             onCancelClassClick = onCancelClassClick,
             onChatRoomClick = onChatRoomClick,
             onReadyClick = onReadyClick,
@@ -66,9 +71,12 @@ private fun LessonDetailScreen(
             modifier = modifier,
         )
 
-        is LessonDetailPhase.LessonDetailDuring -> LessonDetailDuringScreen(
-            during = phase.during,
-            onBackClick = onBackClick,
+        is LessonDetailPhase.LessonDetailOngoing -> LessonDetailOngoingScreen(
+            ongoing = phase.ongoing,
+            lessonBannerState = LessonBannerState.Ongoing(
+                remainingTime = phase.ongoing.remainingTime,
+                elapsedTime = phase.ongoing.elapsedTime,
+            ),
             onCancelClassClick = onCancelClassClick,
             onChatRoomClick = onChatRoomClick,
             onEndClick = onEndClick,
@@ -76,9 +84,11 @@ private fun LessonDetailScreen(
 
             )
 
-        is LessonDetailPhase.LessonDetailAfter -> LessonDetailAfterScreen(
-            after = phase.after,
-            onBackClick = onBackClick,
+        is LessonDetailPhase.LessonDetailCompleted -> LessonDetailCompletedScreen(
+            completed = phase.completed,
+            lessonBannerState = LessonBannerState.Completed(
+                lessonDate = phase.completed.lessonDate,
+            ),
             onCancelClassClick = onCancelClassClick,
             onChatRoomClick = onChatRoomClick,
             onEndClick = onEndClick,
@@ -87,6 +97,7 @@ private fun LessonDetailScreen(
 
         is LessonDetailPhase.LessonDetailCanceled -> LessonDetailCanceledScreen(
             cancel = phase.cancel,
+            lessonBannerState = LessonBannerState.Canceled,
             onBackClick = onBackClick,
             onCancelClassClick = onCancelClassClick,
             onChatRoomClick = onChatRoomClick,

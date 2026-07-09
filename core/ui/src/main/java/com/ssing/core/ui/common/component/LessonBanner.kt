@@ -58,7 +58,7 @@ sealed interface LessonBannerState {
 @Composable
 fun LessonBanner(
     lessonBannerState: LessonBannerState,
-    beforeLessonText: String,
+    lessonText: String,
     onBackClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -83,7 +83,7 @@ fun LessonBanner(
                 )
         ) {
             when (lessonBannerState) {
-                is LessonBannerState.Before -> LessonBeforeContent(lessonBannerState, beforeLessonText)
+                is LessonBannerState.Before -> LessonBeforeContent(lessonBannerState, lessonText)
                 is LessonBannerState.Ongoing -> LessonOngoingContent(lessonBannerState)
                 is LessonBannerState.Completed -> LessonCompletedContent(lessonBannerState)
                 is LessonBannerState.Canceled -> LessonCanceledContent()
@@ -322,7 +322,7 @@ private fun LessonBannerPreview(
     SSINGTheme {
         LessonBanner(
             lessonBannerState = lessonBannerState,
-            beforeLessonText = "강사님과 만난 후\n강습 시작을 눌러주세요",
+            lessonText = "강사님과 만난 후\n강습 시작을 눌러주세요",
             onBackClick = {},
         )
     }

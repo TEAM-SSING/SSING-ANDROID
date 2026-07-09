@@ -1,6 +1,5 @@
 package instructorlessondetail.screen
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -14,13 +13,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -28,30 +23,27 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.ssing.core.ui.R
 import com.ssing.core.ui.common.component.ConsumerInfoCard
+import com.ssing.core.ui.common.component.LessonBanner
+import com.ssing.core.ui.common.component.LessonBannerState
 import com.ssing.core.ui.common.component.SsingButton
 import com.ssing.core.ui.common.component.SsingButtonStyle
 import com.ssing.core.ui.common.component.SsingChip
 import com.ssing.core.ui.common.component.SsingChipStyle
 import com.ssing.core.ui.designsystem.theme.Blue50
 import com.ssing.core.ui.designsystem.theme.SSINGTheme
-import instructorlessondetail.model.LessonDetailAfterUiModel
+import instructorlessondetail.model.LessonDetailCompletedUiModel
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-internal fun LessonDetailAfterScreen(
-    after: LessonDetailAfterUiModel,
-    onBackClick: () -> Unit,
+internal fun LessonDetailCompletedScreen(
+    completed: LessonDetailCompletedUiModel,
+    lessonBannerState: LessonBannerState,
     onCancelClassClick: () -> Unit,
     onChatRoomClick: () -> Unit,
     onEndClick: () -> Unit,
@@ -62,29 +54,6 @@ internal fun LessonDetailAfterScreen(
 
     Scaffold(
         modifier = modifier,
-        topBar = {
-            CenterAlignedTopAppBar(
-                title = {
-                    Text(
-                        text = "강습 상세",
-                        style = SSINGTheme.typography.body.sb16,
-                        color = SSINGTheme.colors.textNormal,
-                    )
-                },
-                navigationIcon = {
-                    IconButton(onClick = onBackClick) {
-                        Icon(
-                            imageVector = ImageVector.vectorResource(R.drawable.ic_arrow_left),
-                            contentDescription = "뒤로가기",
-                            tint = SSINGTheme.colors.textNormal,
-                        )
-                    }
-                },
-                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                    containerColor = Blue50,
-                ),
-            )
-        },
         bottomBar = {
             Column(
                 modifier = Modifier
@@ -152,10 +121,10 @@ internal fun LessonDetailAfterScreen(
                 modifier = Modifier.fillMaxSize(),
             ) {
                 item {
-                    TimeHeader(
-                        modifier = Modifier.onSizeChanged { size ->
-                            headerHeightPx = size.height
-                        },
+                    LessonBanner(
+                        lessonBannerState = lessonBannerState,
+                        lessonText = "강습이 종료됐어요",
+                        onBackClick = {},
                     )
                 }
 
@@ -167,11 +136,11 @@ internal fun LessonDetailAfterScreen(
                             SectionTitle(text = "강습 정보")
                             Spacer(modifier = Modifier.height(8.dp))
                             ClassInfoCard(
-                                tags = after.tags,
-                                classTitle = after.classTitle,
-                                location = after.location,
-                                duration = after.duration,
-                                price = after.price,
+                                tags = completed.tags,
+                                classTitle = completed.classTitle,
+                                location = completed.location,
+                                duration = completed.duration,
+                                price = completed.price,
                             )
 
                             Spacer(modifier = Modifier.height(24.dp))
@@ -179,14 +148,14 @@ internal fun LessonDetailAfterScreen(
                             Column {
                                 SectionTitle(text = "강습생 정보")
                                 Spacer(modifier = Modifier.height(8.dp))
-                                after.teams.forEachIndexed { index, team ->
+                                completed.teams.forEachIndexed { index, team ->
                                     ConsumerInfoCard(
                                         isReady = team.isReady,
                                         nickname = team.teamNickname,
                                         participants = team.participants,
                                         price = team.price,
                                     )
-                                    if (index != after.teams.lastIndex) {
+                                    if (index != completed.teams.lastIndex) {
                                         Spacer(modifier = Modifier.height(8.dp))
                                     }
                                 }
@@ -199,45 +168,6 @@ internal fun LessonDetailAfterScreen(
     }
 }
 
-@Composable
-private fun TimeHeader(modifier: Modifier = Modifier) {
-    Row(
-        modifier = modifier
-            .background(color = Blue50)
-            .fillMaxWidth()
-    ) {
-        Box(modifier = Modifier.padding(horizontal = 16.dp)) {
-            Column(
-                modifier = Modifier
-                    .background(color = Blue50)
-                    .padding(top = 16.dp)
-            ) {
-                Text(
-                    text = "강습이 종료됐어요",
-                    style = SSINGTheme.typography.body.sb20,
-                    color = SSINGTheme.colors.textNormal,
-                )
-
-                Text(
-                    text = "2026년 12월 31일", // 수정
-                    style = SSINGTheme.typography.caption.md14,
-                    color = SSINGTheme.colors.textAlternative,
-                )
-            }
-
-            Row(
-                horizontalArrangement = Arrangement.End,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Image(
-                    painter = painterResource(R.drawable.img_lesson_end),
-                    contentDescription = null,
-                    modifier = Modifier.padding(top = 16.dp),
-                )
-            }
-        }
-    }
-}
 
 @Composable
 private fun SectionTitle(text: String) {
@@ -311,10 +241,10 @@ private fun InfoRow(label: String, value: String) {
 
 @Preview
 @Composable
-private fun LessonDetailAfterScreenPreview() {
+private fun LessonDetailCompletedScreenPreview() {
     SSINGTheme {
-        LessonDetailAfterScreen(
-            after = LessonDetailAfterUiModel(
+        LessonDetailCompletedScreen(
+            completed = LessonDetailCompletedUiModel(
                 tags = persistentListOf("스노보드", "자격증이 있어요"),
                 classTitle = "김OO님 팀, 홍지민님 팀 총 5명",
                 location = "OOO 리조트",
@@ -337,10 +267,12 @@ private fun LessonDetailAfterScreenPreview() {
                     ),
                 ),
             ),
-            onBackClick = {},
             onCancelClassClick = {},
             onChatRoomClick = {},
             onEndClick = {},
+            lessonBannerState = LessonBannerState.Completed(
+                lessonDate = "2026년 12월 31일",
+            ),
         )
     }
 }

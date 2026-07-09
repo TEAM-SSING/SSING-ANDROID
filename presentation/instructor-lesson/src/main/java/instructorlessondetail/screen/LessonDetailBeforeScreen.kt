@@ -13,13 +13,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.getValue
@@ -29,12 +25,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.ssing.core.ui.R
 import com.ssing.core.ui.common.component.ConsumerInfoCard
 import com.ssing.core.ui.common.component.LessonBanner
 import com.ssing.core.ui.common.component.LessonBannerState
@@ -53,7 +46,6 @@ import kotlinx.collections.immutable.persistentListOf
  * 강습 상세 (강습 전) 화면.
  *
  * @param before 강습 전 화면에 필요한 데이터
- * @param onBackClick 뒤로가기 클릭
  * @param onCancelClassClick 강습 취소 클릭
  * @param onChatRoomClick 채팅방 클릭
  * @param onReadyClick 강습 준비 완료 클릭
@@ -64,7 +56,6 @@ import kotlinx.collections.immutable.persistentListOf
 internal fun LessonDetailBeforeScreen(
     before: LessonDetailBeforeUiModel,
     lessonBannerState: LessonBannerState,
-    onBackClick: () -> Unit,
     onCancelClassClick: () -> Unit,
     onChatRoomClick: () -> Unit,
     onReadyClick: () -> Unit,
@@ -156,7 +147,7 @@ internal fun LessonDetailBeforeScreen(
                 item {
                     LessonBanner(
                         lessonBannerState = lessonBannerState,
-                        beforeLessonText = "강사님과 만난 후\n강습 시작을 눌러주세요",
+                        lessonText = "강사님과 만난 후\n강습 시작을 눌러주세요",
                         onBackClick = {},
                     )
                 }
@@ -215,107 +206,6 @@ internal fun LessonDetailBeforeScreen(
     }
 }
 
-//@Composable
-//private fun PreparationHeader(
-//    isInstructorReady: Boolean,
-//    participantReadyCount: Int,
-//    participantTotalCount: Int,
-//    modifier: Modifier = Modifier,
-//) {
-//    val density = LocalDensity.current
-//    var instructorImageHeightPx by remember { mutableIntStateOf(0) }
-//    val totalReady = (if (isInstructorReady) 1 else 0) + participantReadyCount
-//    val totalCount = 1 + participantTotalCount
-//
-//    Column(
-//        modifier = modifier
-//            .fillMaxWidth()
-//            .background(color = Blue50)
-//            .padding(16.dp),
-//    ) {
-//        Text(
-//            text = "강습을 준비해주세요",
-//            style = SSINGTheme.typography.body.sb20,
-//            color = SSINGTheme.colors.textNormal,
-//        )
-//
-//        Spacer(modifier = Modifier.height(4.dp))
-//
-//        Text(
-//            text = "강습생과 강사가 모두 강습 시작을 선택하면\n강습중 상태로 변경돼요",
-//            style = SSINGTheme.typography.caption.md14,
-//            color = SSINGTheme.colors.textAlternative,
-//        )
-//
-//        Spacer(modifier = Modifier.height(20.dp))
-//
-//        Row(
-//            verticalAlignment = Alignment.Bottom,
-//            modifier = Modifier
-//                .background(color = Blue50)
-//                .fillMaxWidth()
-//                .height(IntrinsicSize.Min),
-//            horizontalArrangement = Arrangement.End
-//        ) {
-//
-//            Text(
-//                text = "$totalReady / $totalCount",
-//                style = SSINGTheme.typography.caption.sb14,
-//                color = SSINGTheme.colors.primaryNormal,
-//            )
-//
-//            Spacer(modifier = Modifier.width(8.dp))
-//
-//            Image(
-//                painter = painterResource(
-//                    id = if (isInstructorReady) {
-//                        R.drawable.img_instructor_ready
-//                    } else {
-//                        R.drawable.img_instructor_default
-//                    }
-//                ),
-//                contentDescription = "강사 준비 완료 여부",
-//                modifier = Modifier
-//                    .onSizeChanged { size ->
-//                        instructorImageHeightPx = size.height
-//                    },
-//            )
-//
-//            Spacer(modifier = Modifier.width(8.dp))
-//
-//            Box(
-//                modifier = Modifier
-//                    .width(1.dp)
-//                    .height(
-//                        with(density) {
-//                            (instructorImageHeightPx.toDp() - 8.dp).coerceAtLeast(0.dp)
-//                        }
-//                    )
-//                    .background(SSINGTheme.colors.primaryAlternative)
-//                    .align(Alignment.CenterVertically),
-//            )
-//
-//            Spacer(modifier = Modifier.width(8.dp))
-//
-//            Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-//                repeat(participantTotalCount) { index ->
-//                    val isParticipantDone = index < participantReadyCount
-//
-//                    Image(
-//                        painter = painterResource(
-//                            id = if (isParticipantDone) {
-//                                R.drawable.img_waiting_ready
-//                            } else {
-//                                R.drawable.img_waiting_default
-//                            }
-//                        ),
-//                        contentDescription = "강습생 준비 완료 여부",
-//                    )
-//                }
-//            }
-//        }
-//    }
-//}
 
 @Composable
 private fun SectionTitle(text: String) {
@@ -427,7 +317,6 @@ private fun LessonDetailBeforeScreenPreview() {
                     ),
                 ),
             ),
-            onBackClick = {},
             onCancelClassClick = {},
             onChatRoomClick = {},
             onReadyClick = {},

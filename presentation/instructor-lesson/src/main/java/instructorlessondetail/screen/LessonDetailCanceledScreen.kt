@@ -1,6 +1,5 @@
 package instructorlessondetail.screen
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -29,14 +28,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ssing.core.ui.R
 import com.ssing.core.ui.common.component.ConsumerInfoCard
+import com.ssing.core.ui.common.component.LessonBanner
+import com.ssing.core.ui.common.component.LessonBannerState
 import com.ssing.core.ui.common.component.SsingButton
 import com.ssing.core.ui.common.component.SsingButtonStyle
 import com.ssing.core.ui.common.component.SsingChip
@@ -51,6 +50,7 @@ import kotlinx.collections.immutable.persistentListOf
 @Composable
 internal fun LessonDetailCanceledScreen(
     cancel: LessonDetailCanceledUiModel,
+    lessonBannerState: LessonBannerState,
     onBackClick: () -> Unit,
     onCancelClassClick: () -> Unit,
     onChatRoomClick: () -> Unit,
@@ -152,10 +152,10 @@ internal fun LessonDetailCanceledScreen(
                 modifier = Modifier.fillMaxSize(),
             ) {
                 item {
-                    TimeHeader(
-                        modifier = Modifier.onSizeChanged { size ->
-                            headerHeightPx = size.height
-                        },
+                    LessonBanner(
+                        lessonBannerState = lessonBannerState,
+                        lessonText = "강습이 취소됐어요",
+                        onBackClick = {},
                     )
                 }
 
@@ -199,45 +199,6 @@ internal fun LessonDetailCanceledScreen(
     }
 }
 
-@Composable
-private fun TimeHeader(modifier: Modifier = Modifier) {
-    Row(
-        modifier = modifier
-            .background(color = Blue50)
-            .fillMaxWidth()
-    ) {
-        Box(modifier = Modifier.padding(horizontal = 16.dp)) {
-            Column(
-                modifier = Modifier
-                    .background(color = Blue50)
-                    .padding(top = 16.dp)
-            ) {
-                Text(
-                    text = "강습이 취소됐어요",
-                    style = SSINGTheme.typography.body.sb20,
-                    color = SSINGTheme.colors.textNormal,
-                )
-
-                Text(
-                    text = "환불 상태를 확인해주세요.\n결제 수단에 따라 최대 3일 걸릴 수 있어요.", // 수정
-                    style = SSINGTheme.typography.caption.md14,
-                    color = SSINGTheme.colors.textAlternative,
-                )
-            }
-
-            Row(
-                horizontalArrangement = Arrangement.End,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Image(
-                    painter = painterResource(R.drawable.img_lesson_cancel),
-                    contentDescription = null,
-                    modifier = Modifier.padding(top = 16.dp),
-                )
-            }
-        }
-    }
-}
 
 @Composable
 private fun SectionTitle(text: String) {
@@ -341,6 +302,7 @@ private fun LessonDetailCanceledScreenPreview() {
             onCancelClassClick = {},
             onChatRoomClick = {},
             onEndClick = {},
+            lessonBannerState = LessonBannerState.Canceled,
         )
     }
 }

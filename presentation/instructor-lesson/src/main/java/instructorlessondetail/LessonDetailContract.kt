@@ -1,10 +1,10 @@
 package instructorlessondetail
 
 import androidx.compose.runtime.Immutable
-import instructorlessondetail.model.LessonDetailAfterUiModel
 import instructorlessondetail.model.LessonDetailBeforeUiModel
 import instructorlessondetail.model.LessonDetailCanceledUiModel
-import instructorlessondetail.model.LessonDetailDuringUiModel
+import instructorlessondetail.model.LessonDetailCompletedUiModel
+import instructorlessondetail.model.LessonDetailOngoingUiModel
 
 internal interface LessonDetailContract {
 
@@ -18,8 +18,8 @@ internal interface LessonDetailContract {
     sealed interface LessonDetailPhase {
         data object Loading : LessonDetailPhase
         data class LessonDetailBefore(val before: LessonDetailBeforeUiModel) : LessonDetailPhase
-        data class LessonDetailDuring(val during: LessonDetailDuringUiModel) : LessonDetailPhase
-        data class LessonDetailAfter(val after: LessonDetailAfterUiModel) : LessonDetailPhase
+        data class LessonDetailOngoing(val ongoing: LessonDetailOngoingUiModel) : LessonDetailPhase
+        data class LessonDetailCompleted(val completed: LessonDetailCompletedUiModel) : LessonDetailPhase
         data class LessonDetailCanceled(val cancel: LessonDetailCanceledUiModel) : LessonDetailPhase
     }
 
