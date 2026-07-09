@@ -168,7 +168,7 @@ internal fun LessonDetailBeforeScreen(
                 item {
                     LessonBanner(
                         lessonBannerState = lessonBannerState,
-                        lessonText = "강사님과 만난 후\n강습 시작을 눌러주세요",
+                        beforeLessonText = "강사님과 만난 후\n강습 시작을 눌러주세요",
                         onBackClick = {},
                         modifier = Modifier.onSizeChanged { size ->
                             headerHeightPx = size.height
