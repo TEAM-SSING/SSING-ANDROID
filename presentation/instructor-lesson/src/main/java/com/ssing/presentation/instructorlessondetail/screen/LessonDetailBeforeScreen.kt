@@ -36,14 +36,12 @@ import com.ssing.core.ui.common.component.SsingButtonStyle
 import com.ssing.core.ui.common.component.SsingMatchingDetailCardSmall
 import com.ssing.core.ui.common.component.SsingModal
 import com.ssing.core.ui.common.component.SsingTopBar
-import com.ssing.core.ui.common.component.TeamNickname
 import com.ssing.core.ui.common.component.UserRole
 import com.ssing.core.ui.designsystem.theme.Blue50
 import com.ssing.core.ui.designsystem.theme.SSINGTheme
 import com.ssing.presentation.instructorlessondetail.model.LessonDetailBeforeUiModel
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
-import kotlinx.collections.immutable.toPersistentList
 
 /**
  * 강습 상세 (강습 전) 화면.
@@ -161,17 +159,6 @@ internal fun LessonDetailBeforeScreen(
                                     modifier = Modifier.weight(1f),
                                 )
 
-                                if (showSheet) {
-                                    MatchingCancelBottomSheet(
-                                        userRole = UserRole.INSTRUCTOR,
-                                        selectedReason = selectedReason,
-                                        onReasonClick = { selectedReason = it },
-                                        etcState = etcState,
-                                        onConfirmClick = { showSheet = false },
-                                        onDismissRequest = { showSheet = false },
-                                    )
-                                }
-
                                 SsingButton(
                                     text = "채팅방",
                                     onClick = onChatRoomClick,
@@ -180,6 +167,16 @@ internal fun LessonDetailBeforeScreen(
                                 )
                             }
                         }
+                    }
+                    if (showSheet) {
+                        MatchingCancelBottomSheet(
+                            userRole = UserRole.INSTRUCTOR,
+                            selectedReason = selectedReason,
+                            onReasonClick = { selectedReason = it },
+                            etcState = etcState,
+                            onConfirmClick = { showSheet = false },
+                            onDismissRequest = { showSheet = false },
+                        )
                     }
                 }
             }

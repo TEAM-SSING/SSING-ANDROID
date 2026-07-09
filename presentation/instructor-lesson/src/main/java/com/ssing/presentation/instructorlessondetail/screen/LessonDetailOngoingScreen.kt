@@ -9,7 +9,9 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -47,131 +49,132 @@ internal fun LessonDetailOngoingScreen(
     modifier: Modifier = Modifier,
     onDialogDismiss: () -> Unit = {},
 ) {
-    Column{
+    Column(
+        modifier = modifier
+            .navigationBarsPadding()
+            .background(Blue50),
+    ) {
         SsingTopBar(
             title = "강습 상세",
             onBack = { onBack() },
             backgroundColor = Blue50,
+            modifier = Modifier
+                .background(Blue50)
+                .statusBarsPadding(),
         )
-        Box(
-            modifier = modifier
+
+        LessonBanner(
+            lessonBannerState = lessonBannerState
+        )
+
+        Column(
+            modifier = Modifier
                 .fillMaxSize()
-                .background(Blue50),
-        ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(
-                        color = SSINGTheme.colors.backgroundNormal,
-                        shape = RoundedCornerShape(
-                            topStart = 12.dp,
-                            topEnd = 12.dp,
-                        ),
+                .background(
+                    color = SSINGTheme.colors.backgroundNormal,
+                    shape = RoundedCornerShape(
+                        topStart = 12.dp,
+                        topEnd = 12.dp,
                     ),
+                ),
+        ) {
+            LazyColumn(
+                modifier = Modifier.weight(1f),
             ) {
-                LazyColumn(
-                    modifier = Modifier.weight(1f),
-                ) {
-                    item {
-                        LessonBanner(
-                            lessonBannerState = lessonBannerState
-                        )
-                    }
-                    item {
-                        Column(modifier = Modifier.fillMaxWidth()) {
-                            Spacer(modifier = Modifier.height(16.dp))
+                item {
+                    Column(modifier = Modifier.fillMaxWidth()) {
+                        Spacer(modifier = Modifier.height(16.dp))
 
-                            Column(modifier = Modifier.padding(horizontal = 16.dp)) {
-                                SectionTitle(text = "강습 정보")
-                                Spacer(modifier = Modifier.height(8.dp))
-                                SsingMatchingDetailCardSmall(
-                                    tags = ongoing.tags,
-                                    teamNicknames = ongoing.teams.map {
-                                        TeamNickname(
-                                            it.teamNickname,
-                                            it.teamCount
-                                        )
-                                    }.toPersistentList(),
-                                    totalCount = ongoing.teams.size,
-                                    place = ongoing.location,
-                                    duration = ongoing.duration,
-                                    price = ongoing.price,
-                                )
-                            }
-
-                            Spacer(modifier = Modifier.height(24.dp))
-
-                            Column(modifier = Modifier.padding(horizontal = 16.dp)) {
-                                SectionTitle(text = "강습생 정보")
-                                Spacer(modifier = Modifier.height(8.dp))
-                                ongoing.teams.forEachIndexed { index, team ->
-                                    ConsumerInfoCard(
-                                        isReady = false,
-                                        nickname = team.teamNickname,
-                                        participants = team.participants,
-                                        price = team.price,
+                        Column(modifier = Modifier.padding(horizontal = 16.dp)) {
+                            SectionTitle(text = "강습 정보")
+                            Spacer(modifier = Modifier.height(8.dp))
+                            SsingMatchingDetailCardSmall(
+                                tags = ongoing.tags,
+                                teamNicknames = ongoing.teams.map {
+                                    TeamNickname(
+                                        it.teamNickname,
+                                        it.teamCount
                                     )
-                                    if (index != ongoing.teams.lastIndex) {
-                                        Spacer(modifier = Modifier.height(8.dp))
-                                    }
+                                }.toPersistentList(),
+                                totalCount = ongoing.teams.size,
+                                place = ongoing.location,
+                                duration = ongoing.duration,
+                                price = ongoing.price,
+                            )
+                        }
+
+                        Spacer(modifier = Modifier.height(24.dp))
+
+                        Column(modifier = Modifier.padding(horizontal = 16.dp)) {
+                            SectionTitle(text = "강습생 정보")
+                            Spacer(modifier = Modifier.height(8.dp))
+                            ongoing.teams.forEachIndexed { index, team ->
+                                ConsumerInfoCard(
+                                    isReady = false,
+                                    nickname = team.teamNickname,
+                                    participants = team.participants,
+                                    price = team.price,
+                                )
+                                if (index != ongoing.teams.lastIndex) {
+                                    Spacer(modifier = Modifier.height(8.dp))
                                 }
                             }
+                        }
 
-                            Spacer(modifier = Modifier.height(24.dp))
+                        Spacer(modifier = Modifier.height(24.dp))
 
-                            Column(modifier = Modifier.padding(horizontal = 16.dp)) {
-                                Text(
-                                    text = "강습 관리",
-                                    style = SSINGTheme.typography.caption.sb12,
-                                    color = SSINGTheme.colors.textAlternative,
-                                    modifier = Modifier.padding(bottom = 8.dp),
+                        Column(modifier = Modifier.padding(horizontal = 16.dp)) {
+                            Text(
+                                text = "강습 관리",
+                                style = SSINGTheme.typography.caption.sb12,
+                                color = SSINGTheme.colors.textAlternative,
+                                modifier = Modifier.padding(bottom = 8.dp),
+                            )
+                            Row(
+                                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                modifier = Modifier.fillMaxWidth(),
+                            ) {
+                                SsingButton(
+                                    text = "문제 신고",
+                                    onClick = onCancelClassClick,
+                                    style = SsingButtonStyle.RED,
+                                    modifier = Modifier.weight(1f),
                                 )
-                                Row(
-                                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                                    modifier = Modifier.fillMaxWidth(),
-                                ) {
-                                    SsingButton(
-                                        text = "문제 신고",
-                                        onClick = onCancelClassClick,
-                                        style = SsingButtonStyle.RED,
-                                        modifier = Modifier.weight(1f),
-                                    )
-                                    Spacer(modifier = Modifier.height(16.dp))
-                                    SsingButton(
-                                        text = "채팅방",
-                                        onClick = onChatRoomClick,
-                                        style = SsingButtonStyle.GRAY,
-                                        modifier = Modifier.weight(1f),
-                                    )
-                                }
+                                Spacer(modifier = Modifier.height(16.dp))
+                                SsingButton(
+                                    text = "채팅방",
+                                    onClick = onChatRoomClick,
+                                    style = SsingButtonStyle.GRAY,
+                                    modifier = Modifier.weight(1f),
+                                )
                             }
                         }
                     }
                 }
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(SSINGTheme.colors.backgroundNormal)
-                        .padding(16.dp),
-                ) {
-                    SsingButton(
-                        text = "강습 종료",
-                        onClick = { onEndClick() },
-                        style = SsingButtonStyle.BLUE,
-                        modifier = Modifier.fillMaxWidth(),
-                    )
-                }
-                if (showReadyDialog) {
-                    SsingModal(
-                        onDismissRequest = onDialogDismiss,
-                        title = "강습을 종료할까요?",
-                        text = "종료 시 변경이 불가능해요",
-                        primaryText = "강습 종료",
-                        onPrimary = onContinueClick,
-                        secondaryText = "취소",
-                        onSecondary = onDialogDismiss,
-                    )
-                }
+            }
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(SSINGTheme.colors.backgroundNormal)
+                    .padding(16.dp),
+            ) {
+                SsingButton(
+                    text = "강습 종료",
+                    onClick = { onEndClick() },
+                    style = SsingButtonStyle.BLUE,
+                    modifier = Modifier.fillMaxWidth(),
+                )
+            }
+            if (showReadyDialog) {
+                SsingModal(
+                    onDismissRequest = onDialogDismiss,
+                    title = "강습을 종료할까요?",
+                    text = "종료 시 변경이 불가능해요",
+                    primaryText = "강습 종료",
+                    onPrimary = onContinueClick,
+                    secondaryText = "취소",
+                    onSecondary = onDialogDismiss,
+                )
             }
         }
     }
