@@ -115,12 +115,7 @@ internal fun LessonDetailBeforeScreen(
                             Spacer(modifier = Modifier.height(8.dp))
                             SsingMatchingDetailCardSmall(
                                 tags = before.tags,
-                                teamNicknames = before.teams.map {
-                                    TeamNickname(
-                                        it.teamNickname,
-                                        it.teamCount
-                                    )
-                                }.toPersistentList(),
+                                teamNicknames = before.nicknames,
                                 totalCount = before.teams.size,
                                 place = before.location,
                                 duration = before.duration,
@@ -141,7 +136,7 @@ internal fun LessonDetailBeforeScreen(
                                     price = team.price,
                                 )
                                 if (index != before.teams.lastIndex) {
-                                    Spacer(modifier = Modifier.height(8.dp))
+                                    Spacer(modifier = Modifier.height(4.dp))
                                 }
                             }
                         }
