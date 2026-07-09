@@ -231,7 +231,7 @@ private fun ConsumerMatchingConditionScreen(
 
                     if (state.showAddConsumer) {
                         SsingPlusButton(
-                            text = "강습생 추가",
+                            text = "강습생 추가하기",
                             onClick = onAddConsumerClick,
                             modifier = Modifier
                                 .fillMaxWidth()
