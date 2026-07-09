@@ -11,6 +11,8 @@ import com.ssing.core.ui.extension.clearBackStackNavOptions
 import com.ssing.presentation.auth.navigation.authNavGraph
 import com.ssing.presentation.consumerhome.navigation.ConsumerHome
 import com.ssing.presentation.consumerhome.navigation.consumerHomeNavGraph
+import com.ssing.presentation.consumerpayment.navigation.ConsumerPayment
+import com.ssing.presentation.consumerpayment.navigation.consumerPaymentNavGraph
 
 @Composable
 internal fun ConsumerMainNavHost(
@@ -33,6 +35,10 @@ internal fun ConsumerMainNavHost(
             },
         )
         consumerHomeNavGraph(
+            paddingValues = paddingValues,
+        )
+        consumerPaymentNavGraph(
+            navController = navController,
             paddingValues = paddingValues,
         )
         consumerMatchingNavGraph(
