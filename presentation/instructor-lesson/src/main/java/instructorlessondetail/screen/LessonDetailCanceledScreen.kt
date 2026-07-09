@@ -43,6 +43,7 @@ import com.ssing.core.ui.designsystem.theme.Blue50
 import com.ssing.core.ui.designsystem.theme.SSINGTheme
 import instructorlessondetail.model.LessonDetailCanceledUiModel
 import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toPersistentList
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -168,15 +169,12 @@ internal fun LessonDetailCanceledScreen(
                             SectionTitle(text = "강습 정보")
                             Spacer(modifier = Modifier.height(8.dp))
                             SsingMatchingDetailCardSmall(
-                                tags = persistentListOf("스노보드", "자격증이 있어요"),
-                                teamNicknames = persistentListOf(
-                                    TeamNickname("김OO", 1),
-                                    TeamNickname("홍지민", 1),
-                                ),
-                                totalCount = 4,
-                                place = "000 리조트",
-                                duration = "0시간",
-                                price = 0,
+                                tags = cancel.tags,
+                                teamNicknames = cancel.teams.map { TeamNickname(it.teamNickname, it.teamCount) }.toPersistentList(),
+                                totalCount = cancel.teams.size,
+                                place = cancel.location,
+                                duration = cancel.duration,
+                                price = cancel.price,
                             )
 
                             Spacer(modifier = Modifier.height(24.dp))

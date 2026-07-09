@@ -44,6 +44,7 @@ import com.ssing.core.ui.designsystem.theme.SSINGTheme
 import instructorlessondetail.model.LessonDetailBeforeUiModel
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toPersistentList
 import kotlin.collections.forEachIndexed
 import kotlin.collections.lastIndex
 
@@ -98,7 +99,7 @@ internal fun LessonDetailBeforeScreen(
                 ) {
                     SsingButton(
                         text = "강습 취소",
-                        onClick = onCancelClassClick,
+                        onClick = { showSheet = true },
                         style = SsingButtonStyle.RED,
                         modifier = Modifier.weight(1f),
                     )
@@ -183,15 +184,12 @@ internal fun LessonDetailBeforeScreen(
                             SectionTitle(text = "강습 정보")
                             Spacer(modifier = Modifier.height(8.dp))
                             SsingMatchingDetailCardSmall(
-                                tags = persistentListOf("스노보드", "자격증이 있어요"),
-                                teamNicknames = persistentListOf(
-                                    TeamNickname("김OO", 1),
-                                    TeamNickname("홍지민", 1),
-                                ),
-                                totalCount = 4,
-                                place = "000 리조트",
-                                duration = "0시간",
-                                price = 0,
+                                tags = before.tags,
+                                teamNicknames = before.teams.map { TeamNickname(it.teamNickname, it.teamCount) }.toPersistentList(),
+                                totalCount = before.teams.size,
+                                place = before.location,
+                                duration = before.duration,
+                                price = before.price,
                             )
                         }
 

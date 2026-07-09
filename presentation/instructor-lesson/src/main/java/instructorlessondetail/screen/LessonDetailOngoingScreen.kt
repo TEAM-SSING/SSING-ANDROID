@@ -18,7 +18,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -38,6 +37,7 @@ import com.ssing.core.ui.designsystem.theme.Blue50
 import com.ssing.core.ui.designsystem.theme.SSINGTheme
 import instructorlessondetail.model.LessonDetailOngoingUiModel
 import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toPersistentList
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -54,7 +54,7 @@ internal fun LessonDetailOngoingScreen(
 ) {
     val density = LocalDensity.current
     var headerHeightPx by remember { mutableIntStateOf(0) }
-    var isContinueState by remember { mutableStateOf(ongoing.isContinue) }
+    val isContinue = ongoing.isContinue
 
     Scaffold(
         modifier = modifier,
@@ -92,7 +92,7 @@ internal fun LessonDetailOngoingScreen(
                 SsingButton(
                     text = "강습 종료",
                     onClick = {
-                        if (!isContinueState) {
+                        if (!isContinue) {
                             onEndClick()
                         }
                     },
@@ -147,15 +147,17 @@ internal fun LessonDetailOngoingScreen(
                             SectionTitle(text = "강습 정보")
                             Spacer(modifier = Modifier.height(8.dp))
                             SsingMatchingDetailCardSmall(
-                                tags = persistentListOf("스노보드", "자격증이 있어요"),
-                                teamNicknames = persistentListOf(
-                                    TeamNickname("김OO", 1),
-                                    TeamNickname("홍지민", 1),
-                                ),
-                                totalCount = 4,
-                                place = "000 리조트",
-                                duration = "0시간",
-                                price = 0,
+                                tags = ongoing.tags,
+                                teamNicknames = ongoing.teams.map {
+                                    TeamNickname(
+                                        it.teamNickname,
+                                        it.teamCount
+                                    )
+                                }.toPersistentList(),
+                                totalCount = ongoing.teams.size,
+                                place = ongoing.location,
+                                duration = ongoing.duration,
+                                price = ongoing.price,
                             )
 
                             Spacer(modifier = Modifier.height(24.dp))
@@ -187,10 +189,7 @@ internal fun LessonDetailOngoingScreen(
             title = "강습 준비를 완료할까요?",
             text = "준비 완료 시 변경이 불가능해요",
             primaryText = "준비 완료",
-            onPrimary = {
-                isContinueState = true
-                onContinueClick()
-            },
+            onPrimary = onContinueClick,
             secondaryText = "취소",
             onSecondary = onDialogDismiss,
         )
