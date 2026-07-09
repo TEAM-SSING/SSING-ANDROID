@@ -24,7 +24,6 @@ internal fun InstructorMainNavHost(
         modifier = modifier.fillMaxSize(),
     ) {
         instructorAuthNavGraph(
-            paddingValues = paddingValues,
             navigateToHome = {
                 navController.navigate(
                     route = InstructorHome,
