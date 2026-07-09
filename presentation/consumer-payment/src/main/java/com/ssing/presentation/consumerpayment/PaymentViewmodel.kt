@@ -9,7 +9,9 @@ import javax.inject.Inject
 @HiltViewModel
 internal class PaymentViewModel @Inject constructor() :
     BaseViewModel<PaymentContract.State, PaymentContract.Effect>(
-        PaymentContract.State()
+        PaymentContract.State(
+            paymentInfo = PaymentInfo(),
+        )
     ) {
 
     fun onLessonClick() {

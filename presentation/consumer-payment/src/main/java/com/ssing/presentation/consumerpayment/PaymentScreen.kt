@@ -1,5 +1,6 @@
 package com.ssing.presentation.consumerpayment
 
+import android.R.attr.duration
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -12,10 +13,13 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.ssing.core.ui.common.component.Gender
 import com.ssing.core.ui.common.component.Participant
 import com.ssing.core.ui.common.component.SsingButton
@@ -34,35 +38,17 @@ internal fun PaymentRoute(
     modifier: Modifier = Modifier,
     viewModel: PaymentViewModel = hiltViewModel(),
 ) {
+    val state by viewModel.uiState.collectAsStateWithLifecycle()
+
     PaymentScreen(
         onButtonClick = { viewModel.onLessonClick() },
-        nickname = "김OO",
-        tags = persistentListOf("스노보드", "처음타요"),
-        classDatetime = "7월 9일 오후 04:40",
-        location = "지산리조트",
-        duration = "3시간",
-        participants = persistentListOf(
-            Participant(11, Gender.MALE),
-            Participant(11, Gender.MALE),
-            Participant(9, Gender.FEMALE),
-        ),
-        equipmentStatus = "착용 완료",
-        lessonCost = 60000,
-        resortCost = 20000,
+        paymentInfo = state.paymentInfo,
         modifier = modifier,
     )
 }
 @Composable
 fun PaymentScreen(
-    nickname: String,
-    tags: ImmutableList<String>,
-    classDatetime: String,
-    location: String,
-    duration: String,
-    participants: ImmutableList<Participant>,
-    equipmentStatus: String,
-    lessonCost: Int,
-    resortCost: Int,
+    paymentInfo: PaymentInfo,
     onButtonClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -86,15 +72,7 @@ fun PaymentScreen(
         )
 
         PayInfoSection(
-            nickname = nickname,
-            tags = tags,
-            classDatetime = classDatetime,
-            location = location,
-            duration = duration,
-            participants = participants,
-            equipmentStatus = equipmentStatus,
-            lessonCost = lessonCost,
-            resortCost = resortCost,
+            paymentInfo = paymentInfo,
         )
 
         Spacer(modifier = Modifier.weight(1f))
@@ -112,15 +90,7 @@ fun PaymentScreen(
 
 @Composable
 private fun PayInfoSection(
-    nickname: String,
-    tags: ImmutableList<String>,
-    classDatetime: String,
-    location: String,
-    duration: String,
-    participants: ImmutableList<Participant>,
-    equipmentStatus: String,
-    lessonCost: Int,
-    resortCost: Int,
+    paymentInfo: PaymentInfo,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -128,15 +98,15 @@ private fun PayInfoSection(
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
          SsingMatchingDetailCard(
-            nickname = nickname,
+            nickname = paymentInfo.nickname,
             stepLabel = "결제 정보",
             stepLabelColor = SSINGTheme.colors.textAlternative,
-            tags = tags,
-            classDateTime = classDatetime,
-            location = location,
-            duration = duration,
-            participants = participants,
-            equipmentStatus = equipmentStatus,
+            tags = paymentInfo.tags,
+            classDateTime = paymentInfo.classDateTime,
+            location = paymentInfo.location,
+            duration = paymentInfo.duration,
+            participants = paymentInfo.participants,
+            equipmentStatus = paymentInfo.equipmentStatus,
         )
 
         Column(
@@ -159,7 +129,7 @@ private fun PayInfoSection(
                 )
 
                 Text(
-                    text = "${lessonCost.DecimalFormatter()}원",
+                    text = "${paymentInfo.lessonCost.DecimalFormatter()}원",
                     style = SSINGTheme.typography.caption.sb14,
                     color = SSINGTheme.colors.textStrong,
                 )
@@ -176,7 +146,7 @@ private fun PayInfoSection(
                 )
 
                 Text(
-                    text = "${resortCost.DecimalFormatter()}원",
+                    text = "${paymentInfo.resortCost.DecimalFormatter()}원",
                     style = SSINGTheme.typography.caption.sb14,
                     color = SSINGTheme.colors.textStrong,
                 )
@@ -198,7 +168,7 @@ private fun PayInfoSection(
                 )
 
                 Text(
-                    text = "${(lessonCost+resortCost).DecimalFormatter()}원",
+                    text = "${(paymentInfo.lessonCost+paymentInfo.resortCost).DecimalFormatter()}원",
                     style = SSINGTheme.typography.title.b16,
                     color = SSINGTheme.colors.primaryNormal,
                 )
@@ -212,19 +182,21 @@ private fun PayInfoSection(
 private fun PaymentScreenPreview() {
     SSINGTheme {
         PaymentScreen(
-            nickname = "김OO",
-            tags = persistentListOf("스노보드", "처음타요"),
-            classDatetime = "7월 9일 오후 04:40",
-            location = "지산리조트",
-            duration = "3시간",
-            participants = persistentListOf(
-                Participant(11, Gender.MALE),
-                Participant(11, Gender.MALE),
-                Participant(9, Gender.FEMALE),
+            paymentInfo = PaymentInfo(
+                nickname = "김OO",
+                tags = persistentListOf("스노보드", "처음타요"),
+                classDateTime = "7월 9일 오후 04:40",
+                location = "지산리조트",
+                duration = "3시간",
+                participants = persistentListOf(
+                    Participant(11, Gender.MALE),
+                    Participant(11, Gender.MALE),
+                    Participant(9, Gender.FEMALE),
+                ),
+                equipmentStatus = "착용 완료",
+                lessonCost = 60000,
+                resortCost = 20000,
             ),
-            equipmentStatus = "착용 완료",
-            lessonCost = 60000,
-            resortCost = 20000,
             onButtonClick = {},
         )
     }
