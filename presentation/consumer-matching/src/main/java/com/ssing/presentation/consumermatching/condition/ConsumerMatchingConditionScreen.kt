@@ -95,7 +95,7 @@ private fun ConsumerMatchingConditionScreen(
         },
         bottomBar = {
             SsingButton(
-                text = "빠른 매칭 시작",
+                text = "씽 매칭 시작",
                 onClick = onStartMatchingClick,
                 style = SsingButtonStyle.BLUE,
                 modifier = Modifier
