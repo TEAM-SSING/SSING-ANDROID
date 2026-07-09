@@ -83,7 +83,10 @@ fun LessonBanner(
                 )
         ) {
             when (lessonBannerState) {
-                is LessonBannerState.Before -> LessonBeforeContent(lessonBannerState, beforeLessonText?: "강사님과 만난 후\n강습 시작을 눌러주세요")
+                is LessonBannerState.Before -> LessonBeforeContent(
+                    lessonBannerState = lessonBannerState,
+                    beforeLessonText = beforeLessonText ?: "",
+                )
                 is LessonBannerState.Ongoing -> LessonOngoingContent(lessonBannerState)
                 is LessonBannerState.Completed -> LessonCompletedContent(lessonBannerState)
                 is LessonBannerState.Canceled -> LessonCanceledContent()
