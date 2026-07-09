@@ -35,6 +35,7 @@ internal fun LessonDetailRoute(
         onDialogDismiss = viewModel::onDialogDismiss,
         onChatRoomClick = viewModel::onChatRoomClick,
         onEndClick = viewModel::onEndClick,
+        onReviewClick = viewModel::onReviewClick,
         onContinueClick = viewModel::onContinueClick,
         modifier = modifier,
     )
@@ -51,6 +52,7 @@ private fun LessonDetailScreen(
     onDialogDismiss: () -> Unit,
     onReadyButtonClick: () -> Unit,
     onEndClick: () -> Unit,
+    onReviewClick: () -> Unit,
     onContinueClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -93,7 +95,7 @@ private fun LessonDetailScreen(
             lessonBannerState = LessonBannerState.Completed(
                 lessonDate = phase.completed.lessonDate,
             ),
-            onCancelClassClick = onCancelClassClick,
+            onReviewClick = onReviewClick,
             onChatRoomClick = onChatRoomClick,
             onEndClick = onEndClick,
             modifier = modifier,

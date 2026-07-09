@@ -61,4 +61,10 @@ internal class LessonDetailViewModel @Inject constructor() :
             copy(dialog = LessonDetailContract.LessonDetailDialog.LessonEnd)
         }
     }
+
+    fun onReviewClick() {
+        updateState {
+            copy(dialog = LessonDetailContract.LessonDetailDialog.LessonEnd)
+        }
+    }
 }
