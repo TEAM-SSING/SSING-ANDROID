@@ -186,9 +186,9 @@ internal fun LessonDetailOngoingScreen(
     if (showReadyDialog) {
         SsingModal(
             onDismissRequest = onDialogDismiss,
-            title = "강습 준비를 완료할까요?",
-            text = "준비 완료 시 변경이 불가능해요",
-            primaryText = "준비 완료",
+            title = "강습을 종료할까요?",
+            text = "종료 시 변경이 불가능해요",
+            primaryText = "강습 종료",
             onPrimary = onContinueClick,
             secondaryText = "취소",
             onSecondary = onDialogDismiss,
