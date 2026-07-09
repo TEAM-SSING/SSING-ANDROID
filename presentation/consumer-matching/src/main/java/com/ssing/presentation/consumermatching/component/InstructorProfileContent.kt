@@ -405,7 +405,7 @@ private fun ReviewSection(
                 style = SSINGTheme.typography.caption.sb14,
             )
 
-            if (isEmpty) {
+            if (!isEmpty) {
                 Row(
                     modifier = Modifier.noRippleClickable(onClick = onReviewClick),
                     verticalAlignment = Alignment.CenterVertically,
@@ -426,7 +426,7 @@ private fun ReviewSection(
             }
         }
 
-        if (isEmpty) {
+        if (!isEmpty) {
             Box(modifier = Modifier.fillMaxWidth()) {
                 var reviewCardHeight by remember { mutableStateOf(0.dp) }
 
