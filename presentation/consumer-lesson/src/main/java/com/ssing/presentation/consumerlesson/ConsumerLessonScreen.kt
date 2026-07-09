@@ -45,6 +45,7 @@ import com.ssing.presentation.consumerlesson.model.CompletedLessonInfoUiModel
 import com.ssing.presentation.consumerlesson.model.InstructorProfileUiModel
 import com.ssing.presentation.consumerlesson.model.LessonInfoUiModel
 import com.ssing.presentation.consumerlesson.model.ParticipantTeamUiModel
+import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
 
@@ -170,64 +171,18 @@ private fun BeforeLessonContent(
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        ContentSection(
-            titleText = "강사 프로필",
-        ) {
-            val instructorProfile = state.instructorProfile ?: return@ContentSection
-
-            InstructorProfileButton(
-                name = instructorProfile.name,
-                age = instructorProfile.age,
-                gender = instructorProfile.gender,
-                level = instructorProfile.level,
-                imageUrl = instructorProfile.imageUrl,
-                onClick = {},
-            )
-        }
+        InstructorProfileSection(state.instructorProfile)
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        ContentSection(
-            titleText = "강습생 정보",
-        ) {
-            Column(
-                verticalArrangement = Arrangement.spacedBy(8.dp),
-            ) {
-                state.participantTeams.forEach { team ->
-                    ConsumerInfoCard(
-                        isReady = team.isReady,
-                        nickname = team.nickname,
-                        participants = team.participants,
-                    )
-                }
-            }
-        }
+        ParticipantTeamsSection(state.participantTeams)
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        ContentSection(
-            titleText = "강습 관리",
-        ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-            ) {
-                SsingButton(
-                    text = "강습 취소",
-                    onClick = onCancelClick,
-                    style = SsingButtonStyle.RED,
-                    modifier = Modifier.weight(1f),
-                )
-
-                SsingButton(
-                    text = "채팅방",
-                    onClick = {},
-                    style = SsingButtonStyle.GRAY,
-                    modifier = Modifier.weight(1f),
-                )
-            }
-        }
+        LessonManagementSection(
+            primaryButton = LessonActionButton("강습 취소", onCancelClick),
+            secondaryButton = LessonActionButton("채팅방", {})
+        )
     }
 }
 
@@ -254,64 +209,18 @@ private fun OngoingLessonContent(
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        ContentSection(
-            titleText = "강사 프로필",
-        ) {
-            val instructorProfile = state.instructorProfile ?: return@ContentSection
-
-            InstructorProfileButton(
-                name = instructorProfile.name,
-                age = instructorProfile.age,
-                gender = instructorProfile.gender,
-                level = instructorProfile.level,
-                imageUrl = instructorProfile.imageUrl,
-                onClick = {},
-            )
-        }
+        InstructorProfileSection(state.instructorProfile)
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        ContentSection(
-            titleText = "강습생 정보",
-        ) {
-            Column(
-                verticalArrangement = Arrangement.spacedBy(8.dp),
-            ) {
-                state.participantTeams.forEach { team ->
-                    ConsumerInfoCard(
-                        isReady = team.isReady,
-                        nickname = team.nickname,
-                        participants = team.participants,
-                    )
-                }
-            }
-        }
+        ParticipantTeamsSection(state.participantTeams)
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        ContentSection(
-            titleText = "강습 관리",
-        ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-            ) {
-                SsingButton(
-                    text = "문제 신고",
-                    onClick = {},
-                    style = SsingButtonStyle.RED,
-                    modifier = Modifier.weight(1f),
-                )
-
-                SsingButton(
-                    text = "채팅방",
-                    onClick = {},
-                    style = SsingButtonStyle.GRAY,
-                    modifier = Modifier.weight(1f),
-                )
-            }
-        }
+        LessonManagementSection(
+            primaryButton = LessonActionButton("문제 신고", {}),
+            secondaryButton = LessonActionButton("채팅방", {})
+        )
     }
 }
 
@@ -339,46 +248,14 @@ private fun CompletedLessonContent(
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        ContentSection(
-            titleText = "강사 프로필",
-        ) {
-            val instructorProfile = state.instructorProfile ?: return@ContentSection
-
-            InstructorProfileButton(
-                name = instructorProfile.name,
-                age = instructorProfile.age,
-                gender = instructorProfile.gender,
-                level = instructorProfile.level,
-                imageUrl = instructorProfile.imageUrl,
-                onClick = {},
-            )
-        }
+        InstructorProfileSection(state.instructorProfile)
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        ContentSection(
-            titleText = "강습 관리",
-        ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-            ) {
-                SsingButton(
-                    text = "문제 신고",
-                    onClick = {},
-                    style = SsingButtonStyle.RED,
-                    modifier = Modifier.weight(1f),
-                )
-
-                SsingButton(
-                    text = "이 강사님 추가 예약",
-                    onClick = {},
-                    style = SsingButtonStyle.GRAY,
-                    modifier = Modifier.weight(1f),
-                )
-            }
-        }
+        LessonManagementSection(
+            primaryButton = LessonActionButton("문제 신고", {}),
+            secondaryButton = LessonActionButton("이 강사님 추가 예약", {})
+        )
     }
 }
 
@@ -408,45 +285,81 @@ private fun CanceledLessonContent(
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        ContentSection(
-            titleText = "강사 프로필",
-        ) {
-            val instructorProfile = state.instructorProfile ?: return@ContentSection
-
-            InstructorProfileButton(
-                name = instructorProfile.name,
-                age = instructorProfile.age,
-                gender = instructorProfile.gender,
-                level = instructorProfile.level,
-                imageUrl = instructorProfile.imageUrl,
-                onClick = {},
-            )
-        }
+        InstructorProfileSection(state.instructorProfile)
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        ContentSection(
-            titleText = "강습 관리",
-        ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-            ) {
-                SsingButton(
-                    text = "문제 신고",
-                    onClick = {},
-                    style = SsingButtonStyle.RED,
-                    modifier = Modifier.weight(1f),
-                )
+        LessonManagementSection(
+            primaryButton = LessonActionButton("문제 신고", {}),
+            secondaryButton = LessonActionButton("강습 내역 보기", {})
+        )
+    }
+}
 
-                SsingButton(
-                    text = "강습 내역 보기",
-                    onClick = {},
-                    style = SsingButtonStyle.GRAY,
-                    modifier = Modifier.weight(1f),
+@Composable
+private fun InstructorProfileSection(
+    instructorProfile: InstructorProfileUiModel?,
+) {
+    ContentSection(
+        titleText = "강사 프로필",
+    ) {
+        val profile = instructorProfile ?: return@ContentSection
+
+        InstructorProfileButton(
+            name = profile.name,
+            age = profile.age,
+            gender = profile.gender,
+            level = profile.level,
+            imageUrl = profile.imageUrl,
+            onClick = {},
+        )
+    }
+}
+
+@Composable
+private fun ParticipantTeamsSection(
+    participantTeams: ImmutableList<ParticipantTeamUiModel>,
+) {
+    ContentSection(titleText = "강습생 정보") {
+        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            participantTeams.forEach { team ->
+                ConsumerInfoCard(
+                    isReady = team.isReady,
+                    nickname = team.nickname,
+                    participants = team.participants,
                 )
             }
+        }
+    }
+}
+
+private data class LessonActionButton(
+    val text: String,
+    val onClick: () -> Unit,
+)
+
+@Composable
+private fun LessonManagementSection(
+    primaryButton: LessonActionButton,
+    secondaryButton: LessonActionButton,
+) {
+    ContentSection(titleText = "강습 관리") {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+        ) {
+            SsingButton(
+                text = primaryButton.text,
+                onClick = primaryButton.onClick,
+                style = SsingButtonStyle.RED,
+                modifier = Modifier.weight(1f),
+            )
+            SsingButton(
+                text = secondaryButton.text,
+                onClick = secondaryButton.onClick,
+                style = SsingButtonStyle.GRAY,
+                modifier = Modifier.weight(1f),
+            )
         }
     }
 }
@@ -549,6 +462,15 @@ private fun ConsumerLessonScreenPreview(
     @PreviewParameter(LessonBannerStatePreviewProvider::class) bannerState: LessonBannerState,
 ) {
     SSINGTheme {
+        val sampleLessonInfo = LessonInfoUiModel(
+            tags = persistentListOf("스노보드", "자격증이 있어요"),
+            teamNicknames = persistentListOf("김멍멍", "김야옹"),
+            totalCount = 2,
+            place = "000 리조트",
+            duration = "2시간",
+            price = 500000,
+        )
+
         val baseParticipantTeams = persistentListOf(
             ParticipantTeamUiModel(
                 isReady = true,
@@ -571,14 +493,7 @@ private fun ConsumerLessonScreenPreview(
         val state = ConsumerLessonContract.State(
             lessonBannerState = bannerState,
             isReady = false,
-            lessonInfo = LessonInfoUiModel(
-                tags = persistentListOf("스노보드", "자격증이 있어요"),
-                teamNicknames = persistentListOf("김멍멍", "김야옹"),
-                totalCount = 2,
-                place = "000 리조트",
-                duration = "2시간",
-                price = 500000,
-            ),
+            lessonInfo = sampleLessonInfo,
             instructorProfile = InstructorProfileUiModel(
                 name = "김어흥 강사",
                 age = 27,
@@ -588,25 +503,11 @@ private fun ConsumerLessonScreenPreview(
             ),
             participantTeams = participantTeams,
             completedLessonInfo = CompletedLessonInfoUiModel(
-                lessonInfo = LessonInfoUiModel(
-                    tags = persistentListOf("스노보드", "자격증이 있어요"),
-                    teamNicknames = persistentListOf("김멍멍", "김야옹"),
-                    totalCount = 2,
-                    place = "000 리조트",
-                    duration = "2시간",
-                    price = 500000,
-                ),
+                lessonInfo = sampleLessonInfo,
                 actualTimeRange = "14:00 - 16:00 (2시간)",
             ),
             canceledLessonInfo = CanceledLessonInfoUiModel(
-                lessonInfo = LessonInfoUiModel(
-                    tags = persistentListOf("스노보드", "자격증이 있어요"),
-                    teamNicknames = persistentListOf("김멍멍", "김야옹"),
-                    totalCount = 2,
-                    place = "000 리조트",
-                    duration = "2시간",
-                    price = 500000,
-                ),
+                lessonInfo = sampleLessonInfo,
                 cancelDateTime = "2026.07.10 14:00",
                 cancelSubject = "강습생",
                 cancelReason = "일정 변경",
