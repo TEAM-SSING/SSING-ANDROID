@@ -128,7 +128,7 @@ private fun RatingSection(
 
             Text(
                 text = grade.label,
-                style = SSINGTheme.typography.caption.md14,
+                style = SSINGTheme.typography.caption.md12,
                 color = SSINGTheme.colors.textNormal,
             )
         }
@@ -154,7 +154,7 @@ private fun RatingSection(
 
             Text(
                 text = "${min(progress, 100)}%",
-                style = SSINGTheme.typography.caption.md14,
+                style = SSINGTheme.typography.caption.md12,
                 color = SSINGTheme.colors.textNormal,
             )
         }
