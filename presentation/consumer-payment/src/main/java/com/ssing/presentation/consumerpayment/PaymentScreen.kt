@@ -34,7 +34,7 @@ import com.ssing.core.ui.common.component.SsingModal
 import com.ssing.core.ui.common.component.SsingTopBar
 import com.ssing.core.ui.designsystem.theme.SSINGTheme
 import com.ssing.core.ui.extension.toast
-import com.ssing.core.ui.util.DecimalFormatter
+import com.ssing.core.ui.util.toDecimalFormat
 import com.ssing.core.ui.util.HandleUiEffects
 import kotlinx.collections.immutable.persistentListOf
 
@@ -182,7 +182,7 @@ private fun PayInfoSection(
                 )
 
                 Text(
-                    text = "${state.lessonCost.DecimalFormatter()}원",
+                    text = "${state.lessonCost.toDecimalFormat()}원",
                     style = SSINGTheme.typography.caption.sb14,
                     color = SSINGTheme.colors.textStrong,
                 )
@@ -199,7 +199,7 @@ private fun PayInfoSection(
                 )
 
                 Text(
-                    text = "${state.resortCost.DecimalFormatter()}원",
+                    text = "${state.resortCost.toDecimalFormat()}원",
                     style = SSINGTheme.typography.caption.sb14,
                     color = SSINGTheme.colors.textStrong,
                 )
@@ -221,7 +221,7 @@ private fun PayInfoSection(
                 )
 
                 Text(
-                    text = "${(state.lessonCost+state.resortCost).DecimalFormatter()}원",
+                    text = "${(state.lessonCost+state.resortCost).toDecimalFormat()}원",
                     style = SSINGTheme.typography.title.b16,
                     color = SSINGTheme.colors.primaryNormal,
                 )
