@@ -91,8 +91,8 @@ private fun ConsumerHomeScreen(
                 .background(
                     color = SSINGTheme.colors.backgroundAlternative,
                 )
-                .padding(innerPadding)
-                .verticalScroll(rememberScrollState()),
+                .verticalScroll(rememberScrollState())
+                .padding(innerPadding),
             ){
 
             Spacer(modifier = Modifier.height(23.dp))
@@ -143,65 +143,6 @@ private fun ConsumerHomeScreen(
                     modifier = Modifier.weight(1f),
                 )
             }
-
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-            ) {
-                StartMatchingButton(
-                    badgeText = "99명 매칭중",
-                    title = "씽 매칭",
-                    description = "준비된 강습생과\n바로 연결하기",
-                    iconRes = R.drawable.img_fast_dark,
-                    style = StartMatchingCardStyle.BLUE,
-                    onClick = {},
-                    chipStyle = SsingChipStyle.BLUE,
-                    modifier = Modifier.weight(1f),
-                )
-
-                StartMatchingButton(
-                    badgeText = "예약 모집중",
-                    title = "예약 관리",
-                    description = "강습 가능한\n시간표 관리하기",
-                    iconRes = R.drawable.img_reservation,
-                    style = StartMatchingCardStyle.WHITE,
-                    onClick = {},
-                    chipStyle = SsingChipStyle.BLUE,
-                    modifier = Modifier.weight(1f),
-                )
-            }
-
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-            ) {
-                StartMatchingButton(
-                    badgeText = "99명 매칭중",
-                    title = "씽 매칭",
-                    description = "준비된 강습생과\n바로 연결하기",
-                    iconRes = R.drawable.img_fast_dark,
-                    style = StartMatchingCardStyle.BLUE,
-                    onClick = {},
-                    chipStyle = SsingChipStyle.BLUE,
-                    modifier = Modifier.weight(1f),
-                )
-
-                StartMatchingButton(
-                    badgeText = "예약 모집중",
-                    title = "예약 관리",
-                    description = "강습 가능한\n시간표 관리하기",
-                    iconRes = R.drawable.img_reservation,
-                    style = StartMatchingCardStyle.WHITE,
-                    onClick = {},
-                    chipStyle = SsingChipStyle.BLUE,
-                    modifier = Modifier.weight(1f),
-                )
-            }
-
         }
     }
 }
