@@ -46,6 +46,7 @@ import kotlinx.collections.immutable.persistentListOf
  * @param price 예상 가격
  * @param equipmentStatus 장비 상태
  */
+
 @Composable
 fun SsingMatchingDetailCard(
     modifier: Modifier = Modifier,
@@ -63,12 +64,13 @@ fun SsingMatchingDetailCard(
     isPaid: Boolean = false,
     price: Int? = null,
     equipmentStatus: String = "",
+    borderColor: Color = SSINGTheme.colors.borderAlternative,
 ) {
     Column(
         modifier = modifier
             .border(
                 width = 1.dp,
-                color = SSINGTheme.colors.borderAlternative,
+                color = borderColor,
                 shape = RoundedCornerShape(12.dp),
             )
             .clip(RoundedCornerShape(12.dp))
