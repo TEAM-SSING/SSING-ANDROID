@@ -4,8 +4,11 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -18,14 +21,21 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.ssing.core.ui.common.component.ConsumerInfoCard
+import com.ssing.core.ui.common.component.InstructorProfileButton
 import com.ssing.core.ui.common.component.LessonBanner
 import com.ssing.core.ui.common.component.LessonBannerState
 import com.ssing.core.ui.common.component.SsingButton
 import com.ssing.core.ui.common.component.SsingButtonStyle
+import com.ssing.core.ui.common.component.SsingMatchingDetailCardSmall
 import com.ssing.core.ui.common.component.SsingTopBar
 import com.ssing.core.ui.designsystem.theme.Blue50
 import com.ssing.core.ui.designsystem.theme.SSINGTheme
 import com.ssing.core.ui.designsystem.theme.White
+import com.ssing.presentation.consumerlesson.model.InstructorProfileUiModel
+import com.ssing.presentation.consumerlesson.model.LessonInfoUiModel
+import com.ssing.presentation.consumerlesson.model.ParticipantTeamUiModel
+import kotlinx.collections.immutable.persistentListOf
 
 @Composable
 internal fun ConsumerLessonRoute(
@@ -69,11 +79,11 @@ private fun ConsumerLessonScreen(
             }
 
             item {
-                when (val bannerState = state.lessonBannerState) {
-                    is LessonBannerState.Before -> BeforeLessonBody(bannerState)
-                    is LessonBannerState.Ongoing -> OngoingLessonBody(bannerState)
-                    is LessonBannerState.Completed -> CompletedLessonBody(bannerState)
-                    is LessonBannerState.Canceled -> CanceledLessonBody(bannerState)
+                when (state.lessonBannerState) {
+                    is LessonBannerState.Before -> BeforeLessonContent(state)
+                    is LessonBannerState.Ongoing -> OngoingLessonContent(state)
+                    is LessonBannerState.Completed -> CompletedLessonContent(state)
+                    is LessonBannerState.Canceled -> CanceledLessonContent(state)
                 }
             }
         }
@@ -100,43 +110,117 @@ private fun ConsumerLessonScreen(
 }
 
 @Composable
-private fun BeforeLessonBody(
-    state: LessonBannerState.Before,
+private fun BeforeLessonContent(
+    state: ConsumerLessonContract.State,
     modifier: Modifier = Modifier,
 ) {
-    BodyBackground(
-        modifier = modifier,
-    ) {
+    ContentBackground {
+        ContentSection(
+            titleText = "강습 정보",
+        ) {
+            val lessonInfo = state.lessonInfo ?: return@ContentSection
 
+            SsingMatchingDetailCardSmall(
+                tags = lessonInfo.tags,
+                teamNicknames = lessonInfo.teamNicknames,
+                totalCount = lessonInfo.totalCount,
+                place = lessonInfo.place,
+                duration = lessonInfo.duration,
+                price = lessonInfo.price,
+            )
+        }
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        ContentSection(
+            titleText = "강사 프로필",
+        ) {
+            val instructorProfile = state.instructorProfile ?: return@ContentSection
+
+            InstructorProfileButton(
+                name = instructorProfile.name,
+                age = instructorProfile.age,
+                gender = instructorProfile.gender,
+                level = instructorProfile.level,
+                imageUrl = instructorProfile.imageUrl,
+                onClick = {},
+            )
+        }
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        ContentSection(
+            titleText = "강습생 정보",
+        ) {
+            Column(
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+            ) {
+                state.participantTeams.forEach { team ->
+                    ConsumerInfoCard(
+                        isReady = team.isReady,
+                        nickname = team.nickname,
+                        participants = team.participants,
+                    )
+                }
+            }
+        }
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        ContentSection(
+            titleText = "강습 관리",
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+            ) {
+                SsingButton(
+                    text = "강습 취소",
+                    onClick = {
+                        // TODO: 강습 취소 바텀시트 노출
+                    },
+                    style = SsingButtonStyle.RED,
+                    modifier = Modifier.weight(1f),
+                )
+
+                SsingButton(
+                    text = "채팅방",
+                    onClick = {},
+                    style = SsingButtonStyle.GRAY,
+                    modifier = Modifier.weight(1f),
+                )
+            }
+        }
     }
 }
 
 @Composable
-private fun OngoingLessonBody(
-    state: LessonBannerState.Ongoing,
+private fun OngoingLessonContent(
+    state: ConsumerLessonContract.State,
     modifier: Modifier = Modifier,
 ) {
-
+    // TODO: 강습 진행 중 UI 구현
 }
 
 @Composable
-private fun CompletedLessonBody(
-    state: LessonBannerState.Completed,
+private fun CompletedLessonContent(
+    state: ConsumerLessonContract.State,
     modifier: Modifier = Modifier,
 ) {
-
+    // TODO: 강습 진행 후 UI 구현
 }
 
 @Composable
-private fun CanceledLessonBody(
-    state: LessonBannerState.Canceled,
+private fun CanceledLessonContent(
+    state: ConsumerLessonContract.State,
     modifier: Modifier = Modifier,
 ) {
-
+    // TODO: 강습 취소 UI 구현
 }
 
 @Composable
-private fun BodyBackground(
+private fun ContentBackground(
     modifier: Modifier = Modifier,
     content: @Composable () -> Unit,
 ) {
@@ -162,7 +246,7 @@ private fun BodyBackground(
 }
 
 @Composable
-private fun BodySection(
+private fun ContentSection(
     titleText: String,
     modifier: Modifier = Modifier,
     spacer: Int = 8,
@@ -195,6 +279,7 @@ private fun BottomButton(
         } else {
             "강습 준비 완료"
         }
+
         is LessonBannerState.Ongoing -> "강습 종료"
         is LessonBannerState.Completed -> "리뷰 쓰기"
         is LessonBannerState.Canceled -> "홈으로 돌아가기"
@@ -204,7 +289,7 @@ private fun BottomButton(
         text = buttonText,
         onClick = onClick,
         style = SsingButtonStyle.BLUE,
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
     )
 }
 
@@ -218,6 +303,35 @@ private fun ConsumerLessonScreenPreview() {
                     isInstructorReady = false,
                     participantReadyCount = 2,
                     participantTotalCount = 5,
+                ),
+                lessonInfo = LessonInfoUiModel(
+                    tags = persistentListOf("스노보드", "자격증이 있어요"),
+                    teamNicknames = persistentListOf(
+                        "김멍멍", "김야옹"
+                    ),
+                    totalCount = 2,
+                    place = "000 리조트",
+                    duration = "0시간",
+                    price = 500000,
+                ),
+                instructorProfile = InstructorProfileUiModel(
+                    name = "김어흥 강사",
+                    age = 27,
+                    gender = "남",
+                    level = "grade1",
+                    imageUrl = "",
+                ),
+                participantTeams = persistentListOf(
+                    ParticipantTeamUiModel(
+                        isReady = true,
+                        nickname = "김음메",
+                        participants = persistentListOf("38세 남", "12세 여", "9세 남"),
+                    ),
+                    ParticipantTeamUiModel(
+                        isReady = false,
+                        nickname = "김끼룩",
+                        participants = persistentListOf("38세 남", "12세 여", "9세 남"),
+                    ),
                 )
             ),
         )
