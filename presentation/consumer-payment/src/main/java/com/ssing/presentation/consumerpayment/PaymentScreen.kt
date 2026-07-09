@@ -1,6 +1,5 @@
 package com.ssing.presentation.consumerpayment
 
-import android.R.attr.duration
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -19,7 +18,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.ssing.core.ui.common.component.Gender
 import com.ssing.core.ui.common.component.Participant
 import com.ssing.core.ui.common.component.SsingButton
@@ -29,9 +27,7 @@ import com.ssing.core.ui.common.component.SsingMatchingDetailCard
 import com.ssing.core.ui.common.component.SsingTopBar
 import com.ssing.core.ui.designsystem.theme.SSINGTheme
 import com.ssing.core.ui.util.DecimalFormatter
-import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
-import kotlin.String
 
 @Composable
 internal fun PaymentRoute(
