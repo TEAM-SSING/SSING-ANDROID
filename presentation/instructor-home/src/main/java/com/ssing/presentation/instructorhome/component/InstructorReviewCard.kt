@@ -73,7 +73,7 @@ private fun ReviewSection(
         horizontalArrangement = Arrangement.spacedBy(2.dp),
     ) {
         Text(
-            text = averageRating.toString(),
+            text = "%.1f".format(averageRating),
             color = SSINGTheme.colors.textAlternative,
             style = SSINGTheme.typography.body.sb16,
         )
@@ -192,7 +192,7 @@ private fun InstructorReviewCardPreview() {
     SSINGTheme {
         InstructorReviewCard(
             averageRating = 4f,
-            grade = Grade.Grade4,
+            grade = Grade.GRADE4,
             achievementRate = 88,
             onClick = {},
         )
