@@ -150,7 +150,7 @@ internal fun LessonDetailCompletedScreen(
                         .padding(16.dp),
                 ) {
                     SsingButton(
-                        text = "강습 준비 완료",
+                        text = "정산 보기",
                         onClick = { onEndClick() },
                         style = SsingButtonStyle.BLUE,
                         modifier = Modifier.fillMaxWidth(),
