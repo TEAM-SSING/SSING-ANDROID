@@ -10,13 +10,13 @@ import com.ssing.presentation.consumerprofile.ProfileRoute
 import kotlinx.serialization.Serializable
 
 @Serializable
-data object Profile : MainTabRoute
+data object ConsumerProfile : MainTabRoute
 
 fun NavGraphBuilder.profileNavGraph(
     paddingValues: PaddingValues,
     navigateToLogin: () -> Unit,
 ) {
-    composable<Profile> {
+    composable<ConsumerProfile> {
         ProfileRoute(
             navigateToLogin = navigateToLogin,
             modifier = Modifier.padding(paddingValues),
