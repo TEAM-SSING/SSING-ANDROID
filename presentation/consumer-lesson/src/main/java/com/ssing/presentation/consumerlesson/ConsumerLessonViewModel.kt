@@ -2,6 +2,7 @@ package com.ssing.presentation.consumerlesson
 
 import androidx.lifecycle.viewModelScope
 import com.ssing.core.ui.base.BaseViewModel
+import com.ssing.core.ui.common.component.CancelReason
 import com.ssing.core.ui.common.component.LessonBannerState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -20,9 +21,20 @@ internal class ConsumerLessonViewModel @Inject constructor() :
         updateState { copy(showCancelConfirmSheet = true) }
     }
 
+    fun onReasonSelected(reason: CancelReason) {
+        updateState { copy(selectedReason = reason) }
+    }
+
     fun onCancelConfirmed() {
         viewModelScope.launch {
-            updateState { copy(lessonBannerState = LessonBannerState.Canceled) }
+            updateState {
+                copy(
+                    lessonBannerState = LessonBannerState.Canceled,
+                    showCancelConfirmSheet = false,
+                    selectedReason = null,
+                    // TODO: LessonBannerState를 canceled로 변경
+                )
+            }
         }
     }
 

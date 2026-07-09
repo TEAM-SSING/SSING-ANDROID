@@ -12,23 +12,31 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.input.rememberTextFieldState
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.ssing.core.ui.common.component.CancelReason
 import com.ssing.core.ui.common.component.ConsumerInfoCard
 import com.ssing.core.ui.common.component.InstructorProfileButton
 import com.ssing.core.ui.common.component.LessonBanner
 import com.ssing.core.ui.common.component.LessonBannerState
+import com.ssing.core.ui.common.component.MatchingCancelBottomSheet
 import com.ssing.core.ui.common.component.SsingButton
 import com.ssing.core.ui.common.component.SsingButtonStyle
 import com.ssing.core.ui.common.component.SsingMatchingDetailCardSmall
 import com.ssing.core.ui.common.component.SsingTopBar
+import com.ssing.core.ui.common.component.UserRole
 import com.ssing.core.ui.designsystem.theme.Blue50
 import com.ssing.core.ui.designsystem.theme.SSINGTheme
 import com.ssing.core.ui.designsystem.theme.White
@@ -46,15 +54,28 @@ internal fun ConsumerLessonRoute(
 
     ConsumerLessonScreen(
         state = state,
+        onReadyClick = viewModel::onReadyClick,
+        onCancelClick = viewModel::onCancelClick,
+        onReasonSelected = viewModel::onReasonSelected,
+        onCancelConfirmed = viewModel::onCancelConfirmed,
+        onCancelDismiss = viewModel::onCancelDismiss,
         modifier = modifier,
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ConsumerLessonScreen(
     state: ConsumerLessonContract.State,
+    onReadyClick: () -> Unit,
+    onCancelClick: () -> Unit,
+    onReasonSelected: (CancelReason) -> Unit,
+    onCancelConfirmed: () -> Unit,
+    onCancelDismiss: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val etcState = rememberTextFieldState()
+
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -80,7 +101,11 @@ private fun ConsumerLessonScreen(
 
             item {
                 when (state.lessonBannerState) {
-                    is LessonBannerState.Before -> BeforeLessonContent(state)
+                    is LessonBannerState.Before -> BeforeLessonContent(
+                        state,
+                        onCancelClick = onCancelClick,
+                    )
+
                     is LessonBannerState.Ongoing -> OngoingLessonContent(state)
                     is LessonBannerState.Completed -> CompletedLessonContent(state)
                     is LessonBannerState.Canceled -> CanceledLessonContent(state)
@@ -107,11 +132,23 @@ private fun ConsumerLessonScreen(
         }
 
     }
+
+    if (state.showCancelConfirmSheet) {
+        MatchingCancelBottomSheet(
+            userRole = UserRole.CONSUMER,
+            selectedReason = state.selectedReason,
+            onReasonClick = onReasonSelected,
+            etcState = etcState,
+            onConfirmClick = onCancelConfirmed,
+            onDismissRequest = onCancelDismiss,
+        )
+    }
 }
 
 @Composable
 private fun BeforeLessonContent(
     state: ConsumerLessonContract.State,
+    onCancelClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     ContentBackground {
@@ -177,9 +214,7 @@ private fun BeforeLessonContent(
             ) {
                 SsingButton(
                     text = "강습 취소",
-                    onClick = {
-                        // TODO: 강습 취소 바텀시트 노출
-                    },
+                    onClick = onCancelClick,
                     style = SsingButtonStyle.RED,
                     modifier = Modifier.weight(1f),
                 )
@@ -297,43 +332,52 @@ private fun BottomButton(
 @Composable
 private fun ConsumerLessonScreenPreview() {
     SSINGTheme {
-        ConsumerLessonScreen(
-            state = ConsumerLessonContract.State(
-                lessonBannerState = LessonBannerState.Before(
-                    isInstructorReady = false,
-                    participantReadyCount = 2,
-                    participantTotalCount = 5,
-                ),
-                lessonInfo = LessonInfoUiModel(
-                    tags = persistentListOf("스노보드", "자격증이 있어요"),
-                    teamNicknames = persistentListOf(
-                        "김멍멍", "김야옹"
+        var state by remember {
+            mutableStateOf(
+                ConsumerLessonContract.State(
+                    lessonBannerState = LessonBannerState.Before(
+                        isInstructorReady = false,
+                        participantReadyCount = 2,
+                        participantTotalCount = 5,
                     ),
-                    totalCount = 2,
-                    place = "000 리조트",
-                    duration = "0시간",
-                    price = 500000,
-                ),
-                instructorProfile = InstructorProfileUiModel(
-                    name = "김어흥 강사",
-                    age = 27,
-                    gender = "남",
-                    level = "grade1",
-                    imageUrl = "",
-                ),
-                participantTeams = persistentListOf(
-                    ParticipantTeamUiModel(
-                        isReady = true,
-                        nickname = "김음메",
-                        participants = persistentListOf("38세 남", "12세 여", "9세 남"),
+                    lessonInfo = LessonInfoUiModel(
+                        tags = persistentListOf("스노보드", "자격증이 있어요"),
+                        teamNicknames = persistentListOf("김멍멍", "김야옹"),
+                        totalCount = 2,
+                        place = "000 리조트",
+                        duration = "0시간",
+                        price = 500000,
                     ),
-                    ParticipantTeamUiModel(
-                        isReady = false,
-                        nickname = "김끼룩",
-                        participants = persistentListOf("38세 남", "12세 여", "9세 남"),
+                    instructorProfile = InstructorProfileUiModel(
+                        name = "김어흥 강사",
+                        age = 27,
+                        gender = "남",
+                        level = "grade1",
+                        imageUrl = "",
                     ),
+                    participantTeams = persistentListOf(
+                        ParticipantTeamUiModel(
+                            isReady = true,
+                            nickname = "김음메",
+                            participants = persistentListOf("38세 남", "12세 여", "9세 남"),
+                        ),
+                        ParticipantTeamUiModel(
+                            isReady = false,
+                            nickname = "김끼룩",
+                            participants = persistentListOf("38세 남", "12세 여", "9세 남"),
+                        ),
+                    )
                 )
-            ),
+            )
+        }
+
+        ConsumerLessonScreen(
+            state = state,
+            onReadyClick = { state = state.copy(isReady = true) },
+            onCancelClick = { state = state.copy(showCancelConfirmSheet = true) },
+            onReasonSelected = { state = state.copy(selectedReason = it) },
+            onCancelConfirmed = { state = state.copy(showCancelConfirmSheet = false, selectedReason = null) },
+            onCancelDismiss = { state = state.copy(showCancelConfirmSheet = false, selectedReason = null) },
         )
     }
 }

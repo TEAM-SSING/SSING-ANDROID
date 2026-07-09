@@ -1,6 +1,7 @@
 package com.ssing.presentation.consumerlesson
 
 import androidx.compose.runtime.Immutable
+import com.ssing.core.ui.common.component.CancelReason
 import com.ssing.core.ui.common.component.LessonBannerState
 import com.ssing.presentation.consumerlesson.model.InstructorProfileUiModel
 import com.ssing.presentation.consumerlesson.model.LessonInfoUiModel
@@ -25,6 +26,7 @@ internal interface ConsumerLessonContract {
 
         val isReady: Boolean = false,
         val showCancelConfirmSheet: Boolean = false,
+        val selectedReason: CancelReason? = null,
     )
 
     sealed interface Effect {
