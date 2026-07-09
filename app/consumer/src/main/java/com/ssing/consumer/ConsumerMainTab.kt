@@ -7,6 +7,7 @@ import com.ssing.core.ui.R.drawable
 import com.ssing.core.ui.navigation.MainTab
 import com.ssing.core.ui.navigation.MainTabRoute
 import com.ssing.core.ui.navigation.Route
+import com.ssing.presentation.consumerprofile.navigation.Profile
 import com.ssing.presentation.consumerhome.navigation.ConsumerHome
 
 enum class ConsumerMainTab(
@@ -38,7 +39,7 @@ enum class ConsumerMainTab(
         selectedIconRes = drawable.ic_profile,
         unselectedIconRes = drawable.ic_profile,
         titleRes = R.string.consumer_profile,
-        route = ConsumerDummyTabRoute,
+        route = Profile,
     );
 
     companion object {
