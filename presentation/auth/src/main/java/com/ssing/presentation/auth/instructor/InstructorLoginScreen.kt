@@ -96,7 +96,6 @@ private fun InstructorLoginScreen(
             .background(color = SSINGTheme.colors.primaryNormal)
             .systemBarsPadding(),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center,
     ) {
         InstructorLoginLogo()
 
