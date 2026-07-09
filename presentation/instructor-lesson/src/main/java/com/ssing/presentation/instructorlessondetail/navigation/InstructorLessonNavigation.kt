@@ -19,7 +19,7 @@ fun NavGraphBuilder.instructorLessonNavGraph(
 ) {
     composable<InstructorLesson> {
         LessonDetailRoute(
-            navigateBack = { navController.popBackStack() },
+            navigateBack = navController::popBackStack,
             modifier = Modifier.padding(paddingValues),
         )
     }
