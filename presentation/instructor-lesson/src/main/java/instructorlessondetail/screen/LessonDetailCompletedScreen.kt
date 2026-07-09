@@ -42,7 +42,7 @@ import kotlinx.collections.immutable.persistentListOf
 internal fun LessonDetailCompletedScreen(
     completed: LessonDetailCompletedUiModel,
     lessonBannerState: LessonBannerState,
-    onCancelClassClick: () -> Unit,
+    onReviewClick: () -> Unit,
     onChatRoomClick: () -> Unit,
     onEndClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -77,7 +77,7 @@ internal fun LessonDetailCompletedScreen(
                     )
                     SsingButton(
                         text = "강습 후기",
-                        onClick = onCancelClassClick,
+                        onClick = onReviewClick,
                         style = SsingButtonStyle.GRAY,
                         modifier = Modifier.weight(1f),
                     )
@@ -213,7 +213,7 @@ private fun LessonDetailCompletedScreenPreview() {
                     ),
                 ),
             ),
-            onCancelClassClick = {},
+            onReviewClick = {},
             onChatRoomClick = {},
             onEndClick = {},
             lessonBannerState = LessonBannerState.Completed(
