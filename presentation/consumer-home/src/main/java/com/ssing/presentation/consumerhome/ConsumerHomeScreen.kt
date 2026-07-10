@@ -45,7 +45,7 @@ internal fun ConsumerHomeRoute(
     modifier: Modifier = Modifier,
     viewModel: ConsumerHomeViewModel = hiltViewModel(),
 ) {
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val state by viewModel.uiState.collectAsStateWithLifecycle()
     val context = LocalContext.current
 
     HandleUiEffects(viewModel.uiEffect) { effect ->
@@ -57,7 +57,7 @@ internal fun ConsumerHomeRoute(
     }
 
     ConsumerHomeScreen(
-        state = uiState,
+        state = state,
         onLessonClick = viewModel::onLessonClick,
         onMatchingClick = viewModel::onMatchingClick,
         onReservationClick = viewModel::onReservationClick,
