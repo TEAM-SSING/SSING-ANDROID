@@ -43,6 +43,7 @@ internal interface ConsumerMatchingContract {
             data object PopBackStack: Pending
             data object NavigateToResult: Pending
             data object NavigateToFailure: Pending
+            data object NavigateToHome: Pending
             data class ShowToast(val message: String) : Pending
         }
 
