@@ -40,7 +40,6 @@ import kotlinx.collections.immutable.persistentListOf
 
 @Composable
 internal fun PaymentRoute(
-    popBackStack: () -> Unit,
     navigateToLesson: () -> Unit,
     navigateToHome: () -> Unit,
     modifier: Modifier = Modifier,
@@ -53,7 +52,6 @@ internal fun PaymentRoute(
         if (effect is PaymentContract.Effect.Result) {
             when (effect) {
                 PaymentContract.Effect.Result.NavigateToLesson -> navigateToLesson()
-                PaymentContract.Effect.Result.PopBackStack -> popBackStack()
                 PaymentContract.Effect.Result.NavigateToHome -> navigateToHome()
                 is PaymentContract.Effect.Result.ShowToast -> context.toast(effect.message)
             }
