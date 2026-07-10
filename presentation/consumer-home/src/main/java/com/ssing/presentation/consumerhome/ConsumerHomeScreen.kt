@@ -18,6 +18,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -32,6 +33,7 @@ import com.ssing.core.ui.common.component.SsingHomeTopBar
 import com.ssing.core.ui.common.component.StartMatchingButton
 import com.ssing.core.ui.common.component.StartMatchingCardStyle
 import com.ssing.core.ui.designsystem.theme.SSINGTheme
+import com.ssing.core.ui.extension.toast
 import com.ssing.core.ui.util.HandleUiEffects
 import kotlinx.collections.immutable.persistentListOf
 import java.time.LocalDateTime
@@ -44,16 +46,13 @@ internal fun ConsumerHomeRoute(
     viewModel: ConsumerHomeViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val context = LocalContext.current
 
     HandleUiEffects(viewModel.uiEffect) { effect ->
         when (effect) {
-            is ConsumerHomeContract.Effect.NavigateToLessonDetail -> {
-               navigateToLessonDetail(effect.lessonId)
-            }
-            is ConsumerHomeContract.Effect.NavigateToMatching -> {
-                navigateToMatching()
-            }
-            else -> ConsumerHomeContract.Effect.ShowToast(effect.toString())
+            is ConsumerHomeContract.Effect.NavigateToLessonDetail -> navigateToLessonDetail(effect.lessonId)
+            is ConsumerHomeContract.Effect.NavigateToMatching -> navigateToMatching()
+            is ConsumerHomeContract.Effect.ShowToast -> context.toast(effect.message)
         }
     }
 

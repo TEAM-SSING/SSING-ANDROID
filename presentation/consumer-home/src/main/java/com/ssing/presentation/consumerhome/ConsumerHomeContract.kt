@@ -12,13 +12,11 @@ internal interface ConsumerHomeContract {
         val lessonCards: ImmutableList<HomeLessonCardState> = persistentListOf(
             HomeLessonCardState.Empty
         ),
-        val hasUnreadNotification: Boolean = false,
     )
 
     sealed interface Effect {
         data class ShowToast(val message: String) : Effect
         data object NavigateToMatching : Effect
         data class NavigateToLessonDetail(val lessonId: Long) : Effect
-        data object NavigateToReservation : Effect
     }
 }
