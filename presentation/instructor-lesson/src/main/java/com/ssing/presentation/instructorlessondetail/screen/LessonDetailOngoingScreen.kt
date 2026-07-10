@@ -25,7 +25,6 @@ import com.ssing.core.ui.common.component.LessonBannerState
 import com.ssing.core.ui.common.component.SsingButton
 import com.ssing.core.ui.common.component.SsingButtonStyle
 import com.ssing.core.ui.common.component.SsingMatchingDetailCardSmall
-import com.ssing.core.ui.common.component.SsingModal
 import com.ssing.core.ui.common.component.SsingTopBar
 import com.ssing.core.ui.common.component.TeamNickname
 import com.ssing.core.ui.designsystem.theme.Blue50
@@ -43,9 +42,7 @@ internal fun LessonDetailOngoingScreen(
     onCancelClassClick: () -> Unit,
     onChatRoomClick: () -> Unit,
     onEndClick: () -> Unit,
-    onContinueClick: () -> Unit,
     modifier: Modifier = Modifier,
-    onDialogDismiss: () -> Unit = {},
 ) {
     Column(
         modifier = modifier
@@ -163,15 +160,6 @@ internal fun LessonDetailOngoingScreen(
                     modifier = Modifier.fillMaxWidth(),
                 )
             }
-            SsingModal(
-                onDismissRequest = onDialogDismiss,
-                title = "강습을 종료할까요?",
-                text = "종료 시 변경이 불가능해요",
-                primaryText = "강습 종료",
-                onPrimary = onDialogDismiss,
-                secondaryText = "취소",
-                onSecondary = onContinueClick,
-            )
         }
     }
 }
@@ -209,7 +197,6 @@ private fun LessonDetailOngoingScreenPreview() {
             onBack = {},
             onChatRoomClick = {},
             onEndClick = {},
-            onContinueClick = {},
             lessonBannerState = LessonBannerState.Ongoing(
                 remainingTime = "2:59:59",
                 elapsedTime = "59분",

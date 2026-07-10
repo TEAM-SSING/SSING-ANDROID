@@ -36,7 +36,6 @@ internal fun LessonDetailRoute(
         onDialogDismiss = viewModel::onDialogDismiss,
         onChatRoomClick = viewModel::onChatRoomClick,
         onEndClick = viewModel::onEndClick,
-        onContinueClick = viewModel::onContinueClick,
         onCancelReasonSelect = viewModel::onCancelReasonSelect,
         onEtcReasonTextChange = viewModel::onEtcReasonTextChange,
         modifier = modifier,
@@ -54,7 +53,6 @@ private fun LessonDetailScreen(
     onDialogDismiss: () -> Unit,
     onReadyButtonClick: () -> Unit,
     onEndClick: () -> Unit,
-    onContinueClick: () -> Unit,
     onCancelReasonSelect: (CancelReason) -> Unit,
     onEtcReasonTextChange: (String) -> Unit,
     modifier: Modifier = Modifier,
@@ -90,9 +88,7 @@ private fun LessonDetailScreen(
             onBack = onBackClick,
             onChatRoomClick = onChatRoomClick,
             onEndClick = onEndClick,
-            onContinueClick = onContinueClick,
             modifier = modifier,
-            onDialogDismiss = onDialogDismiss,
             )
 
         is LessonDetailPhase.LessonDetailCompleted -> LessonDetailCompletedScreen(
@@ -122,6 +118,7 @@ private fun LessonDetailScreen(
             onStopWaitingConfirm = { /* Handle via Event */ },
             onContinueMatchingClick = { /* Handle via Event */ },
             onReadyButtonClick = { },
+            onEndClick = { },
             onDialogDismiss = onDialogDismiss,
         )
     }
@@ -134,6 +131,7 @@ private fun LessonDetailDialogHost(
     onReadyButtonClick: () -> Unit,
     onStopWaitingConfirm: () -> Unit,
     onContinueMatchingClick: () -> Unit,
+    onEndClick: () -> Unit,
     onDialogDismiss: () -> Unit,
 ) {
     when (dialog) {
@@ -144,7 +142,7 @@ private fun LessonDetailDialogHost(
             primaryText = "준비 완료",
             onPrimary = onReadyButtonClick,
             secondaryText = "취소",
-            onSecondary = onStopWaitingConfirm,
+            onSecondary = onEndClick,
         )
 
         LessonDetailContract.LessonDetailDialog.LessonEnd -> SsingModal(
