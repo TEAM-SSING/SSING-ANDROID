@@ -21,7 +21,7 @@ internal fun ConsumerMainNavHost(
     paddingValues: PaddingValues,
     modifier: Modifier = Modifier,
 ) {
-    NavHost(
+    SsingNavHost(
         navController = navController,
         startDestination = ConsumerHome,
         modifier = modifier.fillMaxSize(),
