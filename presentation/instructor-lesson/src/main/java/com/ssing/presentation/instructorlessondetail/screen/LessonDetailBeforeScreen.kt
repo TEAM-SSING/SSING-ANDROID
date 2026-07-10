@@ -1,5 +1,6 @@
 package com.ssing.presentation.instructorlessondetail.screen
 
+import android.R.attr.enabled
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -129,68 +130,60 @@ internal fun LessonDetailBeforeScreen(
                                 topEnd = 12.dp,
                             )
                         )
+                        .padding(horizontal = 16.dp)
                 ) {
-                    Column(
-                        modifier = Modifier
-                            .padding(horizontal = 16.dp)
-                    ) {
-                        Spacer(modifier = Modifier.height(16.dp))
-                        SectionTitle(text = "강습 정보")
-                        SsingMatchingDetailCardSmall(
-                            tags = before.tags,
-                            teamNicknames = before.nicknames,
-                            totalCount = before.teams.size,
-                            place = before.location,
-                            duration = before.duration,
-                            price = before.price,
-                        )
-                    }
-                    Column(
-                        modifier = Modifier
-                            .padding(horizontal = 16.dp)
-                    ) {
-                        Spacer(modifier = Modifier.height(24.dp))
-                        SectionTitle(text = "강습생 정보")
-                        Spacer(modifier = Modifier.height(8.dp))
-                        before.teams.forEachIndexed { index, team ->
-                            ConsumerInfoCard(
-                                isReady = team.isReady ?: false,
-                                nickname = team.teamNickname,
-                                participants = team.participants,
-                                price = team.price,
-                            )
-                            if (index != before.teams.lastIndex) {
-                                Spacer(modifier = Modifier.height(4.dp))
-                            }
-                        }
-                    }
-                    Spacer(modifier = Modifier.height(24.dp))
-                    Column(modifier = Modifier.padding(horizontal = 16.dp)) {
-                        Text(
-                            text = "강습 관리",
-                            style = SSINGTheme.typography.caption.sb12,
-                            color = SSINGTheme.colors.textAlternative,
-                            modifier = Modifier.padding(bottom = 8.dp),
-                        )
-                        Row(
-                            horizontalArrangement = Arrangement.spacedBy(8.dp),
-                            modifier = Modifier.fillMaxWidth(),
-                        ) {
-                            SsingButton(
-                                text = "강습 취소",
-                                onClick = { showSheet = true },
-                                style = SsingButtonStyle.RED,
-                                modifier = Modifier.weight(1f),
-                            )
+                    Spacer(modifier = Modifier.height(16.dp))
+                    SectionTitle(text = "강습 정보")
+                    SsingMatchingDetailCardSmall(
+                        tags = before.tags,
+                        teamNicknames = before.nicknames,
+                        totalCount = before.teams.size,
+                        place = before.location,
+                        duration = before.duration,
+                        price = before.price,
+                    )
 
-                            SsingButton(
-                                text = "채팅방",
-                                onClick = onChatRoomClick,
-                                style = SsingButtonStyle.GRAY,
-                                modifier = Modifier.weight(1f),
-                            )
+                    Spacer(modifier = Modifier.height(24.dp))
+                    SectionTitle(text = "강습생 정보")
+                    Spacer(modifier = Modifier.height(8.dp))
+                    before.teams.forEachIndexed { index, team ->
+                        ConsumerInfoCard(
+                            isReady = team.isReady ?: false,
+                            nickname = team.teamNickname,
+                            participants = team.participants,
+                            price = team.price,
+                        )
+                        if (index != before.teams.lastIndex) {
+                            Spacer(modifier = Modifier.height(4.dp))
                         }
                     }
+
+                    Spacer(modifier = Modifier.height(24.dp))
+                    Text(
+                        text = "강습 관리",
+                        style = SSINGTheme.typography.caption.sb12,
+                        color = SSINGTheme.colors.textAlternative,
+                        modifier = Modifier.padding(bottom = 8.dp),
+                    )
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        modifier = Modifier.fillMaxWidth(),
+                    ) {
+                        SsingButton(
+                            text = "강습 취소",
+                            onClick = { showSheet = true },
+                            style = SsingButtonStyle.RED,
+                            modifier = Modifier.weight(1f),
+                        )
+
+                        SsingButton(
+                            text = "채팅방",
+                            onClick = onChatRoomClick,
+                            style = SsingButtonStyle.GRAY,
+                            modifier = Modifier.weight(1f),
+                        )
+                    }
+
                 }
 
             }
@@ -203,11 +196,7 @@ internal fun LessonDetailBeforeScreen(
         ) {
             SsingButton(
                 text = if (before.isInstructorReady) "강습 대기중" else "강습 준비 완료",
-                onClick = {
-                    if (!before.isInstructorReady) {
-                        onReadyButtonClick()
-                    }
-                },
+                onClick = { onReadyButtonClick() },
                 style = if (before.isInstructorReady) SsingButtonStyle.GRAY else SsingButtonStyle.BLUE,
                 enabled = !before.isInstructorReady,
                 modifier = Modifier.fillMaxWidth()
