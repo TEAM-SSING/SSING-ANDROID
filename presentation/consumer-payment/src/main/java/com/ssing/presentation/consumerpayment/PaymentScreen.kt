@@ -108,7 +108,8 @@ internal fun PaymentScreen(
                 style = SsingButtonStyle.BLUE,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(16.dp),
+                    .padding(horizontal = 16.dp)
+                    .padding(bottom = 16.dp),
             )
         }
     ) { innerPadding->
