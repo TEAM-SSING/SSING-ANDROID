@@ -12,6 +12,7 @@ import com.ssing.presentation.auth.navigation.authNavGraph
 import com.ssing.presentation.consumerhome.navigation.ConsumerHome
 import com.ssing.presentation.consumerhome.navigation.consumerHomeNavGraph
 import com.ssing.presentation.consumermatching.navigation.consumerMatchingNavGraph
+import com.ssing.presentation.devauth.navigation.devAuthNavGraph
 import com.ssing.presentation.notification.navigation.notificationNavGraph
 
 @Composable
@@ -25,6 +26,15 @@ internal fun ConsumerMainNavHost(
         startDestination = ConsumerHome,
         modifier = modifier.fillMaxSize(),
     ) {
+        devAuthNavGraph(
+            paddingValues = paddingValues,
+            navigateToHome = {
+                navController.navigate(
+                    route = ConsumerHome,
+                    navOptions = navController.clearBackStackNavOptions(),
+                )
+            },
+        )
         authNavGraph(
             paddingValues = paddingValues,
             navigateToHome = {
