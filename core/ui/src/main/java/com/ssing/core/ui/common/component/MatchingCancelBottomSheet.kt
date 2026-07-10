@@ -79,7 +79,7 @@ fun MatchingCancelBottomSheet(
     selectedReason: CancelReason?,
     onReasonClick: (CancelReason) -> Unit,
     etcState: TextFieldState,
-    onConfirmClick: () -> Unit,
+    onConfirmClick: (String?) -> Unit,
     onDismissRequest: () -> Unit,
     modifier: Modifier = Modifier,
     bottomSheetState: SheetState = rememberModalBottomSheetState(
@@ -108,7 +108,14 @@ fun MatchingCancelBottomSheet(
             selectedReason = selectedReason,
             onReasonClick = onReasonClick,
             etcState = etcState,
-            onConfirmClick = { dismiss(onConfirmClick) },
+            onConfirmClick = {
+                val etcReason = if (selectedReason == CancelReason.ETC) {
+                    etcState.text.toString()
+                } else {
+                    null
+                }
+                dismiss { onConfirmClick(etcReason) }
+            },
             onDismissRequest = { dismiss(onDismissRequest) },
         )
     }
