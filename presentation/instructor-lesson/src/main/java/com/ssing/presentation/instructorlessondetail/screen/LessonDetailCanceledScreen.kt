@@ -155,7 +155,7 @@ internal fun LessonDetailCanceledScreen(
             ) {
                 SsingButton(
                     text = "씽 매칭으로 돌아가기",
-                    onClick = { onEndClick() },
+                    onClick = onEndClick,
                     style = SsingButtonStyle.BLUE,
                     modifier = Modifier.fillMaxWidth(),
                 )

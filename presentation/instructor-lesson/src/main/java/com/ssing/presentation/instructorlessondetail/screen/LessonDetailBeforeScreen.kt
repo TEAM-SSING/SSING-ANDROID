@@ -195,7 +195,7 @@ internal fun LessonDetailBeforeScreen(
         ) {
             SsingButton(
                 text = if (before.isInstructorReady) "강습 대기중" else "강습 준비 완료",
-                onClick = { onReadyButtonClick() },
+                onClick = onReadyButtonClick,
                 style = if (before.isInstructorReady) SsingButtonStyle.GRAY else SsingButtonStyle.BLUE,
                 enabled = !before.isInstructorReady,
                 modifier = Modifier.fillMaxWidth()
@@ -208,8 +208,8 @@ internal fun LessonDetailBeforeScreen(
             selectedReason = cancelReasonState.selectedReason,
             onReasonClick = onCancelReasonSelect,
             etcState = etcState,
-            onConfirmClick = { onCancelClassClick() },
-            onDismissRequest = { onCancelClassClick() },
+            onConfirmClick = onCancelClassClick,
+            onDismissRequest = onCancelClassClick,
         )
     }
 }

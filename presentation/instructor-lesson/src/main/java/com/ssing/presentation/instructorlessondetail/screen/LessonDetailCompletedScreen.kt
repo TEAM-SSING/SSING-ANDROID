@@ -50,7 +50,7 @@ internal fun LessonDetailCompletedScreen(
     ) {
         SsingTopBar(
             title = "강습 상세",
-            onBack = { onBack() },
+            onBack = onBack,
             backgroundColor = Blue50,
             modifier = Modifier
                 .background(Blue50)
@@ -154,7 +154,7 @@ internal fun LessonDetailCompletedScreen(
             ) {
                 SsingButton(
                     text = "정산 보기",
-                    onClick = { onEndClick() },
+                    onClick = onEndClick,
                     style = SsingButtonStyle.BLUE,
                     modifier = Modifier.fillMaxWidth(),
                 )
