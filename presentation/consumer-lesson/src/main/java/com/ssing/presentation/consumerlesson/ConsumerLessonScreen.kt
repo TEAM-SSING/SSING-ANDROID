@@ -11,6 +11,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
@@ -26,6 +27,8 @@ import com.ssing.core.ui.common.component.UserRole
 import com.ssing.core.ui.designsystem.theme.Blue50
 import com.ssing.core.ui.designsystem.theme.SSINGTheme
 import com.ssing.core.ui.designsystem.theme.White
+import com.ssing.core.ui.extension.toast
+import com.ssing.core.ui.util.HandleUiEffects
 import com.ssing.presentation.consumerlesson.component.BottomButton
 import com.ssing.presentation.consumerlesson.component.content.BeforeLessonContent
 import com.ssing.presentation.consumerlesson.component.content.CanceledLessonContent
@@ -41,10 +44,19 @@ import kotlinx.collections.immutable.toPersistentList
 
 @Composable
 internal fun ConsumerLessonRoute(
+    navigateToHome: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: ConsumerLessonViewModel = hiltViewModel(),
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
+    val context = LocalContext.current
+
+    HandleUiEffects(viewModel.uiEffect) { effect ->
+        when (effect) {
+            is ConsumerLessonContract.Effect.ShowToast -> context.toast(effect.message)
+            is ConsumerLessonContract.Effect.NavigationToHome -> navigateToHome()
+        }
+    }
 
     ConsumerLessonScreen(
         state = state,
@@ -53,6 +65,7 @@ internal fun ConsumerLessonRoute(
         onReasonSelected = viewModel::onReasonSelected,
         onCancelConfirmed = viewModel::onCancelConfirmed,
         onCancelDismiss = viewModel::onCancelDismiss,
+        onChatClick = viewModel::onChatClick,
         modifier = modifier,
     )
 }
@@ -66,6 +79,7 @@ private fun ConsumerLessonScreen(
     onReasonSelected: (CancelReason) -> Unit,
     onCancelConfirmed: (String?) -> Unit,
     onCancelDismiss: () -> Unit,
+    onChatClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val etcState = rememberTextFieldState()
@@ -96,9 +110,13 @@ private fun ConsumerLessonScreen(
             when (state.lessonBannerState) {
                 is LessonBannerState.Before -> BeforeLessonContent(
                     state,
+                    onChatClick = onChatClick,
                     onCancelClick = onCancelClick,
                 )
-                is LessonBannerState.Ongoing -> OngoingLessonContent(state)
+                is LessonBannerState.Ongoing -> OngoingLessonContent(
+                    state,
+                    onChatClick = onChatClick,
+                )
                 is LessonBannerState.Completed -> CompletedLessonContent(state)
                 is LessonBannerState.Canceled -> CanceledLessonContent(state)
             }
@@ -213,6 +231,7 @@ private fun ConsumerLessonScreenPreview(
             onReasonSelected = {},
             onCancelConfirmed = {},
             onCancelDismiss = {},
+            onChatClick = {}
         )
     }
 }

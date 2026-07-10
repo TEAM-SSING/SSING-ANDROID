@@ -4,7 +4,13 @@ import androidx.lifecycle.viewModelScope
 import com.ssing.core.ui.base.BaseViewModel
 import com.ssing.core.ui.common.component.CancelReason
 import com.ssing.core.ui.common.component.LessonBannerState
+import com.ssing.presentation.consumerlesson.model.CanceledLessonInfoUiModel
+import com.ssing.presentation.consumerlesson.model.CompletedLessonInfoUiModel
+import com.ssing.presentation.consumerlesson.model.InstructorProfileUiModel
+import com.ssing.presentation.consumerlesson.model.LessonInfoUiModel
+import com.ssing.presentation.consumerlesson.model.ParticipantTeamUiModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -14,6 +20,63 @@ internal class ConsumerLessonViewModel @Inject constructor() :
     BaseViewModel<ConsumerLessonContract.State, ConsumerLessonContract.Effect>(
         ConsumerLessonContract.State()
     ) {
+
+    init {
+        // TODO: 서버 연동 후 실제 API 호출로 교체
+        loadDummyData()
+    }
+
+    private fun loadDummyData() {
+        val dummyLessonInfo = LessonInfoUiModel(
+            tags = persistentListOf("스노보드", "자격증이 있어요"),
+            teamNicknames = persistentListOf("김멍멍", "김야옹"),
+            totalCount = 2,
+            place = "000 리조트",
+            duration = "2시간",
+            price = 500000,
+        )
+
+        updateState {
+            copy(
+                lessonBannerState = LessonBannerState.Before(
+                    isInstructorReady = true,
+                    participantReadyCount = 3,
+                    participantTotalCount = 5,
+                ),
+                lessonInfo = dummyLessonInfo,
+                instructorProfile = InstructorProfileUiModel(
+                    name = "김어흥 강사",
+                    age = 27,
+                    gender = "남",
+                    level = "grade1",
+                    imageUrl = "",
+                ),
+                participantTeams = persistentListOf(
+                    ParticipantTeamUiModel(
+                        isReady = true,
+                        nickname = "김음메",
+                        participants = persistentListOf("38세 남", "12세 여", "9세 남"),
+                    ),
+                    ParticipantTeamUiModel(
+                        isReady = false,
+                        nickname = "김끼룩",
+                        participants = persistentListOf("38세 남", "12세 여", "9세 남"),
+                    ),
+                ),
+                completedLessonInfo = CompletedLessonInfoUiModel(
+                    lessonInfo = dummyLessonInfo,
+                    actualTimeRange = "14:00 - 16:00 (2시간)",
+                ),
+                canceledLessonInfo = CanceledLessonInfoUiModel(
+                    lessonInfo = dummyLessonInfo,
+                    cancelDateTime = "2026.07.10 14:00",
+                    cancelSubject = "강습생",
+                    cancelReason = "일정 변경",
+                ),
+            )
+        }
+    }
+
     fun onReadyClick() {
         updateState { copy(isReady = true) }
     }
@@ -29,22 +92,22 @@ internal class ConsumerLessonViewModel @Inject constructor() :
     fun onCancelConfirmed(
         etcReason: String? = null,
     ) {
-        viewModelScope.launch {
-            updateState {
-                copy(
-                    lessonBannerState = LessonBannerState.Canceled,
-                    showCancelConfirmSheet = false,
-                    selectedReason = null,
-                    etcReason = etcReason,
-                    // TODO: LessonBannerState를 canceled로 변경
-                )
-            }
+        updateState {
+            copy(
+                lessonBannerState = LessonBannerState.Canceled,
+                showCancelConfirmSheet = false,
+                selectedReason = null,
+                etcReason = etcReason,
+                // TODO: LessonBannerState를 canceled로 변경
+            )
         }
     }
 
     fun onCancelDismiss() {
         updateState { copy(showCancelConfirmSheet = false) }
     }
+
+    fun onChatClick() = sendEffect(ConsumerLessonContract.Effect.ShowToast("준비 중인 기능입니다."))
 
     fun onLessonStarted(remainingTime: String, elapsedTime: String) {
         updateState {

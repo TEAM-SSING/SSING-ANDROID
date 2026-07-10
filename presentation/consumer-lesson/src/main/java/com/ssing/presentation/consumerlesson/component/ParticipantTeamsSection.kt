@@ -14,13 +14,13 @@ internal fun ParticipantTeamsSection(
     participantTeams: ImmutableList<ParticipantTeamUiModel>,
     modifier: Modifier = Modifier,
 ) {
-    participantTeams.let { info ->
+    participantTeams.takeIf { it.isNotEmpty() }?.let { teams ->
         ContentSection(
             titleText = "강습생 정보",
             modifier = modifier,
         ) {
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                info.forEach { team ->
+                teams.forEach { team ->
                     ConsumerInfoCard(
                         isReady = team.isReady,
                         nickname = team.nickname,
