@@ -2,7 +2,6 @@ package com.ssing.presentation.instructorlessondetail.screen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -13,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -182,31 +182,47 @@ internal fun LessonDetailBeforeScreen(
                 }
             }
         }
-        Box(
+        SsingButton(
+            text = if (before.isInstructorReady) "강습 대기중" else "강습 준비 완료",
+            onClick = onReadyButtonClick,
+            style = if (before.isInstructorReady) SsingButtonStyle.GRAY else SsingButtonStyle.BLUE,
+            enabled = !before.isInstructorReady,
             modifier = Modifier
                 .fillMaxWidth()
                 .background(SSINGTheme.colors.backgroundNormal)
-                .padding(16.dp),
-        ) {
-            SsingButton(
-                text = if (before.isInstructorReady) "강습 대기중" else "강습 준비 완료",
-                onClick = onReadyButtonClick,
-                style = if (before.isInstructorReady) SsingButtonStyle.GRAY else SsingButtonStyle.BLUE,
-                enabled = !before.isInstructorReady,
-                modifier = Modifier.fillMaxWidth()
-            )
-        }
-    }
-    if (showSheet) {
-        MatchingCancelBottomSheet(
-            userRole = UserRole.INSTRUCTOR,
-            selectedReason = cancelReasonState.selectedReason,
-            onReasonClick = onCancelReasonSelect,
-            etcState = etcState,
-            onConfirmClick = onCancelClassClick,
-            onDismissRequest = onCancelClassClick,
+                .padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
         )
     }
+    CancelReasonBottomSheet(
+        visible = showSheet,
+        cancelReasonState = cancelReasonState,
+        etcState = etcState,
+        onReasonClick = onCancelReasonSelect,
+        onConfirmClick = onCancelClassClick,
+        onDismissRequest = { showSheet = false },
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun CancelReasonBottomSheet(
+    visible: Boolean,
+    cancelReasonState: CancelReasonState,
+    etcState: TextFieldState,
+    onReasonClick: (CancelReason) -> Unit,
+    onConfirmClick: () -> Unit,
+    onDismissRequest: () -> Unit,
+) {
+    if (!visible) return
+
+    MatchingCancelBottomSheet(
+        userRole = UserRole.INSTRUCTOR,
+        selectedReason = cancelReasonState.selectedReason,
+        onReasonClick = onReasonClick,
+        etcState = etcState,
+        onConfirmClick = onConfirmClick,
+        onDismissRequest = onDismissRequest,
+    )
 }
 
 @Preview
