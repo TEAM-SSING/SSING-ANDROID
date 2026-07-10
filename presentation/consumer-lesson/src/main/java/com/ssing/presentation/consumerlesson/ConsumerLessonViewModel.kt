@@ -34,7 +34,6 @@ internal class ConsumerLessonViewModel @Inject constructor() :
                     lessonBannerState = LessonBannerState.Canceled,
                     showCancelConfirmSheet = false,
                     selectedReason = null,
-                    etcReason = etcReason,
                     // TODO: LessonBannerState를 canceled로 변경
                 )
             }
