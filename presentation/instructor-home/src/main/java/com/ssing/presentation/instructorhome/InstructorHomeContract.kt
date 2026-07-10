@@ -1,8 +1,6 @@
 package com.ssing.presentation.instructorhome
 
-import androidx.annotation.DrawableRes
 import androidx.compose.runtime.Immutable
-import com.ssing.core.ui.R
 import com.ssing.core.ui.common.component.HomeLessonCardState
 import com.ssing.presentation.instructorhome.model.Grade
 import com.ssing.presentation.instructorhome.model.InstructorHomeUiModel
