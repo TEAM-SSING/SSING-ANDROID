@@ -14,15 +14,12 @@ import kotlinx.serialization.Serializable
 data object ConsumerPayment : Route
 
 fun NavGraphBuilder.consumerPaymentNavGraph(
-    paddingValues: PaddingValues,
     navController: NavController,
 ) {
     composable<ConsumerPayment> {
         PaymentRoute(
-            popBackStack = navController::popBackStack,
             navigateToLesson = {},
             navigateToHome = {},
-            modifier = Modifier.padding(paddingValues),
         )
     }
 }

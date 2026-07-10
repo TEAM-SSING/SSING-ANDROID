@@ -11,6 +11,7 @@ import com.ssing.core.ui.navigation.SsingNavHost
 import com.ssing.presentation.auth.navigation.authNavGraph
 import com.ssing.presentation.consumerhome.navigation.ConsumerHome
 import com.ssing.presentation.consumerhome.navigation.consumerHomeNavGraph
+import com.ssing.presentation.consumerpayment.navigation.ConsumerPayment
 import com.ssing.presentation.consumerpayment.navigation.consumerPaymentNavGraph
 import com.ssing.presentation.notification.navigation.notificationNavGraph
 
@@ -22,7 +23,7 @@ internal fun ConsumerMainNavHost(
 ) {
     SsingNavHost(
         navController = navController,
-        startDestination = ConsumerHome,
+        startDestination = ConsumerPayment,
         modifier = modifier.fillMaxSize(),
     ) {
         authNavGraph(
@@ -39,7 +40,6 @@ internal fun ConsumerMainNavHost(
         )
         consumerPaymentNavGraph(
             navController = navController,
-            paddingValues = paddingValues,
         )
         notificationNavGraph(
             paddingValues = paddingValues,
