@@ -41,7 +41,7 @@ fun KakaoButton(
         )
 
         Text(
-            text = "카카오로 시작하기",
+            text = "카카오로 3초만에 시작하기",
             color = SSINGTheme.colors.textStrong,
             style = SSINGTheme.typography.body.sb16,
             modifier = Modifier.align(Alignment.Center),
