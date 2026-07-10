@@ -25,7 +25,6 @@ import com.ssing.core.ui.common.component.SsingButton
 import com.ssing.core.ui.common.component.SsingButtonStyle
 import com.ssing.core.ui.common.component.SsingMatchingDetailCardSmall
 import com.ssing.core.ui.common.component.SsingTopBar
-import com.ssing.core.ui.common.component.TeamNickname
 import com.ssing.core.ui.designsystem.theme.Blue50
 import com.ssing.core.ui.designsystem.theme.SSINGTheme
 import com.ssing.presentation.instructorlessondetail.component.SectionTitle
@@ -88,12 +87,7 @@ internal fun LessonDetailCanceledScreen(
                     SectionTitle(text = "강습 정보")
                     SsingMatchingDetailCardSmall(
                         tags = cancel.tags,
-                        teamNicknames = cancel.teams.map {
-                            TeamNickname(
-                                it.teamNickname,
-                                it.teamCount
-                            )
-                        }.toPersistentList(),
+                        teamNicknames = cancel.teams.map { it.teamNickname }.toPersistentList(),
                         totalCount = cancel.teams.size,
                         place = cancel.location,
                         duration = cancel.duration,

@@ -1,7 +1,6 @@
 package com.ssing.presentation.instructorlessondetail.model
 
 import androidx.compose.runtime.Immutable
-import com.ssing.core.ui.common.component.TeamNickname
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toPersistentList
 
@@ -18,13 +17,8 @@ internal data class LessonDetailBeforeUiModel(
     val duration: String = "",
     val price: Int = 0,
 ) {
-    val nicknames =
-        teams.map {
-            TeamNickname(
-                it.teamNickname,
-                it.teamCount
-            )
-        }.toPersistentList()
+    val nicknames: ImmutableList<String> =
+        teams.map { it.teamNickname }.toPersistentList()
 }
 
 @Immutable

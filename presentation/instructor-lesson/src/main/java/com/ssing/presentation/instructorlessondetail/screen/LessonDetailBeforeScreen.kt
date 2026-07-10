@@ -220,7 +220,7 @@ private fun CancelReasonBottomSheet(
         selectedReason = cancelReasonState.selectedReason,
         onReasonClick = onReasonClick,
         etcState = etcState,
-        onConfirmClick = onConfirmClick,
+        onConfirmClick = { onConfirmClick() },
         onDismissRequest = onDismissRequest,
     )
 }
