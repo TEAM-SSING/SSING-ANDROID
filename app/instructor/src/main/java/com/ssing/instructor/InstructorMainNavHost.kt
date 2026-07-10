@@ -33,7 +33,7 @@ internal fun InstructorMainNavHost(
                 )
             },
         )
-        instructorHomeNavGraph(paddingValues = paddingValues)
+        instructorHomeNavGraph()
         notificationNavGraph(
             paddingValues = paddingValues,
             navController = navController,

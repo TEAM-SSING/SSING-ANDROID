@@ -1,10 +1,8 @@
 package com.ssing.presentation.instructorhome
 
-import androidx.lifecycle.viewModelScope
 import com.ssing.core.ui.base.BaseViewModel
 import com.ssing.core.ui.common.component.HomeLessonCardState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
