@@ -56,10 +56,6 @@ internal fun LessonDetailCanceledScreen(
                 .statusBarsPadding(),
         )
 
-        LessonBanner(
-            lessonBannerState = lessonBannerState
-        )
-
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -74,6 +70,12 @@ internal fun LessonDetailCanceledScreen(
             LazyColumn(
                 modifier = Modifier.weight(1f),
             ) {
+                item {
+                    LessonBanner(
+                        lessonBannerState = lessonBannerState
+                    )
+                }
+
                 item {
                     Column(modifier = Modifier.fillMaxWidth()) {
                         Spacer(modifier = Modifier.height(16.dp))

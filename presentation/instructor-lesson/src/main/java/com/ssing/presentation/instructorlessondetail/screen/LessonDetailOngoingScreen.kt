@@ -59,10 +59,6 @@ internal fun LessonDetailOngoingScreen(
                 .statusBarsPadding(),
         )
 
-        LessonBanner(
-            lessonBannerState = lessonBannerState
-        )
-
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -77,6 +73,12 @@ internal fun LessonDetailOngoingScreen(
             LazyColumn(
                 modifier = Modifier.weight(1f),
             ) {
+                item {
+                    LessonBanner(
+                        lessonBannerState = lessonBannerState
+                    )
+                }
+
                 item {
                     Column(modifier = Modifier.fillMaxWidth()) {
                         Spacer(modifier = Modifier.height(16.dp))
