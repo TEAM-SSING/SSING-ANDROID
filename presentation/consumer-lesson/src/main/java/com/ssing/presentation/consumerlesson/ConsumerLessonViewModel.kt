@@ -75,6 +75,8 @@ internal class ConsumerLessonViewModel @Inject constructor() :
         }
     }
 
+    fun onBack() = sendEffect(ConsumerLessonContract.Effect.NavigationToHome)
+
     fun onReadyClick() {
         updateState { copy(showReadyAlert = true) }
     }

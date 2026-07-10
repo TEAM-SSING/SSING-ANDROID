@@ -61,6 +61,7 @@ internal fun ConsumerLessonRoute(
 
     ConsumerLessonScreen(
         state = state,
+        onBack = viewModel::onBack,
         onReadyClick = viewModel::onReadyClick,
         onReadyDismissed = viewModel::onReadyDismissed,
         onReadyConfirmed = viewModel::onReadyConfirmed,
@@ -85,6 +86,7 @@ internal fun ConsumerLessonRoute(
 @Composable
 private fun ConsumerLessonScreen(
     state: ConsumerLessonContract.State,
+    onBack: () -> Unit,
     onReadyClick: () -> Unit,
     onReadyDismissed: () -> Unit,
     onReadyConfirmed: () -> Unit,
@@ -112,9 +114,7 @@ private fun ConsumerLessonScreen(
     ) {
         SsingTopBar(
             title = "강습 상세",
-            onBack = {
-                // TODO: 홈으로 이동
-            },
+            onBack = onBack,
             backgroundColor = Blue50,
         )
 
@@ -285,6 +285,7 @@ private fun ConsumerLessonScreenPreview(
 
         ConsumerLessonScreen(
             state = state,
+            onBack = {},
             onReadyClick = {},
             onReadyDismissed = {},
             onReadyConfirmed = {},
