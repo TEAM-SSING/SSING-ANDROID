@@ -89,8 +89,6 @@ private fun LoginSectionPreview() {
             onConditionClick = {},
             onPersonalInfoClick = {},
             onServiceCenterClick = {},
-            textColor = SSINGTheme.colors.primaryAlternative,
         )
     }
 }
-
