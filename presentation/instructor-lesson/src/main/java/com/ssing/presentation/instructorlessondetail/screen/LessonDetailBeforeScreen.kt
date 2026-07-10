@@ -13,8 +13,10 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.input.rememberTextFieldState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -43,6 +45,8 @@ import com.ssing.presentation.instructorlessondetail.component.SectionTitle
 import com.ssing.presentation.instructorlessondetail.model.LessonDetailBeforeUiModel
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
+import kotlin.collections.forEachIndexed
+import kotlin.collections.lastIndex
 
 @Immutable
 data class CancelReasonState(
@@ -98,43 +102,40 @@ internal fun LessonDetailBeforeScreen(
 
         Column(
             modifier = Modifier
-                .fillMaxSize()
+                .weight(1f)
                 .background(
-                    color = SSINGTheme.colors.backgroundNormal,
-                    shape = RoundedCornerShape(
-                        topStart = 12.dp,
-                        topEnd = 12.dp,
-                    ),
+                    color = Blue50
                 ),
         ) {
-            LazyColumn(
-                modifier = Modifier.weight(1f),
+            Column(
+                modifier = Modifier
+                    .verticalScroll(rememberScrollState())
+                    .weight(1f)
             ) {
-                item {
-                    LessonBanner(
-                        lessonBannerState = lessonBannerState,
-                        beforeLessonText = "강사님과 만난 후\n강습 시작을 눌러주세요",
-                    )
-                }
+                Spacer(modifier = Modifier.height(16.dp))
 
-                item {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                    ) {}
-                }
+                LessonBanner(
+                    lessonBannerState = lessonBannerState,
+                    beforeLessonText = "강습을 준비해주세요",
+                )
 
-                item {
-                    Spacer(modifier = Modifier.height(16.dp))
-                }
-
-                item {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(
+                            color = SSINGTheme.colors.backgroundNormal,
+                            shape = RoundedCornerShape(
+                                topStart = 12.dp,
+                                topEnd = 12.dp,
+                            )
+                        )
+                ) {
                     Column(
                         modifier = Modifier
                             .padding(horizontal = 16.dp)
                     ) {
+                        Spacer(modifier = Modifier.height(16.dp))
                         SectionTitle(text = "강습 정보")
-                        Spacer(modifier = Modifier.height(8.dp))
                         SsingMatchingDetailCardSmall(
                             tags = before.tags,
                             teamNicknames = before.nicknames,
@@ -144,17 +145,11 @@ internal fun LessonDetailBeforeScreen(
                             price = before.price,
                         )
                     }
-                }
-
-                item {
-                    Spacer(modifier = Modifier.height(24.dp))
-                }
-
-                item {
                     Column(
                         modifier = Modifier
                             .padding(horizontal = 16.dp)
                     ) {
+                        Spacer(modifier = Modifier.height(24.dp))
                         SectionTitle(text = "강습생 정보")
                         Spacer(modifier = Modifier.height(8.dp))
                         before.teams.forEachIndexed { index, team ->
@@ -169,65 +164,54 @@ internal fun LessonDetailBeforeScreen(
                             }
                         }
                     }
-                }
-
-                item {
                     Spacer(modifier = Modifier.height(24.dp))
-                }
-
-                item {
                     Column(modifier = Modifier.padding(horizontal = 16.dp)) {
                         Text(
                             text = "강습 관리",
                             style = SSINGTheme.typography.caption.sb12,
                             color = SSINGTheme.colors.textAlternative,
+                            modifier = Modifier.padding(bottom = 8.dp),
                         )
-                    }
-                }
+                        Row(
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            modifier = Modifier.fillMaxWidth(),
+                        ) {
+                            SsingButton(
+                                text = "강습 취소",
+                                onClick = { showSheet = true },
+                                style = SsingButtonStyle.RED,
+                                modifier = Modifier.weight(1f),
+                            )
 
-                item {
-                    Spacer(modifier = Modifier.height(8.dp))
-                }
-
-                item {
-                    Row(
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
-                        modifier = Modifier.fillMaxWidth(),
-                    ) {
-                        SsingButton(
-                            text = "강습 취소",
-                            onClick = { showSheet = true },
-                            style = SsingButtonStyle.RED,
-                            modifier = Modifier.weight(1f),
-                        )
-
-                        SsingButton(
-                            text = "채팅방",
-                            onClick = onChatRoomClick,
-                            style = SsingButtonStyle.GRAY,
-                            modifier = Modifier.weight(1f),
-                        )
-                    }
-                }
-            }
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(SSINGTheme.colors.backgroundNormal)
-                    .padding(16.dp),
-            ) {
-                SsingButton(
-                    text = if (before.isInstructorReady) "강습 대기중" else "강습 준비 완료",
-                    onClick = {
-                        if (!before.isInstructorReady) {
-                            onReadyButtonClick()
+                            SsingButton(
+                                text = "채팅방",
+                                onClick = onChatRoomClick,
+                                style = SsingButtonStyle.GRAY,
+                                modifier = Modifier.weight(1f),
+                            )
                         }
-                    },
-                    style = if (before.isInstructorReady) SsingButtonStyle.GRAY else SsingButtonStyle.BLUE,
-                    enabled = !before.isInstructorReady,
-                    modifier = Modifier.fillMaxWidth()
-                )
+                    }
+                }
+
             }
+        }
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(SSINGTheme.colors.backgroundNormal)
+                .padding(16.dp),
+        ) {
+            SsingButton(
+                text = if (before.isInstructorReady) "강습 대기중" else "강습 준비 완료",
+                onClick = {
+                    if (!before.isInstructorReady) {
+                        onReadyButtonClick()
+                    }
+                },
+                style = if (before.isInstructorReady) SsingButtonStyle.GRAY else SsingButtonStyle.BLUE,
+                enabled = !before.isInstructorReady,
+                modifier = Modifier.fillMaxWidth()
+            )
         }
     }
     if (showSheet) {
@@ -237,7 +221,7 @@ internal fun LessonDetailBeforeScreen(
             onReasonClick = onCancelReasonSelect,
             etcState = etcState,
             onConfirmClick = { onCancelClassClick() },
-            onDismissRequest = { onCancelClassClick()  },
+            onDismissRequest = { onCancelClassClick() },
         )
     }
 }
