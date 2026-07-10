@@ -126,7 +126,7 @@ internal fun LessonDetailCompletedScreen(
                                 modifier = Modifier.padding(bottom = 8.dp),
                             )
                             Row(
-                                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                horizontalArrangement = Arrangement.spacedBy(4.dp),
                                 modifier = Modifier.fillMaxWidth(),
                             ) {
                                 SsingButton(
@@ -135,7 +135,6 @@ internal fun LessonDetailCompletedScreen(
                                     style = SsingButtonStyle.GRAY,
                                     modifier = Modifier.weight(1f),
                                 )
-                                Spacer(modifier = Modifier.height(16.dp))
                                 SsingButton(
                                     text = "강습 후기",
                                     onClick = onEndClick,
@@ -143,6 +142,7 @@ internal fun LessonDetailCompletedScreen(
                                     modifier = Modifier.weight(1f),
                                 )
                             }
+                            Spacer(modifier = Modifier.height(16.dp))
                         }
                     }
                 }
