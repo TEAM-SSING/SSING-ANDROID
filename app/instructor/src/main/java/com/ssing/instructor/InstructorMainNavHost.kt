@@ -44,6 +44,7 @@ internal fun InstructorMainNavHost(
             navController = navController,
         )
         instructorLessonNavGraph(
+            paddingValues = paddingValues,
             navController = navController,
         )
     }
