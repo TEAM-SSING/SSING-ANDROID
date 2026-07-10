@@ -149,53 +149,59 @@ private fun BeforeLessonContent(
     ContentBackground(
         modifier = modifier,
     ) {
-        ContentSection(
-            titleText = "강습 정보",
-        ) {
-            val lessonInfo = state.lessonInfo ?: return@ContentSection
+        state.lessonInfo?.let { info ->
+            ContentSection(
+                titleText = "강습 정보",
+            ) {
+                val lessonInfo = state.lessonInfo ?: return@ContentSection
 
-            SsingMatchingDetailCardSmall(
-                tags = lessonInfo.tags,
-                teamNicknames = lessonInfo.teamNicknames,
-                totalCount = lessonInfo.totalCount,
-                place = lessonInfo.place,
-                duration = lessonInfo.duration,
-                price = lessonInfo.price,
-            )
+                SsingMatchingDetailCardSmall(
+                    tags = lessonInfo.tags,
+                    teamNicknames = lessonInfo.teamNicknames,
+                    totalCount = lessonInfo.totalCount,
+                    place = lessonInfo.place,
+                    duration = lessonInfo.duration,
+                    price = lessonInfo.price,
+                )
+            }
         }
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        ContentSection(
-            titleText = "강사 프로필",
-            spacer = 4,
-        ) {
-            val instructorProfile = state.instructorProfile ?: return@ContentSection
+        state.instructorProfile?.let { info ->
+            ContentSection(
+                titleText = "강사 프로필",
+                spacer = 4,
+            ) {
+                val instructorProfile = state.instructorProfile ?: return@ContentSection
 
-            InstructorProfileButton(
-                name = instructorProfile.name,
-                age = instructorProfile.age,
-                gender = instructorProfile.gender,
-                level = instructorProfile.level,
-                imageUrl = instructorProfile.imageUrl,
-                onClick = {},
-            )
+                InstructorProfileButton(
+                    name = instructorProfile.name,
+                    age = instructorProfile.age,
+                    gender = instructorProfile.gender,
+                    level = instructorProfile.level,
+                    imageUrl = instructorProfile.imageUrl,
+                    onClick = {},
+                )
+            }
         }
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        ContentSection(
-            titleText = "강습생 정보",
-        ) {
-            Column(
-                verticalArrangement = Arrangement.spacedBy(8.dp),
+        state.participantTeams.let { info ->
+            ContentSection(
+                titleText = "강습생 정보",
             ) {
-                state.participantTeams.forEach { team ->
-                    ConsumerInfoCard(
-                        isReady = team.isReady,
-                        nickname = team.nickname,
-                        participants = team.participants,
-                    )
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                ) {
+                    state.participantTeams.forEach { team ->
+                        ConsumerInfoCard(
+                            isReady = team.isReady,
+                            nickname = team.nickname,
+                            participants = team.participants,
+                        )
+                    }
                 }
             }
         }
