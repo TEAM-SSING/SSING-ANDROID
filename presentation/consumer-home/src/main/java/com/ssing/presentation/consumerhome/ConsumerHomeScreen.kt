@@ -1,6 +1,5 @@
 package com.ssing.presentation.consumerhome
 
-import android.R.id.message
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -11,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Scaffold
@@ -23,7 +23,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.ssing.core.ui.R
 import com.ssing.core.ui.common.component.HomeLessonCardList
 import com.ssing.core.ui.common.component.HomeLessonCardState
@@ -86,6 +85,9 @@ private fun ConsumerHomeScreen(
                     )
                 },
                 onNotificationClick = {},
+                modifier = Modifier
+                    .background(color = SSINGTheme.colors.backgroundAlternative)
+                    .statusBarsPadding()
             )
         },
     ) { innerPadding ->
@@ -122,7 +124,8 @@ private fun ConsumerHomeScreen(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
+                    .padding(horizontal = 16.dp)
+                    .padding(bottom = 16.dp),
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
             ) {
                 StartMatchingButton(

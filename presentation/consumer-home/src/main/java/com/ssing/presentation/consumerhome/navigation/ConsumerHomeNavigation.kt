@@ -13,13 +13,11 @@ import kotlinx.serialization.Serializable
 data object ConsumerHome : MainTabRoute
 
 fun NavGraphBuilder.consumerHomeNavGraph(
-    paddingValues: PaddingValues,
 ) {
     composable<ConsumerHome> {
         ConsumerHomeRoute(
             navigateToLessonDetail = {},
             navigateToMatching = {},
-            modifier = Modifier.padding(paddingValues),
         )
     }
 }

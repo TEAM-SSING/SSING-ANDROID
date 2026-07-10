@@ -33,9 +33,7 @@ internal fun ConsumerMainNavHost(
                 )
             },
         )
-        consumerHomeNavGraph(
-            paddingValues = paddingValues,
-        )
+        consumerHomeNavGraph()
         notificationNavGraph(
             paddingValues = paddingValues,
             navController = navController,
