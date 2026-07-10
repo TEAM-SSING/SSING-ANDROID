@@ -11,6 +11,8 @@ import com.ssing.core.ui.navigation.SsingNavHost
 import com.ssing.presentation.auth.navigation.authNavGraph
 import com.ssing.presentation.consumerhome.navigation.ConsumerHome
 import com.ssing.presentation.consumerhome.navigation.consumerHomeNavGraph
+import com.ssing.presentation.consumerlesson.navigation.ConsumerLesson
+import com.ssing.presentation.consumerlesson.navigation.consumerLessonNavGraph
 import com.ssing.presentation.consumermatching.navigation.consumerMatchingNavGraph
 import com.ssing.presentation.notification.navigation.notificationNavGraph
 
@@ -46,6 +48,15 @@ internal fun ConsumerMainNavHost(
             paddingValues = paddingValues,
         )
         consumerAuthNavGraph(
+            paddingValues = paddingValues,
+            navigateToHome = {
+                navController.navigate(
+                    route = ConsumerHome,
+                    navOptions = navController.clearBackStackNavOptions(),
+                )
+            },
+        )
+        consumerLessonNavGraph(
             paddingValues = paddingValues,
             navigateToHome = {
                 navController.navigate(
