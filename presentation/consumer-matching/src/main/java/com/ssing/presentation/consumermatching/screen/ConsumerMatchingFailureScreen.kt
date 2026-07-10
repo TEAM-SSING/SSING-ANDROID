@@ -24,7 +24,7 @@ import com.ssing.presentation.consumermatching.ConsumerMatchingContract
 import com.ssing.presentation.consumermatching.ConsumerMatchingViewModel
 
 @Composable
-internal fun ConsumerMatchingFailure(
+internal fun ConsumerMatchingFailureRoute(
     navigateToHome: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: ConsumerMatchingViewModel = hiltViewModel(),
