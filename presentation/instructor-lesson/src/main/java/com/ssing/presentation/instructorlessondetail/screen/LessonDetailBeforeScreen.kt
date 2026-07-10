@@ -1,19 +1,16 @@
 package com.ssing.presentation.instructorlessondetail.screen
 
-import android.R.attr.enabled
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.input.rememberTextFieldState
@@ -44,10 +41,8 @@ import com.ssing.core.ui.designsystem.theme.Blue50
 import com.ssing.core.ui.designsystem.theme.SSINGTheme
 import com.ssing.presentation.instructorlessondetail.component.SectionTitle
 import com.ssing.presentation.instructorlessondetail.model.LessonDetailBeforeUiModel
-import kotlinx.collections.immutable.ImmutableList
+import com.ssing.presentation.instructorlessondetail.model.TeamParticipantsInfo
 import kotlinx.collections.immutable.persistentListOf
-import kotlin.collections.forEachIndexed
-import kotlin.collections.lastIndex
 
 @Immutable
 data class CancelReasonState(
@@ -213,16 +208,6 @@ internal fun LessonDetailBeforeScreen(
         )
     }
 }
-
-/** 강습생 정보 화면에서 팀 단위로 보여줄 데이터. */
-@Immutable
-data class TeamParticipantsInfo(
-    val teamNickname: String,
-    val teamCount: Int,
-    val participants: ImmutableList<String>,
-    val price: Int,
-    val isReady: Boolean? = false,
-)
 
 @Preview
 @Composable

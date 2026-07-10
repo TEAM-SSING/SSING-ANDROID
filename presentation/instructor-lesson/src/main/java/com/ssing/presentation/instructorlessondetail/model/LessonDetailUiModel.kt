@@ -61,3 +61,13 @@ internal data class LessonDetailCanceledUiModel(
     val duration: String = "",
     val price: Int = 0,
 )
+
+/** 강습생 정보 화면에서 팀 단위로 보여줄 데이터. */
+@Immutable
+data class TeamParticipantsInfo(
+    val teamNickname: String,
+    val teamCount: Int,
+    val participants: ImmutableList<String>,
+    val price: Int,
+    val isReady: Boolean? = false,
+)
