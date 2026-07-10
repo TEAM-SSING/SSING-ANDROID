@@ -12,19 +12,15 @@ internal interface PaymentContract {
     data class State(
         val isLoading: Boolean = false,
         val showCancelModal: Boolean = false,
-        val nickname: String = "김00",
-        val tags: ImmutableList<String> = persistentListOf("스노보드", "처음타요"),
-        val classDateTime: String = "7월 9일 오후 04:40",
-        val location: String = "지산리조트",
-        val duration: String = "3시간",
-        val participants: ImmutableList<Participant> = persistentListOf(
-            Participant(11, Gender.MALE),
-            Participant(11, Gender.MALE),
-            Participant(9, Gender.FEMALE),
-        ),
-        val equipmentStatus: String = "착용 완료",
-        val lessonCost: Int = 60000,
-        val resortCost: Int = 20000,
+        val nickname: String = "",
+        val tags: ImmutableList<String> = persistentListOf(),
+        val classDateTime: String = "",
+        val location: String = "",
+        val duration: String = "",
+        val participants: ImmutableList<Participant> = persistentListOf(),
+        val equipmentStatus: String = "",
+        val lessonCost: Int = 0,
+        val resortCost: Int = 0,
     )
 
     sealed interface Effect {
