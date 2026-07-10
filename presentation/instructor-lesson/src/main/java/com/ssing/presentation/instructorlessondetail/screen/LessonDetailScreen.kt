@@ -39,6 +39,9 @@ internal fun LessonDetailRoute(
         onLessonEndDialogDismiss = viewModel::onLessonEndDialogDismiss,
         onContinueClick = viewModel::onContinueClick,
         onCancelReasonSelect = viewModel::onCancelReasonSelect,
+        onCancelSheetOpen = viewModel::onCancelSheetOpen,
+        onCancelSheetDismiss = viewModel::onCancelSheetDismiss,
+        onCancelConfirmClick = viewModel::onCancelConfirmClick,
         modifier = modifier,
     )
 }
@@ -57,6 +60,9 @@ private fun LessonDetailScreen(
     onLessonEndDialogDismiss: () -> Unit,
     onContinueClick: () -> Unit,
     onCancelReasonSelect: (CancelReason) -> Unit,
+    onCancelSheetOpen: () -> Unit,
+    onCancelSheetDismiss: () -> Unit,
+    onCancelConfirmClick: (String?) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     when (val phase = state.phase) {
@@ -71,7 +77,9 @@ private fun LessonDetailScreen(
             ),
             cancelReasonState = state.cancelReasonState,
             onCancelReasonSelect = onCancelReasonSelect,
-            onCancelClassClick = onCancelClassClick,
+            onCancelSheetOpen = onCancelSheetOpen,
+            onCancelSheetDismiss = onCancelSheetDismiss,
+            onCancelConfirmClick = onCancelConfirmClick,
             onBack = onBackClick,
             onChatRoomClick = onChatRoomClick,
             onReadyClick = onReadyClick,
@@ -113,17 +121,6 @@ private fun LessonDetailScreen(
         )
     }
 
-    if (state.showReadyDialog) {
-        SsingModal(
-            onDismissRequest = onReadyDialogDismiss,
-            title = "강습 준비를 완료할까요?",
-            text = "준비 완료 시 변경이 불가능해요",
-            primaryText = "준비 완료",
-            onPrimary = onReadyClick,
-            secondaryText = "취소",
-            onSecondary = onReadyDialogDismiss,
-        )
-    }
     LessonDetailDialogHost(
         showReadyDialog = state.showReadyDialog,
         showLessonEndDialog = state.showLessonEndDialog,

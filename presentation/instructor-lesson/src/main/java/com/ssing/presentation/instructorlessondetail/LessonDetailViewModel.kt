@@ -74,4 +74,23 @@ internal class LessonDetailViewModel @Inject constructor() :
             copy(cancelReasonState = cancelReasonState.copy(selectedReason = reason))
         }
     }
+
+    fun onCancelSheetOpen() {
+        updateState {
+            copy(cancelReasonState = cancelReasonState.copy(visible = true))
+        }
+    }
+
+    fun onCancelSheetDismiss() {
+        updateState {
+            copy(cancelReasonState = cancelReasonState.copy(visible = false, selectedReason = null))
+        }
+    }
+
+    fun onCancelConfirmClick(customReason: String?) {
+        val reason = uiState.value.cancelReasonState.selectedReason ?: return
+        updateState {
+            copy(cancelReasonState = cancelReasonState.copy(visible = false, selectedReason = null))
+        }
+    }
 }
