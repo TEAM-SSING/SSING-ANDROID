@@ -141,6 +141,7 @@ internal class ConsumerLessonViewModel @Inject constructor() :
     fun onCancelConfirmed(
         etcReason: String? = null,
     ) {
+        // TODO: 서버 연동 시 etcReason 처리
         updateState {
             copy(
                 lessonBannerState = LessonBannerState.Canceled,

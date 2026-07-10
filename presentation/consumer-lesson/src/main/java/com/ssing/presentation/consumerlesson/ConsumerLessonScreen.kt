@@ -177,8 +177,14 @@ private fun ConsumerLessonScreen(
             selectedReason = state.selectedReason,
             onReasonClick = onReasonSelected,
             etcState = etcState,
-            onConfirmClick = onCancelConfirmed,
-            onDismissRequest = onCancelDismiss,
+            onConfirmClick = { reason ->
+                onCancelConfirmed(reason)
+                etcState.edit { replace(0, length, "") }
+            },
+            onDismissRequest = {
+                onCancelDismiss()
+                etcState.edit { replace(0, length, "") }
+            },
         )
     }
 
