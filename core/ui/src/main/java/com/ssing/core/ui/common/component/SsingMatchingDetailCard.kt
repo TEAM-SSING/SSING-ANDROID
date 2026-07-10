@@ -19,13 +19,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ssing.core.ui.R
+import com.ssing.core.ui.designsystem.theme.Blue200
 import com.ssing.core.ui.designsystem.theme.SSINGTheme
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
@@ -46,7 +46,6 @@ import kotlinx.collections.immutable.persistentListOf
  * @param price 예상 가격
  * @param equipmentStatus 장비 상태
  */
-
 @Composable
 fun SsingMatchingDetailCard(
     modifier: Modifier = Modifier,
@@ -64,18 +63,14 @@ fun SsingMatchingDetailCard(
     isPaid: Boolean = false,
     price: Int? = null,
     equipmentStatus: String = "",
-    borderColor: Color = SSINGTheme.colors.borderAlternative,
+    title: String? = null,
 ) {
     Column(
         modifier = modifier
-            .border(
-                width = 1.dp,
-                color = borderColor,
-                shape = RoundedCornerShape(12.dp),
-            )
+            .border(width = 1.dp, color = Blue200, shape = RoundedCornerShape(12.dp))
             .clip(RoundedCornerShape(12.dp))
             .background(color = SSINGTheme.colors.backgroundNormal)
-            .padding(16.dp)
+            .padding(16.dp),
     ) {
         if (stepLabel != null) {
             Text(
@@ -91,9 +86,10 @@ fun SsingMatchingDetailCard(
             Spacer(modifier = Modifier.height(4.dp))
         }
 
-        if (nickname.isNotEmpty()) {
+        if (title != null || nickname.isNotEmpty()) {
             SsingClassTitleRow(
-                title = "${nickname}님 팀 ${teamCount ?: 0}명"
+                title = title ?: "${nickname}님 팀 ${teamCount ?: 0}명",
+                totalCount = totalCount ?: 0,
             )
             HorizontalDivider(
                 color = SSINGTheme.colors.borderDisabled,
@@ -120,7 +116,6 @@ fun SsingMatchingDetailCard(
  * @param tags 강습 태그 목록
  * @param teamNicknames 팀별 닉네임/인원 목록
  * @param totalCount 전체 강습 인원 수
- * @param place 강습 장소
  * @param duration 강습 시간
  * @param actualTimeRange 실제 강습 시간 범위
  * @param price 강습 가격
@@ -130,17 +125,17 @@ fun SsingMatchingDetailCard(
  */
 @Composable
 fun SsingMatchingDetailCardSmall(
+    tags: ImmutableList<String>,
+    teamNicknames: ImmutableList<TeamNickname>,
+    totalCount: Int,
+    place: String,
+    duration: String,
+    actualTimeRange: String,
+    price: Int,
+    cancelDateTime: String,
+    cancelSubject: String,
+    cancelReason: String,
     modifier: Modifier = Modifier,
-    tags: ImmutableList<String> = persistentListOf(),
-    teamNicknames: ImmutableList<TeamNickname> = persistentListOf(),
-    totalCount: Int? = null,
-    place: String = "",
-    duration: String = "",
-    actualTimeRange: String = "",
-    price: Int? = null,
-    cancelDateTime: String = "",
-    cancelSubject: String = "",
-    cancelReason: String = "",
 ) {
     Column(
         modifier = modifier
@@ -148,43 +143,35 @@ fun SsingMatchingDetailCardSmall(
                 color = SSINGTheme.colors.backgroundNormal,
                 shape = RoundedCornerShape(12.dp),
             )
-            .border(
-                width = 1.dp,
-                color = SSINGTheme.colors.borderAlternative,
-                shape = RoundedCornerShape(12.dp),
-            )
             .padding(16.dp),
     ) {
-        if (tags.isNotEmpty()) {
-            SsingTagChipRow(tags = tags, style = SsingChipStyle.GRAY)
-            Spacer(modifier = Modifier.height(4.dp))
+        SsingTagChipRow(tags = tags, style = SsingChipStyle.GRAY)
+
+        Spacer(modifier = Modifier.height(4.dp))
+
+        val title = teamNicknames.joinToString(", ") {
+            "${it.nickname}님 팀 ${it.teamCount}명"
         }
+        SsingClassTitleRowSmall(title = title, totalCount = totalCount)
 
-        if (teamNicknames.isNotEmpty()) {
-            val title = teamNicknames.joinToString(", ") {
-                "${it.nickname}님 팀 ${it.teamCount}명"
-            }
-            SsingClassTitleRowSmall(title = title, totalCount = totalCount ?: 0)
-            Spacer(modifier = Modifier.height(4.dp))
-        }
+        Spacer(modifier = Modifier.height(4.dp))
 
-        Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
-            if (place.isNotEmpty()) SsingInfoRow(label = "강습 장소", value = place)
-            if (duration.isNotEmpty()) SsingInfoRow(label = "강습 시간", value = duration)
-            if (actualTimeRange.isNotEmpty()) SsingInfoRow(label = "실제 강습 시간", value = actualTimeRange)
-            if (price != null) SsingInfoRow(label = "강습 가격", value = "₩ ${"%,d".format(price)}")
+        Column(
+            verticalArrangement = Arrangement.spacedBy(2.dp)
+        ) {
+            SsingInfoRow(label = "강습 장소", value = place)
+            SsingInfoRow(label = "강습 시간", value = duration)
+            SsingInfoRow(label = "실제 강습 시간", value = actualTimeRange)
+            SsingInfoRow(label = "강습 가격", value = "₩ ${"%,d".format(price)}")
 
-            val hasCancelInfo = cancelDateTime.isNotEmpty() || cancelSubject.isNotEmpty() || cancelReason.isNotEmpty()
-            if (hasCancelInfo) {
-                HorizontalDivider(
-                    color = SSINGTheme.colors.borderDisabled,
-                    modifier = Modifier.padding(vertical = 6.dp)
-                )
-            }
+            HorizontalDivider(
+                color = SSINGTheme.colors.borderDisabled,
+                modifier = Modifier.padding(vertical = 6.dp)
+            )
 
-            if (cancelDateTime.isNotEmpty()) SsingInfoRow(label = "취소 일시", value = cancelDateTime)
-            if (cancelSubject.isNotEmpty()) SsingInfoRow(label = "취소 주체", value = cancelSubject)
-            if (cancelReason.isNotEmpty()) SsingInfoRow(label = "취소 사유", value = cancelReason)
+            SsingInfoRow(label = "취소 일시", value = cancelDateTime)
+            SsingInfoRow(label = "취소 주체", value = cancelSubject)
+            SsingInfoRow(label = "취소 사유", value = cancelReason)
         }
     }
 }
@@ -310,7 +297,7 @@ private val Gender.label: String
     }
 
 @Composable
-private fun SsingClassTitleRow(title: String) {
+private fun SsingClassTitleRow(title: String, totalCount: Int) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -321,6 +308,11 @@ private fun SsingClassTitleRow(title: String) {
             style = SSINGTheme.typography.body.sb20,
             color = SSINGTheme.colors.textNormal,
         )
+        Text(
+            text = "총 ${totalCount}명",
+            style = SSINGTheme.typography.caption.sb14,
+            color = SSINGTheme.colors.textAlternative,
+        )
     }
 }
 
@@ -329,17 +321,17 @@ private fun SsingClassTitleRowSmall(title: String, totalCount: Int) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(8.dp),
-        verticalAlignment = Alignment.Bottom,
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(
             text = title,
             style = SSINGTheme.typography.caption.sb14,
             color = SSINGTheme.colors.textNormal,
-            modifier = Modifier.weight(1f, fill = false),
+            modifier = Modifier.weight(1f),
         )
         Text(
             text = "총 ${totalCount}명",
-            style = SSINGTheme.typography.caption.sb12,
+            style = SSINGTheme.typography.caption.sb14,
             color = SSINGTheme.colors.textAlternative,
         )
     }
@@ -394,7 +386,10 @@ private fun SsingClassDetailCardSmallPreview() {
             tags = persistentListOf("스노보드", "자격증이 있어요"),
             teamNicknames = persistentListOf(
                 TeamNickname("김남자", 1),
-                ),
+                TeamNickname("김여자", 1),
+                TeamNickname("김야웅이", 1),
+                TeamNickname("강아지", 1),
+            ),
             totalCount = 4,
             place = "000 리조트",
             duration = "0시간",

@@ -1,25 +1,24 @@
-package com.ssing.presentation.instructormatching.navigation
+package com.ssing.presentation.auth.consumer.navigation
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.ui.Modifier
-import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.ssing.core.ui.navigation.Route
-import com.ssing.presentation.instructormatching.screen.MatchingRoute
+import com.ssing.presentation.auth.consumer.ConsumerLoginRoute
 import kotlinx.serialization.Serializable
 
 @Serializable
-data object InstructorMatching: Route
+data object ConsumerLogin : Route
 
-fun NavGraphBuilder.instructorMatchingNavGraph(
+fun NavGraphBuilder.consumerAuthNavGraph(
     paddingValues: PaddingValues,
-    navController: NavController,
+    navigateToHome: () -> Unit,
 ) {
-    composable<InstructorMatching> {
-        MatchingRoute(
-            navigateBack = { navController.popBackStack() },
+    composable<ConsumerLogin> {
+        ConsumerLoginRoute(
+            navigateToHome = navigateToHome,
             modifier = Modifier.padding(paddingValues),
         )
     }
