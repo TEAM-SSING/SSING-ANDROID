@@ -3,7 +3,6 @@ package com.ssing.presentation.consumerhome
 import androidx.compose.runtime.Immutable
 import com.ssing.core.ui.common.component.HomeLessonCardState
 import com.ssing.presentation.consumerhome.model.ConsumerHomeUiModel
-import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 
 internal interface ConsumerHomeContract {
