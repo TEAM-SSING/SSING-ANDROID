@@ -65,6 +65,7 @@ internal fun InstructorHomeRoute(
         onLessonClick = viewModel::onLessonClick,
         onMatchingClick = viewModel::onMatchingClick,
         onReservationClick = viewModel::onReservationClick,
+        onReviewClick = viewModel::onReviewClick,
         modifier = modifier,
     )
 }
@@ -75,6 +76,7 @@ private fun InstructorHomeScreen(
     onLessonClick: (HomeLessonCardState.Reservation) -> Unit,
     onMatchingClick: () -> Unit,
     onReservationClick: () -> Unit,
+    onReviewClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Scaffold(
@@ -168,7 +170,7 @@ private fun InstructorHomeScreen(
                     averageRating = state.reviewModel.averageRating,
                     grade = state.reviewModel.grade,
                     achievementRate = state.reviewModel.achievementRate,
-                    onClick = {},
+                    onClick = onReviewClick,
                 )
             }
         }
@@ -211,6 +213,7 @@ private fun ConsumerHomeScreenPreview() {
         onLessonClick = {},
         onMatchingClick = {},
         onReservationClick = {},
+        onReviewClick = {},
     )
 }
 
@@ -235,5 +238,6 @@ private fun InstructorHomeScreen2Preview() {
         onLessonClick = {},
         onMatchingClick = {},
         onReservationClick = {},
+        onReviewClick = {},
     )
 }

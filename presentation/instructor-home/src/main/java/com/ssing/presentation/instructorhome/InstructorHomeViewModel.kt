@@ -21,6 +21,12 @@ internal class InstructorHomeViewModel @Inject constructor() :
         sendEffect(InstructorHomeContract.Effect.NavigateToLessonDetail(lessonId = lesson.lessonId))
     }
 
+    fun onReviewClick() {
+        sendEffect(
+            InstructorHomeContract.Effect.ShowToast("준비 중인 기능이에요.")
+        )
+    }
+
     fun onReservationClick() {
         sendEffect(
             InstructorHomeContract.Effect.ShowToast("준비 중인 기능이에요.")
