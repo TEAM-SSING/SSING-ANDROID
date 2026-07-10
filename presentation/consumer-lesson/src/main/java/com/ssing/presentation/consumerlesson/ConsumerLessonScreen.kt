@@ -113,7 +113,11 @@ private fun ConsumerLessonScreen(
             }
         }
 
-        Box(
+        BottomButton(
+            state = state,
+            onClick = {
+                // TODO: LessonState 단계별 내비게이션
+            },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(
@@ -121,16 +125,7 @@ private fun ConsumerLessonScreen(
                     end = 16.dp,
                     bottom = 16.dp,
                 ),
-            contentAlignment = Alignment.BottomCenter,
-        ) {
-            BottomButton(
-                state = state,
-                onClick = {
-                    // TODO: LessonState 단계별 내비게이션
-                },
-            )
-        }
-
+        )
     }
 
     if (state.showCancelConfirmSheet) {
@@ -151,7 +146,9 @@ private fun BeforeLessonContent(
     onCancelClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    ContentBackground {
+    ContentBackground(
+        modifier = modifier,
+    ) {
         ContentSection(
             titleText = "강습 정보",
         ) {
@@ -261,7 +258,7 @@ private fun ContentBackground(
     content: @Composable () -> Unit,
 ) {
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .background(Blue50)
             .background(
