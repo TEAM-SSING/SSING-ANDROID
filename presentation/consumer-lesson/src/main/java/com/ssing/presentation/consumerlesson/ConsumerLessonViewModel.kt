@@ -146,7 +146,6 @@ internal class ConsumerLessonViewModel @Inject constructor() :
                 lessonBannerState = LessonBannerState.Canceled,
                 showCancelConfirmSheet = false,
                 selectedReason = null,
-                etcReason = etcReason,
             )
         }
     }
@@ -156,7 +155,6 @@ internal class ConsumerLessonViewModel @Inject constructor() :
             copy(
                 showCancelConfirmSheet = false,
                 selectedReason = null,
-                etcReason = null,
             )
         }
     }

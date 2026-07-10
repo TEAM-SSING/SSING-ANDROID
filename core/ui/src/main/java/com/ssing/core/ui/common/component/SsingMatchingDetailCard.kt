@@ -64,6 +64,7 @@ fun SsingMatchingDetailCard(
     isPaid: Boolean = false,
     price: Int? = null,
     equipmentStatus: String = "",
+    title: String? = null,
 ) {
     Column(
         modifier = modifier
@@ -86,9 +87,9 @@ fun SsingMatchingDetailCard(
             Spacer(modifier = Modifier.height(4.dp))
         }
 
-        if (nickname.isNotEmpty()) {
+        if (title != null || nickname.isNotEmpty()) {
             SsingClassTitleRow(
-                title = "${nickname}님 팀 ${teamCount ?: 0}명",
+                title = title ?: "${nickname}님 팀 ${teamCount ?: 0}명",
                 totalCount = totalCount ?: 0,
             )
             HorizontalDivider(
