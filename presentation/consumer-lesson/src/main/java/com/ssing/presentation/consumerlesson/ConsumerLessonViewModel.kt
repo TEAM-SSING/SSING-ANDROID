@@ -38,7 +38,7 @@ internal class ConsumerLessonViewModel @Inject constructor() :
             copy(
                 lessonBannerState = LessonBannerState.Before(
                     isInstructorReady = true,
-                    participantReadyCount = 3,
+                    participantReadyCount = 4,
                     participantTotalCount = 5,
                 ),
                 lessonInfo = dummyLessonInfo,
@@ -83,11 +83,28 @@ internal class ConsumerLessonViewModel @Inject constructor() :
         updateState { copy(showReadyAlert = false) }
     }
 
+    // TODO: 서버 연동 후 수정 - [테스트] participantReadyCount를 로컬에서 직접 증가시킴
     fun onReadyConfirmed() {
-        updateState { copy(
-            isReady = true,
-            showReadyAlert = false,
-        ) }
+        var isAllReady = false
+
+        updateState {
+            val before = lessonBannerState as? LessonBannerState.Before ?: return@updateState this
+            val updatedBanner = before.copy(participantReadyCount = before.participantReadyCount + 1)
+            isAllReady = updatedBanner.totalReadyCount == updatedBanner.totalCount
+
+            copy(
+                isReady = true,
+                showReadyAlert = false,
+                lessonBannerState = updatedBanner,
+            )
+        }
+
+        if (isAllReady) {
+            onLessonStarted(
+                remainingTime = "2:59:59",
+                elapsedTime = "0분",
+            )
+        }
     }
 
     fun onEndLessonClick() {
@@ -99,12 +116,14 @@ internal class ConsumerLessonViewModel @Inject constructor() :
     }
 
     fun onEndLessonConfirmed() {
-        updateState { copy(
-            showEndLessonAlert = false,
-            lessonBannerState = LessonBannerState.Completed(
-                lessonDate = "2026년 12월 31일",
-            ),
-        ) }
+        updateState {
+            copy(
+                showEndLessonAlert = false,
+                lessonBannerState = LessonBannerState.Completed(
+                    lessonDate = "2026년 12월 31일",
+                ),
+            )
+        }
     }
 
     fun onReviewClick() = sendEffect(ConsumerLessonContract.Effect.ShowToast("준비 중인 기능입니다."))
@@ -131,11 +150,13 @@ internal class ConsumerLessonViewModel @Inject constructor() :
     }
 
     fun onCancelDismiss() {
-        updateState { copy(
-            showCancelConfirmSheet = false,
-            selectedReason = null,
-            etcReason = null,
-        ) }
+        updateState {
+            copy(
+                showCancelConfirmSheet = false,
+                selectedReason = null,
+                etcReason = null,
+            )
+        }
     }
 
     fun onChatClick() = sendEffect(ConsumerLessonContract.Effect.ShowToast("준비 중인 기능입니다."))
@@ -154,10 +175,10 @@ internal class ConsumerLessonViewModel @Inject constructor() :
         }
     }
 
-
     fun onReportIssueClick() = sendEffect(ConsumerLessonContract.Effect.ShowToast("준비 중인 기능입니다."))
 
-    fun onAdditionalLessonClick() = sendEffect(ConsumerLessonContract.Effect.ShowToast("준비 중인 기능입니다."))
+    fun onAdditionalLessonClick() =
+        sendEffect(ConsumerLessonContract.Effect.ShowToast("준비 중인 기능입니다."))
 
     fun onLessonListClick() = sendEffect(ConsumerLessonContract.Effect.ShowToast("준비 중인 기능입니다."))
 
