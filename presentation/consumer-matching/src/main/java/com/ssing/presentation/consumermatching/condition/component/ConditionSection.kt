@@ -1,4 +1,4 @@
-package com.presentation.consumermatching.condition.component
+package com.ssing.presentation.consumermatching.condition.component
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

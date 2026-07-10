@@ -1,5 +1,6 @@
-package com.presentation.consumermatching.condition
+package com.ssing.presentation.consumermatching.condition
 
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.FlowRow
@@ -18,18 +19,21 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.presentation.consumermatching.condition.component.ConditionSection
-import com.presentation.consumermatching.condition.component.ConditionSectionStyle
 import com.ssing.core.ui.common.component.MatchingConditionInformationCard
 import com.ssing.core.ui.common.component.SsingButton
 import com.ssing.core.ui.common.component.SsingButtonStyle
 import com.ssing.core.ui.common.component.SsingDropdownField
 import com.ssing.core.ui.common.component.SsingHeader
+import com.ssing.core.ui.common.component.SsingPlusButton
 import com.ssing.core.ui.common.component.SsingSelectButton
 import com.ssing.core.ui.common.component.SsingTopBar
 import com.ssing.core.ui.designsystem.theme.SSINGTheme
 import com.ssing.core.ui.extension.toast
 import com.ssing.core.ui.util.HandleUiEffects
+import com.ssing.presentation.consumermatching.component.ConsumerInfoInputCard
+import com.ssing.presentation.consumermatching.condition.component.ConditionSection
+import com.ssing.presentation.consumermatching.condition.component.ConditionSectionStyle
+import com.ssing.presentation.consumermatching.type.ConsumerGender
 
 @Composable
 internal fun ConsumerMatchingConditionRoute(
@@ -54,6 +58,10 @@ internal fun ConsumerMatchingConditionRoute(
         onSportSelect = viewModel::onSportSelect,
         onLevelSelect = viewModel::onLevelSelect,
         onDurationSelect = viewModel::onDurationSelect,
+        onAddConsumerClick = viewModel::onAddConsumerClick,
+        onConsumerDelete = viewModel::onConsumerDelete,
+        onConsumerGenderSelect = viewModel::onConsumerGenderSelect,
+        onConsumerFocusChange = viewModel::onConsumerFocusChange,
         onConfirm = viewModel::onConfirm,
         onStartMatchingClick = viewModel::onStartMatchingClick,
         onPopBackStack = onPopBackStack,
@@ -68,6 +76,10 @@ private fun ConsumerMatchingConditionScreen(
     onSportSelect: (Sport) -> Unit,
     onLevelSelect: (LessonLevel) -> Unit,
     onDurationSelect: (LessonDuration) -> Unit,
+    onAddConsumerClick: () -> Unit,
+    onConsumerDelete: (Int) -> Unit,
+    onConsumerGenderSelect: (Int, ConsumerGender) -> Unit,
+    onConsumerFocusChange: (Int, Boolean) -> Unit,
     onConfirm: (Boolean) -> Unit,
     onStartMatchingClick: () -> Unit,
     onPopBackStack: () -> Unit,
@@ -83,7 +95,7 @@ private fun ConsumerMatchingConditionScreen(
         },
         bottomBar = {
             SsingButton(
-                text = "빠른 매칭 시작",
+                text = "씽 매칭 시작",
                 onClick = onStartMatchingClick,
                 style = SsingButtonStyle.BLUE,
                 modifier = Modifier
@@ -189,6 +201,47 @@ private fun ConsumerMatchingConditionScreen(
                 Spacer(Modifier.height(24.dp))
             }
 
+            item {
+                ConditionSection(
+                    label = "강습생 정보",
+                    style = ConditionSectionStyle.ParticipantCount(
+                        currentCount = state.consumers.size,
+                        totalCount = MAX_CONSUMER_COUNT,
+                    ),
+                    modifier = Modifier.animateContentSize(),
+                ) {
+                    state.consumers.forEachIndexed { index, consumer ->
+                        ConsumerInfoInputCard(
+                            heading = "강습생 ${index + 1}",
+                            ageState = consumer.ageState,
+                            selectedConsumerGender = consumer.gender,
+                            isFocused = consumer.isFocused,
+                            onGenderClick = { onConsumerGenderSelect(consumer.id, it) },
+                            onFocus = { onConsumerFocusChange(consumer.id, it) },
+                            onDelete = if (state.consumers.size > 1) {
+                                { onConsumerDelete(consumer.id) }
+                            } else {
+                                null
+                            },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(bottom = 10.dp),
+                        )
+                    }
+
+                    if (state.showAddConsumer) {
+                        SsingPlusButton(
+                            text = "강습생 추가하기",
+                            onClick = onAddConsumerClick,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(top = 2.dp),
+                        )
+                    }
+                }
+
+                Spacer(Modifier.height(24.dp))
+            }
 
             item {
                 MatchingConditionInformationCard(
@@ -215,6 +268,10 @@ private fun ConsumerMatchingConditionScreenPreview() {
             onSportSelect = {},
             onLevelSelect = {},
             onDurationSelect = {},
+            onAddConsumerClick = {},
+            onConsumerDelete = {},
+            onConsumerGenderSelect = { _, _ -> },
+            onConsumerFocusChange = { _, _ -> },
             onConfirm = {},
             onStartMatchingClick = {},
             onPopBackStack = {},
