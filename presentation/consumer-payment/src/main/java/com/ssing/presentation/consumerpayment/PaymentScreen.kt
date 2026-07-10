@@ -102,6 +102,9 @@ internal fun PaymentScreen(
                 onBack = onBackClick,
                 title = "결제",
                 backgroundColor = SSINGTheme.colors.backgroundAlternative,
+                modifier = Modifier
+                    .background(SSINGTheme.colors.backgroundAlternative)
+                    .statusBarsPadding()
             )
         },
         bottomBar = {
