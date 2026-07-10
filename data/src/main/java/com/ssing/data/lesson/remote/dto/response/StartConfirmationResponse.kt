@@ -5,39 +5,16 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class StartConfirmationResponse(
-    @SerialName("success")
-    val success: Boolean,
-    @SerialName("code")
-    val code: String,
-    @SerialName("message")
-    val message: String,
     @SerialName("lessonId")
-    val lessonId: Data,
+    val lessonId: Long,
     @SerialName("lessonStatus")
-    val lessonStatus: Data,
+    val lessonStatus: String,
     @SerialName("currentActorConfirmed")
-    val currentActorConfirmed: Data,
+    val currentActorConfirmed: Boolean,
     @SerialName("confirmedCount")
-    val confirmedCount: Data,
+    val confirmedCount: Int,
     @SerialName("requiredCount")
-    val requiredCount: Data,
+    val requiredCount: Int,
     @SerialName("startedAt")
-    val startedAt: Data
-) {
-
-    @Serializable
-    data class Data(
-        @SerialName("lessonId")
-        val lessonId: Long,
-        @SerialName("lessonStatus")
-        val lessonStatus: String,
-        @SerialName("currentActorConfirmed")
-        val currentActorConfirmed: Boolean,
-        @SerialName("confirmedCount")
-        val confirmedCount: Int,
-        @SerialName("requiredCount")
-        val requiredCount: Int,
-        @SerialName("startedAt")
-        val startedAt: String,
-    )
-}
+    val startedAt: String,
+)
