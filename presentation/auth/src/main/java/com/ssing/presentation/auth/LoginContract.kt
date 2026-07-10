@@ -7,7 +7,6 @@ internal interface LoginContract {
 
     @Immutable
     data class State(
-        val homeLessonCardState: HomeLessonCardState,
         val isLoading: Boolean = false,
     )
 
