@@ -38,7 +38,7 @@ import com.ssing.presentation.consumermatching.type.ConsumerGender
 @Composable
 internal fun ConsumerMatchingConditionRoute(
     onPopBackStack: () -> Unit,
-    navigateToMatching: () -> Unit,
+    navigateToMatchingPending: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: ConsumerMatchingConditionViewModel = hiltViewModel(),
 ) {
@@ -47,7 +47,7 @@ internal fun ConsumerMatchingConditionRoute(
 
     HandleUiEffects(viewModel.uiEffect) { effect ->
         when (effect) {
-            ConsumerMatchingConditionContract.Effect.NavigateToMatching -> navigateToMatching()
+            ConsumerMatchingConditionContract.Effect.NavigateToMatching -> navigateToMatchingPending()
             is ConsumerMatchingConditionContract.Effect.ShowToast -> context.toast(effect.message)
         }
     }
