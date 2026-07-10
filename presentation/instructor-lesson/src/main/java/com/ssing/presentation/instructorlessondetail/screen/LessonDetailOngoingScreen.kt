@@ -138,7 +138,6 @@ internal fun LessonDetailOngoingScreen(
                                     style = SsingButtonStyle.RED,
                                     modifier = Modifier.weight(1f),
                                 )
-                                Spacer(modifier = Modifier.width(16.dp))
                                 SsingButton(
                                     text = "채팅방",
                                     onClick = onChatRoomClick,
