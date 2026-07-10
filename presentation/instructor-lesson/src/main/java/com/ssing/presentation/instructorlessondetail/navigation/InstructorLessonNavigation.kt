@@ -1,8 +1,6 @@
 package com.ssing.presentation.instructorlessondetail.navigation
 
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.padding
-import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
@@ -20,7 +18,6 @@ fun NavGraphBuilder.instructorLessonNavGraph(
     composable<InstructorLesson> {
         LessonDetailRoute(
             navigateBack = navController::popBackStack,
-            modifier = Modifier.padding(paddingValues),
         )
     }
 }
