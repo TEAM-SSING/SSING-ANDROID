@@ -23,7 +23,7 @@ internal fun ConsumerMainNavHost(
 ) {
     SsingNavHost(
         navController = navController,
-        startDestination = ConsumerPayment,
+        startDestination = ConsumerHome,
         modifier = modifier.fillMaxSize(),
     ) {
         authNavGraph(
