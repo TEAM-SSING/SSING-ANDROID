@@ -117,6 +117,7 @@ fun SsingMatchingDetailCard(
  * @param tags 강습 태그 목록
  * @param teamNicknames 팀별 닉네임/인원 목록
  * @param totalCount 전체 강습 인원 수
+ * @param place 강습 장소
  * @param duration 강습 시간
  * @param actualTimeRange 실제 강습 시간 범위
  * @param price 강습 가격
@@ -126,16 +127,16 @@ fun SsingMatchingDetailCard(
  */
 @Composable
 fun SsingMatchingDetailCardSmall(
-    tags: ImmutableList<String>,
-    teamNicknames: ImmutableList<TeamNickname>,
-    totalCount: Int,
-    place: String,
-    duration: String,
-    actualTimeRange: String,
-    price: Int,
-    cancelDateTime: String,
-    cancelSubject: String,
-    cancelReason: String,
+    tags: ImmutableList<String> = persistentListOf(),
+    teamNicknames: ImmutableList<TeamNickname> = persistentListOf(),
+    totalCount: Int? = null,
+    place: String? = null,
+    duration: String? = null,
+    actualTimeRange: String? = null,
+    price: Int? = null,
+    cancelDateTime: String? = null,
+    cancelSubject: String? = null,
+    cancelReason: String? = null,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -146,33 +147,44 @@ fun SsingMatchingDetailCardSmall(
             )
             .padding(16.dp),
     ) {
-        SsingTagChipRow(tags = tags, style = SsingChipStyle.GRAY)
-
-        Spacer(modifier = Modifier.height(4.dp))
-
-        val title = teamNicknames.joinToString(", ") {
-            "${it.nickname}님 팀 ${it.teamCount}명"
+        if (tags.isNotEmpty()) {
+            SsingTagChipRow(tags = tags, style = SsingChipStyle.GRAY)
+            Spacer(modifier = Modifier.height(4.dp))
         }
-        SsingClassTitleRowSmall(title = title, totalCount = totalCount)
 
-        Spacer(modifier = Modifier.height(4.dp))
+        if (teamNicknames.isNotEmpty()) {
+            val title = teamNicknames.joinToString(", ") {
+                "${it.nickname}님 팀 ${it.teamCount}명"
+            }
+            SsingClassTitleRowSmall(title = title, totalCount = totalCount ?: 0)
+            Spacer(modifier = Modifier.height(4.dp))
+        }
 
         Column(
             verticalArrangement = Arrangement.spacedBy(2.dp)
         ) {
-            SsingInfoRow(label = "강습 장소", value = place)
-            SsingInfoRow(label = "강습 시간", value = duration)
-            SsingInfoRow(label = "실제 강습 시간", value = actualTimeRange)
-            SsingInfoRow(label = "강습 가격", value = "₩ ${"%,d".format(price)}")
+            if (!place.isNullOrEmpty()) SsingInfoRow(label = "강습 장소", value = place)
+            if (!duration.isNullOrEmpty()) SsingInfoRow(label = "강습 시간", value = duration)
+            if (!actualTimeRange.isNullOrEmpty()) {
+                SsingInfoRow(label = "실제 강습 시간", value = actualTimeRange)
+            }
+            if (price != null) {
+                SsingInfoRow(label = "강습 가격", value = "₩ ${"%,d".format(price)}")
+            }
 
-            HorizontalDivider(
-                color = SSINGTheme.colors.borderDisabled,
-                modifier = Modifier.padding(vertical = 6.dp)
-            )
+            if (!cancelDateTime.isNullOrEmpty() ||
+                !cancelSubject.isNullOrEmpty() ||
+                !cancelReason.isNullOrEmpty()
+            ) {
+                HorizontalDivider(
+                    color = SSINGTheme.colors.borderDisabled,
+                    modifier = Modifier.padding(vertical = 6.dp)
+                )
+            }
 
-            SsingInfoRow(label = "취소 일시", value = cancelDateTime)
-            SsingInfoRow(label = "취소 주체", value = cancelSubject)
-            SsingInfoRow(label = "취소 사유", value = cancelReason)
+            if (!cancelDateTime.isNullOrEmpty()) SsingInfoRow(label = "취소 일시", value = cancelDateTime)
+            if (!cancelSubject.isNullOrEmpty()) SsingInfoRow(label = "취소 주체", value = cancelSubject)
+            if (!cancelReason.isNullOrEmpty()) SsingInfoRow(label = "취소 사유", value = cancelReason)
         }
     }
 }

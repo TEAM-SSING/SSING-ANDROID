@@ -71,7 +71,6 @@ internal fun LessonDetailBeforeScreen(
     onReadyClick: () -> Unit,
     onReadyButtonClick: () -> Unit,
     onCancelReasonSelect: (CancelReason) -> Unit,
-    onEtcReasonTextChange: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
 
@@ -261,7 +260,6 @@ private fun LessonDetailBeforeScreenPreview() {
             onReadyClick = {},
             onReadyButtonClick = {},
             onCancelReasonSelect = {},
-            onEtcReasonTextChange = {},
             cancelReasonState = CancelReasonState(),
             lessonBannerState = LessonBannerState.Before(
                 isInstructorReady = false,
