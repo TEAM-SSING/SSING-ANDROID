@@ -31,6 +31,7 @@ import com.ssing.core.ui.common.component.SsingHomeTopBar
 import com.ssing.core.ui.common.component.StartMatchingButton
 import com.ssing.core.ui.common.component.StartMatchingCardStyle
 import com.ssing.core.ui.designsystem.theme.SSINGTheme
+import com.ssing.core.ui.util.HandleUiEffects
 import kotlinx.collections.immutable.persistentListOf
 import java.time.LocalDateTime
 
@@ -42,9 +43,21 @@ internal fun ConsumerHomeRoute(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
+    HandleUiEffects(viewModel.uiEffect) { effect ->
+        when (effect) {
+            is ConsumerHomeContract.Effect.NavigateToLessonDetail -> {
+//                navigateToLessonDetail(effect.lessonStatus)
+            }
+            is ConsumerHomeContract.Effect.NavigateToMatching -> {}
+            else -> {}
+        }
+    }
+
     ConsumerHomeScreen(
         state = uiState,
         onLessonClick = viewModel::onLessonClick,
+        onMatchingClick = viewModel::onMatchingClick,
+        onReservationClick = viewModel::onReservationClick,
         modifier = modifier,
     )
 }
@@ -53,6 +66,8 @@ internal fun ConsumerHomeRoute(
 private fun ConsumerHomeScreen(
     state: ConsumerHomeContract.State,
     onLessonClick: (HomeLessonCardState.Reservation) -> Unit,
+    onMatchingClick: () -> Unit,
+    onReservationClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Scaffold(
@@ -83,7 +98,7 @@ private fun ConsumerHomeScreen(
 
             HomeLessonCardList(
                 states = state.lessonCards,
-                onButtonClick = {},
+                onButtonClick = onLessonClick,
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -111,7 +126,7 @@ private fun ConsumerHomeScreen(
                     description = "준비된 강습생과\n바로 연결하기",
                     iconRes = R.drawable.img_fast_dark,
                     style = StartMatchingCardStyle.BLUE,
-                    onClick = {},
+                    onClick = onMatchingClick,
                     chipStyle = SsingChipStyle.BLUE,
                     modifier = Modifier.weight(1f),
                 )
@@ -122,7 +137,7 @@ private fun ConsumerHomeScreen(
                     description = "강습 가능한\n시간표 관리하기",
                     iconRes = R.drawable.img_reservation,
                     style = StartMatchingCardStyle.WHITE,
-                    onClick = {},
+                    onClick = onReservationClick,
                     chipStyle = SsingChipStyle.BLUE,
                     modifier = Modifier.weight(1f),
                 )
@@ -154,5 +169,7 @@ private fun ConsumerHomeScreenPreview() {
             ),
         ),
         onLessonClick = {},
+        onMatchingClick = {},
+        onReservationClick = {},
     )
 }
