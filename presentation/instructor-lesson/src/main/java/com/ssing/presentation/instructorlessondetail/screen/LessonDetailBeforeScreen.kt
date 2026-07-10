@@ -77,8 +77,10 @@ internal fun LessonDetailBeforeScreen(
 
     var showSheet by remember { mutableStateOf(false) }
     val etcState = rememberTextFieldState(initialText = cancelReasonState.etcReasonText)
-    LaunchedEffect(etcState.text) {
-        onEtcReasonTextChange(etcState.text.toString())
+    LaunchedEffect(cancelReasonState.etcReasonText) {
+        if (etcState.text.toString() != cancelReasonState.etcReasonText) {
+            etcState.edit { replace(0, length, cancelReasonState.etcReasonText) }
+        }
     }
 
     Column(
