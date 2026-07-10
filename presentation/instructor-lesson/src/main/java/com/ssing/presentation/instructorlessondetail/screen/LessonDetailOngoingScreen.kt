@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
@@ -135,7 +136,7 @@ internal fun LessonDetailOngoingScreen(
                                     style = SsingButtonStyle.RED,
                                     modifier = Modifier.weight(1f),
                                 )
-                                Spacer(modifier = Modifier.height(16.dp))
+                                Spacer(modifier = Modifier.width(16.dp))
                                 SsingButton(
                                     text = "채팅방",
                                     onClick = onChatRoomClick,
