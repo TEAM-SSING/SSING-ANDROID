@@ -3,7 +3,6 @@ package com.ssing.presentation.consumerhome
 import androidx.lifecycle.viewModelScope
 import com.ssing.core.ui.base.BaseViewModel
 import com.ssing.core.ui.common.component.HomeLessonCardState
-import com.ssing.core.ui.common.component.HomeLessonCardState.Reservation.Status
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
