@@ -93,48 +93,46 @@ internal fun PaymentScreen(
     modifier: Modifier = Modifier,
 ) {
     Scaffold(
-        modifier = modifier,
+        modifier = modifier.background(color = SSINGTheme.colors.backgroundAlternative),
         topBar = {
-            Column(
-                modifier = Modifier
-                    .background(
-                        color = SSINGTheme.colors.backgroundAlternative,
-                    )
-            ) {
-                SsingTopBar(
-                    onBack = onBackClick,
-                    title = "결제",
-                    backgroundColor = SSINGTheme.colors.backgroundAlternative,
-                )
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                SsingHeader(
-                    title = "결제 정보를 확인해요",
-                    subText = "강습은 강사님과 만나 양측 확인 후 시작돼요",
-                )
-            }
+            SsingTopBar(
+                onBack = onBackClick,
+                title = "결제",
+                backgroundColor = SSINGTheme.colors.backgroundAlternative,
+            )
         },
         bottomBar = {
-            Column{
-                SsingButton(
-                    text = "결제하기",
-                    onClick = onPaymentClick,
-                    style = SsingButtonStyle.BLUE,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp),
-                )
-            }
+            SsingButton(
+                text = "결제하기",
+                onClick = onPaymentClick,
+                style = SsingButtonStyle.BLUE,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+            )
         }
-    ) { innerPadding ->
-        PayInfoSection(
-            state = state,
+    ) { innerPadding->
+        Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(color = SSINGTheme.colors.backgroundAlternative)
-                .padding(innerPadding),
-        )
+                .background(color = SSINGTheme.colors.backgroundAlternative,)
+                .padding(innerPadding)
+        ){
+            SsingHeader(
+                title = "결제 정보를 확인해요",
+                subText = "강습은 강사님과 만나 양측 확인 후 시작돼요",
+                modifier = Modifier
+                    .padding(vertical = 16.dp)
+            )
+
+            PayInfoSection(
+                state = state,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 16.dp)
+            )
+        }
+
     }
 }
 
@@ -145,10 +143,7 @@ private fun PayInfoSection(
 ) {
     Column(
         modifier = modifier
-            .padding(top = 16.dp)
-            .padding(horizontal = 16.dp)
             .verticalScroll(state = rememberScrollState()),
-        verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
          SsingMatchingDetailCard(
             nickname = state.nickname,
@@ -161,6 +156,8 @@ private fun PayInfoSection(
             participants = state.participants,
             equipmentStatus = state.equipmentStatus,
         )
+        
+        Spacer(modifier = Modifier.height(8.dp))
 
         Column(
             modifier = Modifier
