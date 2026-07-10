@@ -52,7 +52,7 @@ internal class ConsumerMatchingViewModel @Inject constructor() :
         sendEffect(ConsumerMatchingContract.Effect.Result.ShowToast("준비 중인 기능이에요."))
 
     // failure
-    fun nagigateToHome() {
+    fun navigateToHome() {
         // TODO: 연결 해제
         sendEffect(ConsumerMatchingContract.Effect.Failure.NavigateToHome)
     }
