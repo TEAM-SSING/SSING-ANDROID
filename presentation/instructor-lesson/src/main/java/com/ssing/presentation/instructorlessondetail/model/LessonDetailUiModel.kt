@@ -2,7 +2,6 @@ package com.ssing.presentation.instructorlessondetail.model
 
 import androidx.compose.runtime.Immutable
 import com.ssing.core.ui.common.component.TeamNickname
-import com.ssing.presentation.instructorlessondetail.screen.TeamParticipantsInfo
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toPersistentList
 

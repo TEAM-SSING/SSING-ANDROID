@@ -2,19 +2,17 @@ package com.ssing.presentation.instructorlessondetail.screen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -32,6 +30,7 @@ import com.ssing.core.ui.designsystem.theme.Blue50
 import com.ssing.core.ui.designsystem.theme.SSINGTheme
 import com.ssing.presentation.instructorlessondetail.component.SectionTitle
 import com.ssing.presentation.instructorlessondetail.model.LessonDetailOngoingUiModel
+import com.ssing.presentation.instructorlessondetail.model.TeamParticipantsInfo
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
 
@@ -58,114 +57,104 @@ internal fun LessonDetailOngoingScreen(
                 .background(Blue50)
                 .statusBarsPadding(),
         )
-
         Column(
             modifier = Modifier
-                .fillMaxSize()
-                .background(
-                    color = SSINGTheme.colors.backgroundNormal,
-                    shape = RoundedCornerShape(
-                        topStart = 12.dp,
-                        topEnd = 12.dp,
-                    ),
-                ),
+                .weight(1f)
+                .background(color = Blue50),
         ) {
-            LazyColumn(
-                modifier = Modifier.weight(1f),
+            Column(
+                modifier = Modifier
+                    .verticalScroll(rememberScrollState())
+                    .weight(1f)
             ) {
-                item {
-                    LessonBanner(
-                        lessonBannerState = lessonBannerState
+                Spacer(modifier = Modifier.height(16.dp))
+
+                LessonBanner(
+                    lessonBannerState = lessonBannerState
+                )
+
+                Column(
+                    modifier = Modifier
+                        .weight(1f)
+                        .background(
+                            color = SSINGTheme.colors.backgroundNormal,
+                            shape = RoundedCornerShape(
+                                topStart = 12.dp,
+                                topEnd = 12.dp,
+                            )
+                        )
+                        .padding(horizontal = 16.dp)
+                ) {
+                    Spacer(modifier = Modifier.height(16.dp))
+                    SectionTitle(text = "강습 정보")
+                    SsingMatchingDetailCardSmall(
+                        tags = ongoing.tags,
+                        teamNicknames = ongoing.teams.map {
+                            TeamNickname(
+                                it.teamNickname,
+                                it.teamCount
+                            )
+                        }.toPersistentList(),
+                        totalCount = ongoing.teams.size,
+                        place = ongoing.location,
+                        duration = ongoing.duration,
+                        price = ongoing.price,
                     )
-                }
 
-                item {
-                    Column(modifier = Modifier.fillMaxWidth()) {
-                        Spacer(modifier = Modifier.height(16.dp))
-
-                        Column(modifier = Modifier.padding(horizontal = 16.dp)) {
-                            SectionTitle(text = "강습 정보")
-                            Spacer(modifier = Modifier.height(8.dp))
-                            SsingMatchingDetailCardSmall(
-                                tags = ongoing.tags,
-                                teamNicknames = ongoing.teams.map {
-                                    TeamNickname(
-                                        it.teamNickname,
-                                        it.teamCount
-                                    )
-                                }.toPersistentList(),
-                                totalCount = ongoing.teams.size,
-                                place = ongoing.location,
-                                duration = ongoing.duration,
-                                price = ongoing.price,
-                            )
-                        }
-
-                        Spacer(modifier = Modifier.height(24.dp))
-
-                        Column(modifier = Modifier.padding(horizontal = 16.dp)) {
-                            SectionTitle(text = "강습생 정보")
-                            Spacer(modifier = Modifier.height(8.dp))
-                            ongoing.teams.forEachIndexed { index, team ->
-                                ConsumerInfoCard(
-                                    isReady = false,
-                                    nickname = team.teamNickname,
-                                    participants = team.participants,
-                                    price = team.price,
-                                )
-                                if (index != ongoing.teams.lastIndex) {
-                                    Spacer(modifier = Modifier.height(8.dp))
-                                }
-                            }
-                        }
-
-                        Spacer(modifier = Modifier.height(24.dp))
-
-                        Column(modifier = Modifier.padding(horizontal = 16.dp)) {
-                            Text(
-                                text = "강습 관리",
-                                style = SSINGTheme.typography.caption.sb12,
-                                color = SSINGTheme.colors.textAlternative,
-                                modifier = Modifier.padding(bottom = 8.dp),
-                            )
-                            Row(
-                                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                                modifier = Modifier.fillMaxWidth(),
-                            ) {
-                                SsingButton(
-                                    text = "문제 신고",
-                                    onClick = onCancelClassClick,
-                                    style = SsingButtonStyle.RED,
-                                    modifier = Modifier.weight(1f),
-                                )
-                                SsingButton(
-                                    text = "채팅방",
-                                    onClick = onChatRoomClick,
-                                    style = SsingButtonStyle.GRAY,
-                                    modifier = Modifier.weight(1f),
-                                )
-                            }
+                    Spacer(modifier = Modifier.height(24.dp))
+                    SectionTitle(text = "강습생 정보")
+                    Spacer(modifier = Modifier.height(8.dp))
+                    ongoing.teams.forEachIndexed { index, team ->
+                        ConsumerInfoCard(
+                            isReady = false,
+                            nickname = team.teamNickname,
+                            participants = team.participants,
+                            price = team.price,
+                        )
+                        if (index != ongoing.teams.lastIndex) {
+                            Spacer(modifier = Modifier.height(4.dp))
                         }
                     }
+
+                    Spacer(modifier = Modifier.height(24.dp))
+                    Text(
+                        text = "강습 관리",
+                        style = SSINGTheme.typography.caption.sb12,
+                        color = SSINGTheme.colors.textAlternative,
+                        modifier = Modifier.padding(bottom = 8.dp),
+                    )
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        modifier = Modifier.fillMaxWidth(),
+                    ) {
+                        SsingButton(
+                            text = "문제 신고",
+                            onClick = onCancelClassClick,
+                            style = SsingButtonStyle.RED,
+                            modifier = Modifier.weight(1f),
+                        )
+                        SsingButton(
+                            text = "채팅방",
+                            onClick = onChatRoomClick,
+                            style = SsingButtonStyle.GRAY,
+                            modifier = Modifier.weight(1f),
+                        )
+                    }
+                    Spacer(modifier = Modifier.height(16.dp))
                 }
             }
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(SSINGTheme.colors.backgroundNormal)
-                    .padding(16.dp),
-            ) {
-                SsingButton(
-                    text = "강습 종료",
-                    onClick = onEndClick,
-                    style = SsingButtonStyle.BLUE,
-                    modifier = Modifier.fillMaxWidth(),
-                )
-            }
         }
+        SsingButton(
+            text = "강습 종료",
+            onClick = onEndClick,
+            style = SsingButtonStyle.BLUE,
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(SSINGTheme.colors.backgroundNormal)
+                .padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
+        )
     }
 }
-
 
 @Preview
 @Composable
