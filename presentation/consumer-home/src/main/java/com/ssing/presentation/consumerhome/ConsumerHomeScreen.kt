@@ -31,7 +31,6 @@ import com.ssing.core.ui.common.component.SsingHomeTopBar
 import com.ssing.core.ui.common.component.StartMatchingButton
 import com.ssing.core.ui.common.component.StartMatchingCardStyle
 import com.ssing.core.ui.designsystem.theme.SSINGTheme
-import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import java.time.LocalDateTime
 
@@ -45,22 +44,7 @@ internal fun ConsumerHomeRoute(
 
     ConsumerHomeScreen(
         state = uiState,
-        states = persistentListOf(
-            HomeLessonCardState.Reservation(
-                chip = "Now",
-                displayText = "김OO님 팀 3명",
-                location = "하이원",
-                date = LocalDateTime.of(2025, 7, 15, 19, 0),
-                status = Status.Matching,
-            ),
-            HomeLessonCardState.Reservation(
-                chip = "D-3",
-                displayText = "김OO님 팀 3명",
-                location = "지산리조트",
-                date = LocalDateTime.of(2026, 7, 11, 19, 0),
-                status = Status.Default,
-            ),
-        ),
+        onLessonClick = viewModel::onLessonClick,
         modifier = modifier,
     )
 }
@@ -68,7 +52,7 @@ internal fun ConsumerHomeRoute(
 @Composable
 private fun ConsumerHomeScreen(
     state: ConsumerHomeContract.State,
-    states: ImmutableList<HomeLessonCardState>,
+    onLessonClick: (HomeLessonCardState.Reservation) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Scaffold(
@@ -98,7 +82,7 @@ private fun ConsumerHomeScreen(
             Spacer(modifier = Modifier.height(23.dp))
 
             HomeLessonCardList(
-                states = states,
+                states = state.lessonCards,
                 onButtonClick = {},
             )
 
@@ -151,22 +135,24 @@ private fun ConsumerHomeScreen(
 @Composable
 private fun ConsumerHomeScreenPreview() {
     ConsumerHomeScreen(
-        state = ConsumerHomeContract.State(),
-        states = persistentListOf(
-            HomeLessonCardState.Reservation(
-                chip = "Now",
-                displayText = "김OO님 팀 3명",
-                location = "하이원",
-                date = LocalDateTime.of(2025, 7, 15, 19, 0),
-                status = Status.Matching,
-            ),
-            HomeLessonCardState.Reservation(
-                chip = "D-3",
-                displayText = "김OO님 팀 3명",
-                location = "지산리조트",
-                date = LocalDateTime.of(2026, 7, 11, 19, 0),
-                status = Status.Default,
+        state = ConsumerHomeContract.State(
+            lessonCards = persistentListOf(
+                HomeLessonCardState.Reservation(
+                    chip = "Now",
+                    displayText = "김OO님 팀 3명",
+                    location = "하이원",
+                    date = LocalDateTime.of(2025, 7, 15, 19, 0),
+                    status = Status.Matching,
+                ),
+                HomeLessonCardState.Reservation(
+                    chip = "D-3",
+                    displayText = "김OO님 팀 3명",
+                    location = "지산리조트",
+                    date = LocalDateTime.of(2026, 7, 11, 19, 0),
+                    status = Status.Default,
+                ),
             ),
         ),
+        onLessonClick = {},
     )
 }

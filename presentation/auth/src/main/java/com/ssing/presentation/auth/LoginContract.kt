@@ -1,11 +1,13 @@
 package com.ssing.presentation.auth
 
 import androidx.compose.runtime.Immutable
+import com.ssing.core.ui.common.component.HomeLessonCardState
 
 internal interface LoginContract {
 
     @Immutable
     data class State(
+        val homeLessonCardState: HomeLessonCardState,
         val isLoading: Boolean = false,
     )
 
