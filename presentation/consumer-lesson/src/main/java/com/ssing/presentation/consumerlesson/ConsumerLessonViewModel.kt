@@ -28,15 +28,13 @@ internal class ConsumerLessonViewModel @Inject constructor() :
     fun onCancelConfirmed(
         etcReason: String? = null,
     ) {
-        viewModelScope.launch {
-            updateState {
-                copy(
-                    lessonBannerState = LessonBannerState.Canceled,
-                    showCancelConfirmSheet = false,
-                    selectedReason = null,
-                    // TODO: LessonBannerState를 canceled로 변경
-                )
-            }
+        updateState {
+            copy(
+                lessonBannerState = LessonBannerState.Canceled,
+                showCancelConfirmSheet = false,
+                selectedReason = null,
+                // TODO: LessonBannerState를 canceled로 변경
+            )
         }
     }
 
