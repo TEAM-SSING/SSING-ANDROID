@@ -29,6 +29,8 @@ internal interface ConsumerLessonContract {
         val participantTeams: ImmutableList<ParticipantTeamUiModel> = persistentListOf(),
 
         val isReady: Boolean = false,
+        val showReadyAlert: Boolean = false,
+        val showEndLessonAlert: Boolean = false,
         val showCancelConfirmSheet: Boolean = false,
         val selectedReason: CancelReason? = null,
         val etcReason: String? = null,

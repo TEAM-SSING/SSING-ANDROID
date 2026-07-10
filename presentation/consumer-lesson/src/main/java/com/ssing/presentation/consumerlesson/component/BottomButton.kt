@@ -16,9 +16,9 @@ internal fun BottomButton(
 ) {
     val buttonText = when (state.lessonBannerState) {
         is LessonBannerState.Before -> if (state.isReady) {
-            "강습 대기중"
-        } else {
             "강습 준비 완료"
+        } else {
+            "강습 대기 중"
         }
 
         is LessonBannerState.Ongoing -> "강습 종료"
@@ -29,7 +29,8 @@ internal fun BottomButton(
     SsingButton(
         text = buttonText,
         onClick = onClick,
-        style = SsingButtonStyle.BLUE,
+        style = if (state.isReady) SsingButtonStyle.GRAY else SsingButtonStyle.BLUE,
         modifier = modifier.fillMaxWidth(),
+        enabled = !state.isReady
     )
 }

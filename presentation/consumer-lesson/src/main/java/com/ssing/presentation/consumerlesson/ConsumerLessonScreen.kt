@@ -22,6 +22,7 @@ import com.ssing.core.ui.common.component.CancelReason
 import com.ssing.core.ui.common.component.LessonBanner
 import com.ssing.core.ui.common.component.LessonBannerState
 import com.ssing.core.ui.common.component.MatchingCancelBottomSheet
+import com.ssing.core.ui.common.component.SsingModal
 import com.ssing.core.ui.common.component.SsingTopBar
 import com.ssing.core.ui.common.component.UserRole
 import com.ssing.core.ui.designsystem.theme.Blue50
@@ -61,11 +62,18 @@ internal fun ConsumerLessonRoute(
     ConsumerLessonScreen(
         state = state,
         onReadyClick = viewModel::onReadyClick,
+        onReadyDismissed = viewModel::onReadyDismissed,
+        onReadyConfirmed = viewModel::onReadyConfirmed,
+        onEndLessonClick = viewModel::onEndLessonClick,
+        onEndLessonDismiss = viewModel::onEndLessonDismiss,
+        onEndLessonConfirmed = viewModel::onEndLessonConfirmed,
+        onReviewClick = viewModel::onReviewClick,
         onCancelClick = viewModel::onCancelClick,
         onReasonSelected = viewModel::onReasonSelected,
         onCancelConfirmed = viewModel::onCancelConfirmed,
         onCancelDismiss = viewModel::onCancelDismiss,
         onChatClick = viewModel::onChatClick,
+        onHomeClick = viewModel::onHomeClick,
         modifier = modifier,
     )
 }
@@ -75,11 +83,18 @@ internal fun ConsumerLessonRoute(
 private fun ConsumerLessonScreen(
     state: ConsumerLessonContract.State,
     onReadyClick: () -> Unit,
+    onReadyDismissed: () -> Unit,
+    onReadyConfirmed: () -> Unit,
+    onEndLessonClick: () -> Unit,
+    onEndLessonDismiss: () -> Unit,
+    onEndLessonConfirmed: () -> Unit,
+    onReviewClick: () -> Unit,
     onCancelClick: () -> Unit,
     onReasonSelected: (CancelReason) -> Unit,
     onCancelConfirmed: (String?) -> Unit,
     onCancelDismiss: () -> Unit,
     onChatClick: () -> Unit,
+    onHomeClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val etcState = rememberTextFieldState()
@@ -125,7 +140,12 @@ private fun ConsumerLessonScreen(
         BottomButton(
             state = state,
             onClick = {
-                // TODO: LessonState 단계별 내비게이션
+                when (state.lessonBannerState) {
+                    is LessonBannerState.Before -> onReadyClick()
+                    is LessonBannerState.Ongoing -> onEndLessonClick()
+                    is LessonBannerState.Completed -> onReviewClick()
+                    is LessonBannerState.Canceled -> onHomeClick()
+                }
             },
             modifier = Modifier
                 .padding(
@@ -144,6 +164,18 @@ private fun ConsumerLessonScreen(
             etcState = etcState,
             onConfirmClick = onCancelConfirmed,
             onDismissRequest = onCancelDismiss,
+        )
+    }
+
+    if (state.showReadyAlert) {
+        SsingModal(
+            onDismissRequest = onReadyDismissed,
+            title = "강습 준비를 완료할까요?",
+            text = "준비 완료 시 변경이 불가능해요",
+            primaryText = "준비 완료",
+            onPrimary = onReadyConfirmed,
+            secondaryText = "취소",
+            onSecondary = onReadyDismissed,
         )
     }
 }
@@ -227,11 +259,18 @@ private fun ConsumerLessonScreenPreview(
         ConsumerLessonScreen(
             state = state,
             onReadyClick = {},
+            onReadyDismissed = {},
+            onReadyConfirmed = {},
+            onEndLessonClick = {},
+            onEndLessonDismiss = {},
+            onEndLessonConfirmed = {},
+            onReviewClick = {},
             onCancelClick = {},
             onReasonSelected = {},
             onCancelConfirmed = {},
             onCancelDismiss = {},
-            onChatClick = {}
+            onChatClick = {},
+            onHomeClick = {},
         )
     }
 }

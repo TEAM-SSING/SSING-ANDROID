@@ -1,6 +1,5 @@
 package com.ssing.presentation.consumerlesson
 
-import androidx.lifecycle.viewModelScope
 import com.ssing.core.ui.base.BaseViewModel
 import com.ssing.core.ui.common.component.CancelReason
 import com.ssing.core.ui.common.component.LessonBannerState
@@ -12,7 +11,6 @@ import com.ssing.presentation.consumerlesson.model.ParticipantTeamUiModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -78,8 +76,38 @@ internal class ConsumerLessonViewModel @Inject constructor() :
     }
 
     fun onReadyClick() {
-        updateState { copy(isReady = true) }
+        updateState { copy(showReadyAlert = true) }
     }
+
+    fun onReadyDismissed() {
+        updateState { copy(showReadyAlert = false) }
+    }
+
+    fun onReadyConfirmed() {
+        updateState { copy(
+            isReady = true,
+            showReadyAlert = false,
+        ) }
+    }
+
+    fun onEndLessonClick() {
+        updateState { copy(showEndLessonAlert = true) }
+    }
+
+    fun onEndLessonDismiss() {
+        updateState { copy(showEndLessonAlert = false) }
+    }
+
+    fun onEndLessonConfirmed() {
+        updateState { copy(
+            showEndLessonAlert = false,
+            lessonBannerState = LessonBannerState.Completed(
+                lessonDate = "2026년 12월 31일",
+            ),
+        ) }
+    }
+
+    fun onReviewClick() = sendEffect(ConsumerLessonContract.Effect.ShowToast("준비 중인 기능입니다."))
 
     fun onCancelClick() {
         updateState { copy(showCancelConfirmSheet = true) }
@@ -98,13 +126,16 @@ internal class ConsumerLessonViewModel @Inject constructor() :
                 showCancelConfirmSheet = false,
                 selectedReason = null,
                 etcReason = etcReason,
-                // TODO: LessonBannerState를 canceled로 변경
             )
         }
     }
 
     fun onCancelDismiss() {
-        updateState { copy(showCancelConfirmSheet = false) }
+        updateState { copy(
+            showCancelConfirmSheet = false,
+            selectedReason = null,
+            etcReason = null,
+        ) }
     }
 
     fun onChatClick() = sendEffect(ConsumerLessonContract.Effect.ShowToast("준비 중인 기능입니다."))
@@ -122,4 +153,6 @@ internal class ConsumerLessonViewModel @Inject constructor() :
             )
         }
     }
+
+    fun onHomeClick() = sendEffect(ConsumerLessonContract.Effect.NavigationToHome)
 }
