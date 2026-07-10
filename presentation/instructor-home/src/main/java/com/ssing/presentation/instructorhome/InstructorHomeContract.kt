@@ -12,6 +12,7 @@ internal interface InstructorHomeContract {
     @Immutable
     data class State(
         val home: InstructorHomeUiModel = InstructorHomeUiModel(
+            nickname = "",
             member = 0,
             lessonCards = persistentListOf(
                 HomeLessonCardState.Empty

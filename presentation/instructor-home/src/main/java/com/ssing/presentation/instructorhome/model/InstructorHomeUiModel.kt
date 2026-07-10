@@ -6,6 +6,7 @@ import com.ssing.core.ui.common.component.HomeLessonCardState
 import kotlinx.collections.immutable.ImmutableList
 
 data class InstructorHomeUiModel(
+    val nickname: String,
     val member: Int,
     val lessonCards: ImmutableList<HomeLessonCardState>,
 )

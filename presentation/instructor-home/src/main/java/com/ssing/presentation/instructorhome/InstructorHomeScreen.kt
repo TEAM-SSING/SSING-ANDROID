@@ -159,7 +159,7 @@ private fun InstructorHomeScreen(
                 verticalArrangement = Arrangement.spacedBy(8.dp),
             ) {
                 Text(
-                    text = "새로운 강습 시작하기",
+                    text = "${state.home.nickname}님의 강습 후기",
                     color = SSINGTheme.colors.textNormal,
                     style = SSINGTheme.typography.body.sb16,
                 )
@@ -181,6 +181,7 @@ private fun ConsumerHomeScreenPreview() {
     InstructorHomeScreen(
         state = InstructorHomeContract.State(
             home = InstructorHomeUiModel(
+                nickname = "김씽씽",
                 member = 99,
                 lessonCards = persistentListOf(
                     HomeLessonCardState.Reservation(
@@ -219,6 +220,7 @@ private fun InstructorHomeScreen2Preview() {
     InstructorHomeScreen(
         state = InstructorHomeContract.State(
             home = InstructorHomeUiModel(
+                nickname = "김씽씽",
                 member = 99,
                 lessonCards = persistentListOf(
                     HomeLessonCardState.Empty,
