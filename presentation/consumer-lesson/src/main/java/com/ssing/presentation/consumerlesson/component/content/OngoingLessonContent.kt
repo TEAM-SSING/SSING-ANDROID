@@ -17,6 +17,7 @@ import com.ssing.presentation.consumerlesson.component.ParticipantTeamsSection
 @Composable
 internal fun OngoingLessonContent(
     state: ConsumerLessonContract.State,
+    onReportIssueClick: () -> Unit,
     onChatClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -49,7 +50,7 @@ internal fun OngoingLessonContent(
         Spacer(modifier = Modifier.height(24.dp))
 
         LessonManagementSection(
-            primaryButton = LessonActionButton("문제 신고", {}),
+            primaryButton = LessonActionButton("문제 신고", onReportIssueClick),
             secondaryButton = LessonActionButton("채팅방", onChatClick)
         )
     }

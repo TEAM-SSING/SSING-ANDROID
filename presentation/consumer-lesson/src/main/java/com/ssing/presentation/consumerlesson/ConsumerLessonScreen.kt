@@ -72,6 +72,9 @@ internal fun ConsumerLessonRoute(
         onReasonSelected = viewModel::onReasonSelected,
         onCancelConfirmed = viewModel::onCancelConfirmed,
         onCancelDismiss = viewModel::onCancelDismiss,
+        onReportIssueClick = viewModel::onReportIssueClick,
+        onAdditionalLessonClick = viewModel::onAdditionalLessonClick,
+        onLessonListClick = viewModel::onLessonListClick,
         onChatClick = viewModel::onChatClick,
         onHomeClick = viewModel::onHomeClick,
         modifier = modifier,
@@ -94,6 +97,9 @@ private fun ConsumerLessonScreen(
     onCancelConfirmed: (String?) -> Unit,
     onCancelDismiss: () -> Unit,
     onChatClick: () -> Unit,
+    onReportIssueClick: () -> Unit,
+    onAdditionalLessonClick: () -> Unit,
+    onLessonListClick: () -> Unit,
     onHomeClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -130,10 +136,19 @@ private fun ConsumerLessonScreen(
                 )
                 is LessonBannerState.Ongoing -> OngoingLessonContent(
                     state,
+                    onReportIssueClick = onReportIssueClick,
                     onChatClick = onChatClick,
                 )
-                is LessonBannerState.Completed -> CompletedLessonContent(state)
-                is LessonBannerState.Canceled -> CanceledLessonContent(state)
+                is LessonBannerState.Completed -> CompletedLessonContent(
+                    state,
+                    onReportIssueClick = onReportIssueClick,
+                    onAdditionalLessonClick = onAdditionalLessonClick,
+                )
+                is LessonBannerState.Canceled -> CanceledLessonContent(
+                    state,
+                    onReportIssueClick = onReportIssueClick,
+                    onLessonListClick = onLessonListClick,
+                )
             }
         }
 
@@ -176,6 +191,18 @@ private fun ConsumerLessonScreen(
             onPrimary = onReadyConfirmed,
             secondaryText = "취소",
             onSecondary = onReadyDismissed,
+        )
+    }
+
+    if (state.showEndLessonAlert) {
+        SsingModal(
+            onDismissRequest = onEndLessonDismiss,
+            title = "강습을 종료할까요?",
+            text = "강습을 종료하면 모든 참여자의 강습이\n종료 상태로 변경되어요",
+            primaryText = "강습 종료하기",
+            onPrimary = onEndLessonConfirmed,
+            secondaryText = "계속 진행하기",
+            onSecondary = onEndLessonDismiss,
         )
     }
 }
@@ -270,6 +297,9 @@ private fun ConsumerLessonScreenPreview(
             onCancelConfirmed = {},
             onCancelDismiss = {},
             onChatClick = {},
+            onReportIssueClick = {},
+            onAdditionalLessonClick = {},
+            onLessonListClick = {},
             onHomeClick = {},
         )
     }

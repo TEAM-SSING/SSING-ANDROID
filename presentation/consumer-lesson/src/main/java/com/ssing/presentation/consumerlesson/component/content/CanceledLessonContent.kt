@@ -16,6 +16,8 @@ import com.ssing.presentation.consumerlesson.component.LessonManagementSection
 @Composable
 internal fun CanceledLessonContent(
     state: ConsumerLessonContract.State,
+    onReportIssueClick: () -> Unit,
+    onLessonListClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     ContentBackground(
@@ -46,8 +48,8 @@ internal fun CanceledLessonContent(
         Spacer(modifier = Modifier.height(24.dp))
 
         LessonManagementSection(
-            primaryButton = LessonActionButton("문제 신고", {}),
-            secondaryButton = LessonActionButton("강습 내역 보기", {})
+            primaryButton = LessonActionButton("문제 신고", onReportIssueClick),
+            secondaryButton = LessonActionButton("강습 내역 보기", onLessonListClick)
         )
     }
 }

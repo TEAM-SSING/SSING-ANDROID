@@ -154,5 +154,12 @@ internal class ConsumerLessonViewModel @Inject constructor() :
         }
     }
 
+
+    fun onReportIssueClick() = sendEffect(ConsumerLessonContract.Effect.ShowToast("준비 중인 기능입니다."))
+
+    fun onAdditionalLessonClick() = sendEffect(ConsumerLessonContract.Effect.ShowToast("준비 중인 기능입니다."))
+
+    fun onLessonListClick() = sendEffect(ConsumerLessonContract.Effect.ShowToast("준비 중인 기능입니다."))
+
     fun onHomeClick() = sendEffect(ConsumerLessonContract.Effect.NavigationToHome)
 }

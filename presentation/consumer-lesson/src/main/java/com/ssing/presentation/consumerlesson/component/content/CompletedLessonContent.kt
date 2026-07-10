@@ -16,6 +16,8 @@ import com.ssing.presentation.consumerlesson.component.LessonManagementSection
 @Composable
 internal fun CompletedLessonContent(
     state: ConsumerLessonContract.State,
+    onReportIssueClick: () -> Unit,
+    onAdditionalLessonClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     ContentBackground(
@@ -44,8 +46,8 @@ internal fun CompletedLessonContent(
         Spacer(modifier = Modifier.height(24.dp))
 
         LessonManagementSection(
-            primaryButton = LessonActionButton("문제 신고", {}),
-            secondaryButton = LessonActionButton("이 강사님 추가 예약", {})
+            primaryButton = LessonActionButton("문제 신고", onReportIssueClick),
+            secondaryButton = LessonActionButton("이 강사님 추가 예약", onAdditionalLessonClick)
         )
     }
 }
