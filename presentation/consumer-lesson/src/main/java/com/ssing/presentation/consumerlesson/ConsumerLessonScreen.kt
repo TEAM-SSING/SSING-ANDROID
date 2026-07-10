@@ -153,15 +153,13 @@ private fun BeforeLessonContent(
             ContentSection(
                 titleText = "강습 정보",
             ) {
-                val lessonInfo = state.lessonInfo ?: return@ContentSection
-
                 SsingMatchingDetailCardSmall(
-                    tags = lessonInfo.tags,
-                    teamNicknames = lessonInfo.teamNicknames,
-                    totalCount = lessonInfo.totalCount,
-                    place = lessonInfo.place,
-                    duration = lessonInfo.duration,
-                    price = lessonInfo.price,
+                    tags = info.tags,
+                    teamNicknames = info.teamNicknames,
+                    totalCount = info.totalCount,
+                    place = info.place,
+                    duration = info.duration,
+                    price = info.price,
                 )
             }
         }
@@ -173,14 +171,12 @@ private fun BeforeLessonContent(
                 titleText = "강사 프로필",
                 spacer = 4,
             ) {
-                val instructorProfile = state.instructorProfile ?: return@ContentSection
-
                 InstructorProfileButton(
-                    name = instructorProfile.name,
-                    age = instructorProfile.age,
-                    gender = instructorProfile.gender,
-                    level = instructorProfile.level,
-                    imageUrl = instructorProfile.imageUrl,
+                    name = info.name,
+                    age = info.age,
+                    gender = info.gender,
+                    level = info.level,
+                    imageUrl = info.imageUrl,
                     onClick = {},
                 )
             }
@@ -188,20 +184,18 @@ private fun BeforeLessonContent(
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        state.participantTeams.let { info ->
-            ContentSection(
-                titleText = "강습생 정보",
+        ContentSection(
+            titleText = "강습생 정보",
+        ) {
+            Column(
+                verticalArrangement = Arrangement.spacedBy(8.dp),
             ) {
-                Column(
-                    verticalArrangement = Arrangement.spacedBy(8.dp),
-                ) {
-                    state.participantTeams.forEach { team ->
-                        ConsumerInfoCard(
-                            isReady = team.isReady,
-                            nickname = team.nickname,
-                            participants = team.participants,
-                        )
-                    }
+                state.participantTeams.forEach { team ->
+                    ConsumerInfoCard(
+                        isReady = team.isReady,
+                        nickname = team.nickname,
+                        participants = team.participants,
+                    )
                 }
             }
         }
