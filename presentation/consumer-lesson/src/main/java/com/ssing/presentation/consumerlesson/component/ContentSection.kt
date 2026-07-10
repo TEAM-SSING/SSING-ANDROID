@@ -13,13 +13,12 @@ import com.ssing.core.ui.designsystem.theme.SSINGTheme
 internal fun ContentSection(
     titleText: String,
     modifier: Modifier = Modifier,
-    spacer: Int = 8,
     content: @Composable () -> Unit,
 ) {
     Column(
         modifier = modifier
             .fillMaxWidth(),
-        verticalArrangement = Arrangement.spacedBy(spacer.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         Text(
             text = titleText,

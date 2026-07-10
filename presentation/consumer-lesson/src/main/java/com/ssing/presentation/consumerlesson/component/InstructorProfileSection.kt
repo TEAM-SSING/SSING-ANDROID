@@ -13,7 +13,6 @@ internal fun InstructorProfileSection(
     instructorProfile?.let { info ->
         ContentSection(
             titleText = "강사 프로필",
-            spacer = 4,
             modifier = modifier,
         ) {
             InstructorProfileButton(
