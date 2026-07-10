@@ -2,7 +2,6 @@ package com.ssing.presentation.consumerlesson
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -18,7 +17,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
@@ -108,31 +106,24 @@ private fun ConsumerLessonScreen(
                     state,
                     onCancelClick = onCancelClick,
                 )
-
                 is LessonBannerState.Ongoing -> OngoingLessonContent(state)
                 is LessonBannerState.Completed -> CompletedLessonContent(state)
                 is LessonBannerState.Canceled -> CanceledLessonContent(state)
             }
         }
 
-        Box(
+        BottomButton(
+            state = state,
+            onClick = {
+                // TODO: LessonState 단계별 내비게이션
+            },
             modifier = Modifier
-                .fillMaxWidth()
                 .padding(
                     start = 16.dp,
                     end = 16.dp,
                     bottom = 16.dp,
-                ),
-            contentAlignment = Alignment.BottomCenter,
-        ) {
-            BottomButton(
-                state = state,
-                onClick = {
-                    // TODO: LessonState 단계별 내비게이션
-                },
-            )
-        }
-
+                )
+        )
     }
 
     if (state.showCancelConfirmSheet) {
@@ -153,20 +144,22 @@ private fun BeforeLessonContent(
     onCancelClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    ContentBackground {
-        ContentSection(
-            titleText = "강습 정보",
-        ) {
-            val lessonInfo = state.lessonInfo ?: return@ContentSection
-
-            SsingMatchingDetailCardSmall(
-                tags = lessonInfo.tags,
-                teamNicknames = lessonInfo.teamNicknames,
-                totalCount = lessonInfo.totalCount,
-                place = lessonInfo.place,
-                duration = lessonInfo.duration,
-                price = lessonInfo.price,
-            )
+    ContentBackground(
+        modifier = modifier,
+    ) {
+        state.lessonInfo?.let { info ->
+            ContentSection(
+                titleText = "강습 정보",
+            ) {
+                SsingMatchingDetailCardSmall(
+                    tags = info.tags,
+                    teamNicknames = info.teamNicknames,
+                    totalCount = info.totalCount,
+                    place = info.place,
+                    duration = info.duration,
+                    price = info.price,
+                )
+            }
         }
 
         Spacer(modifier = Modifier.height(12.dp))
@@ -191,20 +184,22 @@ private fun OngoingLessonContent(
     state: ConsumerLessonContract.State,
     modifier: Modifier = Modifier,
 ) {
-    ContentBackground {
-        ContentSection(
-            titleText = "강습 정보",
-        ) {
-            val lessonInfo = state.lessonInfo ?: return@ContentSection
-
-            SsingMatchingDetailCardSmall(
-                tags = lessonInfo.tags,
-                teamNicknames = lessonInfo.teamNicknames,
-                totalCount = lessonInfo.totalCount,
-                place = lessonInfo.place,
-                duration = lessonInfo.duration,
-                price = lessonInfo.price,
-            )
+    ContentBackground(
+        modifier = modifier,
+    ) {
+        state.lessonInfo?.let { info ->
+            ContentSection(
+                titleText = "강습 정보",
+            ) {
+                SsingMatchingDetailCardSmall(
+                    tags = info.tags,
+                    teamNicknames = info.teamNicknames,
+                    totalCount = info.totalCount,
+                    place = info.place,
+                    duration = info.duration,
+                    price = info.price,
+                )
+            }
         }
 
         Spacer(modifier = Modifier.height(12.dp))
@@ -229,21 +224,23 @@ private fun CompletedLessonContent(
     state: ConsumerLessonContract.State,
     modifier: Modifier = Modifier,
 ) {
-    ContentBackground {
-        ContentSection(
-            titleText = "강습 정보",
-        ) {
-            val completedLessonInfo = state.completedLessonInfo ?: return@ContentSection
-
-            SsingMatchingDetailCardSmall(
-                tags = completedLessonInfo.lessonInfo.tags,
-                teamNicknames = completedLessonInfo.lessonInfo.teamNicknames,
-                totalCount = completedLessonInfo.lessonInfo.totalCount,
-                place = completedLessonInfo.lessonInfo.place,
-                duration = completedLessonInfo.lessonInfo.duration,
-                actualTimeRange = completedLessonInfo.actualTimeRange,
-                price = completedLessonInfo.lessonInfo.price,
-            )
+    ContentBackground(
+        modifier = modifier,
+    ) {
+        state.completedLessonInfo?.let { info ->
+            ContentSection(
+                titleText = "강습 정보",
+            ) {
+                SsingMatchingDetailCardSmall(
+                    tags = info.lessonInfo.tags,
+                    teamNicknames = info.lessonInfo.teamNicknames,
+                    totalCount = info.lessonInfo.totalCount,
+                    place = info.lessonInfo.place,
+                    duration = info.lessonInfo.duration,
+                    actualTimeRange = info.actualTimeRange,
+                    price = info.lessonInfo.price,
+                )
+            }
         }
 
         Spacer(modifier = Modifier.height(12.dp))
@@ -264,23 +261,25 @@ private fun CanceledLessonContent(
     state: ConsumerLessonContract.State,
     modifier: Modifier = Modifier,
 ) {
-    ContentBackground {
-        ContentSection(
-            titleText = "강습 정보",
-        ) {
-            val canceledLessonInfo = state.canceledLessonInfo ?: return@ContentSection
-
-            SsingMatchingDetailCardSmall(
-                tags = canceledLessonInfo.lessonInfo.tags,
-                teamNicknames = canceledLessonInfo.lessonInfo.teamNicknames,
-                totalCount = canceledLessonInfo.lessonInfo.totalCount,
-                place = canceledLessonInfo.lessonInfo.place,
-                duration = canceledLessonInfo.lessonInfo.duration,
-                price = canceledLessonInfo.lessonInfo.price,
-                cancelDateTime = canceledLessonInfo.cancelDateTime,
-                cancelSubject = canceledLessonInfo.cancelSubject,
-                cancelReason = canceledLessonInfo.cancelReason,
-            )
+    ContentBackground(
+        modifier = modifier,
+    ) {
+        state.canceledLessonInfo?.let { info ->
+            ContentSection(
+                titleText = "강습 정보",
+            ) {
+                SsingMatchingDetailCardSmall(
+                    tags = info.lessonInfo.tags,
+                    teamNicknames = info.lessonInfo.teamNicknames,
+                    totalCount = info.lessonInfo.totalCount,
+                    place = info.lessonInfo.place,
+                    duration = info.lessonInfo.duration,
+                    price = info.lessonInfo.price,
+                    cancelDateTime = info.cancelDateTime,
+                    cancelSubject = info.cancelSubject,
+                    cancelReason = info.cancelReason,
+                )
+            }
         }
 
         Spacer(modifier = Modifier.height(12.dp))
@@ -299,36 +298,44 @@ private fun CanceledLessonContent(
 @Composable
 private fun InstructorProfileSection(
     instructorProfile: InstructorProfileUiModel?,
+    modifier: Modifier = Modifier,
 ) {
-    ContentSection(
-        titleText = "강사 프로필",
-        spacer = 4,
-    ) {
-        val profile = instructorProfile ?: return@ContentSection
-
-        InstructorProfileButton(
-            name = profile.name,
-            age = profile.age,
-            gender = profile.gender,
-            level = profile.level,
-            imageUrl = profile.imageUrl,
-            onClick = {},
-        )
+    instructorProfile?.let { info ->
+        ContentSection(
+            titleText = "강사 프로필",
+            spacer = 4,
+            modifier = modifier,
+        ) {
+            InstructorProfileButton(
+                name = info.name,
+                age = info.age,
+                gender = info.gender,
+                level = info.level,
+                imageUrl = info.imageUrl,
+                onClick = {},
+            )
+        }
     }
 }
 
 @Composable
 private fun ParticipantTeamsSection(
     participantTeams: ImmutableList<ParticipantTeamUiModel>,
+    modifier: Modifier = Modifier,
 ) {
-    ContentSection(titleText = "강습생 정보") {
-        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            participantTeams.forEach { team ->
-                ConsumerInfoCard(
-                    isReady = team.isReady,
-                    nickname = team.nickname,
-                    participants = team.participants,
-                )
+    participantTeams.let { info ->
+        ContentSection(
+            titleText = "강습생 정보",
+            modifier = modifier,
+        ) {
+            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                info.forEach { team ->
+                    ConsumerInfoCard(
+                        isReady = team.isReady,
+                        nickname = team.nickname,
+                        participants = team.participants,
+                    )
+                }
             }
         }
     }
@@ -343,8 +350,12 @@ private data class LessonActionButton(
 private fun LessonManagementSection(
     primaryButton: LessonActionButton,
     secondaryButton: LessonActionButton,
+    modifier: Modifier = Modifier,
 ) {
-    ContentSection(titleText = "강습 관리") {
+    ContentSection(
+        titleText = "강습 관리",
+        modifier = modifier,
+    ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -371,7 +382,7 @@ private fun ContentBackground(
     content: @Composable () -> Unit,
 ) {
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .background(Blue50)
             .background(
