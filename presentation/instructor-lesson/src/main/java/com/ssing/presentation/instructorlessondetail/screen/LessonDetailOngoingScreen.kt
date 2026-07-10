@@ -31,7 +31,6 @@ import com.ssing.presentation.instructorlessondetail.component.SectionTitle
 import com.ssing.presentation.instructorlessondetail.model.LessonDetailOngoingUiModel
 import com.ssing.presentation.instructorlessondetail.model.TeamParticipantsInfo
 import kotlinx.collections.immutable.persistentListOf
-import kotlinx.collections.immutable.toPersistentList
 
 @Composable
 internal fun LessonDetailOngoingScreen(
@@ -88,7 +87,7 @@ internal fun LessonDetailOngoingScreen(
                     SectionTitle(text = "강습 정보")
                     SsingMatchingDetailCardSmall(
                         tags = ongoing.tags,
-                        teamNicknames = ongoing.teams.map { it.teamNickname }.toPersistentList(),
+                        teamNicknames = ongoing.nicknames,
                         totalCount = ongoing.teams.size,
                         place = ongoing.location,
                         duration = ongoing.duration,
