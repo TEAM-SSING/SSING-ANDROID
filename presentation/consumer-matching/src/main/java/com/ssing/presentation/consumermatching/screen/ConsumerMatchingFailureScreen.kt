@@ -10,15 +10,44 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.ssing.core.ui.common.component.SsingButton
 import com.ssing.core.ui.common.component.SsingButtonStyle
 import com.ssing.core.ui.common.component.SsingHeader
 import com.ssing.core.ui.designsystem.theme.SSINGTheme
+import com.ssing.core.ui.extension.toast
+import com.ssing.core.ui.util.HandleUiEffects
+import com.ssing.presentation.consumermatching.ConsumerMatchingContract
+import com.ssing.presentation.consumermatching.ConsumerMatchingViewModel
 
 @Composable
-fun ConsumerMatchingFailureScreen(
+internal fun ConsumerMatchingFailure(
+    navigateToHome: () -> Unit,
+    modifier: Modifier = Modifier,
+    viewModel: ConsumerMatchingViewModel = hiltViewModel(),
+) {
+    val context = LocalContext.current
+
+    HandleUiEffects(viewModel.uiEffect) {effect ->
+        if (effect is ConsumerMatchingContract.Effect.Failure) {
+            when (effect) {
+                ConsumerMatchingContract.Effect.Failure.NavigateToHome -> navigateToHome()
+                is ConsumerMatchingContract.Effect.Failure.ShowToast -> context.toast(effect.message)
+            }
+        }
+    }
+
+    ConsumerMatchingFailureScreen(
+        onReservationClick = {},
+        modifier = modifier,
+    )
+}
+
+@Composable
+internal fun ConsumerMatchingFailureScreen(
     onReservationClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {

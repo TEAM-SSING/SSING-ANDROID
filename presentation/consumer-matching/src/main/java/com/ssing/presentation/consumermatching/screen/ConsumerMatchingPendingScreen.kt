@@ -11,40 +11,59 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ssing.core.ui.common.component.SsingButton
 import com.ssing.core.ui.common.component.SsingButtonStyle
 import com.ssing.core.ui.common.component.SsingHeader
 import com.ssing.core.ui.common.component.SsingMatchingDetailCard
 import com.ssing.core.ui.common.component.SsingTopBar
 import com.ssing.core.ui.designsystem.theme.SSINGTheme
-import kotlinx.collections.immutable.ImmutableList
+import com.ssing.core.ui.extension.toast
+import com.ssing.core.ui.util.HandleUiEffects
+import com.ssing.presentation.consumermatching.ConsumerMatchingContract
+import com.ssing.presentation.consumermatching.ConsumerMatchingViewModel
 import kotlinx.collections.immutable.persistentListOf
 
-// TODO: #91 병합되면 삭제 -> ConsumerMatchingContract.State 내부로 이동
-data class ConsumerMatchingPendingUiState(
-    val tags: ImmutableList<String> = persistentListOf(),
-    val nickname: String = "",
-    val teamCount: Int = 0,
-    val location: String = "",
-    val duration: String = "",
-    val price: Int = 0,
+@Composable
+internal fun ConsumerMatchingPendingRoute(
+    popBackStack: () -> Unit,
+    navigateToResult: () -> Unit,
+    modifier: Modifier = Modifier,
+    viewModel: ConsumerMatchingViewModel = hiltViewModel(),
 ) {
-    val detailCardTitle: String =
-        "${nickname}님" + if (teamCount > 2) {
-            "외 ${teamCount - 1}명"
-        } else ""
+    val state by viewModel.uiState.collectAsStateWithLifecycle()
+    val context = LocalContext.current
+
+    HandleUiEffects(viewModel.uiEffect) { effect ->
+        if (effect is ConsumerMatchingContract.Effect.Pending) {
+            when (effect) {
+                ConsumerMatchingContract.Effect.Pending.NavigateToResult -> navigateToResult()
+                ConsumerMatchingContract.Effect.Pending.PopBackStack -> popBackStack()
+                is ConsumerMatchingContract.Effect.Pending.ShowToast -> context.toast(effect.message)
+            }
+        }
+    }
+
+    ConsumerMatchingPendingScreen(
+        state = state,
+        onEditClick = {},
+        onStopClick = {},
+        modifier = modifier,
+    )
 }
 
 @Composable
-fun ConsumerMatchingPendingScreen(
-    // TODO : #91 병합되면 ConsumerMatchingContract.State로 변경
-    state: ConsumerMatchingPendingUiState,
+internal fun ConsumerMatchingPendingScreen(
+    state: ConsumerMatchingContract.State,
     onEditClick: () -> Unit,
     onStopClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -126,7 +145,7 @@ private fun ConsumerMatchingPendingScreenPreview(
 ) {
     SSINGTheme {
         ConsumerMatchingPendingScreen(
-            state = ConsumerMatchingPendingUiState(
+            state = ConsumerMatchingContract.State(
                 tags = persistentListOf("스노보드", "처음타요"),
                 nickname = "홍지민",
                 teamCount = teamCount,
