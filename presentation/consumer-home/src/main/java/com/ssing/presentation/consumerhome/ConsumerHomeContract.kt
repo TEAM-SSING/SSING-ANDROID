@@ -9,7 +9,9 @@ internal interface ConsumerHomeContract {
     @Immutable
     data class State(
         val isLoading: Boolean = false,
-        val lessonCards: ImmutableList<HomeLessonCardState> = persistentListOf(),
+        val lessonCards: ImmutableList<HomeLessonCardState> = persistentListOf(
+            HomeLessonCardState.Empty
+        ),
         val hasUnreadNotification: Boolean = false,
     )
 
