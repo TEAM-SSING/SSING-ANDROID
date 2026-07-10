@@ -13,6 +13,12 @@ internal class LessonDetailViewModel @Inject constructor() :
 
     fun onBackClick() = sendEffect(LessonDetailContract.Effect.NavigateBack)
 
+    fun onCancelClassClick() {
+        updateState {
+            copy(showReadyDialog = false, showLessonEndDialog = false)
+        }
+    }
+
     fun onReadyButtonClick() {
         updateState {
             copy(showReadyDialog = true)
@@ -62,7 +68,6 @@ internal class LessonDetailViewModel @Inject constructor() :
             copy(showLessonEndDialog = false)
         }
     }
-
 
     fun onCancelReasonSelect(reason: CancelReason) {
         updateState {
