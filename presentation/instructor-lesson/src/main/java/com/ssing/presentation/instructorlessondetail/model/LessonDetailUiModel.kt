@@ -32,7 +32,10 @@ internal data class LessonDetailOngoingUiModel(
     val location: String = "",
     val duration: String = "",
     val price: Int = 0,
-)
+) {
+    val nicknames: ImmutableList<String> =
+        teams.map { it.teamNickname }.toPersistentList()
+}
 
 @Immutable
 internal data class LessonDetailCompletedUiModel(

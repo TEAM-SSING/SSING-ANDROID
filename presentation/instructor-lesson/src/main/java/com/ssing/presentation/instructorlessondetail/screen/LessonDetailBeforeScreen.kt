@@ -20,10 +20,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -46,15 +42,14 @@ import kotlinx.collections.immutable.persistentListOf
 
 @Immutable
 data class CancelReasonState(
+    val visible: Boolean = false,
     val selectedReason: CancelReason? = null,
-    val etcReasonText: String = "",
 )
 
 /**
  * 강습 상세 (강습 전) 화면.
  *
  * @param before 강습 전 화면에 필요한 데이터
- * @param onCancelClassClick 강습 취소 클릭
  * @param onChatRoomClick 채팅방 클릭
  * @param onReadyClick 강습 준비 완료 클릭
  */
@@ -66,19 +61,19 @@ internal fun LessonDetailBeforeScreen(
     lessonBannerState: LessonBannerState,
     cancelReasonState: CancelReasonState,
     onBack: () -> Unit,
-    onCancelClassClick: () -> Unit,
+    onCancelSheetOpen: () -> Unit,
+    onCancelSheetDismiss: () -> Unit,
+    onCancelReasonSelect: (CancelReason) -> Unit,
+    onCancelConfirmClick: (etcReasonText: String?) -> Unit,
     onChatRoomClick: () -> Unit,
     onReadyClick: () -> Unit,
     onReadyButtonClick: () -> Unit,
-    onCancelReasonSelect: (CancelReason) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-
-    var showSheet by remember { mutableStateOf(false) }
-    val etcState = rememberTextFieldState(initialText = cancelReasonState.etcReasonText)
-    LaunchedEffect(cancelReasonState.etcReasonText) {
-        if (etcState.text.toString() != cancelReasonState.etcReasonText) {
-            etcState.edit { replace(0, length, cancelReasonState.etcReasonText) }
+    val etcState = rememberTextFieldState()
+    LaunchedEffect(cancelReasonState.visible) {
+        if (cancelReasonState.visible) {
+            etcState.edit { replace(0, length, "") }
         }
     }
 
@@ -99,9 +94,7 @@ internal fun LessonDetailBeforeScreen(
         Column(
             modifier = Modifier
                 .weight(1f)
-                .background(
-                    color = Blue50
-                ),
+                .background(color = Blue50),
         ) {
             Column(
                 modifier = Modifier
@@ -166,7 +159,7 @@ internal fun LessonDetailBeforeScreen(
                     ) {
                         SsingButton(
                             text = "강습 취소",
-                            onClick = { showSheet = true },
+                            onClick = onCancelSheetOpen,
                             style = SsingButtonStyle.RED,
                             modifier = Modifier.weight(1f),
                         )
@@ -193,27 +186,26 @@ internal fun LessonDetailBeforeScreen(
                 .padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
         )
     }
+
     CancelReasonBottomSheet(
-        visible = showSheet,
         cancelReasonState = cancelReasonState,
         etcState = etcState,
         onReasonClick = onCancelReasonSelect,
-        onConfirmClick = onCancelClassClick,
-        onDismissRequest = { showSheet = false },
+        onConfirmClick = { onCancelConfirmClick(etcState.text.toString().ifBlank { null }) },
+        onDismissRequest = onCancelSheetDismiss,
     )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun CancelReasonBottomSheet(
-    visible: Boolean,
     cancelReasonState: CancelReasonState,
     etcState: TextFieldState,
     onReasonClick: (CancelReason) -> Unit,
     onConfirmClick: () -> Unit,
     onDismissRequest: () -> Unit,
 ) {
-    if (!visible) return
+    if (!cancelReasonState.visible) return
 
     MatchingCancelBottomSheet(
         userRole = UserRole.INSTRUCTOR,
@@ -256,12 +248,14 @@ private fun LessonDetailBeforeScreenPreview() {
                     ),
                 ),
             ),
-            onCancelClassClick = {},
             onBack = {},
             onChatRoomClick = {},
             onReadyClick = {},
             onReadyButtonClick = {},
+            onCancelSheetOpen = {},
+            onCancelSheetDismiss = {},
             onCancelReasonSelect = {},
+            onCancelConfirmClick = {},
             cancelReasonState = CancelReasonState(),
             lessonBannerState = LessonBannerState.Before(
                 isInstructorReady = false,
