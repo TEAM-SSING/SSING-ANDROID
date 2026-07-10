@@ -5,6 +5,7 @@ import com.ssing.presentation.instructorlessondetail.model.LessonDetailBeforeUiM
 import com.ssing.presentation.instructorlessondetail.model.LessonDetailCanceledUiModel
 import com.ssing.presentation.instructorlessondetail.model.LessonDetailCompletedUiModel
 import com.ssing.presentation.instructorlessondetail.model.LessonDetailOngoingUiModel
+import com.ssing.presentation.instructorlessondetail.screen.CancelReasonState
 
 internal interface LessonDetailContract {
 
@@ -13,6 +14,7 @@ internal interface LessonDetailContract {
         val phase: LessonDetailPhase = LessonDetailPhase.Loading,
         val dialog: LessonDetailDialog? = null,
         val showReadyDialog:Boolean=false,
+        val cancelReasonState: CancelReasonState = CancelReasonState(),
     )
 
     sealed interface LessonDetailPhase {

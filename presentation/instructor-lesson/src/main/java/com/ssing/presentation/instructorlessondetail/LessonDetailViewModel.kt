@@ -1,6 +1,7 @@
 package com.ssing.presentation.instructorlessondetail
 
 import com.ssing.core.ui.base.BaseViewModel
+import com.ssing.core.ui.common.component.CancelReason
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
@@ -59,6 +60,18 @@ internal class LessonDetailViewModel @Inject constructor() :
     fun onContinueClick() {
         updateState {
             copy(dialog = null)
+        }
+    }
+
+    fun onCancelReasonSelect(reason: CancelReason) {
+        updateState {
+            copy(cancelReasonState = cancelReasonState.copy(selectedReason = reason))
+        }
+    }
+
+    fun onEtcReasonTextChange(text: String) {
+        updateState {
+            copy(cancelReasonState = cancelReasonState.copy(etcReasonText = text))
         }
     }
 }

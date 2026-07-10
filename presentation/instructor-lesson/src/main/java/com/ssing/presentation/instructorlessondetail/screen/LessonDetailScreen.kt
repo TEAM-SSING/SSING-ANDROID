@@ -5,6 +5,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.ssing.core.ui.common.component.CancelReason
 import com.ssing.core.ui.common.component.LessonBannerState
 import com.ssing.core.ui.common.component.SsingModal
 import com.ssing.core.ui.util.HandleUiEffects
@@ -28,7 +29,7 @@ internal fun LessonDetailRoute(
 
     LessonDetailScreen(
         state = state,
-        onBackClick = viewModel::onBackClick,  // 다 하면 onBack으로 수정
+        onBackClick = viewModel::onBackClick,
         onCancelClassClick = viewModel::onCancelClassClick,
         onReadyButtonClick = viewModel::onReadyButtonClick,
         onReadyClick = viewModel::onReadyClick,
@@ -36,6 +37,8 @@ internal fun LessonDetailRoute(
         onChatRoomClick = viewModel::onChatRoomClick,
         onEndClick = viewModel::onEndClick,
         onContinueClick = viewModel::onContinueClick,
+        onCancelReasonSelect = viewModel::onCancelReasonSelect,
+        onEtcReasonTextChange = viewModel::onEtcReasonTextChange,
         modifier = modifier,
     )
 }
@@ -52,6 +55,8 @@ private fun LessonDetailScreen(
     onReadyButtonClick: () -> Unit,
     onEndClick: () -> Unit,
     onContinueClick: () -> Unit,
+    onCancelReasonSelect: (CancelReason) -> Unit,
+    onEtcReasonTextChange: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     when (val phase = state.phase) {
@@ -64,6 +69,9 @@ private fun LessonDetailScreen(
                 participantReadyCount = phase.before.participantReadyCount,
                 participantTotalCount = phase.before.participantTotalCount,
             ),
+            cancelReasonState = state.cancelReasonState,
+            onCancelReasonSelect = onCancelReasonSelect,
+            onEtcReasonTextChange = onEtcReasonTextChange,
             onCancelClassClick = onCancelClassClick,
             onBack = onBackClick,
             onChatRoomClick = onChatRoomClick,
