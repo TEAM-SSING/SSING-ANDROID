@@ -32,7 +32,7 @@ data object ConsumerMatchingResult : Route
 @Serializable
 data object ConsumerMatchingFailure : Route
 
-private fun NavController.navigateToConsumerMatchingPending() =
+private fun NavController.navigateToConsumerMatching() =
     this.navigate(ConsumerMatchingGraph)
 
 private fun NavController.navigateToConsumerMatchingResult() =
@@ -49,7 +49,7 @@ fun NavGraphBuilder.consumerMatchingNavGraph(
     slideComposable<ConsumerMatchingCondition> {
         ConsumerMatchingConditionRoute(
             onPopBackStack = navController::popBackStack,
-            navigateToMatchingPending = navController::navigateToConsumerMatchingPending,
+            navigateToMatching = navController::navigateToConsumerMatching,
         )
     }
 
