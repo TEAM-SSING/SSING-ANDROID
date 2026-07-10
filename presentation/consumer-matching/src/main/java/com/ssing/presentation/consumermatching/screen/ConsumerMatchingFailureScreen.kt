@@ -41,7 +41,7 @@ internal fun ConsumerMatchingFailureRoute(
     }
 
     ConsumerMatchingFailureScreen(
-        onReservationClick = {},
+        onReservationClick = viewModel::nagigateToHome,
         modifier = modifier,
     )
 }

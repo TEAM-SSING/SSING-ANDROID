@@ -1,6 +1,8 @@
 package com.ssing.presentation.consumermatching.screen
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -38,6 +40,7 @@ internal fun ConsumerMatchingPendingRoute(
     popBackStack: () -> Unit,
     navigateToResult: () -> Unit,
     navigateToFailure: () -> Unit,
+    navigateToHome: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: ConsumerMatchingViewModel = hiltViewModel(),
 ) {
@@ -49,16 +52,21 @@ internal fun ConsumerMatchingPendingRoute(
             when (effect) {
                 ConsumerMatchingContract.Effect.Pending.NavigateToResult -> navigateToResult()
                 ConsumerMatchingContract.Effect.Pending.NavigateToFailure -> navigateToFailure()
+                ConsumerMatchingContract.Effect.Pending.NavigateToHome -> navigateToHome()
                 ConsumerMatchingContract.Effect.Pending.PopBackStack -> popBackStack()
                 is ConsumerMatchingContract.Effect.Pending.ShowToast -> context.toast(effect.message)
             }
         }
     }
 
+    BackHandler { }
+
     ConsumerMatchingPendingScreen(
         state = state,
-        onEditClick = {},
-        onStopClick = {},
+        onEditClick = viewModel::editCondition,
+        onStopClick = viewModel::stopPending,
+        navigateToResult  = viewModel::navigateToResult,
+        navigateToFailure = viewModel::navigateToFailure,
         modifier = modifier,
     )
 }
@@ -68,6 +76,8 @@ internal fun ConsumerMatchingPendingScreen(
     state: ConsumerMatchingContract.State,
     onEditClick: () -> Unit,
     onStopClick: () -> Unit,
+    navigateToResult: () -> Unit,
+    navigateToFailure: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Scaffold(
@@ -110,11 +120,16 @@ internal fun ConsumerMatchingPendingScreen(
             SsingHeader(
                 title = "조건에 맞는 강사님을 찾고있어요",
                 subText = "요청 조건에 맞는 강사님을 확인하고 있어요",
-                modifier = Modifier.padding(vertical = 16.dp),
+                // TODO: 소켓 연결 후 수정 / 플로우 확인용 임시 콜백
+                modifier = Modifier
+                    .clickable(onClick = navigateToFailure)
+                    .padding(vertical = 16.dp),
             )
 
+            // TODO: 소켓 연결 후 수정 / 플로우 확인용 임시 콜백
             Box(
                 modifier = Modifier
+                    .clickable(onClick = navigateToResult)
                     .size(217.dp)
                     .background(SSINGTheme.colors.primaryAlternative),
             )
@@ -155,6 +170,8 @@ private fun ConsumerMatchingPendingScreenPreview(
                 duration = "2시간",
                 price = 87500
             ),
+            navigateToResult = {},
+            navigateToFailure = {},
             onEditClick = {},
             onStopClick = {},
         )
