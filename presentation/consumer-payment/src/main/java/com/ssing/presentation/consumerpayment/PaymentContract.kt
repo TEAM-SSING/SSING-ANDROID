@@ -1,7 +1,6 @@
 package com.ssing.presentation.consumerpayment
 
 import androidx.compose.runtime.Immutable
-import com.ssing.core.ui.common.component.Gender
 import com.ssing.core.ui.common.component.Participant
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
@@ -24,10 +23,8 @@ internal interface PaymentContract {
     )
 
     sealed interface Effect {
-        sealed interface Result : Effect {
-            data object NavigateToLesson : Result
-            data object NavigateToHome: Result
-            data class ShowToast(val message: String) : Result
-        }
+        data object NavigateToLesson : Effect
+        data object NavigateToHome: Effect
+        data class ShowToast(val message: String) : Effect
     }
 }

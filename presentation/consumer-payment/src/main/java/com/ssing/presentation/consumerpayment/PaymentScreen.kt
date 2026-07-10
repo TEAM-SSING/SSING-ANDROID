@@ -51,12 +51,10 @@ internal fun PaymentRoute(
     val context = LocalContext.current
 
     HandleUiEffects(viewModel.uiEffect) { effect ->
-        if (effect is PaymentContract.Effect.Result) {
-            when (effect) {
-                PaymentContract.Effect.Result.NavigateToLesson -> navigateToLesson()
-                PaymentContract.Effect.Result.NavigateToHome -> navigateToHome()
-                is PaymentContract.Effect.Result.ShowToast -> context.toast(effect.message)
-            }
+        when (effect) {
+            PaymentContract.Effect.NavigateToLesson -> navigateToLesson()
+            PaymentContract.Effect.NavigateToHome -> navigateToHome()
+            is PaymentContract.Effect.ShowToast -> context.toast(effect.message)
         }
     }
 

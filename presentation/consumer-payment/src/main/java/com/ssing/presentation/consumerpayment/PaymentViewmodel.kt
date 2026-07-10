@@ -11,7 +11,7 @@ internal class PaymentViewModel @Inject constructor() :
     ) {
 
     fun navigateToLesson() =
-        sendEffect(PaymentContract.Effect.Result.NavigateToLesson)
+        sendEffect(PaymentContract.Effect.NavigateToLesson)
 
     fun showCancelModal() =
         updateState { copy(showCancelModal = true) }
@@ -21,6 +21,6 @@ internal class PaymentViewModel @Inject constructor() :
 
     fun confirmCancel() {
         updateState { copy(showCancelModal = false) }
-        sendEffect(PaymentContract.Effect.Result.NavigateToHome)
+        sendEffect(PaymentContract.Effect.NavigateToHome)
     }
 }
