@@ -5,8 +5,8 @@ import com.ssing.presentation.instructorlessondetail.model.LessonDetailBeforeUiM
 import com.ssing.presentation.instructorlessondetail.model.LessonDetailCanceledUiModel
 import com.ssing.presentation.instructorlessondetail.model.LessonDetailCompletedUiModel
 import com.ssing.presentation.instructorlessondetail.model.LessonDetailOngoingUiModel
+import com.ssing.presentation.instructorlessondetail.model.TeamParticipantsInfo
 import com.ssing.presentation.instructorlessondetail.screen.CancelReasonState
-import com.ssing.presentation.instructorlessondetail.screen.TeamParticipantsInfo
 import kotlinx.collections.immutable.persistentListOf
 
 internal interface LessonDetailContract {
