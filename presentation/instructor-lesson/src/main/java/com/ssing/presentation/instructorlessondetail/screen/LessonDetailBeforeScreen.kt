@@ -35,7 +35,6 @@ import com.ssing.core.ui.common.component.MatchingCancelBottomSheet
 import com.ssing.core.ui.common.component.SsingButton
 import com.ssing.core.ui.common.component.SsingButtonStyle
 import com.ssing.core.ui.common.component.SsingMatchingDetailCardSmall
-import com.ssing.core.ui.common.component.SsingModal
 import com.ssing.core.ui.common.component.SsingTopBar
 import com.ssing.core.ui.common.component.UserRole
 import com.ssing.core.ui.designsystem.theme.Blue50
@@ -74,7 +73,6 @@ internal fun LessonDetailBeforeScreen(
     onCancelReasonSelect: (CancelReason) -> Unit,
     onEtcReasonTextChange: (String) -> Unit,
     modifier: Modifier = Modifier,
-    onDialogDismiss: () -> Unit = {},
 ) {
 
     var showSheet by remember { mutableStateOf(false) }
@@ -210,15 +208,6 @@ internal fun LessonDetailBeforeScreen(
                     modifier = Modifier.fillMaxWidth()
                 )
             }
-            SsingModal(
-                onDismissRequest = onDialogDismiss,
-                title = "강습 준비를 완료할까요?",
-                text = "준비 완료 시 변경이 불가능해요",
-                primaryText = "준비 완료",
-                onPrimary = onReadyClick,
-                secondaryText = "취소",
-                onSecondary = onDialogDismiss,
-            )
         }
     }
 }

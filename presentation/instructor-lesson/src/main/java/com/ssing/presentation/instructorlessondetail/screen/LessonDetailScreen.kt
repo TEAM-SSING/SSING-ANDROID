@@ -76,7 +76,6 @@ private fun LessonDetailScreen(
             onBack = onBackClick,
             onChatRoomClick = onChatRoomClick,
             onReadyClick = onReadyClick,
-            onDialogDismiss = onDialogDismiss,
             onReadyButtonClick = onReadyButtonClick,
             modifier = modifier,
         )
@@ -122,6 +121,7 @@ private fun LessonDetailScreen(
             dialog = dialog,
             onStopWaitingConfirm = { /* Handle via Event */ },
             onContinueMatchingClick = { /* Handle via Event */ },
+            onReadyButtonClick = { },
             onDialogDismiss = onDialogDismiss,
         )
     }
@@ -131,6 +131,7 @@ private fun LessonDetailScreen(
 @Composable
 private fun LessonDetailDialogHost(
     dialog: LessonDetailContract.LessonDetailDialog,
+    onReadyButtonClick: () -> Unit,
     onStopWaitingConfirm: () -> Unit,
     onContinueMatchingClick: () -> Unit,
     onDialogDismiss: () -> Unit,
@@ -141,7 +142,7 @@ private fun LessonDetailDialogHost(
             title = "강습 준비를 완료할까요?",
             text = "준비 완료 시 변경이 불가능해요",
             primaryText = "준비 완료",
-            onPrimary = onDialogDismiss,
+            onPrimary = onReadyButtonClick,
             secondaryText = "취소",
             onSecondary = onStopWaitingConfirm,
         )
