@@ -37,6 +37,7 @@ import kotlinx.collections.immutable.persistentListOf
 internal fun ConsumerMatchingPendingRoute(
     popBackStack: () -> Unit,
     navigateToResult: () -> Unit,
+    navigateToFailure: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: ConsumerMatchingViewModel = hiltViewModel(),
 ) {
@@ -47,6 +48,7 @@ internal fun ConsumerMatchingPendingRoute(
         if (effect is ConsumerMatchingContract.Effect.Pending) {
             when (effect) {
                 ConsumerMatchingContract.Effect.Pending.NavigateToResult -> navigateToResult()
+                ConsumerMatchingContract.Effect.Pending.NavigateToFailure -> navigateToFailure()
                 ConsumerMatchingContract.Effect.Pending.PopBackStack -> popBackStack()
                 is ConsumerMatchingContract.Effect.Pending.ShowToast -> context.toast(effect.message)
             }

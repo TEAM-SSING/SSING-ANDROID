@@ -42,6 +42,7 @@ internal interface ConsumerMatchingContract {
         sealed interface Pending: Effect {
             data object PopBackStack: Pending
             data object NavigateToResult: Pending
+            data object NavigateToFailure: Pending
             data class ShowToast(val message: String) : Pending
         }
 
