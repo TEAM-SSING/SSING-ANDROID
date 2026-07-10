@@ -186,7 +186,7 @@ internal fun LessonDetailBeforeScreen(
                             selectedReason = cancelReasonState.selectedReason,
                             onReasonClick = onCancelReasonSelect,
                             etcState = etcState,
-                            onConfirmClick = { showSheet = false },
+                            onConfirmClick = { onCancelClassClick() },
                             onDismissRequest = { showSheet = false },
                         )
                     }
