@@ -12,8 +12,8 @@ internal interface LessonDetailContract {
     @Immutable
     data class State(
         val phase: LessonDetailPhase = LessonDetailPhase.Loading,
-        val dialog: LessonDetailDialog? = null,
-        val showReadyDialog:Boolean=false,
+        val showReadyDialog: Boolean = false,
+        val showLessonEndDialog: Boolean = false,
         val cancelReasonState: CancelReasonState = CancelReasonState(),
     )
 

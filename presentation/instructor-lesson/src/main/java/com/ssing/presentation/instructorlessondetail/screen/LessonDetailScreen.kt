@@ -33,9 +33,11 @@ internal fun LessonDetailRoute(
         onCancelClassClick = viewModel::onCancelClassClick,
         onReadyButtonClick = viewModel::onReadyButtonClick,
         onReadyClick = viewModel::onReadyClick,
-        onDialogDismiss = viewModel::onDialogDismiss,
+        onReadyDialogDismiss = viewModel::onReadyDialogDismiss,
         onChatRoomClick = viewModel::onChatRoomClick,
         onEndClick = viewModel::onEndClick,
+        onLessonEndDialogDismiss = viewModel::onLessonEndDialogDismiss,
+        onContinueClick = viewModel::onContinueClick,
         onCancelReasonSelect = viewModel::onCancelReasonSelect,
         onEtcReasonTextChange = viewModel::onEtcReasonTextChange,
         modifier = modifier,
@@ -50,9 +52,11 @@ private fun LessonDetailScreen(
     onCancelClassClick: () -> Unit,
     onChatRoomClick: () -> Unit,
     onReadyClick: () -> Unit,
-    onDialogDismiss: () -> Unit,
+    onReadyDialogDismiss: () -> Unit,
     onReadyButtonClick: () -> Unit,
     onEndClick: () -> Unit,
+    onLessonEndDialogDismiss: () -> Unit,
+    onContinueClick: () -> Unit,
     onCancelReasonSelect: (CancelReason) -> Unit,
     onEtcReasonTextChange: (String) -> Unit,
     modifier: Modifier = Modifier,
@@ -112,14 +116,27 @@ private fun LessonDetailScreen(
         )
     }
 
-    state.dialog?.let { dialog ->
-        LessonDetailDialogHost(
-            dialog = dialog,
-            onStopWaitingConfirm = { /* Handle via Event */ },
-            onContinueMatchingClick = { /* Handle via Event */ },
-            onReadyButtonClick = { },
-            onEndClick = { },
-            onDialogDismiss = onDialogDismiss,
+    if (state.showReadyDialog) {
+        SsingModal(
+            onDismissRequest = onReadyDialogDismiss,
+            title = "강습 준비를 완료할까요?",
+            text = "준비 완료 시 변경이 불가능해요",
+            primaryText = "준비 완료",
+            onPrimary = onReadyClick,
+            secondaryText = "취소",
+            onSecondary = onReadyDialogDismiss,
+        )
+    }
+
+    if (state.showLessonEndDialog) {
+        SsingModal(
+            onDismissRequest = onLessonEndDialogDismiss,
+            title = "강습을 종료할까요?",
+            text = "강습을 종료하면 모든 참여자의 강습이\n종료 상태로 변경되어요",
+            primaryText = "강습 종료하기",
+            onPrimary = onEndClick,
+            secondaryText = "계속 진행하기",
+            onSecondary = onContinueClick,
         )
     }
 }
@@ -128,6 +145,7 @@ private fun LessonDetailScreen(
 @Composable
 private fun LessonDetailDialogHost(
     dialog: LessonDetailContract.LessonDetailDialog,
+    showReadyDialog: LessonDetailContract.State,
     onReadyButtonClick: () -> Unit,
     onStopWaitingConfirm: () -> Unit,
     onContinueMatchingClick: () -> Unit,
@@ -152,7 +170,7 @@ private fun LessonDetailDialogHost(
             primaryText = "강습 종료하기",
             onPrimary = onStopWaitingConfirm,
             secondaryText = "계속 진행하기",
-            onSecondary = onContinueMatchingClick,
+            onSecondary = onDialogDismiss,
         )
     }
 }

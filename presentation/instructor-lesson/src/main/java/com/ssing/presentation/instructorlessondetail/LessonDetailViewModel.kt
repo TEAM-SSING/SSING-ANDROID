@@ -15,13 +15,37 @@ internal class LessonDetailViewModel @Inject constructor() :
 
     fun onCancelClassClick() {
         updateState {
-            copy(dialog = null)
+            copy(showReadyDialog = false, showLessonEndDialog = false)
         }
     }
 
     fun onReadyButtonClick() {
         updateState {
-            copy(dialog = LessonDetailContract.LessonDetailDialog.InstructorReady)
+            copy(showReadyDialog = true)
+        }
+    }
+
+    fun onReadyDialogDismiss() {
+        updateState {
+            copy(showReadyDialog = false)
+        }
+    }
+
+    fun onEndClick() {
+        updateState {
+            copy(showLessonEndDialog = true)
+        }
+    }
+
+    fun onLessonEndDialogDismiss() {
+        updateState {
+            copy(showLessonEndDialog = false)
+        }
+    }
+
+    fun onChatRoomClick() {
+        updateState {
+            copy(showLessonEndDialog = false)
         }
     }
 
@@ -34,32 +58,14 @@ internal class LessonDetailViewModel @Inject constructor() :
                 phase = LessonDetailContract.LessonDetailPhase.LessonDetailBefore(
                     before = before.copy(isInstructorReady = true)
                 ),
-                dialog = null,
+                showReadyDialog = false,
             )
-        }
-    }
-
-    fun onDialogDismiss() {
-        updateState {
-            copy(dialog = null)
-        }
-    }
-
-    fun onChatRoomClick() {
-        updateState {
-            copy(dialog = null)
-        }
-    }
-
-    fun onEndClick() {
-        updateState {
-            copy(dialog = LessonDetailContract.LessonDetailDialog.LessonEnd)
         }
     }
 
     fun onContinueClick() {
         updateState {
-            copy(dialog = null)
+            copy(showLessonEndDialog = false)
         }
     }
 
