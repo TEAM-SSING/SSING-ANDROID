@@ -85,9 +85,7 @@ private fun ConsumerHomeScreen(
                     )
                 },
                 onNotificationClick = {},
-                modifier = Modifier
-                    .background(color = SSINGTheme.colors.backgroundAlternative)
-                    .statusBarsPadding()
+                modifier = Modifier.statusBarsPadding(),
             )
         },
     ) { innerPadding ->
