@@ -39,7 +39,6 @@ internal fun LessonDetailRoute(
         onLessonEndDialogDismiss = viewModel::onLessonEndDialogDismiss,
         onContinueClick = viewModel::onContinueClick,
         onCancelReasonSelect = viewModel::onCancelReasonSelect,
-        onEtcReasonTextChange = viewModel::onEtcReasonTextChange,
         modifier = modifier,
     )
 }
@@ -58,11 +57,10 @@ private fun LessonDetailScreen(
     onLessonEndDialogDismiss: () -> Unit,
     onContinueClick: () -> Unit,
     onCancelReasonSelect: (CancelReason) -> Unit,
-    onEtcReasonTextChange: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     when (val phase = state.phase) {
-        is LessonDetailPhase.Loading -> { }
+        is LessonDetailPhase.Loading -> {}
 
         is LessonDetailPhase.LessonDetailBefore -> LessonDetailBeforeScreen(
             before = phase.before,
@@ -73,7 +71,6 @@ private fun LessonDetailScreen(
             ),
             cancelReasonState = state.cancelReasonState,
             onCancelReasonSelect = onCancelReasonSelect,
-            onEtcReasonTextChange = onEtcReasonTextChange,
             onCancelClassClick = onCancelClassClick,
             onBack = onBackClick,
             onChatRoomClick = onChatRoomClick,
@@ -93,7 +90,7 @@ private fun LessonDetailScreen(
             onChatRoomClick = onChatRoomClick,
             onEndClick = onEndClick,
             modifier = modifier,
-            )
+        )
 
         is LessonDetailPhase.LessonDetailCompleted -> LessonDetailCompletedScreen(
             completed = phase.completed,
@@ -127,8 +124,40 @@ private fun LessonDetailScreen(
             onSecondary = onReadyDialogDismiss,
         )
     }
+    LessonDetailDialogHost(
+        showReadyDialog = state.showReadyDialog,
+        showLessonEndDialog = state.showLessonEndDialog,
+        onReadyClick = onReadyClick,
+        onReadyDialogDismiss = onReadyDialogDismiss,
+        onEndClick = onEndClick,
+        onLessonEndDialogDismiss = onLessonEndDialogDismiss,
+        onContinueClick = onContinueClick,
+    )
+}
 
-    if (state.showLessonEndDialog) {
+@Composable
+private fun LessonDetailDialogHost(
+    showReadyDialog: Boolean,
+    showLessonEndDialog: Boolean,
+    onReadyClick: () -> Unit,
+    onReadyDialogDismiss: () -> Unit,
+    onEndClick: () -> Unit,
+    onLessonEndDialogDismiss: () -> Unit,
+    onContinueClick: () -> Unit,
+) {
+    if (showReadyDialog) {
+        SsingModal(
+            onDismissRequest = onReadyDialogDismiss,
+            title = "강습 준비를 완료할까요?",
+            text = "준비 완료 시 변경이 불가능해요",
+            primaryText = "준비 완료",
+            onPrimary = onReadyClick,
+            secondaryText = "취소",
+            onSecondary = onReadyDialogDismiss,
+        )
+    }
+
+    if (showLessonEndDialog) {
         SsingModal(
             onDismissRequest = onLessonEndDialogDismiss,
             title = "강습을 종료할까요?",
@@ -137,40 +166,6 @@ private fun LessonDetailScreen(
             onPrimary = onEndClick,
             secondaryText = "계속 진행하기",
             onSecondary = onContinueClick,
-        )
-    }
-}
-
-
-@Composable
-private fun LessonDetailDialogHost(
-    dialog: LessonDetailContract.LessonDetailDialog,
-    showReadyDialog: LessonDetailContract.State,
-    onReadyButtonClick: () -> Unit,
-    onStopWaitingConfirm: () -> Unit,
-    onContinueMatchingClick: () -> Unit,
-    onEndClick: () -> Unit,
-    onDialogDismiss: () -> Unit,
-) {
-    when (dialog) {
-        LessonDetailContract.LessonDetailDialog.InstructorReady -> SsingModal(
-            onDismissRequest = onDialogDismiss,
-            title = "강습 준비를 완료할까요?",
-            text = "준비 완료 시 변경이 불가능해요",
-            primaryText = "준비 완료",
-            onPrimary = onReadyButtonClick,
-            secondaryText = "취소",
-            onSecondary = onEndClick,
-        )
-
-        LessonDetailContract.LessonDetailDialog.LessonEnd -> SsingModal(
-            onDismissRequest = onDialogDismiss,
-            title = "강습을 종료할까요?",
-            text = "강습을 종료하면 모든 참여자의 강습이\n종료 상태로 변경되어요",
-            primaryText = "강습 종료하기",
-            onPrimary = onStopWaitingConfirm,
-            secondaryText = "계속 진행하기",
-            onSecondary = onDialogDismiss,
         )
     }
 }

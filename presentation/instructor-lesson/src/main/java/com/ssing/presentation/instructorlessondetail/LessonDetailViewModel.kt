@@ -74,10 +74,4 @@ internal class LessonDetailViewModel @Inject constructor() :
             copy(cancelReasonState = cancelReasonState.copy(selectedReason = reason))
         }
     }
-
-    fun onEtcReasonTextChange(text: String) {
-        updateState {
-            copy(cancelReasonState = cancelReasonState.copy(etcReasonText = text))
-        }
-    }
 }

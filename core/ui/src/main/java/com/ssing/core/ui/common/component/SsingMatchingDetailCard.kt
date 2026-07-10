@@ -127,6 +127,7 @@ fun SsingMatchingDetailCard(
  */
 @Composable
 fun SsingMatchingDetailCardSmall(
+    modifier: Modifier = Modifier,
     tags: ImmutableList<String> = persistentListOf(),
     teamNicknames: ImmutableList<TeamNickname> = persistentListOf(),
     totalCount: Int? = null,
@@ -137,7 +138,6 @@ fun SsingMatchingDetailCardSmall(
     cancelDateTime: String? = null,
     cancelSubject: String? = null,
     cancelReason: String? = null,
-    modifier: Modifier = Modifier,
 ) {
     Column(
         modifier = modifier
