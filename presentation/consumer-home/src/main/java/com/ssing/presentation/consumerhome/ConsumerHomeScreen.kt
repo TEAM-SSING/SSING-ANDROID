@@ -1,5 +1,6 @@
 package com.ssing.presentation.consumerhome
 
+import android.R.id.message
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -22,6 +23,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.ssing.core.ui.R
 import com.ssing.core.ui.common.component.HomeLessonCardList
 import com.ssing.core.ui.common.component.HomeLessonCardState
@@ -35,9 +37,10 @@ import com.ssing.core.ui.util.HandleUiEffects
 import kotlinx.collections.immutable.persistentListOf
 import java.time.LocalDateTime
 
-
 @Composable
 internal fun ConsumerHomeRoute(
+    navigateToLessonDetail: (Long) -> Unit,
+    navigateToMatching: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: ConsumerHomeViewModel = hiltViewModel(),
 ) {
@@ -46,10 +49,12 @@ internal fun ConsumerHomeRoute(
     HandleUiEffects(viewModel.uiEffect) { effect ->
         when (effect) {
             is ConsumerHomeContract.Effect.NavigateToLessonDetail -> {
-//                navigateToLessonDetail(effect.lessonStatus)
+               navigateToLessonDetail(effect.lessonId)
             }
-            is ConsumerHomeContract.Effect.NavigateToMatching -> {}
-            else -> {}
+            is ConsumerHomeContract.Effect.NavigateToMatching -> {
+                navigateToMatching()
+            }
+            else -> ConsumerHomeContract.Effect.ShowToast(effect.toString())
         }
     }
 
@@ -168,6 +173,21 @@ private fun ConsumerHomeScreenPreview() {
                     date = LocalDateTime.of(2026, 7, 11, 19, 0),
                     status = Status.Default,
                 ),
+            ),
+        ),
+        onLessonClick = {},
+        onMatchingClick = {},
+        onReservationClick = {},
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun ConsumerHomeScreen2Preview() {
+    ConsumerHomeScreen(
+        state = ConsumerHomeContract.State(
+            lessonCards = persistentListOf(
+                HomeLessonCardState.Empty,
             ),
         ),
         onLessonClick = {},

@@ -17,6 +17,8 @@ fun NavGraphBuilder.consumerHomeNavGraph(
 ) {
     composable<ConsumerHome> {
         ConsumerHomeRoute(
+            navigateToLessonDetail = {},
+            navigateToMatching = {},
             modifier = Modifier.padding(paddingValues),
         )
     }
