@@ -24,27 +24,7 @@ internal class ConsumerHomeViewModel @Inject constructor() :
         lesson: HomeLessonCardState.Reservation,
     ) {
         viewModelScope.launch {
-            when (lesson.status) {
-                Status.Default -> {
-                    sendEffect(
-                        ConsumerHomeContract.Effect.NavigateToLessonDetail(
-                            lessonStatus = lesson.status,
-                        )
-                    )
-                }
-
-                Status.Matching,
-                Status.Matched,
-                    -> {
-                    sendEffect(
-                        ConsumerHomeContract.Effect.NavigateToLessonDetail(
-                            lessonStatus = lesson.status,
-                        )
-                    )
-                }
-            }
-
-//            sendEffect(ConsumerHomeContract.Effect.NavigateToLessonDetail(lessonStatus = lesson.status))
+            ConsumerHomeContract.Effect.NavigateToLessonDetail(lessonId = lesson.lessonId)
         }
     }
 
