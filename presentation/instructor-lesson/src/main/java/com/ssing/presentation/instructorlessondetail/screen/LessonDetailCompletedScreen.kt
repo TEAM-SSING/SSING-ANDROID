@@ -31,6 +31,7 @@ import com.ssing.core.ui.designsystem.theme.Blue50
 import com.ssing.core.ui.designsystem.theme.SSINGTheme
 import com.ssing.presentation.instructorlessondetail.component.SectionTitle
 import com.ssing.presentation.instructorlessondetail.model.LessonDetailCompletedUiModel
+import com.ssing.presentation.instructorlessondetail.model.TeamParticipantsInfo
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
 
@@ -110,7 +111,7 @@ internal fun LessonDetailCompletedScreen(
                                     price = team.price,
                                 )
                                 if (index != completed.teams.lastIndex) {
-                                    Spacer(modifier = Modifier.height(8.dp))
+                                    Spacer(modifier = Modifier.height(4.dp))
                                 }
                             }
                         }
