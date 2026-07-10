@@ -2,7 +2,6 @@ package com.ssing.data.devauth.remote.dto.response
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.json.JsonElement
 
 @Serializable
 data class TokenResponse(
@@ -10,12 +9,15 @@ data class TokenResponse(
     @SerialName("refreshToken") val refreshToken: String,
     @SerialName("tokenType") val tokenType: String,
     @SerialName("expiresIn") val expiresIn: Int,
-    @SerialName("member") val member: JsonElement,
-    @SerialName("devMeta") val devMeta: DevMeta,
+    @SerialName("persona") val persona: Persona,
 )
 
 @Serializable
-data class DevMeta(
-    @SerialName("personaOrigin") val personaOrigin: String,
-    @SerialName("accountState") val accountState: String,
+data class Persona(
+    @SerialName("personaKey") val personaKey: String,
+    @SerialName("nickname") val nickname: String,
+    @SerialName("template") val template: String,
+    @SerialName("role") val role: String,
+    @SerialName("memberStatus") val memberStatus: String,
+    @SerialName("instructorStatus") val instructorStatus: String,
 )
