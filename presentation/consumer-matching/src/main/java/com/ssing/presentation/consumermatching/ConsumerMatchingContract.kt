@@ -35,15 +35,15 @@ internal interface ConsumerMatchingContract {
         val lessonDuration: String = "",
     ) {
         val detailCardTitle: String =
-            "${nickname}님" + if (teamCount > 2) "외 ${teamCount - 1}명" else ""
+            "${nickname}님" + if (teamCount > 1) " 외 ${teamCount - 1}명" else ""
     }
 
     sealed interface Effect {
-        sealed interface Pending: Effect {
-            data object PopBackStack: Pending
-            data object NavigateToResult: Pending
-            data object NavigateToFailure: Pending
-            data object NavigateToHome: Pending
+        sealed interface Pending : Effect {
+            data object PopBackStack : Pending
+            data object NavigateToResult : Pending
+            data object NavigateToFailure : Pending
+            data object NavigateToHome : Pending
             data class ShowToast(val message: String) : Pending
         }
 
@@ -54,7 +54,7 @@ internal interface ConsumerMatchingContract {
             data class ShowToast(val message: String) : Result
         }
 
-        sealed interface Failure: Effect {
+        sealed interface Failure : Effect {
             data object NavigateToHome : Failure
             data class ShowToast(val message: String) : Failure
         }
