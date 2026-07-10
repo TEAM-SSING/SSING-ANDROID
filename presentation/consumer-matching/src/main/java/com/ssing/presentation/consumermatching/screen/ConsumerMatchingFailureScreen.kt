@@ -1,5 +1,6 @@
 package com.ssing.presentation.consumermatching.screen
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -31,7 +32,7 @@ internal fun ConsumerMatchingFailureRoute(
 ) {
     val context = LocalContext.current
 
-    HandleUiEffects(viewModel.uiEffect) {effect ->
+    HandleUiEffects(viewModel.uiEffect) { effect ->
         if (effect is ConsumerMatchingContract.Effect.Failure) {
             when (effect) {
                 ConsumerMatchingContract.Effect.Failure.NavigateToHome -> navigateToHome()
@@ -39,6 +40,8 @@ internal fun ConsumerMatchingFailureRoute(
             }
         }
     }
+
+    BackHandler { }
 
     ConsumerMatchingFailureScreen(
         onReservationClick = viewModel::navigateToHome,
