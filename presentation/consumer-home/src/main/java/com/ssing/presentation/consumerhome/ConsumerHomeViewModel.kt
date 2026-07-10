@@ -15,26 +15,19 @@ internal class ConsumerHomeViewModel @Inject constructor() :
     ) {
 
     fun onMatchingClick() {
-        viewModelScope.launch {
-            sendEffect(ConsumerHomeContract.Effect.NavigateToMatching)
-        }
+        sendEffect(ConsumerHomeContract.Effect.NavigateToMatching)
+
     }
 
     fun onLessonClick(
         lesson: HomeLessonCardState.Reservation,
     ) {
-        viewModelScope.launch {
-            sendEffect(
-                ConsumerHomeContract.Effect.NavigateToLessonDetail(lessonId = lesson.lessonId)
-            )
-        }
+        sendEffect(ConsumerHomeContract.Effect.NavigateToLessonDetail(lessonId = lesson.lessonId))
     }
 
     fun onReservationClick() {
-        viewModelScope.launch {
-            sendEffect(
-                ConsumerHomeContract.Effect.ShowToast("준비 중인 기능이에요.")
-            )
-        }
+        sendEffect(
+            ConsumerHomeContract.Effect.ShowToast("준비 중인 기능이에요.")
+        )
     }
 }
