@@ -1,3 +1,5 @@
+package com.ssing.presentation.instructorhome
+
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -33,9 +35,10 @@ import com.ssing.core.ui.common.component.StartMatchingCardStyle
 import com.ssing.core.ui.designsystem.theme.SSINGTheme
 import com.ssing.core.ui.extension.toast
 import com.ssing.core.ui.util.HandleUiEffects
-import com.ssing.presentation.instructorhome.InstructorHomeContract
-import com.ssing.presentation.instructorhome.InstructorHomeViewModel
+import com.ssing.presentation.instructorhome.component.InstructorHomeReviewCard
+import com.ssing.presentation.instructorhome.model.Grade
 import com.ssing.presentation.instructorhome.model.InstructorHomeUiModel
+import com.ssing.presentation.instructorhome.model.ReviewModel
 import kotlinx.collections.immutable.persistentListOf
 import java.time.LocalDateTime
 
@@ -148,6 +151,26 @@ private fun InstructorHomeScreen(
                     modifier = Modifier.weight(1f),
                 )
             }
+
+            Column(
+                modifier = Modifier
+                    .padding(horizontal = 16.dp)
+                    .padding(bottom = 16.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+            ) {
+                Text(
+                    text = "새로운 강습 시작하기",
+                    color = SSINGTheme.colors.textNormal,
+                    style = SSINGTheme.typography.body.sb16,
+                )
+
+                InstructorHomeReviewCard(
+                    averageRating = state.reviewModel.averageRating,
+                    grade = state.reviewModel.grade,
+                    achievementRate = state.reviewModel.achievementRate,
+                    onClick = {},
+                )
+            }
         }
     }
 }
@@ -177,7 +200,12 @@ private fun ConsumerHomeScreenPreview() {
                         status = Status.Default,
                     ),
                 ),
-            )
+            ),
+            reviewModel = ReviewModel(
+                averageRating = 3.0f,
+                grade = Grade.GRADE4,
+                achievementRate = 88,
+            ),
         ),
         onLessonClick = {},
         onMatchingClick = {},
@@ -195,6 +223,11 @@ private fun InstructorHomeScreen2Preview() {
                 lessonCards = persistentListOf(
                     HomeLessonCardState.Empty,
                 ),
+            ),
+            reviewModel = ReviewModel(
+                averageRating = 3.0f,
+                grade = Grade.GRADE4,
+                achievementRate = 88,
             ),
         ),
         onLessonClick = {},
