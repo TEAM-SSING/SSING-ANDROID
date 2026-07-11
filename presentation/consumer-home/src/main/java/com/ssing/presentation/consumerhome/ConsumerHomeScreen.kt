@@ -35,7 +35,6 @@ import com.ssing.core.ui.common.component.StartMatchingCardStyle
 import com.ssing.core.ui.designsystem.theme.SSINGTheme
 import com.ssing.core.ui.extension.toast
 import com.ssing.core.ui.util.HandleUiEffects
-import com.ssing.presentation.consumerhome.model.ConsumerHomeUiModel
 import kotlinx.collections.immutable.persistentListOf
 import java.time.LocalDateTime
 
@@ -102,7 +101,7 @@ private fun ConsumerHomeScreen(
             Spacer(modifier = Modifier.height(23.dp))
 
             HomeLessonCardList(
-                states = state.home.lessonCards,
+                states = state.lessonCards,
                 onButtonClick = onLessonClick,
             )
 
@@ -127,7 +126,7 @@ private fun ConsumerHomeScreen(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
             ) {
                 StartMatchingButton(
-                    badgeText = "${state.home.member}명 매칭중",
+                    badgeText = "${state.member}명 매칭중",
                     title = "씽 매칭",
                     description = "준비된 강습생과\n바로 연결하기",
                     iconRes = R.drawable.img_fast_dark,
@@ -157,27 +156,25 @@ private fun ConsumerHomeScreen(
 private fun ConsumerHomeScreenPreview() {
     ConsumerHomeScreen(
         state = ConsumerHomeContract.State(
-            home = ConsumerHomeUiModel(
-                member = 99,
-                lessonCards = persistentListOf(
-                    HomeLessonCardState.Reservation(
-                        lessonId = 1,
-                        chip = "Now",
-                        displayText = "김OO님 팀 3명",
-                        location = "하이원",
-                        date = LocalDateTime.of(2025, 7, 15, 19, 0),
-                        status = Status.Matching,
-                    ),
-                    HomeLessonCardState.Reservation(
-                        lessonId = 1,
-                        chip = "D-3",
-                        displayText = "김OO님 팀 3명",
-                        location = "지산리조트",
-                        date = LocalDateTime.of(2026, 7, 11, 19, 0),
-                        status = Status.Default,
-                    ),
+            member = 99,
+            lessonCards = persistentListOf(
+                HomeLessonCardState.Reservation(
+                    lessonId = 1,
+                    chip = "Now",
+                    displayText = "김OO님 팀 3명",
+                    location = "하이원",
+                    date = LocalDateTime.of(2025, 7, 15, 19, 0),
+                    status = Status.Matching,
                 ),
-            )
+                HomeLessonCardState.Reservation(
+                    lessonId = 1,
+                    chip = "D-3",
+                    displayText = "김OO님 팀 3명",
+                    location = "지산리조트",
+                    date = LocalDateTime.of(2026, 7, 11, 19, 0),
+                    status = Status.Default,
+                ),
+            ),
         ),
         onLessonClick = {},
         onMatchingClick = {},
@@ -190,11 +187,9 @@ private fun ConsumerHomeScreenPreview() {
 private fun ConsumerHomeScreen2Preview() {
     ConsumerHomeScreen(
         state = ConsumerHomeContract.State(
-            home = ConsumerHomeUiModel(
-                member = 99,
-                lessonCards = persistentListOf(
-                    HomeLessonCardState.Empty,
-                ),
+            member = 99,
+            lessonCards = persistentListOf(
+                HomeLessonCardState.Empty,
             ),
         ),
         onLessonClick = {},
