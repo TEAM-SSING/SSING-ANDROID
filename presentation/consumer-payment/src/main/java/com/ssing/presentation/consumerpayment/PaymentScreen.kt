@@ -93,7 +93,6 @@ internal fun PaymentScreen(
     Scaffold(
         modifier = modifier
             .background(color = SSINGTheme.colors.backgroundAlternative)
-            .statusBarsPadding()
             .navigationBarsPadding(),
         topBar = {
             SsingTopBar(
