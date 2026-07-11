@@ -137,6 +137,8 @@ internal fun PaymentScreen(
                     .fillMaxSize()
                     .padding(horizontal = 16.dp)
             )
+
+            Spacer(modifier = Modifier.padding(bottom = 16.dp))
         }
     }
 }
