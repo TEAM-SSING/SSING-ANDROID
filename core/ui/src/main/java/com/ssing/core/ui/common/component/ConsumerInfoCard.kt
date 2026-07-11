@@ -39,8 +39,8 @@ fun ConsumerInfoCard(
     isReady: Boolean,
     nickname: String,
     participants: ImmutableList<String>,
-    price: Int,
     modifier: Modifier = Modifier,
+    price: Int? = null,
 ) {
     Column(
         modifier = modifier
@@ -104,11 +104,13 @@ fun ConsumerInfoCard(
                     }
                 }
 
-                Text(
-                    text = "₩ ${"%,d".format(price)}",
-                    color = SSINGTheme.colors.textNormal,
-                    style = SSINGTheme.typography.caption.sb14,
-                )
+                price?.let {
+                    Text(
+                        text = "₩ ${"%,d".format(it)}",
+                        color = SSINGTheme.colors.textNormal,
+                        style = SSINGTheme.typography.caption.sb14,
+                    )
+                }
             }
         }
     }
