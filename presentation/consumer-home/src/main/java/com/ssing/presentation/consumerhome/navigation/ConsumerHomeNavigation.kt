@@ -10,11 +10,13 @@ import kotlinx.serialization.Serializable
 data object ConsumerHome : MainTabRoute
 
 fun NavGraphBuilder.consumerHomeNavGraph(
+    navigateToLessonDetail: (Long) -> Unit,
+    navigateToMatching: () -> Unit,
 ) {
     composable<ConsumerHome> {
         ConsumerHomeRoute(
-            navigateToLessonDetail = {},
-            navigateToMatching = {},
+            navigateToLessonDetail = navigateToLessonDetail,
+            navigateToMatching = navigateToMatching,
         )
     }
 }
