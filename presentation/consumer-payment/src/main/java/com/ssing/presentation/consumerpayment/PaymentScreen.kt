@@ -36,6 +36,7 @@ import com.ssing.core.ui.common.component.SsingMatchingDetailCard
 import com.ssing.core.ui.common.component.SsingModal
 import com.ssing.core.ui.common.component.SsingTopBar
 import com.ssing.core.ui.designsystem.theme.SSINGTheme
+import com.ssing.core.ui.designsystem.theme.White
 import com.ssing.core.ui.extension.toast
 import com.ssing.core.ui.util.HandleUiEffects
 import kotlinx.collections.immutable.persistentListOf
@@ -121,6 +122,7 @@ internal fun PaymentScreen(
                 .fillMaxSize()
                 .background(color = SSINGTheme.colors.backgroundAlternative,)
                 .padding(innerPadding)
+                .verticalScroll(rememberScrollState())
         ){
             SsingHeader(
                 title = "결제 정보를 확인해요",
@@ -136,7 +138,6 @@ internal fun PaymentScreen(
                     .padding(horizontal = 16.dp)
             )
         }
-
     }
 }
 
@@ -147,7 +148,6 @@ private fun PayInfoSection(
 ) {
     Column(
         modifier = modifier
-            .verticalScroll(state = rememberScrollState()),
     ) {
          SsingMatchingDetailCard(
             nickname = state.nickname,
