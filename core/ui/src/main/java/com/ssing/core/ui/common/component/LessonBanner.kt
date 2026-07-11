@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.VerticalDivider
@@ -38,7 +37,10 @@ sealed interface LessonBannerState {
         val participantTotalCount: Int,
     ) : LessonBannerState {
         val totalReadyCount: Int
-            get() = (participantReadyCount + if (isInstructorReady) 1 else 0).coerceIn(0, totalCount)
+            get() = (participantReadyCount + if (isInstructorReady) 1 else 0).coerceIn(
+                0,
+                totalCount
+            )
 
         val totalCount: Int
             get() = participantTotalCount + 1
@@ -59,36 +61,26 @@ sealed interface LessonBannerState {
 @Composable
 fun LessonBanner(
     lessonBannerState: LessonBannerState,
-    beforeLessonText: String,
-    onBackClick: () -> Unit,
     modifier: Modifier = Modifier,
+    beforeLessonText: String? = null,
 ) {
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .background(color = Blue50),
+            .background(Blue50)
+            .padding(
+                top = 16.dp,
+                start = 16.dp,
+                end = 16.dp,
+            )
     ) {
-        SsingTopBar(
-            title = "강습 상세",
-            onBack = onBackClick,
-            backgroundColor = Color.Transparent,
-        )
-
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(
-                    top = 16.dp,
-                    start = 16.dp,
-                    end = 16.dp,
-                )
-        ) {
-            when (lessonBannerState) {
-                is LessonBannerState.Before -> LessonBeforeContent(lessonBannerState, beforeLessonText)
-                is LessonBannerState.Ongoing -> LessonOngoingContent(lessonBannerState)
-                is LessonBannerState.Completed -> LessonCompletedContent(lessonBannerState)
-                is LessonBannerState.Canceled -> LessonCanceledContent()
+        when (lessonBannerState) {
+            is LessonBannerState.Before -> beforeLessonText?.let {
+                LessonBeforeContent(lessonBannerState, it)
             }
+            is LessonBannerState.Ongoing -> LessonOngoingContent(lessonBannerState)
+            is LessonBannerState.Completed -> LessonCompletedContent(lessonBannerState)
+            is LessonBannerState.Canceled -> LessonCanceledContent()
         }
     }
 }
@@ -127,9 +119,9 @@ private fun LessonBeforeContent(
             horizontalArrangement = Arrangement.spacedBy(8.dp, alignment = Alignment.End),
             verticalAlignment = Alignment.Bottom,
         ) {
-            Row (
+            Row(
                 horizontalArrangement = Arrangement.spacedBy(2.dp),
-            ){
+            ) {
                 Text(
                     text = "${lessonBannerState.totalReadyCount}",
                     color = SSINGTheme.colors.primaryNormal,
@@ -175,7 +167,7 @@ private fun LessonBeforeContent(
             repeat(lessonBannerState.participantTotalCount) { index ->
                 val isReady = index < lessonBannerState.participantReadyCount
 
-                Icon (
+                Icon(
                     painter = painterResource(
                         id = if (isReady) R.drawable.img_waiting_ready else R.drawable.img_waiting_default,
                     ),
@@ -324,7 +316,6 @@ private fun LessonBannerPreview(
         LessonBanner(
             lessonBannerState = lessonBannerState,
             beforeLessonText = "강사님과 만난 후\n강습 시작을 눌러주세요",
-            onBackClick = {},
         )
     }
 }
