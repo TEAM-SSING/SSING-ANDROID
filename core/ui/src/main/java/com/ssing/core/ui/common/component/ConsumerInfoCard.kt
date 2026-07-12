@@ -7,11 +7,11 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -34,6 +34,8 @@ import kotlinx.collections.immutable.persistentListOf
  * @param price 결제 금액.
  * @param modifier Composable에 적용할 modifier.
  */
+
+
 @Composable
 fun ConsumerInfoCard(
     isReady: Boolean,
@@ -54,17 +56,16 @@ fun ConsumerInfoCard(
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(6.dp)
     ) {
-        if (isReady) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(4.dp),
-            ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(4.dp),
+        ) {
+            if (isReady) {
                 Icon(
                     imageVector = ImageVector.vectorResource(R.drawable.ic_check_circle_filled_sm_12),
                     contentDescription = null,
                     tint = SSINGTheme.colors.primaryNormal,
                 )
-
                 Text(
                     text = "준비완료",
                     color = SSINGTheme.colors.primaryNormal,

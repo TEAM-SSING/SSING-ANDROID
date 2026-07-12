@@ -4,11 +4,11 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Scaffold
@@ -23,6 +23,11 @@ import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.airbnb.lottie.compose.LottieAnimation
+import com.airbnb.lottie.compose.LottieCompositionSpec
+import com.airbnb.lottie.compose.LottieConstants
+import com.airbnb.lottie.compose.animateLottieCompositionAsState
+import com.airbnb.lottie.compose.rememberLottieComposition
 import com.ssing.core.ui.common.component.SsingButton
 import com.ssing.core.ui.common.component.SsingButtonStyle
 import com.ssing.core.ui.common.component.SsingHeader
@@ -33,6 +38,7 @@ import com.ssing.core.ui.extension.toast
 import com.ssing.core.ui.util.HandleUiEffects
 import com.ssing.presentation.consumermatching.ConsumerMatchingContract
 import com.ssing.presentation.consumermatching.ConsumerMatchingViewModel
+import com.ssing.presentation.consumermatching.R
 import kotlinx.collections.immutable.persistentListOf
 
 @Composable
@@ -80,6 +86,12 @@ internal fun ConsumerMatchingPendingScreen(
     navigateToFailure: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.consumer_matching_pending))
+    val progress by animateLottieCompositionAsState(
+        composition = composition,
+        iterations = LottieConstants.IterateForever,
+    )
+
     Scaffold(
         modifier = modifier,
         topBar = {
@@ -127,11 +139,14 @@ internal fun ConsumerMatchingPendingScreen(
             )
 
             // TODO: 소켓 연결 후 수정 / 플로우 확인용 임시 콜백
-            Box(
+            LottieAnimation(
+                composition = composition,
+                progress = { progress },
                 modifier = Modifier
                     .clickable(onClick = navigateToResult)
-                    .size(217.dp)
-                    .background(SSINGTheme.colors.primaryAlternative),
+                    .padding(all = 16.dp)
+                    .fillMaxWidth()
+                    .widthIn(max = 328.dp),
             )
 
             SsingMatchingDetailCard(
@@ -144,7 +159,7 @@ internal fun ConsumerMatchingPendingScreen(
                 duration = state.duration,
                 price = state.price,
                 equipmentStatus = "착용 완료",
-                // TODO: #66 병합되면 borderColor borderAlternative 적용
+                borderColor = SSINGTheme.colors.borderAlternative,
             )
         }
     }
