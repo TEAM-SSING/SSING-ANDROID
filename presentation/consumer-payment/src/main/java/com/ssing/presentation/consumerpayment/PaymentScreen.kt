@@ -162,6 +162,7 @@ private fun PayInfoSection(
             duration = state.duration,
             participants = state.participants,
             equipmentStatus = state.equipmentStatus,
+            borderColor = SSINGTheme.colors.backgroundAlternative,
         )
         
         Spacer(modifier = Modifier.height(8.dp))
