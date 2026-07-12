@@ -4,7 +4,9 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.foundation.verticalScroll
@@ -107,9 +109,19 @@ internal fun ConsumerLessonRoute(
         )
     }
 
+    val onBottomClick: () -> Unit = {
+        when (state.lessonBannerState) {
+            is LessonBannerState.Before -> viewModel.onReadyClick()
+            is LessonBannerState.Ongoing -> viewModel.onEndLessonClick()
+            is LessonBannerState.Completed -> viewModel.onReviewClick()
+            is LessonBannerState.Canceled -> viewModel.onHomeClick()
+        }
+    }
+
     ConsumerLessonScreen(
         state = state,
         onBack = viewModel::onBack,
+        onBottomClick = onBottomClick,
         onReadyClick = viewModel::onReadyClick,
         onEndLessonClick = viewModel::onEndLessonClick,
         onReviewClick = viewModel::onReviewClick,
@@ -127,6 +139,7 @@ internal fun ConsumerLessonRoute(
 private fun ConsumerLessonScreen(
     state: ConsumerLessonContract.State,
     onBack: () -> Unit,
+    onBottomClick: () -> Unit,
     onReadyClick: () -> Unit,
     onEndLessonClick: () -> Unit,
     onReviewClick: () -> Unit,
@@ -147,6 +160,9 @@ private fun ConsumerLessonScreen(
             title = "강습 상세",
             onBack = onBack,
             backgroundColor = Blue50,
+            modifier = Modifier
+                .background(Blue50)
+                .statusBarsPadding()
         )
 
         Column(
@@ -188,20 +204,14 @@ private fun ConsumerLessonScreen(
 
         BottomButton(
             state = state,
-            onClick = {
-                when (state.lessonBannerState) {
-                    is LessonBannerState.Before -> onReadyClick()
-                    is LessonBannerState.Ongoing -> onEndLessonClick()
-                    is LessonBannerState.Completed -> onReviewClick()
-                    is LessonBannerState.Canceled -> onHomeClick()
-                }
-            },
+            onClick = onBottomClick,
             modifier = Modifier
                 .padding(
                     start = 16.dp,
                     end = 16.dp,
                     bottom = 16.dp,
                 )
+                .navigationBarsPadding()
         )
     }
 }
@@ -285,6 +295,7 @@ private fun ConsumerLessonScreenPreview(
         ConsumerLessonScreen(
             state = state,
             onBack = {},
+            onBottomClick = {},
             onReadyClick = {},
             onEndLessonClick = {},
             onReviewClick = {},
