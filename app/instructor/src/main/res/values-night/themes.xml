@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <style name="Theme.Ssing" parent="android:Theme.Material.Light.NoActionBar" />
-
-    <style name="Theme.Ssing.Splash" parent="Theme.Ssing">
-        <item name="android:windowBackground">@color/main</item>
+    <style name="Theme.Ssing.Splash" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/main</item>
+        <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher_foreground</item>
+        <item name="postSplashScreenTheme">@style/Theme.Ssing</item>
     </style>
 </resources>
