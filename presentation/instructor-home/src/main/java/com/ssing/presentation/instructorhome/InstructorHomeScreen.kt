@@ -97,8 +97,8 @@ private fun InstructorHomeScreen(
                 .background(
                     color = SSINGTheme.colors.backgroundAlternative,
                 )
+                .padding(innerPadding)
                 .verticalScroll(rememberScrollState())
-                .padding(innerPadding),
         ) {
 
             Spacer(modifier = Modifier.height(8.dp))
