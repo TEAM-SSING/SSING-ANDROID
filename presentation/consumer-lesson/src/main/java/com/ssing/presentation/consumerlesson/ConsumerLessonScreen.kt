@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
@@ -66,22 +65,14 @@ internal fun ConsumerLessonRoute(
         viewModel.onBack()
     }
 
-    val etcState = rememberTextFieldState()
-
     if (state.showCancelConfirmSheet) {
         MatchingCancelBottomSheet(
             userRole = UserRole.CONSUMER,
             selectedReason = state.selectedReason,
             onReasonClick = viewModel::onReasonSelected,
-            etcState = etcState,
-            onConfirmClick = { reason ->
-                viewModel.onCancelConfirmed(reason)
-                etcState.edit { replace(0, length, "") }
-            },
-            onDismissRequest = {
-                viewModel.onCancelDismiss()
-                etcState.edit { replace(0, length, "") }
-            },
+            etcState = viewModel.etcState,
+            onConfirmClick = { viewModel.onCancelConfirmed() },
+            onDismissRequest = { viewModel.onCancelDismiss() },
         )
     }
 

@@ -1,5 +1,6 @@
 package com.ssing.presentation.consumerlesson
 
+import androidx.compose.foundation.text.input.TextFieldState
 import com.ssing.core.ui.base.BaseViewModel
 import com.ssing.core.ui.common.component.CancelReason
 import com.ssing.core.ui.common.component.LessonBannerState
@@ -18,6 +19,8 @@ internal class ConsumerLessonViewModel @Inject constructor() :
     BaseViewModel<ConsumerLessonContract.State, ConsumerLessonContract.Effect>(
         ConsumerLessonContract.State()
     ) {
+
+    val etcState = TextFieldState()
 
     init {
         // TODO: 서버 연동 후 실제 API 호출로 교체
@@ -91,7 +94,8 @@ internal class ConsumerLessonViewModel @Inject constructor() :
 
         updateState {
             val before = lessonBannerState as? LessonBannerState.Before ?: return@updateState this
-            val updatedBanner = before.copy(participantReadyCount = before.participantReadyCount + 1)
+            val updatedBanner =
+                before.copy(participantReadyCount = before.participantReadyCount + 1)
             isAllReady = updatedBanner.totalReadyCount == updatedBanner.totalCount
 
             copy(
@@ -138,9 +142,8 @@ internal class ConsumerLessonViewModel @Inject constructor() :
         updateState { copy(selectedReason = reason) }
     }
 
-    fun onCancelConfirmed(
-        etcReason: String? = null,
-    ) {
+    fun onCancelConfirmed() {
+        val etcReason = etcState.text.toString()
         // TODO: 서버 연동 시 etcReason 처리
         updateState {
             copy(
@@ -149,6 +152,7 @@ internal class ConsumerLessonViewModel @Inject constructor() :
                 selectedReason = null,
             )
         }
+        etcState.edit { replace(0, length, "") }
     }
 
     fun onCancelDismiss() {
@@ -158,6 +162,7 @@ internal class ConsumerLessonViewModel @Inject constructor() :
                 selectedReason = null,
             )
         }
+        etcState.edit { replace(0, length, "") }
     }
 
     fun onChatClick() = sendEffect(ConsumerLessonContract.Effect.ShowToast("준비 중인 기능입니다."))
