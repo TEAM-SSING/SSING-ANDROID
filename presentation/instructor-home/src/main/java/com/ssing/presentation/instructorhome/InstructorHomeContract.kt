@@ -11,6 +11,7 @@ internal interface InstructorHomeContract {
 
     @Immutable
     data class State(
+        val lessonId: Long = 0,
         val nickname: String = "",
         val matchingCount: Int = 0,
         val lessonCards: ImmutableList<HomeLessonCardState> = persistentListOf(),

@@ -110,7 +110,7 @@ private fun InstructorHomeScreen(
 
             HomeLessonCardList(
                 states = state.lessonCards,
-                onButtonClick = onLessonClick,
+                onButtonClick = onLessonClick,//(state.lessonId),
             )
 
             Spacer(modifier = Modifier.height(16.dp))

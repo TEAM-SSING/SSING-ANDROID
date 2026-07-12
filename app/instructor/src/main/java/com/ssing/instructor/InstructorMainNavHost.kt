@@ -42,9 +42,9 @@ internal fun InstructorMainNavHost(
                     route = InstructorMatching,
                 )
             },
-            navigateToLessonDetail = {
+            navigateToLessonDetail = { lessonId ->
                 navController.navigate(
-                    route = InstructorLesson,
+                    route = InstructorLesson(lessonId = lessonId),
                 )
             }
         )
