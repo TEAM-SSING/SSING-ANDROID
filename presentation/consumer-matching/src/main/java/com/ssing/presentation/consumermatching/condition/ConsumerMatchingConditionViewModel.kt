@@ -1,13 +1,21 @@
 package com.ssing.presentation.consumermatching.condition
 
+import androidx.lifecycle.viewModelScope
+import com.ssing.core.network.exception.ApiException
 import com.ssing.core.ui.base.BaseViewModel
+import com.ssing.core.ui.extension.uiMessage
+import com.ssing.data.consumermatching.model.ConsumerMatchingParticipant
+import com.ssing.data.consumermatching.repository.api.ConsumerMatchingRepository
 import com.ssing.presentation.consumermatching.type.ConsumerGender
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.toPersistentList
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-internal class ConsumerMatchingConditionViewModel @Inject constructor() :
+internal class ConsumerMatchingConditionViewModel @Inject constructor(
+    private val consumerMatchingRepository: ConsumerMatchingRepository,
+) :
     BaseViewModel<ConsumerMatchingConditionContract.State, ConsumerMatchingConditionContract.Effect>(
         initialState = ConsumerMatchingConditionContract.State(),
     ) {
@@ -63,6 +71,36 @@ internal class ConsumerMatchingConditionViewModel @Inject constructor() :
         }
 
     fun onStartMatchingClick() {
-        sendEffect(ConsumerMatchingConditionContract.Effect.NavigateToMatching)
+        updateState { copy(isLoading = true) }
+
+        viewModelScope.launch {
+            consumerMatchingRepository.requestMatching(
+                resort = uiState.value.selectedResort?.api ?: "",
+                sport = uiState.value.selectedSport?.api ?: "",
+                lessonLevel = uiState.value.selectedLevel?.api ?: "",
+                requestedDurationMinutes = uiState.value.selectedDurations.map { it.api },
+                participants = uiState.value.consumers.map { it.toParticipant() },
+                equipmentReady = uiState.value.isConfirmed,
+            )
+                .onSuccess {
+                    sendEffect(ConsumerMatchingConditionContract.Effect.NavigateToMatching)
+                    updateState { copy(isLoading = false) }
+                }
+                .onFailure {
+                    if (it is ApiException) {
+                        sendEffect(ConsumerMatchingConditionContract.Effect.ShowToast(it.uiMessage))
+                    }
+                    updateState { copy(isLoading = false) }
+                }
+        }
     }
+
+    private fun ConsumerInfo.toParticipant(): ConsumerMatchingParticipant =
+        ConsumerMatchingParticipant(
+            age = this.ageState.text.toAgeOrNull() ?: 0,
+            gender = this.gender?.api ?: "",
+        )
+
+    private fun CharSequence.toAgeOrNull(): Int? =
+        filter { it.isDigit() }.toString().toIntOrNull()
 }
