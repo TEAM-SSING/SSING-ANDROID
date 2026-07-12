@@ -5,15 +5,15 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
-import androidx.navigation.navOptions
 import com.ssing.core.ui.extension.clearBackStackNavOptions
 import com.ssing.core.ui.navigation.SsingNavHost
-import com.ssing.presentation.auth.navigation.authNavGraph
+import com.ssing.presentation.auth.instructor.navigation.instructorAuthNavGraph
 import com.ssing.presentation.instructorhome.navigation.InstructorHome
 import com.ssing.presentation.instructorhome.navigation.instructorHomeNavGraph
 import com.ssing.presentation.instructormatching.navigation.InstructorMatching
 import com.ssing.presentation.notification.navigation.notificationNavGraph
 import com.ssing.presentation.instructormatching.navigation.instructorMatchingNavGraph
+import com.ssing.presentation.instructorlessondetail.navigation.instructorLessonNavGraph
 
 @Composable
 internal fun InstructorMainNavHost(
@@ -26,8 +26,7 @@ internal fun InstructorMainNavHost(
         startDestination = InstructorHome,
         modifier = modifier.fillMaxSize(),
     ) {
-        authNavGraph(
-            paddingValues = paddingValues,
+        instructorAuthNavGraph(
             navigateToHome = {
                 navController.navigate(
                     route = InstructorHome,
@@ -54,6 +53,10 @@ internal fun InstructorMainNavHost(
             navController = navController,
         )
         instructorMatchingNavGraph(
+            paddingValues = paddingValues,
+            navController = navController,
+        )
+        instructorLessonNavGraph(
             paddingValues = paddingValues,
             navController = navController,
         )

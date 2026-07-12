@@ -1,15 +1,15 @@
-package com.ssing.presentation.auth
+package com.ssing.presentation.auth.instructor
 
 import com.ssing.core.ui.base.BaseViewModel
+import com.ssing.presentation.auth.LoginContract
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-internal class LoginViewModel @Inject constructor() :
+internal class InstructorLoginViewModel @Inject constructor() :
     BaseViewModel<LoginContract.State, LoginContract.Effect>(
         LoginContract.State()
     ) {
-
     fun processIntent(intent: LoginContract.Intent) {
         when (intent) {
             LoginContract.Intent.OnKakaoClick -> {
