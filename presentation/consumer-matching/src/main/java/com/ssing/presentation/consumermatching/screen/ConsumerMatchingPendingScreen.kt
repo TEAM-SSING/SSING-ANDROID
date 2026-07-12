@@ -108,7 +108,7 @@ fun ConsumerMatchingPendingScreen(
                 duration = state.duration,
                 price = state.price,
                 equipmentStatus = "착용 완료",
-                // TODO: #66 병합되면 borderColor borderAlternative 적용
+                borderColor = SSINGTheme.colors.borderAlternative,
             )
         }
     }
