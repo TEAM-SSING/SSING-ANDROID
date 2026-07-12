@@ -10,6 +10,7 @@ import com.ssing.presentation.auth.consumer.navigation.consumerAuthNavGraph
 import com.ssing.core.ui.navigation.SsingNavHost
 import com.ssing.presentation.consumerhome.navigation.ConsumerHome
 import com.ssing.presentation.consumerhome.navigation.consumerHomeNavGraph
+import com.ssing.presentation.consumerlesson.navigation.ConsumerLesson
 import com.ssing.presentation.consumerpayment.navigation.consumerPaymentNavGraph
 import com.ssing.presentation.consumerlesson.navigation.consumerLessonNavGraph
 import com.ssing.presentation.consumermatching.navigation.ConsumerMatchingCondition
@@ -25,7 +26,7 @@ internal fun ConsumerMainNavHost(
 ) {
     SsingNavHost(
         navController = navController,
-        startDestination = ConsumerPayment,
+        startDestination = ConsumerHome,
         modifier = modifier.fillMaxSize(),
     ) {
         consumerHomeNavGraph(
@@ -46,7 +47,7 @@ internal fun ConsumerMainNavHost(
         consumerPaymentNavGraph(
             navigateToLesson = {
                 navController.navigate(
-                    route = ConsumerHome, // TODO: 강습 상세 화면으로 이동
+                    route = ConsumerLesson,
                     navOptions = navController.clearBackStackNavOptions(),
                 )
             },
