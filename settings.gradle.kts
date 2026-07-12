@@ -44,12 +44,7 @@ include(":presentation:instructor-matching")
 include(":app:consumer")
 include(":app:instructor")
 include(":core:notification")
-<<<<<<< HEAD
-include(":presentation:consumer-profile")
-include(":presentation:instructor-profile")
-=======
 include(":presentation:instructor-lesson")
->>>>>>> develop
 include(":presentation:consumer-profile")
 include(":presentation:instructor-profile")
 include(":presentation:instructor-lesson")
