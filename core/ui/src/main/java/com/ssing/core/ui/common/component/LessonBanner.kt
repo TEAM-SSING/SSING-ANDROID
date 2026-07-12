@@ -64,6 +64,7 @@ fun LessonBanner(
     modifier: Modifier = Modifier,
     beforeLessonText: String? = null,
 ) {
+
     Column(
         modifier = modifier
             .fillMaxWidth()
@@ -75,15 +76,18 @@ fun LessonBanner(
             )
     ) {
         when (lessonBannerState) {
-            is LessonBannerState.Before -> beforeLessonText?.let {
-                LessonBeforeContent(lessonBannerState, it)
-            }
+            is LessonBannerState.Before -> LessonBeforeContent(
+                lessonBannerState = lessonBannerState,
+                beforeLessonText = beforeLessonText ?: "",
+            )
+
             is LessonBannerState.Ongoing -> LessonOngoingContent(lessonBannerState)
             is LessonBannerState.Completed -> LessonCompletedContent(lessonBannerState)
             is LessonBannerState.Canceled -> LessonCanceledContent()
         }
     }
 }
+
 
 @Composable
 private fun LessonBeforeContent(

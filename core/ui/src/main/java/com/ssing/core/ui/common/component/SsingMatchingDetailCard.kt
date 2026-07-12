@@ -117,6 +117,7 @@ fun SsingMatchingDetailCard(
  * @param tags 강습 태그 목록
  * @param teamNicknames 팀별 닉네임/인원 목록
  * @param totalCount 전체 강습 인원 수
+ * @param place 강습 장소
  * @param duration 강습 시간
  * @param actualTimeRange 실제 강습 시간 범위
  * @param price 강습 가격
