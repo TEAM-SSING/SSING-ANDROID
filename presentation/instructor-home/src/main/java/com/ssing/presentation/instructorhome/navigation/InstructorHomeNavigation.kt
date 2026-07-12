@@ -9,10 +9,12 @@ import kotlinx.serialization.Serializable
 @Serializable
 data object InstructorHome : MainTabRoute
 
-fun NavGraphBuilder.instructorHomeNavGraph() {
+fun NavGraphBuilder.instructorHomeNavGraph(
+    navigateToMatching: () -> Unit,
+) {
     composable<InstructorHome> {
         InstructorHomeRoute(
-            navigateToMatching = {},
+            navigateToMatching = navigateToMatching,
             navigateToLessonDetail = {},
         )
     }
