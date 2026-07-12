@@ -19,7 +19,6 @@ fun NavGraphBuilder.consumerLessonNavGraph(
 ) {
     composable<ConsumerLesson> {
         ConsumerLessonRoute(
-            modifier = Modifier.padding(paddingValues),
             navigateToHome = navigateToHome,
         )
     }
