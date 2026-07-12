@@ -24,7 +24,7 @@ sealed interface HomeLessonCardState {
 }
 
 enum class Sports(val imageRes: Int) {
-    SKI(R.drawable.img_ski_66),
-    SNOWBOARD(R.drawable.img_snowboard_66),
+    SKI(R.drawable.img_ski_86),
+    SNOWBOARD(R.drawable.img_snowboard_86),
 }
 

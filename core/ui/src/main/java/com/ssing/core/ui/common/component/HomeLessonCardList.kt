@@ -113,7 +113,7 @@ private fun HomeLessonEmptyCard(
         )
 
         Image(
-            painter = painterResource(id = R.drawable.img_ski_66),
+            painter = painterResource(id = R.drawable.img_ski_86),
             contentDescription = null,
             modifier = Modifier.size(66.dp),
         )
