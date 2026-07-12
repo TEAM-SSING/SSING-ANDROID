@@ -8,7 +8,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.ssing.presentation.consumerlesson.ConsumerLessonContract
 import com.ssing.presentation.consumerlesson.component.InstructorProfileSection
-import com.ssing.presentation.consumerlesson.component.LessonActionButton
 import com.ssing.presentation.consumerlesson.component.LessonInfoSection
 import com.ssing.presentation.consumerlesson.component.LessonManagementSection
 
@@ -34,8 +33,10 @@ internal fun CompletedLessonContent(
         Spacer(modifier = Modifier.height(24.dp))
 
         LessonManagementSection(
-            leftButton = LessonActionButton("문제 신고", onReportIssueClick),
-            rightButton = LessonActionButton("이 강사님 추가 예약", onAdditionalLessonClick)
+            leftButtonText = "문제 신고",
+            leftButtonClick = onReportIssueClick,
+            rightButtonText = "이 강사님 추가 예약",
+            rightButtonClick = onAdditionalLessonClick,
         )
     }
 }

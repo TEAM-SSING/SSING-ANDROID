@@ -9,15 +9,12 @@ import androidx.compose.ui.unit.dp
 import com.ssing.core.ui.common.component.SsingButton
 import com.ssing.core.ui.common.component.SsingButtonStyle
 
-internal data class LessonActionButton(
-    val text: String,
-    val onClick: () -> Unit,
-)
-
 @Composable
 internal fun LessonManagementSection(
-    leftButton: LessonActionButton,
-    rightButton: LessonActionButton,
+    leftButtonText: String,
+    leftButtonClick: () -> Unit,
+    rightButtonText: String,
+    rightButtonClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     ContentSection(
@@ -29,14 +26,14 @@ internal fun LessonManagementSection(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             SsingButton(
-                text = leftButton.text,
-                onClick = leftButton.onClick,
+                text = leftButtonText,
+                onClick = leftButtonClick,
                 style = SsingButtonStyle.RED,
                 modifier = Modifier.weight(1f),
             )
             SsingButton(
-                text = rightButton.text,
-                onClick = rightButton.onClick,
+                text = rightButtonText,
+                onClick = rightButtonClick,
                 style = SsingButtonStyle.GRAY,
                 modifier = Modifier.weight(1f),
             )
