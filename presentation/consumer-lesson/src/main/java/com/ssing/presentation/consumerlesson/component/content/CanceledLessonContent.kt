@@ -42,9 +42,9 @@ internal fun CanceledLessonContent(
 
         LessonManagementSection(
             leftButtonText = "문제 신고",
-            leftButtonClick = onReportIssueClick,
+            onLeftClick = onReportIssueClick,
             rightButtonText = "강습 내역 보기",
-            rightButtonClick = onLessonListClick,
+            onRightClick = onLessonListClick,
         )
     }
 }

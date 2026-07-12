@@ -42,9 +42,9 @@ internal fun OngoingLessonContent(
 
         LessonManagementSection(
             leftButtonText = "문제 신고",
-            leftButtonClick = onReportIssueClick,
+            onLeftClick = onReportIssueClick,
             rightButtonText = "채팅방",
-            rightButtonClick = onChatClick,
+            onRightClick = onChatClick,
         )
     }
 }

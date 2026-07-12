@@ -42,9 +42,9 @@ internal fun BeforeLessonContent(
 
         LessonManagementSection(
             leftButtonText = "강습 취소",
-            leftButtonClick = onCancelClick,
+            onLeftClick = onCancelClick,
             rightButtonText = "채팅방",
-            rightButtonClick = onChatClick,
+            onRightClick = onChatClick,
         )
     }
 }

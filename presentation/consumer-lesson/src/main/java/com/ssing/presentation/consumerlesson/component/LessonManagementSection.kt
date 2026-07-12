@@ -14,9 +14,9 @@ import com.ssing.core.ui.designsystem.theme.SSINGTheme
 @Composable
 internal fun LessonManagementSection(
     leftButtonText: String,
-    leftButtonClick: () -> Unit,
+    onLeftClick: () -> Unit,
     rightButtonText: String,
-    rightButtonClick: () -> Unit,
+    onRightClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     ContentSection(
@@ -29,13 +29,13 @@ internal fun LessonManagementSection(
         ) {
             SsingButton(
                 text = leftButtonText,
-                onClick = leftButtonClick,
+                onClick = onLeftClick,
                 style = SsingButtonStyle.RED,
                 modifier = Modifier.weight(1f),
             )
             SsingButton(
                 text = rightButtonText,
-                onClick = rightButtonClick,
+                onClick = onRightClick,
                 style = SsingButtonStyle.GRAY,
                 modifier = Modifier.weight(1f),
             )
@@ -49,9 +49,9 @@ private fun LessonManagementSectionPreview() {
     SSINGTheme {
         LessonManagementSection(
             leftButtonText = "강습 취소",
-            leftButtonClick = {},
+            onLeftClick = {},
             rightButtonText = "채팅방",
-            rightButtonClick = {},
+            onRightClick = {},
         )
     }
 }

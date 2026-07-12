@@ -40,9 +40,9 @@ internal fun CompletedLessonContent(
 
         LessonManagementSection(
             leftButtonText = "문제 신고",
-            leftButtonClick = onReportIssueClick,
+            onLeftClick = onReportIssueClick,
             rightButtonText = "이 강사님 추가 예약",
-            rightButtonClick = onAdditionalLessonClick,
+            onRightClick = onAdditionalLessonClick,
         )
     }
 }
