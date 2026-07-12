@@ -104,7 +104,7 @@ private fun InstructorHomeScreen(
                 .padding(innerPadding),
         ) {
 
-            Spacer(modifier = Modifier.height(23.dp))
+            Spacer(modifier = Modifier.height(8.dp))
 
             HomeLessonCardList(
                 states = state.home.lessonCards,
