@@ -27,14 +27,15 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ssing.core.ui.R
 import com.ssing.core.ui.common.component.HomeLessonCardList
-import com.ssing.core.ui.common.component.HomeLessonCardState
-import com.ssing.core.ui.common.component.HomeLessonCardState.Reservation.Status
 import com.ssing.core.ui.common.component.SsingChipStyle
 import com.ssing.core.ui.common.component.SsingHomeTopBar
 import com.ssing.core.ui.common.component.StartMatchingButton
 import com.ssing.core.ui.common.component.StartMatchingCardStyle
 import com.ssing.core.ui.designsystem.theme.SSINGTheme
 import com.ssing.core.ui.extension.toast
+import com.ssing.core.ui.state.HomeLessonCardState
+import com.ssing.core.ui.state.HomeLessonCardState.Reservation.Status
+import com.ssing.core.ui.state.Sports
 import com.ssing.core.ui.util.HandleUiEffects
 import kotlinx.collections.immutable.persistentListOf
 import java.time.LocalDateTime
@@ -168,6 +169,7 @@ private fun ConsumerHomeScreenPreview() {
                     displayText = "김OO님 팀 3명",
                     location = "하이원",
                     date = LocalDateTime.of(2025, 7, 15, 19, 0),
+                    sports = Sports.SKI,
                     status = Status.Matching,
                 ),
                 HomeLessonCardState.Reservation(
@@ -176,6 +178,7 @@ private fun ConsumerHomeScreenPreview() {
                     displayText = "김OO님 팀 3명",
                     location = "지산리조트",
                     date = LocalDateTime.of(2026, 7, 11, 19, 0),
+                    sports = Sports.SNOWBOARD,
                     status = Status.Default,
                 ),
             ),
