@@ -61,5 +61,6 @@ internal interface LessonDetailContract {
 
     sealed interface Effect {
         data object NavigateBack : Effect
+        data class ShowToast(val message: String) : Effect
     }
 }

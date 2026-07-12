@@ -1,6 +1,7 @@
 package com.ssing.presentation.instructorlessondetail
 
 import androidx.lifecycle.viewModelScope
+import com.ssing.core.network.exception.ApiException
 import com.ssing.core.ui.base.BaseViewModel
 import com.ssing.core.ui.common.component.CancelReason
 import com.ssing.data.lesson.repository.api.StartConfirmationRepository
@@ -58,6 +59,7 @@ internal class LessonDetailViewModel @Inject constructor(
         val before =
             (uiState.value.phase as? LessonDetailContract.LessonDetailPhase.LessonDetailBefore)
                 ?.before ?: return
+
         viewModelScope.launch {
             startConfirmationRepository.confirmLessonStart(before.lessonId)
                 .onSuccess {
@@ -71,6 +73,9 @@ internal class LessonDetailViewModel @Inject constructor(
                     }
                 }
                 .onFailure {
+                    if (it is ApiException) {
+                        sendEffect(LessonDetailContract.Effect.ShowToast(it.message.orEmpty()))
+                    }
                     updateState { copy(showReadyDialog = false) }
                 }
         }
