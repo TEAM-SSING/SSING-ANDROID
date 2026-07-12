@@ -28,6 +28,7 @@ fun NavGraphBuilder.consumerMatchingNavGraph(
         ConsumerMatchingConditionRoute(
             onPopBackStack = navController::popBackStack,
             navigateToMatching = {},
+            modifier = Modifier.padding(paddingValues),
         )
     }
     composable<ConsumerMatchingResult> {
