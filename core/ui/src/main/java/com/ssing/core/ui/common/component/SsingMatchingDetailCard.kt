@@ -290,7 +290,7 @@ private fun SsingParticipantsRow(participants: ImmutableList<Participant>) {
         )
         FlowRow(
             modifier = Modifier.weight(1f),
-            horizontalArrangement = Arrangement.End,
+            horizontalArrangement = Arrangement.spacedBy(space = 2.dp, alignment = Alignment.End),
             verticalArrangement = Arrangement.spacedBy(4.dp),
             maxItemsInEachRow = maxItemsInEachRow,
         ) {
