@@ -22,6 +22,7 @@ internal interface LessonDetailContract {
             location = "OOO 리조트",
             duration = "0시간",
             price = 0,
+            lessonId = 1023658,
             teams = persistentListOf(
                 TeamParticipantsInfo(
                     teamNickname = "김OO",
