@@ -24,15 +24,15 @@ data object ConsumerMatchingCondition : Route
 private data object ConsumerMatchingGraph : Route
 
 @Serializable
-data object ConsumerMatchingPending : Route
+private data object ConsumerMatchingPending : Route
 
 @Serializable
-data object ConsumerMatchingResult : Route
+private data object ConsumerMatchingResult : Route
 
 @Serializable
-data object ConsumerMatchingFailure : Route
+private data object ConsumerMatchingFailure : Route
 
-fun NavController.navigateToConsumerMatchingCondition() =
+private fun NavController.navigateToConsumerMatchingCondition() =
     this.navigate(ConsumerMatchingCondition)
 
 private fun NavController.navigateToConsumerMatching() =
