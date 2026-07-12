@@ -12,7 +12,7 @@ import com.ssing.presentation.instructorhome.navigation.InstructorHome
 import com.ssing.presentation.instructorhome.navigation.instructorHomeNavGraph
 import com.ssing.presentation.instructorlessondetail.navigation.instructorLessonNavGraph
 import com.ssing.presentation.instructormatching.navigation.instructorMatchingNavGraph
-import com.ssing.presentation.instructorprofile.navigation.InstructorProfile
+import com.ssing.presentation.auth.instructor.navigation.InstructorLogin
 import com.ssing.presentation.instructorprofile.navigation.instructorProfileNavGraph
 import com.ssing.presentation.notification.navigation.notificationNavGraph
 
@@ -52,7 +52,7 @@ internal fun InstructorMainNavHost(
             paddingValues = paddingValues,
             navigateToLogin = {
                 navController.navigate(
-                    route = InstructorProfile,
+                    route = InstructorLogin,
                     navOptions = navController.clearBackStackNavOptions(),
                 )
             },
