@@ -26,6 +26,7 @@ internal fun ConsumerMainNavHost(
         modifier = modifier.fillMaxSize(),
     ) {
         consumerHomeNavGraph(
+            paddingValues = paddingValues,
             navigateToLessonDetail = {
                 navController.navigate(
                     route = {}, // TODO: 강습 상세 뷰 연결

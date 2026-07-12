@@ -4,13 +4,13 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Scaffold
@@ -41,6 +41,7 @@ import java.time.LocalDateTime
 @Composable
 internal fun ConsumerHomeRoute(
     navigateToLessonDetail: (Long) -> Unit,
+    contentPadding : PaddingValues,
     navigateToMatching: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: ConsumerHomeViewModel = hiltViewModel(),
@@ -61,6 +62,7 @@ internal fun ConsumerHomeRoute(
         onLessonClick = viewModel::onLessonClick,
         onMatchingClick = viewModel::onMatchingClick,
         onReservationClick = viewModel::onReservationClick,
+        contentPadding = contentPadding,
         modifier = modifier,
     )
 }
@@ -71,10 +73,10 @@ private fun ConsumerHomeScreen(
     onLessonClick: (HomeLessonCardState.Reservation) -> Unit,
     onMatchingClick: () -> Unit,
     onReservationClick: () -> Unit,
+    contentPadding: PaddingValues,
     modifier: Modifier = Modifier,
 ) {
     Scaffold(
-        modifier = modifier,
         topBar = {
             SsingHomeTopBar(
                 logo = {
@@ -84,19 +86,19 @@ private fun ConsumerHomeScreen(
                     )
                 },
                 onNotificationClick = {},
-                modifier = Modifier.statusBarsPadding(),
             )
         },
     ) { innerPadding ->
         Column(
-            modifier = Modifier
+            modifier = modifier
                 .fillMaxSize()
                 .background(
                     color = SSINGTheme.colors.backgroundAlternative,
                 )
+                .padding(top = innerPadding.calculateTopPadding())
                 .verticalScroll(rememberScrollState())
-                .padding(innerPadding),
-            ){
+                .padding(bottom = contentPadding.calculateBottomPadding()),
+        ){
 
             Spacer(modifier = Modifier.height(23.dp))
 
@@ -179,6 +181,7 @@ private fun ConsumerHomeScreenPreview() {
         onLessonClick = {},
         onMatchingClick = {},
         onReservationClick = {},
+        contentPadding = PaddingValues(0.dp),
     )
 }
 
@@ -195,5 +198,6 @@ private fun ConsumerHomeScreen2Preview() {
         onLessonClick = {},
         onMatchingClick = {},
         onReservationClick = {},
+        contentPadding = PaddingValues(0.dp),
     )
 }
