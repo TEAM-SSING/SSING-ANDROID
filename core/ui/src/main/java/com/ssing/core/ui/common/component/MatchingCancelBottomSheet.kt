@@ -108,7 +108,7 @@ fun MatchingCancelBottomSheet(
             selectedReason = selectedReason,
             onReasonClick = onReasonClick,
             etcState = etcState,
-            onConfirmClick = onConfirmClick,
+            onConfirmClick = { dismiss(onConfirmClick) },
             onDismissRequest = { dismiss(onDismissRequest) },
         )
     }
