@@ -1,5 +1,6 @@
 package com.ssing.presentation.consumerlesson
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -57,6 +58,10 @@ internal fun ConsumerLessonRoute(
             is ConsumerLessonContract.Effect.ShowToast -> context.toast(effect.message)
             is ConsumerLessonContract.Effect.NavigationToHome -> navigateToHome()
         }
+    }
+
+    BackHandler {
+        viewModel.onBack()
     }
 
     ConsumerLessonScreen(
