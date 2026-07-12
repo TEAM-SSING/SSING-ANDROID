@@ -65,10 +65,11 @@ fun SsingMatchingDetailCard(
     price: Int? = null,
     equipmentStatus: String = "",
     title: String? = null,
+    borderColor: Color = Blue200,
 ) {
     Column(
         modifier = modifier
-            .border(width = 1.dp, color = Blue200, shape = RoundedCornerShape(12.dp))
+            .border(width = 1.dp, color = borderColor, shape = RoundedCornerShape(12.dp))
             .clip(RoundedCornerShape(12.dp))
             .background(color = SSINGTheme.colors.backgroundNormal)
             .padding(16.dp),
