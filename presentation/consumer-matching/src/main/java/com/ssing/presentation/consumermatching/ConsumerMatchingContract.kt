@@ -8,6 +8,15 @@ import kotlinx.collections.immutable.persistentListOf
 internal interface ConsumerMatchingContract {
     @Immutable
     data class State(
+        // pending
+        val tags: ImmutableList<String> = persistentListOf(),
+        val nickname: String = "",
+        val teamCount: Int = 0,
+        val location: String = "",
+        val duration: String = "",
+        val price: Int = 0,
+
+        // result
         val showCancelModal: Boolean = false,
         val profileImageUrl: String = "",
         val name: String = "",
@@ -24,14 +33,30 @@ internal interface ConsumerMatchingContract {
         val reviews: ImmutableList<InstructorReview> = persistentListOf(),
         val estimatedFee: Int = 0,
         val lessonDuration: String = "",
-    )
+    ) {
+        val detailCardTitle: String =
+            "${nickname}님" + if (teamCount > 1) " 외 ${teamCount - 1}명" else ""
+    }
 
     sealed interface Effect {
+        sealed interface Pending : Effect {
+            data object PopBackStack : Pending
+            data object NavigateToResult : Pending
+            data object NavigateToFailure : Pending
+            data object NavigateToHome : Pending
+            data class ShowToast(val message: String) : Pending
+        }
+
         sealed interface Result : Effect {
             data object PopBackStack : Result
             data object NavigateToHome : Result
             data object NavigateToPayment : Result
             data class ShowToast(val message: String) : Result
+        }
+
+        sealed interface Failure : Effect {
+            data object NavigateToHome : Failure
+            data class ShowToast(val message: String) : Failure
         }
     }
 }

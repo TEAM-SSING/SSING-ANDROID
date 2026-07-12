@@ -47,6 +47,12 @@ internal fun ConsumerMainNavHost(
         consumerMatchingNavGraph(
             navController = navController,
             paddingValues = paddingValues,
+            navigateToHome = {
+                navController.navigate(
+                    route = ConsumerHome,
+                    navOptions = navController.clearBackStackNavOptions(),
+                )
+            },
         )
         consumerAuthNavGraph(
             paddingValues = paddingValues,
