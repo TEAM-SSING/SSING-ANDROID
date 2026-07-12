@@ -1,6 +1,5 @@
 package com.ssing.presentation.consumerpayment.navigation
 
-import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.ssing.core.ui.navigation.Route
@@ -11,12 +10,13 @@ import kotlinx.serialization.Serializable
 data object ConsumerPayment : Route
 
 fun NavGraphBuilder.consumerPaymentNavGraph(
-    navController: NavController,
+    navigateToLesson: () -> Unit,
+    navigateToHome: () -> Unit,
 ) {
     composable<ConsumerPayment> {
         PaymentRoute(
-            navigateToLesson = {},
-            navigateToHome = {},
+            navigateToLesson = navigateToLesson,
+            navigateToHome = navigateToHome,
         )
     }
 }
