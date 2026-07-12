@@ -5,12 +5,11 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.ssing.core.ui.common.component.SsingMatchingDetailCardSmall
 import com.ssing.presentation.consumerlesson.ConsumerLessonContract
 import com.ssing.presentation.consumerlesson.component.ContentBackground
-import com.ssing.presentation.consumerlesson.component.ContentSection
 import com.ssing.presentation.consumerlesson.component.InstructorProfileSection
 import com.ssing.presentation.consumerlesson.component.LessonActionButton
+import com.ssing.presentation.consumerlesson.component.LessonInfoSection
 import com.ssing.presentation.consumerlesson.component.LessonManagementSection
 
 @Composable
@@ -23,23 +22,12 @@ internal fun CanceledLessonContent(
     ContentBackground(
         modifier = modifier,
     ) {
-        state.canceledLessonInfo?.let { info ->
-            ContentSection(
-                titleText = "강습 정보",
-            ) {
-                SsingMatchingDetailCardSmall(
-                    tags = info.lessonInfo.tags,
-                    teamNicknames = info.lessonInfo.teamNicknames,
-                    totalCount = info.lessonInfo.totalCount,
-                    place = info.lessonInfo.place,
-                    duration = info.lessonInfo.duration,
-                    price = info.lessonInfo.price,
-                    cancelDateTime = info.cancelDateTime,
-                    cancelSubject = info.cancelSubject,
-                    cancelReason = info.cancelReason,
-                )
-            }
-        }
+        LessonInfoSection(
+            lessonInfo = state.canceledLessonInfo?.lessonInfo,
+            cancelDateTime = state.canceledLessonInfo?.cancelDateTime ?: "",
+            cancelSubject = state.canceledLessonInfo?.cancelSubject ?: "",
+            cancelReason = state.canceledLessonInfo?.cancelReason ?: "",
+        )
 
         Spacer(modifier = Modifier.height(12.dp))
 

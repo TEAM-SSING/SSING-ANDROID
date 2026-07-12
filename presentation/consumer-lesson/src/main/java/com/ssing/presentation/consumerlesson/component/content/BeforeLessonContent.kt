@@ -5,12 +5,11 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.ssing.core.ui.common.component.SsingMatchingDetailCardSmall
 import com.ssing.presentation.consumerlesson.ConsumerLessonContract
 import com.ssing.presentation.consumerlesson.component.ContentBackground
-import com.ssing.presentation.consumerlesson.component.ContentSection
 import com.ssing.presentation.consumerlesson.component.InstructorProfileSection
 import com.ssing.presentation.consumerlesson.component.LessonActionButton
+import com.ssing.presentation.consumerlesson.component.LessonInfoSection
 import com.ssing.presentation.consumerlesson.component.LessonManagementSection
 import com.ssing.presentation.consumerlesson.component.ParticipantTeamsSection
 
@@ -24,20 +23,7 @@ internal fun BeforeLessonContent(
     ContentBackground(
         modifier = modifier,
     ) {
-        state.lessonInfo?.let { info ->
-            ContentSection(
-                titleText = "강습 정보",
-            ) {
-                SsingMatchingDetailCardSmall(
-                    tags = info.tags,
-                    teamNicknames = info.teamNicknames,
-                    totalCount = info.totalCount,
-                    place = info.place,
-                    duration = info.duration,
-                    price = info.price,
-                )
-            }
-        }
+        LessonInfoSection(state.lessonInfo)
 
         Spacer(modifier = Modifier.height(12.dp))
 
