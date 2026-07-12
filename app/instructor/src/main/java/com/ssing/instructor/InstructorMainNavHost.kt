@@ -36,6 +36,7 @@ internal fun InstructorMainNavHost(
             },
         )
         instructorHomeNavGraph(
+            paddingValues = paddingValues,
             navigateToMatching = {
                 navController.navigate(
                     route = InstructorMatching,

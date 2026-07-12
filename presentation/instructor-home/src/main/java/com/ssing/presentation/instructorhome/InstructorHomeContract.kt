@@ -4,8 +4,10 @@ import androidx.annotation.DrawableRes
 import androidx.compose.runtime.Immutable
 import com.ssing.core.ui.R
 import com.ssing.core.ui.common.component.HomeLessonCardState
+import com.ssing.core.ui.common.component.HomeLessonCardState.Reservation.Status
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
+import java.time.LocalDateTime
 
 internal interface InstructorHomeContract {
 
@@ -13,7 +15,24 @@ internal interface InstructorHomeContract {
     data class State(
         val nickname: String = "",
         val matchingCount: Int = 0,
-        val lessonCards: ImmutableList<HomeLessonCardState> = persistentListOf(),
+        val lessonCards: ImmutableList<HomeLessonCardState> = persistentListOf(
+            HomeLessonCardState.Reservation(
+                lessonId = 1,
+                chip = "D-3",
+                displayText = "김OO님 팀 3명",
+                location = "지산리조트",
+                date = LocalDateTime.of(2026, 7, 11, 19, 0),
+                status = Status.Default
+            ),
+            HomeLessonCardState.Reservation(
+                lessonId = 1,
+                chip = "D-3",
+                displayText = "김OO님 팀 3명",
+                location = "지산리조트",
+                date = LocalDateTime.of(2026, 7, 11, 19, 0),
+                status = Status.Default
+            )
+        ),
         val averageRating: Float = 0f,
         val grade: Grade = Grade.GRADE1,
         val achievementRate: Int = 0,

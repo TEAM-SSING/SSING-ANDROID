@@ -4,6 +4,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -41,6 +42,7 @@ import java.time.LocalDateTime
 
 @Composable
 internal fun InstructorHomeRoute(
+    contentPadding: PaddingValues,
     navigateToLessonDetail: (Long) -> Unit,
     navigateToMatching: () -> Unit,
     modifier: Modifier = Modifier,
@@ -63,6 +65,7 @@ internal fun InstructorHomeRoute(
         onMatchingClick = viewModel::onMatchingClick,
         onReservationClick = viewModel::onReservationClick,
         onReviewClick = viewModel::onReviewClick,
+        contentPadding = contentPadding,
         modifier = modifier,
     )
 }
@@ -74,6 +77,7 @@ private fun InstructorHomeScreen(
     onMatchingClick: () -> Unit,
     onReservationClick: () -> Unit,
     onReviewClick: () -> Unit,
+    contentPadding: PaddingValues,
     modifier: Modifier = Modifier,
 ) {
     Scaffold(
@@ -97,8 +101,9 @@ private fun InstructorHomeScreen(
                 .background(
                     color = SSINGTheme.colors.backgroundAlternative,
                 )
-                .padding(innerPadding)
+                .padding(top = innerPadding.calculateTopPadding())
                 .verticalScroll(rememberScrollState())
+                .padding(bottom = contentPadding.calculateBottomPadding())
         ) {
 
             Spacer(modifier = Modifier.height(8.dp))
@@ -208,6 +213,7 @@ private fun InstructorHomeScreenPreview() {
             onMatchingClick = {},
             onReservationClick = {},
             onReviewClick = {},
+            contentPadding = PaddingValues(0.dp),
         )
     }
 }
@@ -231,6 +237,7 @@ private fun InstructorHomeScreen2Preview() {
             onMatchingClick = {},
             onReservationClick = {},
             onReviewClick = {},
+            contentPadding = PaddingValues(0.dp),
         )
     }
 }
