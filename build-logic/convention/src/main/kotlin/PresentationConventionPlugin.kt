@@ -33,6 +33,7 @@ class PresentationConventionPlugin : Plugin<Project> {
                 add("implementation", libs.findLibrary("coil.compose").get())
                 add("implementation", libs.findLibrary("immutable").get())
                 add("implementation", libs.findLibrary("timber").get())
+                add("implementation", libs.findLibrary("lottie.compose").get())
                 add("implementation", project(":core:ui"))
                 add("implementation", project(":core:network"))
                 add("implementation", project(":data"))
