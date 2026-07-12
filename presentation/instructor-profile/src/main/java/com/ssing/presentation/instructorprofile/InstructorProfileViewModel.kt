@@ -21,9 +21,12 @@ internal class InstructorProfileViewModel @Inject constructor(
         updateState { copy(isLoading = true) }
         viewModelScope.launch {
             authRepository.postLogout()
-                .onSuccess { sendEffect(InstructorProfileContract.Effect.NavigateToLogin) }
+                .onSuccess {
+                    Timber.d("🔐로그아웃 성공")
+                    sendEffect(InstructorProfileContract.Effect.NavigateToLogin)
+                }
                 .onFailure {
-                    Timber.e(it, "로그아웃 실패")
+                    Timber.e(it, "🔐로그아웃 실패")
                     sendEffect(InstructorProfileContract.Effect.ShowToast("로그아웃에 실패했습니다."))
                 }
 
