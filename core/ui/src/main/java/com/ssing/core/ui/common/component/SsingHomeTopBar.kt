@@ -42,7 +42,6 @@ fun SsingHomeTopBar(
         modifier = modifier
             .fillMaxWidth()
             .background(color = SSINGTheme.colors.backgroundAlternative)
-            .statusBarsPadding()
             .padding(start = 16.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
