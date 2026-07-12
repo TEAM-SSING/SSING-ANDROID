@@ -21,22 +21,22 @@ import com.ssing.core.ui.extension.toast
 import com.ssing.core.ui.util.HandleUiEffects
 
 @Composable
-internal fun ProfileRoute(
+internal fun ConsumerProfileRoute(
     navigateToLogin: () -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: ProfileViewModel = hiltViewModel(),
+    viewModel: ConsumerProfileViewModel = hiltViewModel(),
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val context = LocalContext.current
 
     HandleUiEffects(viewModel.uiEffect) { effect ->
         when (effect) {
-            ProfileContract.Effect.NavigateToLogin -> navigateToLogin()
-            is ProfileContract.Effect.ShowToast -> context.toast(effect.message)
+            ConsumerProfileContract.Effect.NavigateToLogin -> navigateToLogin()
+            is ConsumerProfileContract.Effect.ShowToast -> context.toast(effect.message)
         }
     }
 
-    ProfileScreen(
+    ConsumerProfileScreen(
         state = state,
         onLogoutClick = viewModel::onLogoutClick,
         modifier = modifier,
@@ -44,8 +44,8 @@ internal fun ProfileRoute(
 }
 
 @Composable
-private fun ProfileScreen(
-    state: ProfileContract.State,
+private fun ConsumerProfileScreen(
+    state: ConsumerProfileContract.State,
     onLogoutClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -70,8 +70,8 @@ private fun ProfileScreen(
 @Composable
 private fun ProfileScreenPreview() {
     SSINGTheme {
-        ProfileScreen(
-            state = ProfileContract.State(),
+        ConsumerProfileScreen(
+            state = ConsumerProfileContract.State(),
             onLogoutClick = {},
         )
     }

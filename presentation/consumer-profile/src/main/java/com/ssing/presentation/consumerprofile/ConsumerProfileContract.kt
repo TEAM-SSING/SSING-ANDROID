@@ -2,7 +2,7 @@ package com.ssing.presentation.consumerprofile
 
 import androidx.compose.runtime.Immutable
 
-internal interface ProfileContract {
+internal interface ConsumerProfileContract {
 
     @Immutable
     data class State(

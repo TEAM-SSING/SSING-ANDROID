@@ -6,18 +6,18 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.ssing.core.ui.navigation.MainTabRoute
-import com.ssing.presentation.consumerprofile.ProfileRoute
+import com.ssing.presentation.consumerprofile.ConsumerProfileRoute
 import kotlinx.serialization.Serializable
 
 @Serializable
 data object ConsumerProfile : MainTabRoute
 
-fun NavGraphBuilder.profileNavGraph(
+fun NavGraphBuilder.consumerProfileNavGraph(
     paddingValues: PaddingValues,
     navigateToLogin: () -> Unit,
 ) {
     composable<ConsumerProfile> {
-        ProfileRoute(
+        ConsumerProfileRoute(
             navigateToLogin = navigateToLogin,
             modifier = Modifier.padding(paddingValues),
         )
