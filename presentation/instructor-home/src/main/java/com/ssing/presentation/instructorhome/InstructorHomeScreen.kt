@@ -179,65 +179,69 @@ private fun InstructorHomeScreen(
 
 @Preview(showBackground = true)
 @Composable
-private fun ConsumerHomeScreenPreview() {
-    InstructorHomeScreen(
-        state = InstructorHomeContract.State(
-            home = InstructorHomeUiModel(
-                nickname = "김씽씽",
-                member = 99,
-                lessonCards = persistentListOf(
-                    HomeLessonCardState.Reservation(
-                        lessonId = 1,
-                        chip = "Now",
-                        displayText = "김OO님 팀 3명",
-                        location = "하이원",
-                        date = LocalDateTime.of(2025, 7, 15, 19, 0),
-                        status = Status.Matching,
-                    ),
-                    HomeLessonCardState.Reservation(
-                        lessonId = 1,
-                        chip = "D-3",
-                        displayText = "김OO님 팀 3명",
-                        location = "지산리조트",
-                        date = LocalDateTime.of(2026, 7, 11, 19, 0),
-                        status = Status.Default,
+private fun InstructorHomeScreenPreview() {
+    SSINGTheme{
+        InstructorHomeScreen(
+            state = InstructorHomeContract.State(
+                home = InstructorHomeUiModel(
+                    nickname = "김씽씽",
+                    member = 99,
+                    lessonCards = persistentListOf(
+                        HomeLessonCardState.Reservation(
+                            lessonId = 1,
+                            chip = "Now",
+                            displayText = "김OO님 팀 3명",
+                            location = "하이원",
+                            date = LocalDateTime.of(2025, 7, 15, 19, 0),
+                            status = Status.Matching,
+                        ),
+                        HomeLessonCardState.Reservation(
+                            lessonId = 1,
+                            chip = "D-3",
+                            displayText = "김OO님 팀 3명",
+                            location = "지산리조트",
+                            date = LocalDateTime.of(2026, 7, 11, 19, 0),
+                            status = Status.Default,
+                        ),
                     ),
                 ),
+                reviewModel = ReviewModel(
+                    averageRating = 3.0f,
+                    grade = Grade.GRADE4,
+                    achievementRate = 88,
+                ),
             ),
-            reviewModel = ReviewModel(
-                averageRating = 3.0f,
-                grade = Grade.GRADE4,
-                achievementRate = 88,
-            ),
-        ),
-        onLessonClick = {},
-        onMatchingClick = {},
-        onReservationClick = {},
-        onReviewClick = {},
-    )
+            onLessonClick = {},
+            onMatchingClick = {},
+            onReservationClick = {},
+            onReviewClick = {},
+        )
+    }
 }
 
 @Preview(showBackground = true)
 @Composable
 private fun InstructorHomeScreen2Preview() {
-    InstructorHomeScreen(
-        state = InstructorHomeContract.State(
-            home = InstructorHomeUiModel(
-                nickname = "김씽씽",
-                member = 99,
-                lessonCards = persistentListOf(
-                    HomeLessonCardState.Empty,
+    SSINGTheme{
+        InstructorHomeScreen(
+            state = InstructorHomeContract.State(
+                home = InstructorHomeUiModel(
+                    nickname = "김씽씽",
+                    member = 99,
+                    lessonCards = persistentListOf(
+                        HomeLessonCardState.Empty,
+                    ),
+                ),
+                reviewModel = ReviewModel(
+                    averageRating = 3.0f,
+                    grade = Grade.GRADE4,
+                    achievementRate = 88,
                 ),
             ),
-            reviewModel = ReviewModel(
-                averageRating = 3.0f,
-                grade = Grade.GRADE4,
-                achievementRate = 88,
-            ),
-        ),
-        onLessonClick = {},
-        onMatchingClick = {},
-        onReservationClick = {},
-        onReviewClick = {},
-    )
+            onLessonClick = {},
+            onMatchingClick = {},
+            onReservationClick = {},
+            onReviewClick = {},
+        )
+    }
 }
