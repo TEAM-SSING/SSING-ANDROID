@@ -5,9 +5,11 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ssing.core.ui.common.component.SsingButton
 import com.ssing.core.ui.common.component.SsingButtonStyle
+import com.ssing.core.ui.designsystem.theme.SSINGTheme
 
 @Composable
 internal fun LessonManagementSection(
@@ -38,5 +40,18 @@ internal fun LessonManagementSection(
                 modifier = Modifier.weight(1f),
             )
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun LessonManagementSectionPreview() {
+    SSINGTheme {
+        LessonManagementSection(
+            leftButtonText = "강습 취소",
+            leftButtonClick = {},
+            rightButtonText = "채팅방",
+            rightButtonClick = {},
+        )
     }
 }

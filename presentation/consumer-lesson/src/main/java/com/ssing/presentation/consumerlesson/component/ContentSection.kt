@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ssing.core.ui.designsystem.theme.SSINGTheme
 
@@ -27,5 +28,15 @@ internal fun ContentSection(
         )
 
         content()
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun ContentSectionPreview() {
+    SSINGTheme {
+        ContentSection(titleText = "강습 정보") {
+            Text(text = "content")
+        }
     }
 }
