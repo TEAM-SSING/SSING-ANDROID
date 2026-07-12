@@ -30,7 +30,6 @@ import com.ssing.core.ui.common.component.SsingTopBar
 import com.ssing.core.ui.common.component.UserRole
 import com.ssing.core.ui.designsystem.theme.Blue50
 import com.ssing.core.ui.designsystem.theme.SSINGTheme
-import com.ssing.core.ui.designsystem.theme.White
 import com.ssing.core.ui.extension.toast
 import com.ssing.core.ui.util.HandleUiEffects
 import com.ssing.presentation.consumerlesson.component.ContentBackground
@@ -73,8 +72,8 @@ internal fun ConsumerLessonRoute(
             selectedReason = state.selectedReason,
             onReasonClick = viewModel::onReasonSelected,
             etcState = viewModel.etcState,
-            onConfirmClick = { viewModel.onCancelConfirmed() },
-            onDismissRequest = { viewModel.onCancelDismiss() },
+            onConfirmClick = viewModel::onCancelConfirmed,
+            onDismissRequest = viewModel::onCancelDismiss,
         )
     }
 
@@ -115,15 +114,11 @@ internal fun ConsumerLessonRoute(
         state = state,
         onBack = viewModel::onBack,
         onBottomClick = onBottomClick,
-        onReadyClick = viewModel::onReadyClick,
-        onEndLessonClick = viewModel::onEndLessonClick,
-        onReviewClick = viewModel::onReviewClick,
         onCancelClick = viewModel::onCancelClick,
         onReportIssueClick = viewModel::onReportIssueClick,
         onAdditionalLessonClick = viewModel::onAdditionalLessonClick,
         onLessonListClick = viewModel::onLessonListClick,
         onChatClick = viewModel::onChatClick,
-        onHomeClick = viewModel::onHomeClick,
         modifier = modifier,
     )
 }
@@ -133,15 +128,11 @@ private fun ConsumerLessonScreen(
     state: ConsumerLessonContract.State,
     onBack: () -> Unit,
     onBottomClick: () -> Unit,
-    onReadyClick: () -> Unit,
-    onEndLessonClick: () -> Unit,
-    onReviewClick: () -> Unit,
     onCancelClick: () -> Unit,
     onChatClick: () -> Unit,
     onReportIssueClick: () -> Unit,
     onAdditionalLessonClick: () -> Unit,
     onLessonListClick: () -> Unit,
-    onHomeClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -294,15 +285,11 @@ private fun ConsumerLessonScreenPreview(
             state = state,
             onBack = {},
             onBottomClick = {},
-            onReadyClick = {},
-            onEndLessonClick = {},
-            onReviewClick = {},
             onCancelClick = {},
             onChatClick = {},
             onReportIssueClick = {},
             onAdditionalLessonClick = {},
             onLessonListClick = {},
-            onHomeClick = {},
         )
     }
 }
