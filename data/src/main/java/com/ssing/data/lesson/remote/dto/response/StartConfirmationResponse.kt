@@ -9,12 +9,20 @@ data class StartConfirmationResponse(
     val lessonId: Long,
     @SerialName("lessonStatus")
     val lessonStatus: String,
-    @SerialName("currentActorConfirmed")
-    val currentActorConfirmed: Boolean,
-    @SerialName("confirmedCount")
-    val confirmedCount: Int,
-    @SerialName("requiredCount")
-    val requiredCount: Int,
+    @SerialName("statusInfo")
+    val statusInfo: StatusInfo,
     @SerialName("startedAt")
-    val startedAt: String,
-)
+    val startedAt: String? = null,
+) {
+    @Serializable
+    data class StatusInfo(
+        @SerialName("confirmedCount")
+        val confirmedCount: Int,
+        @SerialName("requiredCount")
+        val requiredCount: Int,
+        @SerialName("currentActorConfirmed")
+        val currentActorConfirmed: Boolean,
+        @SerialName("instructorConfirmed")
+        val instructorConfirmed: Boolean,
+    )
+}
