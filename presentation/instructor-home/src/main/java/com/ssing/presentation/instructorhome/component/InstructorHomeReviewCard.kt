@@ -26,7 +26,7 @@ import com.ssing.core.ui.designsystem.theme.SSINGTheme
 import com.ssing.core.ui.R
 import com.ssing.core.ui.common.component.SsingButton
 import com.ssing.core.ui.common.component.SsingButtonStyle
-import com.ssing.presentation.instructorhome.model.Grade
+import com.ssing.presentation.instructorhome.Grade
 import kotlin.math.min
 
 @Composable
