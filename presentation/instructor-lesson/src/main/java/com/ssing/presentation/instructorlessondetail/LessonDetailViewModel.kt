@@ -1,12 +1,17 @@
 package com.ssing.presentation.instructorlessondetail
 
+import androidx.lifecycle.viewModelScope
 import com.ssing.core.ui.base.BaseViewModel
 import com.ssing.core.ui.common.component.CancelReason
+import com.ssing.data.lesson.repository.api.StartConfirmationRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-internal class LessonDetailViewModel @Inject constructor() :
+internal class LessonDetailViewModel @Inject constructor(
+    private val startConfirmationRepository: StartConfirmationRepository,
+) :
     BaseViewModel<LessonDetailContract.State, LessonDetailContract.Effect>(
         LessonDetailContract.State()
     ) {
@@ -53,13 +58,21 @@ internal class LessonDetailViewModel @Inject constructor() :
         val before =
             (uiState.value.phase as? LessonDetailContract.LessonDetailPhase.LessonDetailBefore)
                 ?.before ?: return
-        updateState {
-            copy(
-                phase = LessonDetailContract.LessonDetailPhase.LessonDetailBefore(
-                    before = before.copy(isInstructorReady = true)
-                ),
-                showReadyDialog = false,
-            )
+        viewModelScope.launch {
+            startConfirmationRepository.confirmLessonStart(before.lessonId)
+                .onSuccess {
+                    updateState {
+                        copy(
+                            phase = LessonDetailContract.LessonDetailPhase.LessonDetailBefore(
+                                before = before.copy(isInstructorReady = true)
+                            ),
+                            showReadyDialog = false,
+                        )
+                    }
+                }
+                .onFailure {
+                    updateState { copy(showReadyDialog = false) }
+                }
         }
     }
 
@@ -83,14 +96,24 @@ internal class LessonDetailViewModel @Inject constructor() :
 
     fun onCancelSheetDismiss() {
         updateState {
-            copy(cancelReasonState = cancelReasonState.copy(visible = false, selectedReason = null))
+            copy(
+                cancelReasonState = cancelReasonState.copy(
+                    visible = false,
+                    selectedReason = null
+                )
+            )
         }
     }
 
     fun onCancelConfirmClick(customReason: String?) {
         val reason = uiState.value.cancelReasonState.selectedReason ?: return
         updateState {
-            copy(cancelReasonState = cancelReasonState.copy(visible = false, selectedReason = null))
+            copy(
+                cancelReasonState = cancelReasonState.copy(
+                    visible = false,
+                    selectedReason = null
+                )
+            )
         }
     }
 }
