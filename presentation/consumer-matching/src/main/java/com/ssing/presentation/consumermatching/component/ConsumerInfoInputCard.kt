@@ -37,11 +37,12 @@ import com.ssing.core.ui.common.component.SsingTextField
 import com.ssing.core.ui.designsystem.theme.Blue50
 import com.ssing.core.ui.designsystem.theme.SSINGTheme
 import com.ssing.core.ui.extension.checkDigitsOnly
+import com.ssing.core.ui.extension.checkMaxLength
 import com.ssing.core.ui.extension.noRippleClickable
 import com.ssing.core.ui.extension.roundedBackgroundWithBorder
 import com.ssing.presentation.consumermatching.type.ConsumerGender
 
-private val AgeInputTransformation: InputTransformation = InputTransformation.checkDigitsOnly()
+private val AgeInputTransformation: InputTransformation = InputTransformation.checkDigitsOnly().checkMaxLength(3)
 
 @Composable
 fun ConsumerInfoInputCard(

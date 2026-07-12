@@ -71,6 +71,13 @@ internal class ConsumerMatchingConditionViewModel @Inject constructor(
         }
 
     fun onStartMatchingClick() {
+        val hasInvalidAge = uiState.value.consumers.any { consumer ->
+            consumer.ageState.text.toString().toIntOrNull()?.let { age -> age > 200 } ?: true
+        }
+        if (hasInvalidAge) {
+            return sendEffect(ConsumerMatchingConditionContract.Effect.ShowToast("200세 이하로 입력해주세요."))
+        }
+
         updateState { copy(isLoading = true) }
 
         viewModelScope.launch {
