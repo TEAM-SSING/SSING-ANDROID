@@ -1,0 +1,11 @@
+package com.ssing.data.consumermatching.remote.datasource.api
+
+import com.ssing.core.network.model.BaseResponse
+import com.ssing.data.consumermatching.remote.dto.request.ConsumerMatchingConditionRequest
+import com.ssing.data.consumermatching.remote.dto.response.ConsumerMatchingRequestResponse
+
+interface ConsumerMatchingRemoteDataSource {
+    suspend fun postMatchingRequest(
+        request: ConsumerMatchingConditionRequest,
+    ): BaseResponse<ConsumerMatchingRequestResponse>
+}
