@@ -21,22 +21,22 @@ import com.ssing.core.ui.extension.toast
 import com.ssing.core.ui.util.HandleUiEffects
 
 @Composable
-internal fun ProfileRoute(
+internal fun InstructorProfileRoute(
     navigateToLogin: () -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: ProfileViewModel = hiltViewModel(),
+    viewModel: InstructorProfileViewModel = hiltViewModel(),
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val context = LocalContext.current
 
     HandleUiEffects(viewModel.uiEffect) { effect ->
         when (effect) {
-            ProfileContract.Effect.NavigateToLogin -> navigateToLogin()
-            is ProfileContract.Effect.ShowToast -> context.toast(effect.message)
+            InstructorProfileContract.Effect.NavigateToLogin -> navigateToLogin()
+            is InstructorProfileContract.Effect.ShowToast -> context.toast(effect.message)
         }
     }
 
-    ProfileScreen(
+    InstructorProfileScreen(
         state = state,
         onLogoutClick = viewModel::onLogoutClick,
         modifier = modifier,
@@ -44,8 +44,8 @@ internal fun ProfileRoute(
 }
 
 @Composable
-private fun ProfileScreen(
-    state: ProfileContract.State,
+private fun InstructorProfileScreen(
+    state: InstructorProfileContract.State,
     onLogoutClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -68,10 +68,10 @@ private fun ProfileScreen(
 
 @Preview(showBackground = true)
 @Composable
-private fun ProfileScreenPreview() {
+private fun InstructorProfileScreenPreview() {
     SSINGTheme {
-        ProfileScreen(
-            state = ProfileContract.State(),
+        InstructorProfileScreen(
+            state = InstructorProfileContract.State(),
             onLogoutClick = {},
         )
     }

@@ -2,7 +2,7 @@ package com.ssing.presentation.instructorprofile
 
 import androidx.compose.runtime.Immutable
 
-internal interface ProfileContract {
+internal interface InstructorProfileContract {
 
     @Immutable
     data class State(

@@ -9,10 +9,10 @@ import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
-internal class ProfileViewModel @Inject constructor(
+internal class InstructorProfileViewModel @Inject constructor(
     private val authRepository: AuthRepository,
-) : BaseViewModel<ProfileContract.State, ProfileContract.Effect>(
-    ProfileContract.State()
+) : BaseViewModel<InstructorProfileContract.State, InstructorProfileContract.Effect>(
+    InstructorProfileContract.State()
 ) {
 
     fun onLogoutClick() {
@@ -21,10 +21,10 @@ internal class ProfileViewModel @Inject constructor(
         updateState { copy(isLoading = true) }
         viewModelScope.launch {
             authRepository.postLogout()
-                .onSuccess { sendEffect(ProfileContract.Effect.NavigateToLogin) }
+                .onSuccess { sendEffect(InstructorProfileContract.Effect.NavigateToLogin) }
                 .onFailure {
                     Timber.e(it, "로그아웃 실패")
-                    sendEffect(ProfileContract.Effect.ShowToast("로그아웃에 실패했습니다."))
+                    sendEffect(InstructorProfileContract.Effect.ShowToast("로그아웃에 실패했습니다."))
                 }
 
             updateState { copy(isLoading = false) }
