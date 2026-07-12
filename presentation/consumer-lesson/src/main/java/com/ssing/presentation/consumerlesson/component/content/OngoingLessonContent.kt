@@ -36,8 +36,8 @@ internal fun OngoingLessonContent(
         Spacer(modifier = Modifier.height(24.dp))
 
         LessonManagementSection(
-            primaryButton = LessonActionButton("문제 신고", onReportIssueClick),
-            secondaryButton = LessonActionButton("채팅방", onChatClick)
+            leftButton = LessonActionButton("문제 신고", onReportIssueClick),
+            rightButton = LessonActionButton("채팅방", onChatClick)
         )
     }
 }

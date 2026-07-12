@@ -36,8 +36,8 @@ internal fun BeforeLessonContent(
         Spacer(modifier = Modifier.height(24.dp))
 
         LessonManagementSection(
-            primaryButton = LessonActionButton("강습 취소", onCancelClick),
-            secondaryButton = LessonActionButton("채팅방", onChatClick)
+            leftButton = LessonActionButton("강습 취소", onCancelClick),
+            rightButton = LessonActionButton("채팅방", onChatClick)
         )
     }
 }

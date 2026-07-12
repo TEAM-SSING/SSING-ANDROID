@@ -16,8 +16,8 @@ internal data class LessonActionButton(
 
 @Composable
 internal fun LessonManagementSection(
-    primaryButton: LessonActionButton,
-    secondaryButton: LessonActionButton,
+    leftButton: LessonActionButton,
+    rightButton: LessonActionButton,
     modifier: Modifier = Modifier,
 ) {
     ContentSection(
@@ -29,14 +29,14 @@ internal fun LessonManagementSection(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             SsingButton(
-                text = primaryButton.text,
-                onClick = primaryButton.onClick,
+                text = leftButton.text,
+                onClick = leftButton.onClick,
                 style = SsingButtonStyle.RED,
                 modifier = Modifier.weight(1f),
             )
             SsingButton(
-                text = secondaryButton.text,
-                onClick = secondaryButton.onClick,
+                text = rightButton.text,
+                onClick = rightButton.onClick,
                 style = SsingButtonStyle.GRAY,
                 modifier = Modifier.weight(1f),
             )

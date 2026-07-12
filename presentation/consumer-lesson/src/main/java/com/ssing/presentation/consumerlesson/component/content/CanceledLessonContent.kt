@@ -36,8 +36,8 @@ internal fun CanceledLessonContent(
         Spacer(modifier = Modifier.height(24.dp))
 
         LessonManagementSection(
-            primaryButton = LessonActionButton("문제 신고", onReportIssueClick),
-            secondaryButton = LessonActionButton("강습 내역 보기", onLessonListClick)
+            leftButton = LessonActionButton("문제 신고", onReportIssueClick),
+            rightButton = LessonActionButton("강습 내역 보기", onLessonListClick)
         )
     }
 }
