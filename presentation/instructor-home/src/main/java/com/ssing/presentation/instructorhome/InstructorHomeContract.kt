@@ -27,13 +27,13 @@ internal interface InstructorHomeContract {
     }
 }
 
-enum class Grade(
+enum class Grade (
     val label: String,
     @get:DrawableRes val icon: Int
 ) {
     GRADE1(
         label = "Grade1",
-        icon = R.drawable.img_grade1_badge
+        icon =  R.drawable.img_grade1_badge
     ),
     GRADE2(
         label = "Grade2",
