@@ -85,7 +85,7 @@ private fun InstructorHomeScreen(
             SsingHomeTopBar(
                 logo = {
                     Image(
-                        painter = painterResource( R.drawable.img_consumer_logo),
+                        painter = painterResource(R.drawable.img_consumer_logo),
                         contentDescription = null,
                     )
                 },
@@ -102,7 +102,7 @@ private fun InstructorHomeScreen(
                 )
                 .verticalScroll(rememberScrollState())
                 .padding(innerPadding),
-        ){
+        ) {
 
             Spacer(modifier = Modifier.height(23.dp))
 
@@ -180,7 +180,7 @@ private fun InstructorHomeScreen(
 @Preview(showBackground = true)
 @Composable
 private fun InstructorHomeScreenPreview() {
-    SSINGTheme{
+    SSINGTheme {
         InstructorHomeScreen(
             state = InstructorHomeContract.State(
                 home = InstructorHomeUiModel(
@@ -222,7 +222,7 @@ private fun InstructorHomeScreenPreview() {
 @Preview(showBackground = true)
 @Composable
 private fun InstructorHomeScreen2Preview() {
-    SSINGTheme{
+    SSINGTheme {
         InstructorHomeScreen(
             state = InstructorHomeContract.State(
                 home = InstructorHomeUiModel(
