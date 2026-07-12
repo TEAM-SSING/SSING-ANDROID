@@ -10,9 +10,7 @@ internal interface ConsumerHomeContract {
     data class State(
         val isLoading: Boolean = false,
         val matchingConsumerCount: Int = 0,
-        val lessonCards: ImmutableList<HomeLessonCardState> = persistentListOf(
-            HomeLessonCardState.Empty
-        ),
+        val lessonCards: ImmutableList<HomeLessonCardState> = persistentListOf(),
     )
 
     sealed interface Effect {
