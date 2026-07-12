@@ -10,7 +10,7 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-abstract class ConsumerMatchingDataSourceModule {
+internal abstract class ConsumerMatchingDataSourceModule {
 
     @Binds
     @Singleton

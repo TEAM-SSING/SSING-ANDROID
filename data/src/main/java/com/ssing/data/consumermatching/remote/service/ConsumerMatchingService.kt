@@ -6,7 +6,7 @@ import com.ssing.data.consumermatching.remote.dto.response.ConsumerMatchingReque
 import retrofit2.http.Body
 import retrofit2.http.POST
 
-interface ConsumerMatchingService {
+internal interface ConsumerMatchingService {
     @POST("/api/v1/consumer/matching-requests")
     suspend fun postMatchingRequest(
         @Body request: ConsumerMatchingConditionRequest,

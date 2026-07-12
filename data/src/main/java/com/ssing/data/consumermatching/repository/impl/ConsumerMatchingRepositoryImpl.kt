@@ -10,7 +10,7 @@ import com.ssing.data.consumermatching.remote.dto.response.ConsumerMatchingReque
 import com.ssing.data.consumermatching.repository.api.ConsumerMatchingRepository
 import javax.inject.Inject
 
-class ConsumerMatchingRepositoryImpl @Inject constructor(
+internal class ConsumerMatchingRepositoryImpl @Inject constructor(
     private val apiResponseHandler: ApiResponseHandler,
     private val remoteDataSource: ConsumerMatchingRemoteDataSource,
 ) : ConsumerMatchingRepository {

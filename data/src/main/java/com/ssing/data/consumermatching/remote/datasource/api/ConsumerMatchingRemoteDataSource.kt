@@ -4,7 +4,7 @@ import com.ssing.core.network.model.BaseResponse
 import com.ssing.data.consumermatching.remote.dto.request.ConsumerMatchingConditionRequest
 import com.ssing.data.consumermatching.remote.dto.response.ConsumerMatchingRequestResponse
 
-interface ConsumerMatchingRemoteDataSource {
+internal interface ConsumerMatchingRemoteDataSource {
     suspend fun postMatchingRequest(
         request: ConsumerMatchingConditionRequest,
     ): BaseResponse<ConsumerMatchingRequestResponse>

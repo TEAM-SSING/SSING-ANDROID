@@ -7,7 +7,7 @@ import com.ssing.data.consumermatching.remote.dto.response.ConsumerMatchingReque
 import com.ssing.data.consumermatching.remote.service.ConsumerMatchingService
 import javax.inject.Inject
 
-class ConsumerMatchingRemoteDataSourceImpl @Inject constructor(
+internal class ConsumerMatchingRemoteDataSourceImpl @Inject constructor(
     private val consumerMatchingService: ConsumerMatchingService,
 ) : ConsumerMatchingRemoteDataSource {
 
