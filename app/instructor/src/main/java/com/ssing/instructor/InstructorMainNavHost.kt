@@ -40,13 +40,11 @@ internal fun InstructorMainNavHost(
             navigateToMatching = {
                 navController.navigate(
                     route = InstructorMatching,
-                    navOptions = navController.clearBackStackNavOptions(),
                 )
             },
             navigateToLessonDetail = {
                 navController.navigate(
                     route = InstructorLesson,
-                    navOptions = navController.clearBackStackNavOptions(),
                 )
             }
         )
