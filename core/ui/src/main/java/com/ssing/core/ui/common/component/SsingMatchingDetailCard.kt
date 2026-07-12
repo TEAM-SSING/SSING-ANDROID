@@ -46,6 +46,7 @@ import kotlinx.collections.immutable.persistentListOf
  * @param isPaid 결제 완료 여부
  * @param price 예상 가격
  * @param equipmentStatus 장비 상태
+ * @param title 제목 텍스트. 이 값이 null면 nickname과 teamCount로 title이 결정됨.
  */
 @Composable
 fun SsingMatchingDetailCard(
@@ -65,10 +66,11 @@ fun SsingMatchingDetailCard(
     price: Int? = null,
     equipmentStatus: String = "",
     title: String? = null,
+    borderColor: Color = Blue200,
 ) {
     Column(
         modifier = modifier
-            .border(width = 1.dp, color = Blue200, shape = RoundedCornerShape(12.dp))
+            .border(width = 1.dp, color = borderColor, shape = RoundedCornerShape(12.dp))
             .clip(RoundedCornerShape(12.dp))
             .background(color = SSINGTheme.colors.backgroundNormal)
             .padding(16.dp),
@@ -117,6 +119,7 @@ fun SsingMatchingDetailCard(
  * @param tags 강습 태그 목록
  * @param teamNicknames 팀별 닉네임/인원 목록
  * @param totalCount 전체 강습 인원 수
+ * @param place 강습 장소
  * @param duration 강습 시간
  * @param actualTimeRange 실제 강습 시간 범위
  * @param price 강습 가격

@@ -1,54 +1,97 @@
 package com.ssing.presentation.consumermatching.screen
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.airbnb.lottie.compose.LottieAnimation
+import com.airbnb.lottie.compose.LottieCompositionSpec
+import com.airbnb.lottie.compose.LottieConstants
+import com.airbnb.lottie.compose.animateLottieCompositionAsState
+import com.airbnb.lottie.compose.rememberLottieComposition
 import com.ssing.core.ui.common.component.SsingButton
 import com.ssing.core.ui.common.component.SsingButtonStyle
 import com.ssing.core.ui.common.component.SsingHeader
 import com.ssing.core.ui.common.component.SsingMatchingDetailCard
 import com.ssing.core.ui.common.component.SsingTopBar
 import com.ssing.core.ui.designsystem.theme.SSINGTheme
-import kotlinx.collections.immutable.ImmutableList
+import com.ssing.core.ui.extension.toast
+import com.ssing.core.ui.util.HandleUiEffects
+import com.ssing.presentation.consumermatching.ConsumerMatchingContract
+import com.ssing.presentation.consumermatching.ConsumerMatchingViewModel
+import com.ssing.presentation.consumermatching.R
 import kotlinx.collections.immutable.persistentListOf
 
-// TODO: #91 병합되면 삭제 -> ConsumerMatchingContract.State 내부로 이동
-data class ConsumerMatchingPendingUiState(
-    val tags: ImmutableList<String> = persistentListOf(),
-    val nickname: String = "",
-    val teamCount: Int = 0,
-    val location: String = "",
-    val duration: String = "",
-    val price: Int = 0,
+@Composable
+internal fun ConsumerMatchingPendingRoute(
+    popBackStack: () -> Unit,
+    navigateToResult: () -> Unit,
+    navigateToFailure: () -> Unit,
+    navigateToHome: () -> Unit,
+    modifier: Modifier = Modifier,
+    viewModel: ConsumerMatchingViewModel = hiltViewModel(),
 ) {
-    val detailCardTitle: String =
-        "${nickname}님" + if (teamCount > 2) {
-            "외 ${teamCount - 1}명"
-        } else ""
+    val state by viewModel.uiState.collectAsStateWithLifecycle()
+    val context = LocalContext.current
+
+    HandleUiEffects(viewModel.uiEffect) { effect ->
+        if (effect is ConsumerMatchingContract.Effect.Pending) {
+            when (effect) {
+                ConsumerMatchingContract.Effect.Pending.NavigateToResult -> navigateToResult()
+                ConsumerMatchingContract.Effect.Pending.NavigateToFailure -> navigateToFailure()
+                ConsumerMatchingContract.Effect.Pending.NavigateToHome -> navigateToHome()
+                ConsumerMatchingContract.Effect.Pending.PopBackStack -> popBackStack()
+                is ConsumerMatchingContract.Effect.Pending.ShowToast -> context.toast(effect.message)
+            }
+        }
+    }
+
+    BackHandler { }
+
+    ConsumerMatchingPendingScreen(
+        state = state,
+        onEditClick = viewModel::editCondition,
+        onStopClick = viewModel::stopPending,
+        navigateToResult  = viewModel::navigateToResult,
+        navigateToFailure = viewModel::navigateToFailure,
+        modifier = modifier,
+    )
 }
 
 @Composable
-fun ConsumerMatchingPendingScreen(
-    // TODO : #91 병합되면 ConsumerMatchingContract.State로 변경
-    state: ConsumerMatchingPendingUiState,
+internal fun ConsumerMatchingPendingScreen(
+    state: ConsumerMatchingContract.State,
     onEditClick: () -> Unit,
     onStopClick: () -> Unit,
+    navigateToResult: () -> Unit,
+    navigateToFailure: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.consumer_matching_pending))
+    val progress by animateLottieCompositionAsState(
+        composition = composition,
+        iterations = LottieConstants.IterateForever,
+    )
+
     Scaffold(
         modifier = modifier,
         topBar = {
@@ -89,13 +132,21 @@ fun ConsumerMatchingPendingScreen(
             SsingHeader(
                 title = "조건에 맞는 강사님을 찾고있어요",
                 subText = "요청 조건에 맞는 강사님을 확인하고 있어요",
-                modifier = Modifier.padding(vertical = 16.dp),
+                // TODO: 소켓 연결 후 수정 / 플로우 확인용 임시 콜백
+                modifier = Modifier
+                    .clickable(onClick = navigateToFailure)
+                    .padding(vertical = 16.dp),
             )
 
-            Box(
+            // TODO: 소켓 연결 후 수정 / 플로우 확인용 임시 콜백
+            LottieAnimation(
+                composition = composition,
+                progress = { progress },
                 modifier = Modifier
-                    .size(217.dp)
-                    .background(SSINGTheme.colors.primaryAlternative),
+                    .clickable(onClick = navigateToResult)
+                    .padding(all = 16.dp)
+                    .fillMaxWidth()
+                    .widthIn(max = 328.dp),
             )
 
             SsingMatchingDetailCard(
@@ -108,7 +159,7 @@ fun ConsumerMatchingPendingScreen(
                 duration = state.duration,
                 price = state.price,
                 equipmentStatus = "착용 완료",
-                // TODO: #66 병합되면 borderColor borderAlternative 적용
+                borderColor = SSINGTheme.colors.borderAlternative,
             )
         }
     }
@@ -126,7 +177,7 @@ private fun ConsumerMatchingPendingScreenPreview(
 ) {
     SSINGTheme {
         ConsumerMatchingPendingScreen(
-            state = ConsumerMatchingPendingUiState(
+            state = ConsumerMatchingContract.State(
                 tags = persistentListOf("스노보드", "처음타요"),
                 nickname = "홍지민",
                 teamCount = teamCount,
@@ -134,6 +185,8 @@ private fun ConsumerMatchingPendingScreenPreview(
                 duration = "2시간",
                 price = 87500
             ),
+            navigateToResult = {},
+            navigateToFailure = {},
             onEditClick = {},
             onStopClick = {},
         )
