@@ -97,10 +97,7 @@ internal class ConsumerMatchingConditionViewModel @Inject constructor(
 
     private fun ConsumerInfo.toParticipant(): ConsumerMatchingParticipant =
         ConsumerMatchingParticipant(
-            age = this.ageState.text.toAgeOrNull() ?: 0,
+            age = this.ageState.text.toString().toIntOrNull() ?: 0,
             gender = this.gender?.api ?: "",
         )
-
-    private fun CharSequence.toAgeOrNull(): Int? =
-        filter { it.isDigit() }.toString().toIntOrNull()
 }
