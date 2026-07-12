@@ -32,6 +32,7 @@ import com.ssing.core.ui.designsystem.theme.White
 import com.ssing.core.ui.extension.toast
 import com.ssing.core.ui.util.HandleUiEffects
 import com.ssing.presentation.consumerlesson.component.BottomButton
+import com.ssing.presentation.consumerlesson.component.ContentBackground
 import com.ssing.presentation.consumerlesson.component.content.BeforeLessonContent
 import com.ssing.presentation.consumerlesson.component.content.CanceledLessonContent
 import com.ssing.presentation.consumerlesson.component.content.CompletedLessonContent
@@ -166,30 +167,32 @@ private fun ConsumerLessonScreen(
                 beforeLessonText = "강사님과 만난 후\n강습시작을 눌러주세요",
             )
 
-            when (state.lessonBannerState) {
-                is LessonBannerState.Before -> BeforeLessonContent(
-                    state,
-                    onChatClick = onChatClick,
-                    onCancelClick = onCancelClick,
-                )
+            ContentBackground {
+                when (state.lessonBannerState) {
+                    is LessonBannerState.Before -> BeforeLessonContent(
+                        state,
+                        onChatClick = onChatClick,
+                        onCancelClick = onCancelClick,
+                    )
 
-                is LessonBannerState.Ongoing -> OngoingLessonContent(
-                    state,
-                    onReportIssueClick = onReportIssueClick,
-                    onChatClick = onChatClick,
-                )
+                    is LessonBannerState.Ongoing -> OngoingLessonContent(
+                        state,
+                        onReportIssueClick = onReportIssueClick,
+                        onChatClick = onChatClick,
+                    )
 
-                is LessonBannerState.Completed -> CompletedLessonContent(
-                    state,
-                    onReportIssueClick = onReportIssueClick,
-                    onAdditionalLessonClick = onAdditionalLessonClick,
-                )
+                    is LessonBannerState.Completed -> CompletedLessonContent(
+                        state,
+                        onReportIssueClick = onReportIssueClick,
+                        onAdditionalLessonClick = onAdditionalLessonClick,
+                    )
 
-                is LessonBannerState.Canceled -> CanceledLessonContent(
-                    state,
-                    onReportIssueClick = onReportIssueClick,
-                    onLessonListClick = onLessonListClick,
-                )
+                    is LessonBannerState.Canceled -> CanceledLessonContent(
+                        state,
+                        onReportIssueClick = onReportIssueClick,
+                        onLessonListClick = onLessonListClick,
+                    )
+                }
             }
         }
 

@@ -1,12 +1,12 @@
 package com.ssing.presentation.consumerlesson.component.content
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.ssing.presentation.consumerlesson.ConsumerLessonContract
-import com.ssing.presentation.consumerlesson.component.ContentBackground
 import com.ssing.presentation.consumerlesson.component.InstructorProfileSection
 import com.ssing.presentation.consumerlesson.component.LessonActionButton
 import com.ssing.presentation.consumerlesson.component.LessonInfoSection
@@ -20,7 +20,7 @@ internal fun OngoingLessonContent(
     onChatClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    ContentBackground(
+    Column(
         modifier = modifier,
     ) {
         LessonInfoSection(state.lessonInfo)
