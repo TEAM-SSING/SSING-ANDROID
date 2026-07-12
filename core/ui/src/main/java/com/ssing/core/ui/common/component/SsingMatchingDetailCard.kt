@@ -24,6 +24,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import com.ssing.core.ui.R
 import com.ssing.core.ui.designsystem.theme.Blue200
@@ -360,15 +362,22 @@ data class Participant(
 
 enum class Gender { MALE, FEMALE }
 
+private class SsingClassDetailCardPreviewProvider: PreviewParameterProvider<Int?> {
+    override val values: Sequence<Int?>
+        get() = sequenceOf(0, 5, null)
+}
+
 @Preview
 @Composable
-private fun SsingClassDetailCardPreview() {
+private fun SsingClassDetailCardPreview(
+    @PreviewParameter(SsingClassDetailCardPreviewProvider::class) totalCount: Int?,
+) {
     SSINGTheme {
         SsingMatchingDetailCard(
             tags = persistentListOf("하이원", "스노보드", "처음타요"),
             nickname = "김OO",
             teamCount = 0,
-            totalCount = 0,
+            totalCount = totalCount,
             classDateTime = "0월 0일 오전 00:00",
             location = "OOO 리조트",
             duration = "0시간",
