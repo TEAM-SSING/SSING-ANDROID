@@ -10,7 +10,7 @@ data class StartConfirmationResponse(
     @SerialName("lessonStatus")
     val lessonStatus: String,
     @SerialName("statusInfo")
-    val statusInfo: StatusInfo,
+    val statusInfo: StatusInfo? = null,
     @SerialName("startedAt")
     val startedAt: String? = null,
 ) {
