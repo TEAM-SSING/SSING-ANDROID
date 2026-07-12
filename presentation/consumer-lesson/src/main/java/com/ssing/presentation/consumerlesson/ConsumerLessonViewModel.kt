@@ -143,7 +143,11 @@ internal class ConsumerLessonViewModel @Inject constructor() :
     }
 
     fun onCancelConfirmed() {
-        val etcReason = etcState.text.toString()
+        val etcReason = if (uiState.value.selectedReason == CancelReason.ETC) {
+            etcState.text.toString()
+        } else {
+            null
+        }
         // TODO: 서버 연동 시 etcReason 처리
         updateState {
             copy(
