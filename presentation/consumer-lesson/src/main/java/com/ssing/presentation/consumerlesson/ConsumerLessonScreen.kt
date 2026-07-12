@@ -19,7 +19,6 @@ import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.ssing.core.ui.common.component.CancelReason
 import com.ssing.core.ui.common.component.LessonBanner
 import com.ssing.core.ui.common.component.LessonBannerState
 import com.ssing.core.ui.common.component.MatchingCancelBottomSheet
@@ -44,6 +43,7 @@ import com.ssing.presentation.consumerlesson.model.ParticipantTeamUiModel
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun ConsumerLessonRoute(
     navigateToHome: () -> Unit,
@@ -64,20 +64,56 @@ internal fun ConsumerLessonRoute(
         viewModel.onBack()
     }
 
+    val etcState = rememberTextFieldState()
+
+    if (state.showCancelConfirmSheet) {
+        MatchingCancelBottomSheet(
+            userRole = UserRole.CONSUMER,
+            selectedReason = state.selectedReason,
+            onReasonClick = viewModel::onReasonSelected,
+            etcState = etcState,
+            onConfirmClick = { reason ->
+                viewModel.onCancelConfirmed(reason)
+                etcState.edit { replace(0, length, "") }
+            },
+            onDismissRequest = {
+                viewModel.onCancelDismiss()
+                etcState.edit { replace(0, length, "") }
+            },
+        )
+    }
+
+    if (state.showReadyAlert) {
+        SsingModal(
+            onDismissRequest = viewModel::onReadyDismissed,
+            title = "강습 준비를 완료할까요?",
+            text = "준비 완료 시 변경이 불가능해요",
+            primaryText = "준비 완료",
+            onPrimary = viewModel::onReadyConfirmed,
+            secondaryText = "취소",
+            onSecondary = viewModel::onReadyDismissed,
+        )
+    }
+
+    if (state.showEndLessonAlert) {
+        SsingModal(
+            onDismissRequest = viewModel::onEndLessonDismiss,
+            title = "강습을 종료할까요?",
+            text = "강습을 종료하면 모든 참여자의 강습이\n종료 상태로 변경되어요",
+            primaryText = "강습 종료하기",
+            onPrimary = viewModel::onEndLessonConfirmed,
+            secondaryText = "계속 진행하기",
+            onSecondary = viewModel::onEndLessonDismiss,
+        )
+    }
+
     ConsumerLessonScreen(
         state = state,
         onBack = viewModel::onBack,
         onReadyClick = viewModel::onReadyClick,
-        onReadyDismissed = viewModel::onReadyDismissed,
-        onReadyConfirmed = viewModel::onReadyConfirmed,
         onEndLessonClick = viewModel::onEndLessonClick,
-        onEndLessonDismiss = viewModel::onEndLessonDismiss,
-        onEndLessonConfirmed = viewModel::onEndLessonConfirmed,
         onReviewClick = viewModel::onReviewClick,
         onCancelClick = viewModel::onCancelClick,
-        onReasonSelected = viewModel::onReasonSelected,
-        onCancelConfirmed = viewModel::onCancelConfirmed,
-        onCancelDismiss = viewModel::onCancelDismiss,
         onReportIssueClick = viewModel::onReportIssueClick,
         onAdditionalLessonClick = viewModel::onAdditionalLessonClick,
         onLessonListClick = viewModel::onLessonListClick,
@@ -87,22 +123,14 @@ internal fun ConsumerLessonRoute(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ConsumerLessonScreen(
     state: ConsumerLessonContract.State,
     onBack: () -> Unit,
     onReadyClick: () -> Unit,
-    onReadyDismissed: () -> Unit,
-    onReadyConfirmed: () -> Unit,
     onEndLessonClick: () -> Unit,
-    onEndLessonDismiss: () -> Unit,
-    onEndLessonConfirmed: () -> Unit,
     onReviewClick: () -> Unit,
     onCancelClick: () -> Unit,
-    onReasonSelected: (CancelReason) -> Unit,
-    onCancelConfirmed: (String?) -> Unit,
-    onCancelDismiss: () -> Unit,
     onChatClick: () -> Unit,
     onReportIssueClick: () -> Unit,
     onAdditionalLessonClick: () -> Unit,
@@ -110,8 +138,6 @@ private fun ConsumerLessonScreen(
     onHomeClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val etcState = rememberTextFieldState()
-
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -139,16 +165,19 @@ private fun ConsumerLessonScreen(
                     onChatClick = onChatClick,
                     onCancelClick = onCancelClick,
                 )
+
                 is LessonBannerState.Ongoing -> OngoingLessonContent(
                     state,
                     onReportIssueClick = onReportIssueClick,
                     onChatClick = onChatClick,
                 )
+
                 is LessonBannerState.Completed -> CompletedLessonContent(
                     state,
                     onReportIssueClick = onReportIssueClick,
                     onAdditionalLessonClick = onAdditionalLessonClick,
                 )
+
                 is LessonBannerState.Canceled -> CanceledLessonContent(
                     state,
                     onReportIssueClick = onReportIssueClick,
@@ -173,47 +202,6 @@ private fun ConsumerLessonScreen(
                     end = 16.dp,
                     bottom = 16.dp,
                 )
-        )
-    }
-
-    if (state.showCancelConfirmSheet) {
-        MatchingCancelBottomSheet(
-            userRole = UserRole.CONSUMER,
-            selectedReason = state.selectedReason,
-            onReasonClick = onReasonSelected,
-            etcState = etcState,
-            onConfirmClick = { reason ->
-                onCancelConfirmed(reason)
-                etcState.edit { replace(0, length, "") }
-            },
-            onDismissRequest = {
-                onCancelDismiss()
-                etcState.edit { replace(0, length, "") }
-            },
-        )
-    }
-
-    if (state.showReadyAlert) {
-        SsingModal(
-            onDismissRequest = onReadyDismissed,
-            title = "강습 준비를 완료할까요?",
-            text = "준비 완료 시 변경이 불가능해요",
-            primaryText = "준비 완료",
-            onPrimary = onReadyConfirmed,
-            secondaryText = "취소",
-            onSecondary = onReadyDismissed,
-        )
-    }
-
-    if (state.showEndLessonAlert) {
-        SsingModal(
-            onDismissRequest = onEndLessonDismiss,
-            title = "강습을 종료할까요?",
-            text = "강습을 종료하면 모든 참여자의 강습이\n종료 상태로 변경되어요",
-            primaryText = "강습 종료하기",
-            onPrimary = onEndLessonConfirmed,
-            secondaryText = "계속 진행하기",
-            onSecondary = onEndLessonDismiss,
         )
     }
 }
@@ -298,16 +286,9 @@ private fun ConsumerLessonScreenPreview(
             state = state,
             onBack = {},
             onReadyClick = {},
-            onReadyDismissed = {},
-            onReadyConfirmed = {},
             onEndLessonClick = {},
-            onEndLessonDismiss = {},
-            onEndLessonConfirmed = {},
             onReviewClick = {},
             onCancelClick = {},
-            onReasonSelected = {},
-            onCancelConfirmed = {},
-            onCancelDismiss = {},
             onChatClick = {},
             onReportIssueClick = {},
             onAdditionalLessonClick = {},
