@@ -92,7 +92,7 @@ fun SsingMatchingDetailCard(
         if (title != null || nickname.isNotEmpty()) {
             SsingClassTitleRow(
                 title = title ?: "${nickname}님 팀 ${teamCount ?: 0}명",
-                totalCount = totalCount ?: 0,
+                totalCount = totalCount,
             )
             HorizontalDivider(
                 color = SSINGTheme.colors.borderDisabled,
@@ -309,7 +309,7 @@ private val Gender.label: String
     }
 
 @Composable
-private fun SsingClassTitleRow(title: String, totalCount: Int) {
+private fun SsingClassTitleRow(title: String, totalCount: Int?) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -320,11 +320,14 @@ private fun SsingClassTitleRow(title: String, totalCount: Int) {
             style = SSINGTheme.typography.body.sb20,
             color = SSINGTheme.colors.textNormal,
         )
-        Text(
-            text = "총 ${totalCount}명",
-            style = SSINGTheme.typography.caption.sb14,
-            color = SSINGTheme.colors.textAlternative,
-        )
+
+        totalCount?.let {
+            Text(
+                text = "총 ${it}명",
+                style = SSINGTheme.typography.caption.sb14,
+                color = SSINGTheme.colors.textAlternative,
+            )
+        }
     }
 }
 
