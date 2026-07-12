@@ -4,10 +4,8 @@ import androidx.annotation.DrawableRes
 import androidx.compose.runtime.Immutable
 import com.ssing.core.ui.R
 import com.ssing.core.ui.common.component.HomeLessonCardState
-import com.ssing.core.ui.common.component.HomeLessonCardState.Reservation.Status
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
-import java.time.LocalDateTime
 
 internal interface InstructorHomeContract {
 
@@ -29,25 +27,25 @@ internal interface InstructorHomeContract {
     }
 }
 
-enum class Grade (
+enum class Grade(
     val label: String,
     @get:DrawableRes val icon: Int
 ) {
     GRADE1(
         label = "Grade1",
-        icon = com.ssing.core.ui.R.drawable.img_grade1_badge
+        icon = R.drawable.img_grade1_badge
     ),
     GRADE2(
         label = "Grade2",
-        icon = com.ssing.core.ui.R.drawable.img_grade2_badge
+        icon = R.drawable.img_grade2_badge
     ),
     GRADE3(
         label = "Grade3",
-        icon = com.ssing.core.ui.R.drawable.img_grade3_badge
+        icon = R.drawable.img_grade3_badge
     ),
     GRADE4(
         label = "Grade4",
-        icon = com.ssing.core.ui.R.drawable.img_grade4_badge
+        icon = R.drawable.img_grade4_badge
     ),
     GRADE5(
         label = "Grade5",
