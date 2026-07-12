@@ -55,25 +55,14 @@ internal class AuthRepositoryImpl @Inject constructor(
     override suspend fun postLogout(): Result<Unit> {
         val refreshToken = tokenAccessManager.withLock { getRefreshToken() }
 
-        val result =
-            if (refreshToken == null) {
-                Result.success(Unit)
-            } else {
-                apiResponseHandler.safeUnitApiCall {
-                    dataSource.logout(refreshToken)
-                }
-            }
+        if (refreshToken != null) {
+            apiResponseHandler.safeUnitApiCall {
+                dataSource.logout(refreshToken)
+            }.onFailure { Timber.e(it, "로그아웃 API 실패") }
+        }
 
-        suspendRunCatching {
+        return suspendRunCatching {
             tokenAccessManager.withLock { clearTokens() }
-        }.onFailure { Timber.e(it, "clearTokens 실패") }
-
-        return result.mapApiException {
-            when (it.serverCode) {
-                "VALIDATION_FAILED" -> AuthException.ValidationFailed(it.serverCode, it.message, it.requestId)
-                "AUTH_INVALID_TOKEN" -> AuthException.InvalidToken(it.serverCode, it.message, it.requestId)
-                else -> it
-            }
         }
     }
 
