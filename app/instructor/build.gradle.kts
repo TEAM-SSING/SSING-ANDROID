@@ -46,4 +46,5 @@ dependencies {
     implementation(libs.immutable)
     implementation(libs.material)
     implementation(libs.kakao.user)
+    implementation(libs.androidx.splashscreen)
 }
