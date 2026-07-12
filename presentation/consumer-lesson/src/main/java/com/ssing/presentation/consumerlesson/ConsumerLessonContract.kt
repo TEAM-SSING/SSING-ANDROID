@@ -34,8 +34,8 @@ internal interface ConsumerLessonContract {
         val showEndLessonAlert: Boolean = false,
         val showCancelConfirmSheet: Boolean = false,
         val selectedReason: CancelReason? = null,
-
-        val isBeforeAndReady: Boolean = lessonBannerState is LessonBannerState.Before && isReady,
+    ) {
+        val isBeforeAndReady: Boolean = lessonBannerState is LessonBannerState.Before && isReady
 
         val bottomButtonText: String = when (lessonBannerState) {
             is LessonBannerState.Before -> if (isReady) {
@@ -47,13 +47,13 @@ internal interface ConsumerLessonContract {
             is LessonBannerState.Ongoing -> "강습 종료"
             is LessonBannerState.Completed -> "리뷰 쓰기"
             is LessonBannerState.Canceled -> "홈으로 돌아가기"
-        },
+        }
 
-        val bottomButtonEnabled: Boolean = !isBeforeAndReady,
+        val bottomButtonEnabled: Boolean = !isBeforeAndReady
 
         val bottomButtonStyle: SsingButtonStyle =
-            if (isBeforeAndReady) SsingButtonStyle.GRAY else SsingButtonStyle.BLUE,
-    )
+            if (isBeforeAndReady) SsingButtonStyle.GRAY else SsingButtonStyle.BLUE
+    }
 
     sealed interface Effect {
         data class ShowToast(val message: String) : Effect
