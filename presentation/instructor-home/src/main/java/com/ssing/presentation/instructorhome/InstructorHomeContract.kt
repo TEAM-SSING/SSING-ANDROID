@@ -12,7 +12,7 @@ internal interface InstructorHomeContract {
     @Immutable
     data class State(
         val nickname: String = "",
-        val member: Int = 0,
+        val matchingCount: Int = 0,
         val lessonCards: ImmutableList<HomeLessonCardState> = persistentListOf(),
         val averageRating: Float = 0f,
         val grade: Grade = Grade.GRADE1,
