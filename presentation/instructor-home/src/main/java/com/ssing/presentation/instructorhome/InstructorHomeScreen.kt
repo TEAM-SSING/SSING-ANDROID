@@ -82,7 +82,7 @@ private fun InstructorHomeScreen(
             SsingHomeTopBar(
                 logo = {
                     Image(
-                        painter = painterResource(R.drawable.img_consumer_logo),
+                        painter = painterResource(R.drawable.img_instructor_logo),
                         contentDescription = null,
                     )
                 },
