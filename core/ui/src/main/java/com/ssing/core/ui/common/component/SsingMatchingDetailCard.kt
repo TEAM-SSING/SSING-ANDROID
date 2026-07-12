@@ -46,6 +46,7 @@ import kotlinx.collections.immutable.persistentListOf
  * @param isPaid 결제 완료 여부
  * @param price 예상 가격
  * @param equipmentStatus 장비 상태
+ * @param title 제목 텍스트. 이 값이 null면 nickname과 teamCount로 title이 결정됨.
  */
 @Composable
 fun SsingMatchingDetailCard(
