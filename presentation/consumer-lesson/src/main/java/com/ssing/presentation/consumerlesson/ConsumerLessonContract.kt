@@ -3,6 +3,7 @@ package com.ssing.presentation.consumerlesson
 import androidx.compose.runtime.Immutable
 import com.ssing.core.ui.common.component.CancelReason
 import com.ssing.core.ui.common.component.LessonBannerState
+import com.ssing.core.ui.common.component.SsingButtonStyle
 import com.ssing.presentation.consumerlesson.model.CanceledLessonInfoUiModel
 import com.ssing.presentation.consumerlesson.model.CompletedLessonInfoUiModel
 import com.ssing.presentation.consumerlesson.model.InstructorProfileUiModel
@@ -33,6 +34,25 @@ internal interface ConsumerLessonContract {
         val showEndLessonAlert: Boolean = false,
         val showCancelConfirmSheet: Boolean = false,
         val selectedReason: CancelReason? = null,
+
+        val isBeforeAndReady: Boolean = lessonBannerState is LessonBannerState.Before && isReady,
+
+        val bottomButtonText: String = when (lessonBannerState) {
+            is LessonBannerState.Before -> if (isReady) {
+                "강습 준비 완료"
+            } else {
+                "강습 대기 중"
+            }
+
+            is LessonBannerState.Ongoing -> "강습 종료"
+            is LessonBannerState.Completed -> "리뷰 쓰기"
+            is LessonBannerState.Canceled -> "홈으로 돌아가기"
+        },
+
+        val bottomButtonEnabled: Boolean = !isBeforeAndReady,
+
+        val bottomButtonStyle: SsingButtonStyle =
+            if (isBeforeAndReady) SsingButtonStyle.GRAY else SsingButtonStyle.BLUE,
     )
 
     sealed interface Effect {

@@ -4,8 +4,7 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.navigationBarsPadding
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -17,12 +16,12 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ssing.core.ui.common.component.LessonBanner
 import com.ssing.core.ui.common.component.LessonBannerState
 import com.ssing.core.ui.common.component.MatchingCancelBottomSheet
+import com.ssing.core.ui.common.component.SsingButton
 import com.ssing.core.ui.common.component.SsingModal
 import com.ssing.core.ui.common.component.SsingTopBar
 import com.ssing.core.ui.common.component.UserRole
@@ -31,7 +30,6 @@ import com.ssing.core.ui.designsystem.theme.SSINGTheme
 import com.ssing.core.ui.designsystem.theme.White
 import com.ssing.core.ui.extension.toast
 import com.ssing.core.ui.util.HandleUiEffects
-import com.ssing.presentation.consumerlesson.component.BottomButton
 import com.ssing.presentation.consumerlesson.component.ContentBackground
 import com.ssing.presentation.consumerlesson.component.content.BeforeLessonContent
 import com.ssing.presentation.consumerlesson.component.content.CanceledLessonContent
@@ -194,19 +192,15 @@ private fun ConsumerLessonScreen(
                     )
                 }
             }
-        }
 
-        BottomButton(
-            state = state,
-            onClick = onBottomClick,
-            modifier = Modifier
-                .padding(
-                    start = 16.dp,
-                    end = 16.dp,
-                    bottom = 16.dp,
-                )
-                .navigationBarsPadding()
-        )
+            SsingButton(
+                text = state.bottomButtonText,
+                onClick = onBottomClick,
+                style = state.bottomButtonStyle,
+                modifier = Modifier.fillMaxWidth(),
+                enabled = state.bottomButtonEnabled,
+            )
+        }
     }
 }
 
