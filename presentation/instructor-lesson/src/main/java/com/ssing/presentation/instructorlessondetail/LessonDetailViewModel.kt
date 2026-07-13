@@ -7,6 +7,7 @@ import com.ssing.core.ui.common.component.CancelReason
 import com.ssing.data.lesson.repository.api.StartConfirmationRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -73,6 +74,7 @@ internal class LessonDetailViewModel @Inject constructor(
                     }
                 }
                 .onFailure {
+                    Timber.e(it, "강습 준비 완료 실패")
                     updateState { copy(showReadyDialog = false) }
                     val message = it.message?.takeIf { msg -> msg.isNotBlank() }
                         ?: "일시적인 오류가 발생했습니다. 다시 시도해주세요."
