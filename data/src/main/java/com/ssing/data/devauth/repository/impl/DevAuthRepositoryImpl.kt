@@ -6,6 +6,7 @@ import com.ssing.core.network.util.suspendRunCatching
 import com.ssing.data.devauth.remote.datasource.api.DevAuthRemoteDataSource
 import com.ssing.data.devauth.remote.dto.request.TokenRequest
 import com.ssing.data.devauth.repository.api.DevAuthRepository
+import timber.log.Timber
 import javax.inject.Inject
 
 internal class DevAuthRepositoryImpl @Inject constructor(
@@ -35,10 +36,12 @@ internal class DevAuthRepositoryImpl @Inject constructor(
                     setAccessToken(response.accessToken)
                     setRefreshToken(response.refreshToken)
                 }
-            }.onFailure {throwable ->
-                tokenAccessManager.withLock {
-                    clearTokens()
-                }
+            }.onFailure { throwable ->
+                suspendRunCatching {
+                    tokenAccessManager.withLock {
+                        clearTokens()
+                    }
+                }.onFailure { Timber.e(it, "clearTokens 실패") }
                 return Result.failure(throwable)
             }
         },
