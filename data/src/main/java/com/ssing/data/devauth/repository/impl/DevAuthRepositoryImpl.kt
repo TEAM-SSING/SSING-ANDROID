@@ -29,22 +29,19 @@ internal class DevAuthRepositoryImpl @Inject constructor(
                 autoCreate = autoCreate,
             )
         )
-    }.fold(
-        onSuccess = { response ->
+    }.mapCatching { response ->
+        suspendRunCatching {
+            tokenAccessManager.withLock {
+                setAccessToken(response.accessToken)
+                setRefreshToken(response.refreshToken)
+            }
+        }.onFailure { throwable ->
             suspendRunCatching {
                 tokenAccessManager.withLock {
-                    setAccessToken(response.accessToken)
-                    setRefreshToken(response.refreshToken)
+                    clearTokens()
                 }
-            }.onFailure { throwable ->
-                suspendRunCatching {
-                    tokenAccessManager.withLock {
-                        clearTokens()
-                    }
-                }.onFailure { Timber.e(it, "clearTokens 실패") }
-                return Result.failure(throwable)
-            }
-        },
-        onFailure = { throwable -> Result.failure(throwable) },
-    )
+            }.onFailure { Timber.e(it, "clearTokens 실패") }
+            return Result.failure(throwable)
+        }
+    }
 }
