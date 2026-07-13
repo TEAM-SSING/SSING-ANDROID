@@ -7,7 +7,7 @@ import kotlinx.serialization.Serializable
 data class ConsumerLessonInfo(
     @SerialName("representativeConsumerNames")
     val representativeConsumerNames: List<String>,
-    @SerialName("totalHeadCount")
+    @SerialName("totalHeadcount")
     val totalHeadcount: Int,
     @SerialName("resort")
     val resort: Resort,
@@ -31,6 +31,10 @@ data class ConsumerLessonInfo(
     val actualEndedAt: String? = null,
     @SerialName("actualDurationMinutes")
     val actualDurationMinutes: Int? = null,
+
+    // canceled
+    @SerialName("lessonDurationMinutes")
+    val lessonDurationMinutes: Int? = null,
 )
 
 @Serializable
