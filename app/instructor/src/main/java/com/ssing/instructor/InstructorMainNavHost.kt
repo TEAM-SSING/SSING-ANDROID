@@ -15,9 +15,8 @@ import com.ssing.presentation.instructormatching.navigation.InstructorMatching
 import com.ssing.presentation.notification.navigation.notificationNavGraph
 import com.ssing.presentation.instructormatching.navigation.instructorMatchingNavGraph
 import com.ssing.presentation.instructorlessondetail.navigation.instructorLessonNavGraph
-import com.ssing.presentation.instructormatching.navigation.instructorMatchingNavGraph
 import com.ssing.presentation.auth.instructor.navigation.InstructorLogin
-import com.ssing.presentation.notification.navigation.notificationNavGraph
+import com.ssing.presentation.instructorprofile.navigation.instructorProfileNavGraph
 
 @Composable
 internal fun InstructorMainNavHost(
