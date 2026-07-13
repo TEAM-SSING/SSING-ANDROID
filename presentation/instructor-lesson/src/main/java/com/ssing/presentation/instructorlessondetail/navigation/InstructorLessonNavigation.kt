@@ -9,7 +9,7 @@ import com.ssing.presentation.instructorlessondetail.screen.LessonDetailRoute
 import kotlinx.serialization.Serializable
 
 @Serializable
-data object InstructorLesson: Route
+data class InstructorLesson(val lessonId :Long): Route
 
 fun NavGraphBuilder.instructorLessonNavGraph(
     paddingValues: PaddingValues,
