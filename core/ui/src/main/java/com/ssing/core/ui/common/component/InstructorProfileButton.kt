@@ -24,7 +24,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ssing.core.ui.R
 import com.ssing.core.ui.designsystem.component.SsingBasicButton
-import com.ssing.core.ui.designsystem.component.UrlImage
 import com.ssing.core.ui.designsystem.theme.SSINGTheme
 
 @Composable
