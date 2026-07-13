@@ -1,7 +1,7 @@
 package com.ssing.data.matching.consumermatching.repository.api
 
-import com.ssing.data.consumermatching.model.ConsumerMatchingRequestResult
-import com.ssing.data.consumermatching.model.ConsumerMatchingParticipant
+import com.ssing.data.matching.consumermatching.model.ConsumerMatchingRequestResult
+import com.ssing.data.matching.consumermatching.model.ConsumerMatchingParticipant
 
 interface ConsumerMatchingRepository {
     suspend fun requestMatching(

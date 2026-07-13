@@ -1,6 +1,6 @@
 package com.ssing.data.matching.consumermatching.di
 
-import com.ssing.data.consumermatching.remote.service.ConsumerMatchingService
+import com.ssing.data.matching.consumermatching.remote.service.ConsumerMatchingService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

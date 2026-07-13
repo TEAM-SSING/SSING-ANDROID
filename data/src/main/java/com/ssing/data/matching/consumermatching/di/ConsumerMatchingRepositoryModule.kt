@@ -1,7 +1,7 @@
 package com.ssing.data.matching.consumermatching.di
 
-import com.ssing.data.consumermatching.repository.api.ConsumerMatchingRepository
-import com.ssing.data.consumermatching.repository.impl.ConsumerMatchingRepositoryImpl
+import com.ssing.data.matching.consumermatching.repository.api.ConsumerMatchingRepository
+import com.ssing.data.matching.consumermatching.repository.impl.ConsumerMatchingRepositoryImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

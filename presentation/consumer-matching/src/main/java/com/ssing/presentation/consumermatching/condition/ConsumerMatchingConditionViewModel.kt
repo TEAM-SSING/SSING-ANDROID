@@ -4,8 +4,8 @@ import androidx.lifecycle.viewModelScope
 import com.ssing.core.network.exception.ApiException
 import com.ssing.core.ui.base.BaseViewModel
 import com.ssing.core.ui.extension.uiMessage
-import com.ssing.data.consumermatching.model.ConsumerMatchingParticipant
-import com.ssing.data.consumermatching.repository.api.ConsumerMatchingRepository
+import com.ssing.data.matching.consumermatching.model.ConsumerMatchingParticipant
+import com.ssing.data.matching.consumermatching.repository.api.ConsumerMatchingRepository
 import com.ssing.presentation.consumermatching.type.ConsumerGender
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.toPersistentList

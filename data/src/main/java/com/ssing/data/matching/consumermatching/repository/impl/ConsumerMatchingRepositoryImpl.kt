@@ -1,13 +1,13 @@
 package com.ssing.data.matching.consumermatching.repository.impl
 
 import com.ssing.core.network.util.ApiResponseHandler
-import com.ssing.data.consumermatching.model.ConsumerMatchingParticipant
-import com.ssing.data.consumermatching.model.ConsumerMatchingRequestResult
-import com.ssing.data.consumermatching.remote.datasource.api.ConsumerMatchingRemoteDataSource
-import com.ssing.data.consumermatching.remote.dto.request.ConsumerMatchingConditionRequest
-import com.ssing.data.consumermatching.remote.dto.request.ConsumerMatchingParticipantRequest
-import com.ssing.data.consumermatching.remote.dto.response.ConsumerMatchingRequestResponse
-import com.ssing.data.consumermatching.repository.api.ConsumerMatchingRepository
+import com.ssing.data.matching.consumermatching.model.ConsumerMatchingParticipant
+import com.ssing.data.matching.consumermatching.model.ConsumerMatchingRequestResult
+import com.ssing.data.matching.consumermatching.remote.datasource.api.ConsumerMatchingRemoteDataSource
+import com.ssing.data.matching.consumermatching.remote.dto.request.ConsumerMatchingConditionRequest
+import com.ssing.data.matching.consumermatching.remote.dto.request.ConsumerMatchingParticipantRequest
+import com.ssing.data.matching.consumermatching.remote.dto.response.ConsumerMatchingRequestResponse
+import com.ssing.data.matching.consumermatching.repository.api.ConsumerMatchingRepository
 import javax.inject.Inject
 
 internal class ConsumerMatchingRepositoryImpl @Inject constructor(
