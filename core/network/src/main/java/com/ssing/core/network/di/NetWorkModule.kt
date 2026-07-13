@@ -97,7 +97,7 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideRetrofit(
+    fun provideAuthRetrofit(
         @Auth client: OkHttpClient,
         factory: Converter.Factory,
     ): Retrofit = Retrofit.Builder()
