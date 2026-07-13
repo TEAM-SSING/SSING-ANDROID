@@ -34,14 +34,12 @@ internal fun ConsumerMainNavHost(
             paddingValues = paddingValues,
             navigateToLessonDetail = {
                 navController.navigate(
-                    route = {}, // TODO: 강습 상세 뷰 연결
-                    navOptions = navController.clearBackStackNavOptions(),
+                    route = ConsumerLesson,
                 )
             },
             navigateToMatching = {
                 navController.navigate(
                     route = ConsumerMatchingCondition,
-                    navOptions = navController.clearBackStackNavOptions(),
                 )
             },
         )
