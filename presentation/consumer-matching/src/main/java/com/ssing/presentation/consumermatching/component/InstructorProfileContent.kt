@@ -1,5 +1,6 @@
 package com.ssing.presentation.consumermatching.component
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -39,6 +40,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.SubcomposeLayout
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -146,14 +148,14 @@ private fun IdentitySection(
         horizontalArrangement = Arrangement.spacedBy(18.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        UrlImage(
-            url = profileImageUrl,
+        Image(
+            painter = painterResource(R.drawable.img_default_profile),
+            contentDescription = null,
             modifier = Modifier
                 .clip(CircleShape)
                 .height(80.dp)
                 .aspectRatio(1f),
             contentScale = ContentScale.Crop,
-            contentDescription = null,
         )
 
         Column {
