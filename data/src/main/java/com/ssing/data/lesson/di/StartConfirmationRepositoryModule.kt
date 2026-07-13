@@ -10,11 +10,11 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-abstract class StartConfirmationRepositoryModule {
+internal abstract class StartConfirmationRepositoryModule {
 
     @Binds
     @Singleton
-    abstract fun bindStartConfirmationRepository(
+    internal abstract fun bindStartConfirmationRepository(
         impl: StartConfirmationRepositoryImpl,
     ): StartConfirmationRepository
 }
