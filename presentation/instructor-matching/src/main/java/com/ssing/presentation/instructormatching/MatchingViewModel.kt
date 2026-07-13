@@ -52,13 +52,7 @@ internal class MatchingViewModel @Inject constructor(
     }
 
     private fun List<String>.toSportOptions(): Set<SportOption> =
-        mapNotNull { code ->
-            when (code) {
-                "SKI" -> SportOption.SKI
-                "SNOWBOARD" -> SportOption.SNOWBOARD
-                else -> null
-            }
-        }.toSet()
+        mapNotNull { code -> runCatching { SportOption.valueOf(code) }.getOrNull() }.toSet()
 
     fun selectSport(sport: SportOption) = updateState {
         copy(exposure = exposure.copy(selectedSports = sport))
@@ -101,7 +95,12 @@ internal class MatchingViewModel @Inject constructor(
     fun acceptOffer() {
         val offer = currentOffer() ?: return
         updateState {
-            copy(phase = MatchingPhase.PendingConfirm(offer = offer, confirmationExpiresAtMillis = null))
+            copy(
+                phase = MatchingPhase.PendingConfirm(
+                    offer = offer,
+                    confirmationExpiresAtMillis = null
+                )
+            )
         }
     }
 
