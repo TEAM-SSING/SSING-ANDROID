@@ -1,3 +1,5 @@
+import org.gradle.api.initialization.resolve.RepositoriesMode
+
 pluginManagement {
     includeBuild("build-logic")
     repositories {
@@ -32,12 +34,19 @@ include(":data")
 include(":presentation:auth")
 include(":presentation:notification")
 include(":presentation:consumer-home")
+include(":presentation:consumer-profile")
 include(":presentation:consumer-matching")
 include(":presentation:consumer-payment")
 include(":presentation:consumer-lesson")
 include(":presentation:instructor-home")
+include(":presentation:instructor-profile")
 include(":presentation:instructor-matching")
 include(":app:consumer")
 include(":app:instructor")
 include(":core:notification")
 include(":presentation:instructor-lesson")
+include(":presentation:consumer-profile")
+include(":presentation:instructor-profile")
+include(":presentation:instructor-lesson")
+include(":presentation:consumer-profile")
+include(":presentation:instructor-profile")
