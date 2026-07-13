@@ -25,6 +25,9 @@ sealed class StartConfirmationException(
     class LessonStartNotAllowed(serverCode: String?, message: String?, requestId: String?) :
         StartConfirmationException(serverCode, message, requestId)
 
+    class LessonInvalidState(serverCode: String?, message: String?, requestId: String?) :
+        StartConfirmationException(serverCode, message, requestId)
+
     class InternalError(serverCode: String?, message: String?, requestId: String?) :
         StartConfirmationException(serverCode, message, requestId)
 }
