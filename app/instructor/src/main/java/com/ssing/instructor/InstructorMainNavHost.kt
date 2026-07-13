@@ -12,11 +12,11 @@ import com.ssing.presentation.auth.instructor.navigation.instructorAuthNavGraph
 import com.ssing.presentation.instructorhome.navigation.InstructorHome
 import com.ssing.presentation.instructorhome.navigation.instructorHomeNavGraph
 import com.ssing.presentation.instructorlessondetail.navigation.InstructorLesson
-import com.ssing.presentation.instructorlessondetail.navigation.instructorLessonNavGraph
 import com.ssing.presentation.instructormatching.navigation.InstructorMatching
-import com.ssing.presentation.instructormatching.navigation.instructorMatchingNavGraph
-import com.ssing.presentation.instructorprofile.navigation.instructorProfileNavGraph
 import com.ssing.presentation.notification.navigation.notificationNavGraph
+import com.ssing.presentation.instructormatching.navigation.instructorMatchingNavGraph
+import com.ssing.presentation.instructorlessondetail.navigation.instructorLessonNavGraph
+import com.ssing.presentation.instructorprofile.navigation.instructorProfileNavGraph
 
 @Composable
 internal fun InstructorMainNavHost(
