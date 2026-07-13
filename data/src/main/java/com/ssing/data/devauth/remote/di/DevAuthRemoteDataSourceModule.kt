@@ -10,7 +10,7 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-abstract class DevAuthRemoteDataSourceModule {
+internal abstract class DevAuthRemoteDataSourceModule {
     @Binds
     @Singleton
     abstract fun bindDevAuthRemoteDataSource (

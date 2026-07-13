@@ -8,7 +8,7 @@ import com.ssing.data.devauth.remote.dto.response.TokenResponse
 import com.ssing.data.devauth.remote.service.DevAuthService
 import javax.inject.Inject
 
-class DevAuthRemoteDataSourceImpl @Inject constructor(
+internal class DevAuthRemoteDataSourceImpl @Inject constructor(
     private val devAuthService: DevAuthService,
 ) : DevAuthRemoteDataSource {
     override suspend fun getPersonas(): BaseResponse<PersonasResponse> =

@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class TokenResponse(
+internal data class TokenResponse(
     @SerialName("accessToken") val accessToken: String,
     @SerialName("refreshToken") val refreshToken: String,
     @SerialName("tokenType") val tokenType: String,
@@ -13,7 +13,7 @@ data class TokenResponse(
 )
 
 @Serializable
-data class Persona(
+internal data class Persona(
     @SerialName("personaKey") val personaKey: String,
     @SerialName("nickname") val nickname: String,
     @SerialName("template") val template: String,

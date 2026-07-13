@@ -8,7 +8,7 @@ import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
 
-interface DevAuthService {
+internal interface DevAuthService {
     @GET("dev/auth/personas")
     suspend fun getPersonas(): BaseResponse<PersonasResponse>
 

@@ -8,7 +8,7 @@ import com.ssing.data.devauth.remote.dto.request.TokenRequest
 import com.ssing.data.devauth.repository.api.DevAuthRepository
 import javax.inject.Inject
 
-class DevAuthRepositoryImpl @Inject constructor(
+internal class DevAuthRepositoryImpl @Inject constructor(
     private val apiResponseHandler: ApiResponseHandler,
     private val tokenAccessManager: TokenAccessManager,
     private val remoteDataSource: DevAuthRemoteDataSource,
