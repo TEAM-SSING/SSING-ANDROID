@@ -13,7 +13,6 @@ import com.ssing.presentation.consumerhome.navigation.ConsumerHome
 import com.ssing.presentation.consumerhome.navigation.consumerHomeNavGraph
 import com.ssing.presentation.consumerlesson.navigation.ConsumerLesson
 import com.ssing.presentation.consumerlesson.navigation.consumerLessonNavGraph
-import com.ssing.presentation.consumermatching.navigation.ConsumerMatchingCondition
 import com.ssing.presentation.consumermatching.navigation.consumerMatchingNavGraph
 import com.ssing.presentation.consumermatching.navigation.navigateToConsumerMatching
 import com.ssing.presentation.consumerpayment.navigation.consumerPaymentNavGraph
