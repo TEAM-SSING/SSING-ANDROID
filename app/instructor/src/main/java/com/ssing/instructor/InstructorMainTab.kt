@@ -12,6 +12,7 @@ import com.ssing.core.ui.navigation.MainTabRoute
 import com.ssing.core.ui.navigation.Route
 import com.ssing.instructor.navigation.InstructorDummyTabRoute
 import com.ssing.presentation.instructorhome.navigation.InstructorHome
+import com.ssing.presentation.instructorprofile.navigation.InstructorProfile
 
 enum class InstructorMainTab(
     @param:DrawableRes override val selectedIconRes: Int,
@@ -47,7 +48,7 @@ enum class InstructorMainTab(
         selectedIconRes = ic_profile,
         unselectedIconRes = ic_profile,
         titleRes = R.string.instructor_profile,
-        route = InstructorDummyTabRoute,
+        route = InstructorProfile,
     );
 
     companion object {
