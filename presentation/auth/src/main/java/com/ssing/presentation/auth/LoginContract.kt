@@ -1,6 +1,7 @@
 package com.ssing.presentation.auth
 
 import androidx.compose.runtime.Immutable
+import com.ssing.core.ui.common.component.HomeLessonCardState
 
 internal interface LoginContract {
 
