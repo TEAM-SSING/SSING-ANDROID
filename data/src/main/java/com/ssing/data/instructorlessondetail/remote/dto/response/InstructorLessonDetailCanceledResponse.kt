@@ -15,7 +15,7 @@ internal data class InstructorLessonDetailCanceledResponse(
     val lessonInfo: LessonInfo,
     @SerialName("matchingRequests")
     val matchingRequests: List<MatchingRequest>,
-) {
+) : InstructorLessonDetailResponse {
     @Serializable
     internal data class CancelInfo(
         @SerialName("canceledAt")

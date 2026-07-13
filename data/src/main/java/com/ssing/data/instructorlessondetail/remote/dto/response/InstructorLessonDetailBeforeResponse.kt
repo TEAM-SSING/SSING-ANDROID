@@ -15,7 +15,7 @@ internal data class InstructorLessonDetailBeforeResponse(
     val lessonInfo: LessonInfo,
     @SerialName("matchingRequests")
     val matchingRequests: List<MatchingRequest>,
-) {
+) : InstructorLessonDetailResponse {
     @Serializable
     internal data class StatusInfo(
         @SerialName("confirmedCount")

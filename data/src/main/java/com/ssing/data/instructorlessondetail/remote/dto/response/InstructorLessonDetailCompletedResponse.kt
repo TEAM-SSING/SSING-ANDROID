@@ -13,7 +13,7 @@ internal data class InstructorLessonDetailCompletedResponse(
     val lessonInfo: LessonInfo,
     @SerialName("matchingRequests")
     val matchingRequests: List<MatchingRequest>,
-) {
+) : InstructorLessonDetailResponse {
     @Serializable
     internal data class LessonInfo(
         @SerialName("representativeConsumerNames")
