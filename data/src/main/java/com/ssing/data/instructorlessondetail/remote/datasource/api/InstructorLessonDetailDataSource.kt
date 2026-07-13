@@ -7,6 +7,5 @@ import com.ssing.data.instructorlessondetail.remote.dto.response.InstructorLesso
 internal interface InstructorLessonDetailDataSource {
     suspend fun instructorLessonDetail(
         lessonId: Int,
-        request: InstructorLessonDetailRequest,
     ): BaseResponse<InstructorLessonDetailResponse>
 }
