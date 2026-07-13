@@ -38,7 +38,7 @@ internal enum class DurationOption(val label: String, val hours: Int) {
 
 
 @Immutable
-internal data class MatchingConditionUiState(
+internal data class MatchingExposureUiState(
     val availableSports: Set<SportOption> = SportOption.entries.toSet(),
     val resortName: String = "",
     val selectedSports: SportOption? = null,
@@ -59,7 +59,7 @@ internal data class MatchingConditionUiState(
     fun applyProfile(
         availableSports: Set<SportOption>,
         resortName: String,
-    ): MatchingConditionUiState = copy(
+    ): MatchingExposureUiState = copy(
         availableSports = availableSports,
         resortName = resortName,
         selectedSports = if (availableSports.size == 1) {
