@@ -1,6 +1,5 @@
 package com.ssing.core.network.socket.matching
 
-import com.ssing.core.network.model.BaseEnvelope
 import com.ssing.core.network.session.AuthSessionManager
 import com.ssing.core.network.socket.BaseSocketManager
 import com.ssing.core.network.token.TokenAccessManager
@@ -17,14 +16,14 @@ internal class MatchingSocketManager @Inject constructor(
     tokenReissueManager: TokenReissueManager,
     authSessionManager: AuthSessionManager,
     json: Json,
-) : BaseSocketManager<BaseEnvelope<JsonElement>>(
+) : BaseSocketManager<MatchingEnvelope<JsonElement>>(
     ioDispatcher = Dispatchers.IO,
     client = client,
     tokenAccessManager = tokenAccessManager,
     tokenReissueManager = tokenReissueManager,
     authSessionManager = authSessionManager,
     json = json,
-    serializer = BaseEnvelope.serializer(JsonElement.serializer()),
+    serializer = MatchingEnvelope.serializer(JsonElement.serializer()),
 ) {
     override val destination: String = "/user/queue/matching"
 }

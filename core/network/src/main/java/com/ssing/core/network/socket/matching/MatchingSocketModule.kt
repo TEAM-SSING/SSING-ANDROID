@@ -1,7 +1,5 @@
 package com.ssing.core.network.socket.matching
 
-import com.ssing.core.network.model.BaseEnvelope
-import com.ssing.core.network.socket.MatchingSocket
 import com.ssing.core.network.socket.SocketManager
 import dagger.Binds
 import dagger.Module
@@ -16,8 +14,7 @@ internal abstract class MatchingSocketModule {
 
     @Binds
     @Singleton
-    @MatchingSocket
     abstract fun bindMatchingSocketManager(
         impl: MatchingSocketManager,
-    ): SocketManager<BaseEnvelope<JsonElement>>
+    ): SocketManager<MatchingEnvelope<JsonElement>>
 }
