@@ -1,6 +1,6 @@
-package com.ssing.data.instructormatching.di
+package com.ssing.data.matching.instructormatching.di
 
-import com.ssing.data.instructormatching.remote.service.InstructorMatchingService
+import com.ssing.data.matching.instructormatching.remote.service.InstructorMatchingService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

@@ -1,7 +1,7 @@
-package com.ssing.data.instructormatching.di
+package com.ssing.data.matching.instructormatching.di
 
-import com.ssing.data.instructormatching.repository.api.InstructorMatchingRepository
-import com.ssing.data.instructormatching.repository.impl.InstructorMatchingRepositoryImpl
+import com.ssing.data.matching.instructormatching.repository.api.InstructorMatchingRepository
+import com.ssing.data.matching.instructormatching.repository.impl.InstructorMatchingRepositoryImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
