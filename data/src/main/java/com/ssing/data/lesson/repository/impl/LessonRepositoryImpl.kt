@@ -1,6 +1,5 @@
 package com.ssing.data.lesson.repository.impl
 
-import com.ssing.core.network.extension.mapApiException
 import com.ssing.core.network.util.ApiResponseHandler
 import com.ssing.data.lesson.remote.datasource.api.LessonDataSource
 import com.ssing.data.lesson.remote.dto.request.LessonRequest
@@ -19,5 +18,4 @@ internal class LessonRepositoryImpl @Inject constructor(
                 request = LessonRequest(lessonId = lessonId),
             )
         }.map { }
-            .mapApiException { mapLessonException(it.serverCode ?: "", it.message ?: "", it.requestId ?: "") }
 }
