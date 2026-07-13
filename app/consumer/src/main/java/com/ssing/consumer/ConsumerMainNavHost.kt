@@ -11,6 +11,7 @@ import com.ssing.presentation.auth.consumer.navigation.ConsumerLogin
 import com.ssing.presentation.auth.consumer.navigation.consumerAuthNavGraph
 import com.ssing.presentation.consumerhome.navigation.ConsumerHome
 import com.ssing.presentation.consumerhome.navigation.consumerHomeNavGraph
+import com.ssing.presentation.consumerlesson.navigation.ConsumerLesson
 import com.ssing.presentation.consumerlesson.navigation.consumerLessonNavGraph
 import com.ssing.presentation.consumermatching.navigation.ConsumerMatchingCondition
 import com.ssing.presentation.consumermatching.navigation.consumerMatchingNavGraph
@@ -32,14 +33,12 @@ internal fun ConsumerMainNavHost(
             paddingValues = paddingValues,
             navigateToLessonDetail = {
                 navController.navigate(
-                    route = {}, // TODO: 강습 상세 뷰 연결
-                    navOptions = navController.clearBackStackNavOptions(),
+                    route = ConsumerLesson,
                 )
             },
             navigateToMatching = {
                 navController.navigate(
                     route = ConsumerMatchingCondition,
-                    navOptions = navController.clearBackStackNavOptions(),
                 )
             },
         )
