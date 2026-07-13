@@ -1,6 +1,6 @@
 package com.ssing.data.lesson.di
 
-import com.ssing.data.lesson.remote.service.StartConfirmationService
+import com.ssing.data.lesson.remote.service.LessonService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -10,11 +10,11 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-internal object StartConfirmationServiceModule {
+internal object LessonServiceModule {
 
     @Provides
     @Singleton
-    fun provideStartConfirmationService(
+    fun provideLessonService(
         retrofit: Retrofit
-    ): StartConfirmationService = retrofit.create(StartConfirmationService::class.java)
+    ): LessonService = retrofit.create(LessonService::class.java)
 }

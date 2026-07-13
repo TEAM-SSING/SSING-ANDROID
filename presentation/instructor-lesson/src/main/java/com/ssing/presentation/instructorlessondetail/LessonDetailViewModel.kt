@@ -1,10 +1,9 @@
 package com.ssing.presentation.instructorlessondetail
 
 import androidx.lifecycle.viewModelScope
-import com.ssing.core.network.exception.ApiException
 import com.ssing.core.ui.base.BaseViewModel
 import com.ssing.core.ui.common.component.CancelReason
-import com.ssing.data.lesson.repository.api.StartConfirmationRepository
+import com.ssing.data.lesson.repository.api.LessonRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -12,7 +11,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 internal class LessonDetailViewModel @Inject constructor(
-    private val startConfirmationRepository: StartConfirmationRepository,
+    private val lessonRepository: LessonRepository,
 ) :
     BaseViewModel<LessonDetailContract.State, LessonDetailContract.Effect>(
         LessonDetailContract.State()
@@ -62,7 +61,7 @@ internal class LessonDetailViewModel @Inject constructor(
                 ?.before ?: return
 
         viewModelScope.launch {
-            startConfirmationRepository.confirmLessonStart(before.lessonId)
+            lessonRepository.lessonStart(before.lessonId)
                 .onSuccess {
                     updateState {
                         copy(
