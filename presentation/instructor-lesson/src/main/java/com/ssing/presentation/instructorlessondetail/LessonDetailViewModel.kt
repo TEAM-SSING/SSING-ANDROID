@@ -8,7 +8,6 @@ import com.ssing.core.ui.extension.uiMessage
 import com.ssing.data.lesson.repository.api.LessonRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import java.nio.file.Files.copy
 import javax.inject.Inject
 
 @HiltViewModel
