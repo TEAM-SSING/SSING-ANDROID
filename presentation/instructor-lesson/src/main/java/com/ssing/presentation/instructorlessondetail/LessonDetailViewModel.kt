@@ -1,12 +1,13 @@
 package com.ssing.presentation.instructorlessondetail
 
 import androidx.lifecycle.viewModelScope
+import com.ssing.core.network.exception.ApiException
 import com.ssing.core.ui.base.BaseViewModel
 import com.ssing.core.ui.common.component.CancelReason
+import com.ssing.core.ui.extension.uiMessage
 import com.ssing.data.lesson.repository.api.LessonRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -73,11 +74,10 @@ internal class LessonDetailViewModel @Inject constructor(
                     }
                 }
                 .onFailure {
-                    Timber.e(it, "강습 준비 완료 실패")
+                    if (it is ApiException) {
+                        sendEffect(LessonDetailContract.Effect.ShowToast(it.uiMessage))
+                    }
                     updateState { copy(showReadyDialog = false) }
-                    val message = it.message?.takeIf { msg -> msg.isNotBlank() }
-                        ?: "일시적인 오류가 발생했습니다. 다시 시도해주세요."
-                    sendEffect(LessonDetailContract.Effect.ShowToast(message))
                 }
         }
     }
