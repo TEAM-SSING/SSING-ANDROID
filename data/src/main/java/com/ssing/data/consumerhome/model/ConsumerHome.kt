@@ -1,7 +1,7 @@
 package com.ssing.data.consumerhome.model
 
 data class ConsumerHome(
-    val lessonCards: LessonCards,
+    val lessonCards: List<LessonCards>,
     val matchingPeopleCount: Long,
     val hasUnreadNotification: Boolean,
 )
@@ -11,6 +11,7 @@ data class LessonCards(
     val remainingDays: Int,
     val displayStatus: DisplayStatus,
     val title: String,
+    val scheduledAt: String,
     val sport: Sports,
     val resort: Resort,
 )
