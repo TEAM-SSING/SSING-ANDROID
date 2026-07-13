@@ -1,4 +1,4 @@
-package com.ssing.data.consumermatching.model
+package com.ssing.data.matching.consumermatching.model
 
 data class ConsumerMatchingRequestResult(
     val matchingRequestId: Long,

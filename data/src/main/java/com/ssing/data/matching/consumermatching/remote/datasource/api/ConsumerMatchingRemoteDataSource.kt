@@ -1,14 +1,11 @@
-package com.ssing.data.consumermatching.remote.service
+package com.ssing.data.matching.consumermatching.remote.datasource.api
 
 import com.ssing.core.network.model.BaseResponse
 import com.ssing.data.consumermatching.remote.dto.request.ConsumerMatchingConditionRequest
 import com.ssing.data.consumermatching.remote.dto.response.ConsumerMatchingRequestResponse
-import retrofit2.http.Body
-import retrofit2.http.POST
 
-internal interface ConsumerMatchingService {
-    @POST("/api/v1/consumer/matching-requests")
+internal interface ConsumerMatchingRemoteDataSource {
     suspend fun postMatchingRequest(
-        @Body request: ConsumerMatchingConditionRequest,
+        request: ConsumerMatchingConditionRequest,
     ): BaseResponse<ConsumerMatchingRequestResponse>
 }

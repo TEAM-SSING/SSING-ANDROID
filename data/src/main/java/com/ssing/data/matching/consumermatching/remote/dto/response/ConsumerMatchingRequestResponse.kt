@@ -1,4 +1,4 @@
-package com.ssing.data.consumermatching.remote.dto.response
+package com.ssing.data.matching.consumermatching.remote.dto.response
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

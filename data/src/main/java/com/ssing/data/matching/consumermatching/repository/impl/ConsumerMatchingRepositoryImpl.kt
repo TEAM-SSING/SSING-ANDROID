@@ -1,4 +1,4 @@
-package com.ssing.data.consumermatching.repository.impl
+package com.ssing.data.matching.consumermatching.repository.impl
 
 import com.ssing.core.network.util.ApiResponseHandler
 import com.ssing.data.consumermatching.model.ConsumerMatchingParticipant

@@ -1,7 +1,7 @@
-package com.ssing.data.consumermatching.di
+package com.ssing.data.matching.consumermatching.di
 
-import com.ssing.data.consumermatching.remote.datasource.api.ConsumerMatchingRemoteDataSource
-import com.ssing.data.consumermatching.remote.datasource.impl.ConsumerMatchingRemoteDataSourceImpl
+import com.ssing.data.matching.consumermatching.remote.datasource.api.ConsumerMatchingRemoteDataSource
+import com.ssing.data.matching.consumermatching.remote.datasource.impl.ConsumerMatchingRemoteDataSourceImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

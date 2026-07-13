@@ -1,4 +1,4 @@
-package com.ssing.data.consumermatching.remote.datasource.impl
+package com.ssing.data.matching.consumermatching.remote.datasource.impl
 
 import com.ssing.core.network.model.BaseResponse
 import com.ssing.data.consumermatching.remote.datasource.api.ConsumerMatchingRemoteDataSource
