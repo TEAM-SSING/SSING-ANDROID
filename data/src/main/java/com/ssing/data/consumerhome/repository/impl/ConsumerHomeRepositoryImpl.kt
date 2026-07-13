@@ -14,31 +14,31 @@ import javax.inject.Inject
 internal class ConsumerHomeRepositoryImpl @Inject constructor(
     private val apiResponseHandler: ApiResponseHandler,
     private val dataSource: ConsumerHomeRemoteDataSource,
-): ConsumerHomeRepository {
+) : ConsumerHomeRepository {
 
     override suspend fun getConsumerHome(): Result<ConsumerHome> =
-        apiResponseHandler.safeApiCall{
+        apiResponseHandler.safeApiCall {
             dataSource.getConsumerHome()
-        }.map{ it.toModel() }
+        }.map { it.toModel() }
 
     private fun ConsumerHomeResponse.toModel(): ConsumerHome = ConsumerHome(
-        lessonCards = lessonCards.map { it.toModel() },
+        lessonCards = this.lessonCards.map { it.toModel() },
         matchingPeopleCount = this.matchingPeopleCount,
         hasUnreadNotification = this.hasUnreadNotification,
     )
 
-    private fun LessonCardResponse.toModel() = LessonCards(
-        lessonId = lessonId,
-        remainingDays = remainingDays,
-        displayStatus = displayStatus,
-        title = title,
-        sport = sport,
-        scheduledAt = scheduledAt,
-        resort = resort.toModel(),
+    private fun LessonCardResponse.toModel(): LessonCards = LessonCards(
+        lessonId = this.lessonId,
+        remainingDays = this.remainingDays,
+        displayStatus = this.displayStatus,
+        title = this.title,
+        sport = this.sport,
+        scheduledAt = this.scheduledAt,
+        resort = this.resort.toModel(),
     )
 
-    private fun ResortResponse.toModel() = Resort(
-        code = code,
-        displayName = displayName,
+    private fun ResortResponse.toModel(): Resort = Resort(
+        code = this.code,
+        displayName = this.displayName,
     )
 }
