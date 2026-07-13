@@ -1,7 +1,7 @@
-package com.ssing.data.instructorlessondetail.di
+package com.ssing.data.lesson.di
 
-import com.ssing.data.instructorlessondetail.remote.datasource.api.InstructorLessonDetailDataSource
-import com.ssing.data.instructorlessondetail.remote.datasource.impl.InstructorLessonDetailDataSourceImpl
+import com.ssing.data.lesson.remote.datasource.api.InstructorLessonDetailDataSource
+import com.ssing.data.lesson.remote.datasource.impl.InstructorLessonDetailDataSourceImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

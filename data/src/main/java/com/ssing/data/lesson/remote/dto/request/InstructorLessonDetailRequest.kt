@@ -1,4 +1,4 @@
-package com.ssing.data.instructorlessondetail.remote.dto.request
+package com.ssing.data.lesson.remote.dto.request
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

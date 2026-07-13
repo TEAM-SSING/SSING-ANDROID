@@ -1,6 +1,6 @@
-package com.ssing.data.instructorlessondetail.di
+package com.ssing.data.lesson.di
 
-import com.ssing.data.instructorlessondetail.remote.service.InstructorLessonDetailService
+import com.ssing.data.lesson.remote.service.InstructorLessonDetailService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

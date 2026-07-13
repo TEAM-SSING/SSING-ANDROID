@@ -1,4 +1,4 @@
-package com.ssing.data.instructorlessondetail.remote.dto.response
+package com.ssing.data.lesson.remote.dto.response
 
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonContentPolymorphicSerializer
