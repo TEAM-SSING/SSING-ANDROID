@@ -10,24 +10,20 @@ import com.ssing.core.ui.common.component.CancelReason
 import com.ssing.core.ui.common.component.LessonBannerState
 import com.ssing.core.ui.extension.uiMessage
 import com.ssing.data.consumerlesson.model.ConsumerLessonDetail
-import com.ssing.data.consumerlesson.model.InstructorProfile
-import com.ssing.data.consumerlesson.model.LessonInfo
-import com.ssing.data.consumerlesson.model.LessonMatchingRequest
 import com.ssing.data.consumerlesson.repository.api.ConsumerLessonDetailRepository
+import com.ssing.presentation.consumerlesson.mapper.toUiModel
 import com.ssing.presentation.consumerlesson.model.CanceledLessonInfoUiModel
 import com.ssing.presentation.consumerlesson.model.CompletedLessonInfoUiModel
-import com.ssing.presentation.consumerlesson.model.InstructorProfileUiModel
-import com.ssing.presentation.consumerlesson.model.LessonInfoUiModel
-import com.ssing.presentation.consumerlesson.model.ParticipantTeamUiModel
 import com.ssing.presentation.consumerlesson.navigation.ConsumerLesson
+import com.ssing.presentation.consumerlesson.util.formatCountdown
+import com.ssing.presentation.consumerlesson.util.formatDateTime
+import com.ssing.presentation.consumerlesson.util.formatMinutesText
+import com.ssing.presentation.consumerlesson.util.formatTime
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.launch
 import timber.log.Timber
-import java.time.OffsetDateTime
-import java.time.Year
-import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
 @HiltViewModel
@@ -84,8 +80,6 @@ internal class ConsumerLessonViewModel @Inject constructor(
                     .map { it.toUiModel() }
                     .toPersistentList(),
                 isReady = detail.currentActorConfirmed,
-                completedLessonInfo = null,
-                canceledLessonInfo = null,
             )
 
             is ConsumerLessonDetail.InProgress -> copy(
@@ -101,8 +95,6 @@ internal class ConsumerLessonViewModel @Inject constructor(
                 participantTeams = detail.lessonMatchingRequest
                     .map { it.toUiModel() }
                     .toPersistentList(),
-                completedLessonInfo = null,
-                canceledLessonInfo = null,
             )
 
             is ConsumerLessonDetail.Completed -> copy(
@@ -117,19 +109,16 @@ internal class ConsumerLessonViewModel @Inject constructor(
                         durationMinutes = detail.lessonDurationMinutes,
                         matchingRequests = emptyList(),
                     ),
-                    actualTimeRange = "${formatTime(detail.actualStartedAt)} - " +
+                    actualTimeRange = "${formatTime(detail.actualStartedAt)}~" +
                             "${formatTime(detail.actualEndedAt)} " +
                             "(${formatMinutesText(detail.actualDurationMinutes)})",
                 ),
-                canceledLessonInfo = null,
             )
 
             is ConsumerLessonDetail.Canceled -> copy(
                 lessonBannerState = LessonBannerState.Canceled,
                 instructorProfile = instructorProfileUiModel,
-                lessonInfo = null,
                 participantTeams = persistentListOf(),
-                completedLessonInfo = null,
                 canceledLessonInfo = CanceledLessonInfoUiModel(
                     lessonInfo = detail.lessonInfo.toUiModel(
                         durationMinutes = detail.lessonDurationMinutes,
@@ -141,83 +130,6 @@ internal class ConsumerLessonViewModel @Inject constructor(
                 ),
             )
         }
-    }
-
-    private fun LessonInfo.toUiModel(
-        durationMinutes: Int,
-        matchingRequests: List<LessonMatchingRequest>,
-    ): LessonInfoUiModel = LessonInfoUiModel(
-        tags = persistentListOf(sportDisplayName(sport), lessonLevelDisplayName(lessonLevel)),
-teamNicknames = matchingRequests
-    .map { "${it.representativeMemberName}님 팀" }
-    .toPersistentList(),
-        totalCount = totalHeadcount,
-        place = resortDisplayName,
-        duration = formatMinutesText(durationMinutes),
-        price = myTeamLessonPrice,
-    )
-
-    private fun InstructorProfile.toUiModel(): InstructorProfileUiModel = InstructorProfileUiModel(
-        name = name,
-        age = Year.now().value - birthYear,
-        gender = genderDisplayName(gender),
-        level = "grade$level",
-        imageUrl = profileImageUrl,
-    )
-
-    private fun LessonMatchingRequest.toUiModel(): ParticipantTeamUiModel = ParticipantTeamUiModel(
-        isReady = startConfirmed,
-        nickname = representativeMemberName,
-        participants = participants
-            .map { "${it.age}세 ${genderDisplayName(it.gender)}" }
-            .toPersistentList(),
-    )
-
-    private fun lessonLevelDisplayName(lessonLevel: String): String = when (lessonLevel) {
-        "FIRST_TIME" -> "처음이에요"
-        "BEGINNER" -> "초급이에요"
-        "INTERMEDIATE" -> "중급이에요"
-        "CERTIFIED" -> "자격증이 있어요"
-        else -> lessonLevel
-    }
-
-    private fun sportDisplayName(sport: String): String = when (sport) {
-        "SNOWBOARD" -> "스노보드"
-        "SKI" -> "스키"
-        else -> sport
-    }
-
-    private fun genderDisplayName(gender: String): String = when (gender) {
-        "MALE" -> "남"
-        "FEMALE" -> "여"
-        else -> gender
-    }
-
-    private fun formatMinutesText(minutes: Int): String {
-        val hours = minutes / 60
-        val remain = minutes % 60
-        return when {
-            hours > 0 && remain > 0 -> "${hours}시간 ${remain}분"
-            hours > 0 -> "${hours}시간"
-            else -> "${remain}분"
-        }
-    }
-
-    private fun formatCountdown(totalSeconds: Int): String {
-        val h = totalSeconds / 3600
-        val m = (totalSeconds % 3600) / 60
-        val s = totalSeconds % 60
-        return "%d:%02d:%02d".format(h, m, s)
-    }
-
-    private fun formatDateTime(isoDateTime: String): String {
-        val dateTime = OffsetDateTime.parse(isoDateTime)
-        return dateTime.format(DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm"))
-    }
-
-    private fun formatTime(isoDateTime: String): String {
-        val dateTime = OffsetDateTime.parse(isoDateTime)
-        return dateTime.format(DateTimeFormatter.ofPattern("HH:mm"))
     }
 
     fun onBack() = sendEffect(ConsumerLessonContract.Effect.NavigationToHome)
