@@ -2,11 +2,14 @@ package com.ssing.presentation.consumerhome
 
 import com.ssing.core.ui.base.BaseViewModel
 import com.ssing.core.ui.common.component.HomeLessonCardState
+import com.ssing.data.consumerhome.repository.api.ConsumerHomeRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-internal class ConsumerHomeViewModel @Inject constructor() :
+internal class ConsumerHomeViewModel @Inject constructor(
+    private val consumerHomeRepository: ConsumerHomeRepository,
+) :
     BaseViewModel<ConsumerHomeContract.State, ConsumerHomeContract.Effect>(
         ConsumerHomeContract.State()
     ) {
