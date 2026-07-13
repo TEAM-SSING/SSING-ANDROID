@@ -13,7 +13,10 @@ internal class MatchingSocketDataSourceImpl @Inject constructor(
     private val socketManager: SocketManager<MatchingEnvelope<JsonElement>>,
 ) : MatchingSocketDataSource {
     override val event: Flow<MatchingEnvelope<JsonElement>> = socketManager.event
+
     override val socketState: StateFlow<SocketState> = socketManager.socketState
+
     override fun connect() = socketManager.connect()
+
     override suspend fun disconnect() = socketManager.disconnect()
 }

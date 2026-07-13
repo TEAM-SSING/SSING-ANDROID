@@ -8,7 +8,10 @@ import kotlinx.serialization.json.JsonElement
 
 internal interface LessonSocketDataSource {
     val event: Flow<LessonEnvelope<JsonElement>>
+
     val socketState: StateFlow<SocketState>
+
     fun connect()
+
     suspend fun disconnect()
 }

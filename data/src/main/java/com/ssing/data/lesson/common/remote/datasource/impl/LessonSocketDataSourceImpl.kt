@@ -13,7 +13,10 @@ internal class LessonSocketDataSourceImpl @Inject constructor(
     private val socketManager: SocketManager<LessonEnvelope<JsonElement>>,
 ) : LessonSocketDataSource {
     override val event: Flow<LessonEnvelope<JsonElement>> = socketManager.event
+
     override val socketState: StateFlow<SocketState> = socketManager.socketState
+
     override fun connect() = socketManager.connect()
+
     override suspend fun disconnect() = socketManager.disconnect()
 }
