@@ -6,6 +6,6 @@ import kotlinx.serialization.Serializable
 @Serializable
 internal data class ConsumerHomeResponse(
     @SerialName("lessonCards") val lessonCards: List<LessonCardsResponse>,
-    @SerialName("matchingPeopleCount") val matchingPeopleCount: Int,
+    @SerialName("matchingPeopleCount") val matchingPeopleCount: Long,
     @SerialName("hasUnreadNotification") val hasUnreadNotification: Boolean,
 )
