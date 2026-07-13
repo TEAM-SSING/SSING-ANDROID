@@ -46,6 +46,7 @@ private fun NavController.navigateToConsumerMatchingFailure() =
 
 fun NavGraphBuilder.consumerMatchingNavGraph(
     navigateToHome: () -> Unit,
+    navigateToPayment: (Long) -> Unit,
     navController: NavHostController,
     paddingValues: PaddingValues,
 ) {
@@ -72,7 +73,7 @@ fun NavGraphBuilder.consumerMatchingNavGraph(
             ConsumerMatchingResultRoute(
                 popBackStack = navController::popBackStack,
                 navigateToHome = navigateToHome,
-                navigateToPayment = {},
+                navigateToPayment = navigateToPayment,
                 modifier = Modifier.padding(paddingValues),
                 viewModel = sharedViewModel(backStackEntry, navController),
             )
