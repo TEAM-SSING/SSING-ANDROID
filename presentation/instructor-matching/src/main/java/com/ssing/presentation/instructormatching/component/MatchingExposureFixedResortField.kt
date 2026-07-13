@@ -13,9 +13,8 @@ import androidx.compose.ui.unit.dp
 import com.ssing.core.ui.designsystem.theme.SSINGTheme
 import com.ssing.core.ui.extension.roundedBackgroundWithBorder
 
-
 @Composable
-internal fun MatchingConditionFixedResortField(
+internal fun MatchingExposureFixedResortField(
     resortName: String,
     modifier: Modifier = Modifier,
 ) {
@@ -41,8 +40,8 @@ internal fun MatchingConditionFixedResortField(
 
 @Preview(showBackground = true)
 @Composable
-private fun MatchingConditionFixedResortFieldPreview() {
+private fun MatchingExposureFixedResortFieldPreview() {
     SSINGTheme {
-        MatchingConditionFixedResortField(resortName = "하이원 리조트")
+        MatchingExposureFixedResortField(resortName = "하이원 리조트")
     }
 }
