@@ -27,9 +27,9 @@ import com.ssing.core.ui.common.component.SsingMatchingDetailCard
 import com.ssing.core.ui.common.component.SsingTopBar
 import com.ssing.core.ui.designsystem.theme.SSINGTheme
 import com.ssing.presentation.instructormatching.R
-import com.ssing.presentation.instructormatching.model.MatchingConditionUiState
 import com.ssing.presentation.instructormatching.model.DurationOption
 import com.ssing.presentation.instructormatching.model.LevelOption
+import com.ssing.presentation.instructormatching.model.MatchingExposureUiState
 import com.ssing.presentation.instructormatching.model.MatchingWaitingUiState
 import com.ssing.presentation.instructormatching.model.ParticipantUiModel
 import com.ssing.presentation.instructormatching.model.SportOption
@@ -38,10 +38,10 @@ import kotlinx.collections.immutable.toPersistentList
 
 @Composable
 internal fun MatchingWaitingScreen(
-    condition: MatchingConditionUiState,
+    exposure: MatchingExposureUiState,
     waiting: MatchingWaitingUiState,
     onBackClick: () -> Unit,
-    onEditConditionClick: () -> Unit,
+    onEditExposureClick: () -> Unit,
     onStopWaitingClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -79,14 +79,14 @@ internal fun MatchingWaitingScreen(
 
         SsingMatchingDetailCard(
             stepLabel = "현재 매칭 조건",
-            tags = (listOfNotNull(condition.selectedSports?.label) + condition.selectedLevels.map { it.label })
+            tags = (listOfNotNull(exposure.selectedSports?.label) + exposure.selectedLevels.map { it.label })
                 .toPersistentList(),
             nickname = waiting.nickname,
             teamCount = waiting.teamCount,
-            totalCount = condition.maxHeadcount,
+            totalCount = exposure.maxHeadcount,
             classDateTime = waiting.classDateTime,
-            location = condition.resortName,
-            duration = condition.selectedDurations.joinToString(" / ") { it.label },
+            location = exposure.resortName,
+            duration = exposure.selectedDurations.joinToString(" / ") { it.label },
             participants = waiting.participants.map { it.toParticipant() }.toPersistentList(),
             price = waiting.price,
             modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp),
@@ -102,7 +102,7 @@ internal fun MatchingWaitingScreen(
         ) {
             SsingButton(
                 text = "조건 수정",
-                onClick = onEditConditionClick,
+                onClick = onEditExposureClick,
                 style = SsingButtonStyle.GRAY,
                 modifier = Modifier.weight(1f),
             )
@@ -121,7 +121,7 @@ internal fun MatchingWaitingScreen(
 private fun MatchingWaitingScreenPreview() {
     SSINGTheme {
         MatchingWaitingScreen(
-            condition = MatchingConditionUiState(
+            exposure = MatchingExposureUiState(
                 resortName = "하이원 리조트",
                 selectedSports = SportOption.SKI,
                 selectedLevels = setOf(LevelOption.BEGINNER),
@@ -141,7 +141,7 @@ private fun MatchingWaitingScreenPreview() {
                 equipmentStatus = "착용 완료",
             ),
             onBackClick = {},
-            onEditConditionClick = {},
+            onEditExposureClick = {},
             onStopWaitingClick = {},
         )
     }

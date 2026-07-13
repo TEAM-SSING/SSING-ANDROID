@@ -22,18 +22,18 @@ import com.ssing.core.ui.common.component.SsingHeader
 import com.ssing.core.ui.common.component.SsingSelectButton
 import com.ssing.core.ui.common.component.SsingTopBar
 import com.ssing.core.ui.designsystem.theme.SSINGTheme
-import com.ssing.presentation.instructormatching.component.MatchingConditionFixedResortField
-import com.ssing.presentation.instructormatching.component.MatchingConditionSection
+import com.ssing.presentation.instructormatching.component.MatchingExposureFixedResortField
+import com.ssing.presentation.instructormatching.component.MatchingExposureSection
 import com.ssing.presentation.instructormatching.component.MatchingStepSlider
 import com.ssing.presentation.instructormatching.component.MultiSelectBadge
-import com.ssing.presentation.instructormatching.model.MatchingConditionUiState
 import com.ssing.presentation.instructormatching.model.DurationOption
 import com.ssing.presentation.instructormatching.model.LevelOption
+import com.ssing.presentation.instructormatching.model.MatchingExposureUiState
 import com.ssing.presentation.instructormatching.model.SportOption
 
 @Composable
-internal fun MatchingConditionScreen(
-    condition: MatchingConditionUiState,
+internal fun MatchingExposureScreen(
+    exposure: MatchingExposureUiState,
     onSportClick: (SportOption) -> Unit,
     onLevelToggle: (LevelOption) -> Unit,
     onDurationToggle: (DurationOption) -> Unit,
@@ -69,27 +69,27 @@ internal fun MatchingConditionScreen(
                     .padding(all = 16.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp),
             ) {
-                MatchingConditionSection(label = "강습 장소") {
-                    MatchingConditionFixedResortField(resortName = condition.resortName)
+                MatchingExposureSection(label = "강습 장소") {
+                    MatchingExposureFixedResortField(resortName = exposure.resortName)
                 }
 
-                MatchingConditionSection(label = "강습 종목") {
+                MatchingExposureSection(label = "강습 종목") {
                     Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-                        condition.availableSports.sortedBy { it.ordinal }.forEach { sport ->
+                        exposure.availableSports.sortedBy { it.ordinal }.forEach { sport ->
                             SsingSelectButton(
                                 text = sport.label,
-                                isSelected = sport == condition.selectedSports,
+                                isSelected = sport == exposure.selectedSports,
                                 onClick = { onSportClick(sport) },
                                 modifier = Modifier.weight(1f),
                             )
                         }
-                        if (condition.availableSports.size == 1) {
+                        if (exposure.availableSports.size == 1) {
                             Spacer(modifier = Modifier.weight(1f))
                         }
                     }
                 }
 
-                MatchingConditionSection(
+                MatchingExposureSection(
                     label = "강습 가능 레벨",
                     labelSuffix = { MultiSelectBadge() },
                 ) {
@@ -100,7 +100,7 @@ internal fun MatchingConditionScreen(
                                     rowOptions.forEach { level ->
                                         SsingSelectButton(
                                             text = level.label,
-                                            isSelected = level in condition.selectedLevels,
+                                            isSelected = level in exposure.selectedLevels,
                                             onClick = { onLevelToggle(level) },
                                             modifier = Modifier.weight(1f),
                                         )
@@ -110,7 +110,7 @@ internal fun MatchingConditionScreen(
                     }
                 }
 
-                MatchingConditionSection(
+                MatchingExposureSection(
                     label = "강습 시간",
                     labelSuffix = { MultiSelectBadge() },
                 ) {
@@ -118,7 +118,7 @@ internal fun MatchingConditionScreen(
                         DurationOption.entries.forEach { duration ->
                             SsingSelectButton(
                                 text = duration.label,
-                                isSelected = duration in condition.selectedDurations,
+                                isSelected = duration in exposure.selectedDurations,
                                 onClick = { onDurationToggle(duration) },
                                 modifier = Modifier.weight(1f),
                             )
@@ -126,26 +126,26 @@ internal fun MatchingConditionScreen(
                     }
                 }
 
-                MatchingConditionSection(
+                MatchingExposureSection(
                     label = "최대 인원",
                     labelSuffix = {
                         Spacer(modifier = Modifier.weight(1f))
                         Text(
-                            text = "최대 ${condition.maxHeadcount}명",
+                            text = "최대 ${exposure.maxHeadcount}명",
                             style = SSINGTheme.typography.caption.sb12,
                             color = SSINGTheme.colors.primaryNormal,
                         )
                     },
                 ) {
                     MatchingStepSlider(
-                        value = condition.maxHeadcount,
+                        value = exposure.maxHeadcount,
                         onValueChange = onMaxHeadcountChange,
-                        valueRange = condition.maxHeadcountRange,
+                        valueRange = exposure.maxHeadcountRange,
                     )
                 }
 
                 MatchingConditionInformationCard(
-                    isChecked = condition.isNoticeChecked,
+                    isChecked = exposure.isNoticeChecked,
                     onCheckedChange = onNoticeCheckedChange,
                     modifier = Modifier.fillMaxWidth(),
                 )
@@ -156,7 +156,7 @@ internal fun MatchingConditionScreen(
             text = "씽 매칭 시작",
             onClick = onStartMatchingClick,
             style = SsingButtonStyle.BLUE,
-            enabled = condition.isStartEnabled,
+            enabled = exposure.isStartEnabled,
             modifier = Modifier
                 .fillMaxWidth()
                 .background(SSINGTheme.colors.backgroundNormal)
@@ -170,10 +170,10 @@ private const val LEVEL_OPTION_COLUMN_COUNT = 2
 
 @Preview(showBackground = true)
 @Composable
-private fun MatchingConditionScreenPreview() {
+private fun MatchingExposureScreenPreview() {
     SSINGTheme {
-        MatchingConditionScreen(
-            condition = MatchingConditionUiState(
+        MatchingExposureScreen(
+            exposure = MatchingExposureUiState(
                 resortName = "하이원 리조트",
                 selectedLevels = setOf(LevelOption.BEGINNER, LevelOption.INTERMEDIATE),
                 selectedDurations = setOf(DurationOption.HOUR_3),

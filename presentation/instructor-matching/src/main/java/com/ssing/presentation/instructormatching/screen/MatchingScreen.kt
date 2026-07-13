@@ -19,10 +19,10 @@ import com.ssing.presentation.instructormatching.MatchingContract
 import com.ssing.presentation.instructormatching.MatchingContract.MatchingDialog
 import com.ssing.presentation.instructormatching.MatchingContract.MatchingPhase
 import com.ssing.presentation.instructormatching.MatchingViewModel
-import com.ssing.presentation.instructormatching.model.MatchingConditionUiState
 import com.ssing.presentation.instructormatching.model.DurationOption
 import com.ssing.presentation.instructormatching.model.LessonSummaryUiModel
 import com.ssing.presentation.instructormatching.model.LevelOption
+import com.ssing.presentation.instructormatching.model.MatchingExposureUiState
 import com.ssing.presentation.instructormatching.model.MatchingOfferUiModel
 import com.ssing.presentation.instructormatching.model.MatchingWaitingUiState
 import com.ssing.presentation.instructormatching.model.OfferStatusOption
@@ -53,7 +53,7 @@ internal fun MatchingRoute(
         onMaxHeadcountChange = viewModel::changeMaxHeadcount,
         onNoticeCheckedChange = viewModel::changeNoticeChecked,
         onStartMatchingClick = viewModel::startMatching,
-        onEditConditionClick = viewModel::editCondition,
+        onEditExposureClick = viewModel::editExposure,
         onStopWaitingClick = viewModel::stopWaiting,
         onAcceptOfferClick = viewModel::acceptOffer,
         onRejectOfferClick = viewModel::rejectOffer,
@@ -75,7 +75,7 @@ private fun MatchingScreen(
     onMaxHeadcountChange: (Int) -> Unit,
     onNoticeCheckedChange: (Boolean) -> Unit,
     onStartMatchingClick: () -> Unit,
-    onEditConditionClick: () -> Unit,
+    onEditExposureClick: () -> Unit,
     onStopWaitingClick: () -> Unit,
     onAcceptOfferClick: () -> Unit,
     onRejectOfferClick: () -> Unit,
@@ -87,8 +87,8 @@ private fun MatchingScreen(
     modifier: Modifier = Modifier,
 ) {
     when (val phase = state.phase) {
-        MatchingPhase.SettingCondition -> MatchingConditionScreen(
-            condition = state.condition,
+        MatchingPhase.SettingExposure -> MatchingExposureScreen(
+            exposure = state.exposure,
             onSportClick = onSportClick,
             onLevelToggle = onLevelToggle,
             onDurationToggle = onDurationToggle,
@@ -100,10 +100,10 @@ private fun MatchingScreen(
         )
 
         MatchingPhase.Waiting -> MatchingWaitingScreen(
-            condition = state.condition,
+            exposure = state.exposure,
             waiting = state.waiting,
             onBackClick = onBackClick,
-            onEditConditionClick = onEditConditionClick,
+            onEditExposureClick = onEditExposureClick,
             onStopWaitingClick = onStopWaitingClick,
             modifier = modifier,
         )
@@ -177,7 +177,7 @@ private fun MatchingDialogHost(
 }
 
 
-private val previewCondition = MatchingConditionUiState(
+private val previewExposure = MatchingExposureUiState(
     availableSports = SportOption.entries.toSet(),
     resortName = "하이원 리조트",
     selectedSports = SportOption.SKI,
@@ -229,22 +229,22 @@ private fun <T> Set<T>.toggle(item: T): Set<T> = if (item in this) this - item e
 
 @Preview
 @Composable
-private fun MatchingFlowConditionPreview() {
-    var state by remember { mutableStateOf(MatchingContract.State(condition = previewCondition)) }
+private fun MatchingFlowExposurePreview() {
+    var state by remember { mutableStateOf(MatchingContract.State(exposure = previewExposure)) }
     SSINGTheme {
         MatchingScreen(
             state = state,
-            onSportClick = { state = state.copy(condition = state.condition.copy(selectedSports = it)) },
-            onLevelToggle = { state = state.copy(condition = state.condition.copy(selectedLevels = state.condition.selectedLevels.toggle(it))) },
-            onDurationToggle = { state = state.copy(condition = state.condition.copy(selectedDurations = state.condition.selectedDurations.toggle(it))) },
-            onMaxHeadcountChange = { state = state.copy(condition = state.condition.copy(maxHeadcount = it)) },
-            onNoticeCheckedChange = { state = state.copy(condition = state.condition.copy(isNoticeChecked = it)) },
+            onSportClick = { state = state.copy(exposure = state.exposure.copy(selectedSports = it)) },
+            onLevelToggle = { state = state.copy(exposure = state.exposure.copy(selectedLevels = state.exposure.selectedLevels.toggle(it))) },
+            onDurationToggle = { state = state.copy(exposure = state.exposure.copy(selectedDurations = state.exposure.selectedDurations.toggle(it))) },
+            onMaxHeadcountChange = { state = state.copy(exposure = state.exposure.copy(maxHeadcount = it)) },
+            onNoticeCheckedChange = { state = state.copy(exposure = state.exposure.copy(isNoticeChecked = it)) },
             onStartMatchingClick = { state = state.copy(phase = MatchingPhase.Waiting, waiting = previewWaiting) },
-            onEditConditionClick = { state = state.copy(phase = MatchingPhase.SettingCondition) },
+            onEditExposureClick = { state = state.copy(phase = MatchingPhase.SettingExposure) },
             onStopWaitingClick = { state = state.copy(dialog = MatchingDialog.StopWaiting) },
             onAcceptOfferClick = { (state.phase as? MatchingPhase.OfferArrived)?.let { state = state.copy(phase = MatchingPhase.PendingConfirm(it.offer)) } },
             onRejectOfferClick = { state = state.copy(phase = MatchingPhase.Waiting) },
-            onStopWaitingConfirm = { state = state.copy(dialog = null, phase = MatchingPhase.SettingCondition) },
+            onStopWaitingConfirm = { state = state.copy(dialog = null, phase = MatchingPhase.SettingExposure) },
             onContinueMatchingClick = { state = state.copy(dialog = null, phase = MatchingPhase.Waiting) },
             onRetryMatchingClick = { state = state.copy(dialog = null) },
             onDialogDismiss = { state = state.copy(dialog = null) },
@@ -259,7 +259,7 @@ private fun MatchingFlowOfferPreview() {
     var state by remember {
         mutableStateOf(
             MatchingContract.State(
-                condition = previewCondition,
+                exposure = previewExposure,
                 phase = MatchingPhase.OfferArrived(previewOffer),
             )
         )
@@ -273,11 +273,11 @@ private fun MatchingFlowOfferPreview() {
             onMaxHeadcountChange = {},
             onNoticeCheckedChange = {},
             onStartMatchingClick = {},
-            onEditConditionClick = { state = state.copy(phase = MatchingPhase.SettingCondition) },
+            onEditExposureClick = { state = state.copy(phase = MatchingPhase.SettingExposure) },
             onStopWaitingClick = { state = state.copy(dialog = MatchingDialog.StopWaiting) },
             onAcceptOfferClick = { (state.phase as? MatchingPhase.OfferArrived)?.let { state = state.copy(phase = MatchingPhase.PendingConfirm(it.offer)) } },
             onRejectOfferClick = { state = state.copy(phase = MatchingPhase.Waiting, waiting = previewWaiting) },
-            onStopWaitingConfirm = { state = state.copy(dialog = null, phase = MatchingPhase.SettingCondition) },
+            onStopWaitingConfirm = { state = state.copy(dialog = null, phase = MatchingPhase.SettingExposure) },
             onContinueMatchingClick = { state = state.copy(dialog = null, phase = MatchingPhase.Waiting) },
             onRetryMatchingClick = { state = state.copy(dialog = null) },
             onDialogDismiss = { state = state.copy(dialog = null) },
