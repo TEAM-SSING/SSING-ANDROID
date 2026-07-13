@@ -26,14 +26,14 @@ import com.ssing.presentation.instructormatching.component.MatchingConditionFixe
 import com.ssing.presentation.instructormatching.component.MatchingConditionSection
 import com.ssing.presentation.instructormatching.component.MatchingStepSlider
 import com.ssing.presentation.instructormatching.component.MultiSelectBadge
-import com.ssing.presentation.instructormatching.model.ConditionUiState
+import com.ssing.presentation.instructormatching.model.MatchingConditionUiState
 import com.ssing.presentation.instructormatching.model.DurationOption
 import com.ssing.presentation.instructormatching.model.LevelOption
 import com.ssing.presentation.instructormatching.model.SportOption
 
 @Composable
 internal fun MatchingConditionScreen(
-    condition: ConditionUiState,
+    condition: MatchingConditionUiState,
     onSportClick: (SportOption) -> Unit,
     onLevelToggle: (LevelOption) -> Unit,
     onDurationToggle: (DurationOption) -> Unit,
@@ -173,7 +173,7 @@ private const val LEVEL_OPTION_COLUMN_COUNT = 2
 private fun MatchingConditionScreenPreview() {
     SSINGTheme {
         MatchingConditionScreen(
-            condition = ConditionUiState(
+            condition = MatchingConditionUiState(
                 resortName = "하이원 리조트",
                 selectedLevels = setOf(LevelOption.BEGINNER, LevelOption.INTERMEDIATE),
                 selectedDurations = setOf(DurationOption.HOUR_3),

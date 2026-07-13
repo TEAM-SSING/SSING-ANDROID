@@ -27,7 +27,7 @@ import com.ssing.core.ui.common.component.SsingMatchingDetailCard
 import com.ssing.core.ui.common.component.SsingTopBar
 import com.ssing.core.ui.designsystem.theme.SSINGTheme
 import com.ssing.presentation.instructormatching.R
-import com.ssing.presentation.instructormatching.model.ConditionUiState
+import com.ssing.presentation.instructormatching.model.MatchingConditionUiState
 import com.ssing.presentation.instructormatching.model.DurationOption
 import com.ssing.presentation.instructormatching.model.LevelOption
 import com.ssing.presentation.instructormatching.model.MatchingWaitingUiState
@@ -38,7 +38,7 @@ import kotlinx.collections.immutable.toPersistentList
 
 @Composable
 internal fun MatchingWaitingScreen(
-    condition: ConditionUiState,
+    condition: MatchingConditionUiState,
     waiting: MatchingWaitingUiState,
     onBackClick: () -> Unit,
     onEditConditionClick: () -> Unit,
@@ -121,7 +121,7 @@ internal fun MatchingWaitingScreen(
 private fun MatchingWaitingScreenPreview() {
     SSINGTheme {
         MatchingWaitingScreen(
-            condition = ConditionUiState(
+            condition = MatchingConditionUiState(
                 resortName = "하이원 리조트",
                 selectedSports = SportOption.SKI,
                 selectedLevels = setOf(LevelOption.BEGINNER),

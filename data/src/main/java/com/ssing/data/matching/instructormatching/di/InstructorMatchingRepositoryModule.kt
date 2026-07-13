@@ -2,7 +2,6 @@ package com.ssing.data.instructormatching.di
 
 import com.ssing.data.instructormatching.repository.api.InstructorMatchingRepository
 import com.ssing.data.instructormatching.repository.impl.InstructorMatchingRepositoryImpl
-
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

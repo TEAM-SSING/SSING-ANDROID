@@ -19,7 +19,7 @@ import com.ssing.presentation.instructormatching.MatchingContract
 import com.ssing.presentation.instructormatching.MatchingContract.MatchingDialog
 import com.ssing.presentation.instructormatching.MatchingContract.MatchingPhase
 import com.ssing.presentation.instructormatching.MatchingViewModel
-import com.ssing.presentation.instructormatching.model.ConditionUiState
+import com.ssing.presentation.instructormatching.model.MatchingConditionUiState
 import com.ssing.presentation.instructormatching.model.DurationOption
 import com.ssing.presentation.instructormatching.model.LessonSummaryUiModel
 import com.ssing.presentation.instructormatching.model.LevelOption
@@ -177,7 +177,7 @@ private fun MatchingDialogHost(
 }
 
 
-private val previewCondition = ConditionUiState(
+private val previewCondition = MatchingConditionUiState(
     availableSports = SportOption.entries.toSet(),
     resortName = "하이원 리조트",
     selectedSports = SportOption.SKI,

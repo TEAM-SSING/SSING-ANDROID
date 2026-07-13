@@ -18,3 +18,12 @@ internal abstract class InstructorMatchingDataSourceModule {
         impl: InstructorMatchingRemoteDataSourceImpl,
     ): InstructorMatchingRemoteDataSource
 }
+@InstallIn(SingletonComponent::class)
+internal abstract class InstructorMatchingDataSourceModule {
+
+    @Binds
+    @Singleton
+    abstract fun bindInstructorMatchingRemoteDataSource(
+        impl: InstructorMatchingRemoteDataSourceImpl,
+    ): InstructorMatchingRemoteDataSource
+}
