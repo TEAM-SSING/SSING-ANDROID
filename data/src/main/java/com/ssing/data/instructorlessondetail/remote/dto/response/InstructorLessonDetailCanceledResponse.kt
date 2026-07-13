@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 internal data class InstructorLessonDetailCanceledResponse(
     @SerialName("lessonId")
-    val lessonId: Int,
+    val lessonId: Long,
     @SerialName("lessonStatus")
     val lessonStatus: LessonStatus,
     @SerialName("cancelInfo")

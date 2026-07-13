@@ -10,6 +10,6 @@ internal interface InstructorLessonDetailService {
     @GET("api/v1/instructor/lessons/{lessonId}")
     suspend fun getInstructorLessonDetail(
         @Path("lessonId")
-        lessonId: Int
+        lessonId: Long
     ): BaseResponse<InstructorLessonDetailResponse>
 }

@@ -10,7 +10,7 @@ internal class InstructorLessonDetailDataSourceImpl @Inject constructor(
     private val service: InstructorLessonDetailService,
 ) : InstructorLessonDetailDataSource {
     override suspend fun instructorLessonDetail(
-        lessonId: Int
+        lessonId: Long
     ): BaseResponse<InstructorLessonDetailResponse> =
         service.getInstructorLessonDetail(lessonId)
 }
