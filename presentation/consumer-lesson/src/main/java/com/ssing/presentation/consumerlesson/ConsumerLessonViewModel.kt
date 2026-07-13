@@ -1,81 +1,223 @@
 package com.ssing.presentation.consumerlesson
 
 import androidx.compose.foundation.text.input.TextFieldState
+import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.viewModelScope
+import androidx.navigation.toRoute
+import com.ssing.core.network.exception.ApiException
 import com.ssing.core.ui.base.BaseViewModel
 import com.ssing.core.ui.common.component.CancelReason
 import com.ssing.core.ui.common.component.LessonBannerState
+import com.ssing.core.ui.extension.uiMessage
+import com.ssing.data.consumerlesson.model.ConsumerLessonDetail
+import com.ssing.data.consumerlesson.model.InstructorProfile
+import com.ssing.data.consumerlesson.model.LessonInfo
+import com.ssing.data.consumerlesson.model.LessonMatchingRequest
+import com.ssing.data.consumerlesson.repository.api.ConsumerLessonDetailRepository
 import com.ssing.presentation.consumerlesson.model.CanceledLessonInfoUiModel
 import com.ssing.presentation.consumerlesson.model.CompletedLessonInfoUiModel
 import com.ssing.presentation.consumerlesson.model.InstructorProfileUiModel
 import com.ssing.presentation.consumerlesson.model.LessonInfoUiModel
 import com.ssing.presentation.consumerlesson.model.ParticipantTeamUiModel
+import com.ssing.presentation.consumerlesson.navigation.ConsumerLesson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
+import kotlinx.coroutines.launch
+import timber.log.Timber
+import java.time.OffsetDateTime
+import java.time.Year
+import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
 @HiltViewModel
-internal class ConsumerLessonViewModel @Inject constructor() :
+internal class ConsumerLessonViewModel @Inject constructor(
+    savedStateHandle: SavedStateHandle,
+    private val consumerLessonDetailRepository: ConsumerLessonDetailRepository,
+) :
     BaseViewModel<ConsumerLessonContract.State, ConsumerLessonContract.Effect>(
         ConsumerLessonContract.State()
     ) {
 
     val etcState = TextFieldState()
 
+    private val lessonId: Long = savedStateHandle.toRoute<ConsumerLesson>().lessonId
+
     init {
-        // TODO: 서버 연동 후 실제 API 호출로 교체
-        loadDummyData()
+        loadLessonDetail(lessonId)
     }
 
-    private fun loadDummyData() {
-        val dummyLessonInfo = LessonInfoUiModel(
-            tags = persistentListOf("스노보드", "자격증이 있어요"),
-            teamNicknames = persistentListOf("김멍멍", "김야옹"),
-            totalCount = 2,
-            place = "000 리조트",
-            duration = "2시간",
-            price = 500000,
-        )
+    fun loadLessonDetail(lessonId: Long) {
+        viewModelScope.launch {
+            consumerLessonDetailRepository.getConsumerLessonDetail(lessonId)
+                .onSuccess { result ->
+                    Timber.d("consumer-lesson: $result")
+                    updateState { applyLessonDetail(result) }
+                }
+                .onFailure {
+                    Timber.e(it, "consumer-lesson 실패")
+                    if (it is ApiException) {
+                        sendEffect(ConsumerLessonContract.Effect.ShowToast(it.uiMessage))
+                    }
+                }
+        }
+    }
 
-        updateState {
-            copy(
+    private fun ConsumerLessonContract.State.applyLessonDetail(
+        detail: ConsumerLessonDetail,
+    ): ConsumerLessonContract.State {
+        val instructorProfileUiModel = detail.instructorProfile.toUiModel()
+
+        return when (detail) {
+            is ConsumerLessonDetail.Confirmed -> copy(
                 lessonBannerState = LessonBannerState.Before(
-                    isInstructorReady = true,
-                    participantReadyCount = 4,
-                    participantTotalCount = 5,
+                    isInstructorReady = detail.instructorConfirmed,
+                    participantReadyCount = detail.confirmedCount,
+                    participantTotalCount = detail.requiredCount,
                 ),
-                lessonInfo = dummyLessonInfo,
-                instructorProfile = InstructorProfileUiModel(
-                    name = "김어흥 강사",
-                    age = 27,
-                    gender = "남",
-                    level = "grade1",
-                    imageUrl = "",
+                lessonInfo = detail.lessonInfo.toUiModel(
+                    durationMinutes = detail.scheduledDurationMinutes,
+                    matchingRequests = detail.lessonMatchingRequest,
                 ),
-                participantTeams = persistentListOf(
-                    ParticipantTeamUiModel(
-                        isReady = true,
-                        nickname = "김음메",
-                        participants = persistentListOf("38세 남", "12세 여", "9세 남"),
-                    ),
-                    ParticipantTeamUiModel(
-                        isReady = false,
-                        nickname = "김끼룩",
-                        participants = persistentListOf("38세 남", "12세 여", "9세 남"),
-                    ),
+                instructorProfile = instructorProfileUiModel,
+                participantTeams = detail.lessonMatchingRequest
+                    .map { it.toUiModel() }
+                    .toPersistentList(),
+                isReady = detail.currentActorConfirmed,
+                completedLessonInfo = null,
+                canceledLessonInfo = null,
+            )
+
+            is ConsumerLessonDetail.InProgress -> copy(
+                lessonBannerState = LessonBannerState.Ongoing(
+                    remainingTime = formatCountdown(detail.remainingSeconds),
+                    elapsedTime = formatMinutesText(detail.elapsedSeconds / 60),
                 ),
+                lessonInfo = detail.lessonInfo.toUiModel(
+                    durationMinutes = detail.scheduledDurationMinutes,
+                    matchingRequests = detail.lessonMatchingRequest,
+                ),
+                instructorProfile = instructorProfileUiModel,
+                participantTeams = detail.lessonMatchingRequest
+                    .map { it.toUiModel() }
+                    .toPersistentList(),
+                completedLessonInfo = null,
+                canceledLessonInfo = null,
+            )
+
+            is ConsumerLessonDetail.Completed -> copy(
+                lessonBannerState = LessonBannerState.Completed(
+                    lessonDate = detail.actualEndedAt
+                ),
+                instructorProfile = instructorProfileUiModel,
+                lessonInfo = null,
+                participantTeams = persistentListOf(),
                 completedLessonInfo = CompletedLessonInfoUiModel(
-                    lessonInfo = dummyLessonInfo,
-                    actualTimeRange = "14:00 - 16:00 (2시간)",
+                    lessonInfo = detail.lessonInfo.toUiModel(
+                        durationMinutes = detail.lessonDurationMinutes,
+                        matchingRequests = emptyList(),
+                    ),
+                    actualTimeRange = "${formatTime(detail.actualStartedAt)} - " +
+                            "${formatTime(detail.actualEndedAt)} " +
+                            "(${formatMinutesText(detail.actualDurationMinutes)})",
                 ),
+                canceledLessonInfo = null,
+            )
+
+            is ConsumerLessonDetail.Canceled -> copy(
+                lessonBannerState = LessonBannerState.Canceled,
+                instructorProfile = instructorProfileUiModel,
+                lessonInfo = null,
+                participantTeams = persistentListOf(),
+                completedLessonInfo = null,
                 canceledLessonInfo = CanceledLessonInfoUiModel(
-                    lessonInfo = dummyLessonInfo,
-                    cancelDateTime = "2026.07.10 14:00",
-                    cancelSubject = "강습생",
-                    cancelReason = "일정 변경",
+                    lessonInfo = detail.lessonInfo.toUiModel(
+                        durationMinutes = detail.lessonDurationMinutes,
+                        matchingRequests = emptyList(),
+                    ),
+                    cancelDateTime = formatDateTime(detail.canceledAt),
+                    cancelSubject = detail.canceledByName,
+                    cancelReason = detail.cancelReason,
                 ),
             )
         }
+    }
+
+    private fun LessonInfo.toUiModel(
+        durationMinutes: Int,
+        matchingRequests: List<LessonMatchingRequest>,
+    ): LessonInfoUiModel = LessonInfoUiModel(
+        tags = persistentListOf(sportDisplayName(sport), lessonLevelDisplayName(lessonLevel)),
+teamNicknames = matchingRequests
+    .map { "${it.representativeMemberName}님 팀" }
+    .toPersistentList(),
+        totalCount = totalHeadcount,
+        place = resortDisplayName,
+        duration = formatMinutesText(durationMinutes),
+        price = myTeamLessonPrice,
+    )
+
+    private fun InstructorProfile.toUiModel(): InstructorProfileUiModel = InstructorProfileUiModel(
+        name = name,
+        age = Year.now().value - birthYear,
+        gender = genderDisplayName(gender),
+        level = "grade$level",
+        imageUrl = profileImageUrl,
+    )
+
+    private fun LessonMatchingRequest.toUiModel(): ParticipantTeamUiModel = ParticipantTeamUiModel(
+        isReady = startConfirmed,
+        nickname = representativeMemberName,
+        participants = participants
+            .map { "${it.age}세 ${genderDisplayName(it.gender)}" }
+            .toPersistentList(),
+    )
+
+    private fun lessonLevelDisplayName(lessonLevel: String): String = when (lessonLevel) {
+        "FIRST_TIME" -> "처음이에요"
+        "BEGINNER" -> "초급이에요"
+        "INTERMEDIATE" -> "중급이에요"
+        "CERTIFIED" -> "자격증이 있어요"
+        else -> lessonLevel
+    }
+
+    private fun sportDisplayName(sport: String): String = when (sport) {
+        "SNOWBOARD" -> "스노보드"
+        "SKI" -> "스키"
+        else -> sport
+    }
+
+    private fun genderDisplayName(gender: String): String = when (gender) {
+        "MALE" -> "남"
+        "FEMALE" -> "여"
+        else -> gender
+    }
+
+    private fun formatMinutesText(minutes: Int): String {
+        val hours = minutes / 60
+        val remain = minutes % 60
+        return when {
+            hours > 0 && remain > 0 -> "${hours}시간 ${remain}분"
+            hours > 0 -> "${hours}시간"
+            else -> "${remain}분"
+        }
+    }
+
+    private fun formatCountdown(totalSeconds: Int): String {
+        val h = totalSeconds / 3600
+        val m = (totalSeconds % 3600) / 60
+        val s = totalSeconds % 60
+        return "%d:%02d:%02d".format(h, m, s)
+    }
+
+    private fun formatDateTime(isoDateTime: String): String {
+        val dateTime = OffsetDateTime.parse(isoDateTime)
+        return dateTime.format(DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm"))
+    }
+
+    private fun formatTime(isoDateTime: String): String {
+        val dateTime = OffsetDateTime.parse(isoDateTime)
+        return dateTime.format(DateTimeFormatter.ofPattern("HH:mm"))
     }
 
     fun onBack() = sendEffect(ConsumerLessonContract.Effect.NavigationToHome)

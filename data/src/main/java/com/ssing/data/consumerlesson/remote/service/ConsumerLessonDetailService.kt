@@ -6,7 +6,7 @@ import retrofit2.http.GET
 import retrofit2.http.Path
 
 internal interface ConsumerLessonDetailService {
-    @GET("api/v1/consumer/lessons/{lessonId}")
+    @GET("/api/v1/consumer/lessons/{lessonId}")
     suspend fun getConsumerLessonDetail(
         @Path("lessonId") lessonId: Long,
     ): BaseResponse<ConsumerLessonDetailResponse>
