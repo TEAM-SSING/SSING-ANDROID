@@ -10,10 +10,11 @@ import com.ssing.core.ui.navigation.SsingNavHost
 import com.ssing.presentation.auth.instructor.navigation.instructorAuthNavGraph
 import com.ssing.presentation.instructorhome.navigation.InstructorHome
 import com.ssing.presentation.instructorhome.navigation.instructorHomeNavGraph
-import com.ssing.presentation.instructorlessondetail.navigation.InstructorLesson
-import com.ssing.presentation.notification.navigation.notificationNavGraph
-import com.ssing.presentation.instructormatching.navigation.instructorMatchingNavGraph
 import com.ssing.presentation.instructorlessondetail.navigation.instructorLessonNavGraph
+import com.ssing.presentation.instructormatching.navigation.instructorMatchingNavGraph
+import com.ssing.presentation.auth.instructor.navigation.InstructorLogin
+import com.ssing.presentation.instructorprofile.navigation.instructorProfileNavGraph
+import com.ssing.presentation.notification.navigation.notificationNavGraph
 
 @Composable
 internal fun InstructorMainNavHost(
@@ -23,7 +24,7 @@ internal fun InstructorMainNavHost(
 ) {
     SsingNavHost(
         navController = navController,
-        startDestination = InstructorLesson,
+        startDestination = InstructorHome,
         modifier = modifier.fillMaxSize(),
     ) {
         instructorAuthNavGraph(
@@ -46,6 +47,15 @@ internal fun InstructorMainNavHost(
         instructorLessonNavGraph(
             paddingValues = paddingValues,
             navController = navController,
+        )
+        instructorProfileNavGraph(
+            paddingValues = paddingValues,
+            navigateToLogin = {
+                navController.navigate(
+                    route = InstructorLogin,
+                    navOptions = navController.clearBackStackNavOptions(),
+                )
+            },
         )
     }
 }
