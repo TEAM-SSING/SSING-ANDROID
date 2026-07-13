@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">instructor</string>
+    <string name="app_name">SSING 강사</string>
     <string name="instructor_home">홈</string>
     <string name="instructor_reservation">예약</string>
     <string name="instructor_chat">채팅</string>

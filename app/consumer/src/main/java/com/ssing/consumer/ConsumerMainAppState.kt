@@ -12,6 +12,7 @@ import androidx.navigation.navOptions
 import com.ssing.core.ui.extension.stateInWhileSubscribed
 import com.ssing.core.ui.navigation.Route
 import com.ssing.presentation.consumerhome.navigation.ConsumerHome
+import com.ssing.presentation.consumerprofile.navigation.ConsumerProfile
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -67,6 +68,7 @@ class ConsumerMainAppState(
         }
         when (tab) {
             ConsumerMainTab.HOME -> navController.navigate(ConsumerHome, navOptions)
+            ConsumerMainTab.PROFILE -> navController.navigate(ConsumerProfile, navOptions)
             else -> {} // TODO: 추후 각 탭 화면 연결 예정
         }
     }

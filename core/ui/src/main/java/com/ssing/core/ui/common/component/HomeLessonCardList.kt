@@ -41,6 +41,7 @@ import java.time.LocalDateTime
 
 sealed interface HomeLessonCardState {
     data class Reservation(
+        val lessonId: Long,
         val chip: String,
         val displayText: String,
         val location: String,
@@ -319,6 +320,7 @@ private fun HomeLessonMatchingCardPreview() {
     SSINGTheme {
         HomeLessonCard(
             state = HomeLessonCardState.Reservation(
+                lessonId = 1,
                 chip = "Now",
                 displayText = "매칭중",
                 date = LocalDateTime.of(2025, 7, 15, 19, 0),
@@ -337,6 +339,7 @@ private fun HomeLessonMatchedCardPreview() {
     SSINGTheme {
         HomeLessonCard(
             state = HomeLessonCardState.Reservation(
+                lessonId = 1,
                 chip = "Now",
                 displayText = "김OO님 팀 3명",
                 date = LocalDateTime.of(2025, 7, 15, 19, 0),
@@ -355,6 +358,7 @@ private fun HomeLessonCardPreview() {
     SSINGTheme {
         HomeLessonCard(
             state = HomeLessonCardState.Reservation(
+                lessonId = 1,
                 chip = "D-2",
                 displayText = "김OO님 팀 3명",
                 date = LocalDateTime.of(2025, 7, 15, 19, 0),
@@ -373,6 +377,7 @@ private class HomeLessonCardPreviewProvider :
         persistentListOf(HomeLessonCardState.Empty),
         persistentListOf(
             HomeLessonCardState.Reservation(
+                lessonId = 1,
                 chip = "Now",
                 displayText = "김OO님 팀 3명",
                 location = "하이원",
@@ -380,6 +385,7 @@ private class HomeLessonCardPreviewProvider :
                 status = Status.Matching,
             ),
             HomeLessonCardState.Reservation(
+                lessonId = 1,
                 chip = "D-3",
                 displayText = "김OO님 팀 3명",
                 location = "지산리조트",

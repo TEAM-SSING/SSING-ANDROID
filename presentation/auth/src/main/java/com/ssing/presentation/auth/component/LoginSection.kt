@@ -25,11 +25,12 @@ internal fun LoginSection(
     onPersonalInfoClick: () -> Unit,
     onServiceCenterClick: () -> Unit,
     modifier: Modifier = Modifier,
-    infoTextColor: Color = SSINGTheme.colors.textAlternative,
+    textColor: Color = SSINGTheme.colors.textAlternative,
 ) {
     Column(
-        modifier = modifier.padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
+        modifier = modifier
+            .padding(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         KakaoButton(
             onClick = onKakaoClick,
@@ -44,19 +45,19 @@ internal fun LoginSection(
             InfoText(
                 text = "이용 약관",
                 onClick = onConditionClick,
-                color = infoTextColor,
+                textColor = textColor,
             )
 
             InfoText(
                 text = "개인정보 처리방침",
                 onClick = onPersonalInfoClick,
-                color = infoTextColor,
+                textColor = textColor,
             )
 
             InfoText(
                 text = "고객센터",
                 onClick = onServiceCenterClick,
-                color = infoTextColor,
+                textColor = textColor,
             )
         }
     }
@@ -66,20 +67,22 @@ internal fun LoginSection(
 private fun InfoText(
     text: String,
     onClick: () -> Unit,
+    textColor: Color,
     modifier: Modifier = Modifier,
-    color: Color = SSINGTheme.colors.textAlternative,
 ) {
     Text(
         text = text,
         style = SSINGTheme.typography.caption.md12,
-        modifier = modifier.noRippleClickable(onClick = onClick),
-        color = color,
+        color = textColor,
+        modifier = modifier.noRippleClickable(
+            onClick = onClick,
+        )
     )
 }
 
 @Preview(showBackground = true)
 @Composable
-private fun LoginSectionPreview(){
+private fun LoginSectionPreview() {
     SSINGTheme {
         LoginSection(
             onKakaoClick = {},

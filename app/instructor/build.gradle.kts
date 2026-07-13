@@ -43,7 +43,10 @@ dependencies {
     implementation(projects.presentation.notification)
     implementation(projects.presentation.instructorHome)
     implementation(projects.presentation.instructorMatching)
+    implementation(projects.presentation.instructorLesson)
+    implementation(projects.presentation.instructorProfile)
     implementation(libs.immutable)
     implementation(libs.material)
     implementation(libs.kakao.user)
+    implementation(libs.androidx.splashscreen)
 }

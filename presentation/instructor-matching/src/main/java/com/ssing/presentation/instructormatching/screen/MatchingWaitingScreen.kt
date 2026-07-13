@@ -7,22 +7,29 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.ssing.core.ui.common.component.Gender
-import com.ssing.core.ui.common.component.Participant
+import com.airbnb.lottie.compose.LottieAnimation
+import com.airbnb.lottie.compose.LottieCompositionSpec
+import com.airbnb.lottie.compose.LottieConstants
+import com.airbnb.lottie.compose.animateLottieCompositionAsState
+import com.airbnb.lottie.compose.rememberLottieComposition
 import com.ssing.core.ui.common.component.SsingButton
 import com.ssing.core.ui.common.component.SsingButtonStyle
 import com.ssing.core.ui.common.component.SsingHeader
 import com.ssing.core.ui.common.component.SsingMatchingDetailCard
 import com.ssing.core.ui.common.component.SsingTopBar
 import com.ssing.core.ui.designsystem.theme.SSINGTheme
-import com.ssing.presentation.instructormatching.model.ConditionUiState
+import com.ssing.presentation.instructormatching.R
 import com.ssing.presentation.instructormatching.model.DurationOption
 import com.ssing.presentation.instructormatching.model.LevelOption
+import com.ssing.presentation.instructormatching.model.MatchingExposureUiState
 import com.ssing.presentation.instructormatching.model.MatchingWaitingUiState
 import com.ssing.presentation.instructormatching.model.ParticipantUiModel
 import com.ssing.presentation.instructormatching.model.SportOption
@@ -31,13 +38,19 @@ import kotlinx.collections.immutable.toPersistentList
 
 @Composable
 internal fun MatchingWaitingScreen(
-    condition: ConditionUiState,
+    exposure: MatchingExposureUiState,
     waiting: MatchingWaitingUiState,
     onBackClick: () -> Unit,
-    onEditConditionClick: () -> Unit,
+    onEditExposureClick: () -> Unit,
     onStopWaitingClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.instructor_matching_waiting))
+
+    val progress by animateLottieCompositionAsState(
+        composition = composition,
+        iterations = LottieConstants.IterateForever,
+    )
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -51,21 +64,29 @@ internal fun MatchingWaitingScreen(
         SsingHeader(
             title = "조건에 맞는 강습요청을 찾고 있어요",
             subText = "조건에 맞는 강습요청이 들어오면 바로 확인할 수 있어요",
-            modifier = Modifier.padding(top =16.dp),
+            modifier = Modifier.padding(vertical = 16.dp),
         )
 
-        // TODO(매칭-그래픽): 로딩 그래픽 에셋 확정 시 이 위치에 추가
+        LottieAnimation(
+            composition = composition,
+            progress = { progress },
+            modifier = Modifier
+                .padding(all = 16.dp)
+                .fillMaxWidth()
+                .widthIn(max = 328.dp)
+                .heightIn(max = 167.dp)
+        )
 
         SsingMatchingDetailCard(
             stepLabel = "현재 매칭 조건",
-            tags = (listOfNotNull(condition.selectedSports?.label) + condition.selectedLevels.map { it.label })
+            tags = (listOfNotNull(exposure.selectedSports?.label) + exposure.selectedLevels.map { it.label })
                 .toPersistentList(),
             nickname = waiting.nickname,
             teamCount = waiting.teamCount,
-            totalCount = condition.maxHeadcount,
+            totalCount = exposure.maxHeadcount,
             classDateTime = waiting.classDateTime,
-            location = condition.resortName,
-            duration = condition.selectedDurations.joinToString(" / ") { it.label },
+            location = exposure.resortName,
+            duration = exposure.selectedDurations.joinToString(" / ") { it.label },
             participants = waiting.participants.map { it.toParticipant() }.toPersistentList(),
             price = waiting.price,
             modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp),
@@ -81,7 +102,7 @@ internal fun MatchingWaitingScreen(
         ) {
             SsingButton(
                 text = "조건 수정",
-                onClick = onEditConditionClick,
+                onClick = onEditExposureClick,
                 style = SsingButtonStyle.GRAY,
                 modifier = Modifier.weight(1f),
             )
@@ -100,7 +121,7 @@ internal fun MatchingWaitingScreen(
 private fun MatchingWaitingScreenPreview() {
     SSINGTheme {
         MatchingWaitingScreen(
-            condition = ConditionUiState(
+            exposure = MatchingExposureUiState(
                 resortName = "하이원 리조트",
                 selectedSports = SportOption.SKI,
                 selectedLevels = setOf(LevelOption.BEGINNER),
@@ -120,7 +141,7 @@ private fun MatchingWaitingScreenPreview() {
                 equipmentStatus = "착용 완료",
             ),
             onBackClick = {},
-            onEditConditionClick = {},
+            onEditExposureClick = {},
             onStopWaitingClick = {},
         )
     }

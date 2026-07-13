@@ -41,10 +41,12 @@ dependencies {
     implementation(projects.presentation.auth)
     implementation(projects.presentation.notification)
     implementation(projects.presentation.consumerHome)
+    implementation(projects.presentation.consumerProfile)
     implementation(projects.presentation.consumerMatching)
     implementation(projects.presentation.consumerPayment)
     implementation(projects.presentation.consumerLesson)
     implementation(libs.immutable)
     implementation(libs.material)
     implementation(libs.kakao.user)
+    implementation(libs.androidx.splashscreen)
 }
