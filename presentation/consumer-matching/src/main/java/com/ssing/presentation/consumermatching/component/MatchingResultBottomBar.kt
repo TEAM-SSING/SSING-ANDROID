@@ -10,11 +10,15 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import com.ssing.core.ui.common.component.SsingButton
 import com.ssing.core.ui.common.component.SsingButtonStyle
 import com.ssing.core.ui.designsystem.theme.SSINGTheme
+import com.ssing.core.ui.extension.figmaDropShadow
 import java.text.DecimalFormat
 
 private val decimal = DecimalFormat("#,###")
@@ -29,6 +33,13 @@ internal fun MatchingResultBottomBar(
 ) {
     Column(
         modifier = modifier
+            .figmaDropShadow(
+                shape = RectangleShape,
+                dpOffset = DpOffset(0.dp, 2.dp),
+                blur = 10.dp,
+                spread = 0.dp,
+                color = Color(0x26000000)
+            )
             .background(SSINGTheme.colors.backgroundNormal)
             .padding(horizontal = 16.dp)
             .padding(top = 16.dp, bottom = 14.dp),
