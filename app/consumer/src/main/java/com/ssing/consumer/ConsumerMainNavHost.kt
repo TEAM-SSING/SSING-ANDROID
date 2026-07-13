@@ -17,6 +17,7 @@ import com.ssing.presentation.consumerpayment.navigation.consumerPaymentNavGraph
 import com.ssing.presentation.consumermatching.navigation.ConsumerMatchingCondition
 import com.ssing.presentation.consumermatching.navigation.consumerMatchingNavGraph
 import com.ssing.presentation.consumerprofile.navigation.consumerProfileNavGraph
+import com.ssing.presentation.devauth.navigation.DevAuth
 import com.ssing.presentation.devauth.navigation.devAuthNavGraph
 import com.ssing.presentation.notification.navigation.notificationNavGraph
 
@@ -28,7 +29,7 @@ internal fun ConsumerMainNavHost(
 ) {
     SsingNavHost(
         navController = navController,
-        startDestination = ConsumerHome,
+        startDestination = DevAuth,
         modifier = modifier.fillMaxSize(),
     ) {
         devAuthNavGraph(

@@ -9,6 +9,7 @@ import com.ssing.core.ui.extension.clearBackStackNavOptions
 import com.ssing.core.ui.navigation.SsingNavHost
 import com.ssing.presentation.auth.instructor.navigation.InstructorLogin
 import com.ssing.presentation.auth.instructor.navigation.instructorAuthNavGraph
+import com.ssing.presentation.devauth.navigation.DevAuth
 import com.ssing.presentation.devauth.navigation.devAuthNavGraph
 import com.ssing.presentation.instructorhome.navigation.InstructorHome
 import com.ssing.presentation.instructorhome.navigation.instructorHomeNavGraph
@@ -27,7 +28,7 @@ internal fun InstructorMainNavHost(
 ) {
     SsingNavHost(
         navController = navController,
-        startDestination = InstructorLogin,
+        startDestination = DevAuth,
         modifier = modifier.fillMaxSize(),
     ) {
         devAuthNavGraph(
