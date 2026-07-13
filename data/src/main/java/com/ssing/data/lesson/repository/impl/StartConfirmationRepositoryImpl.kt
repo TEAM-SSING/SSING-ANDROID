@@ -1,6 +1,6 @@
 package com.ssing.data.lesson.repository.impl
 
-import com.ssing.core.network.exception.ApiException
+import com.ssing.core.network.extension.mapApiException
 import com.ssing.core.network.util.ApiResponseHandler
 import com.ssing.data.lesson.exception.StartConfirmationException
 import com.ssing.data.lesson.remote.datasource.api.StartConfirmationDataSource
@@ -20,39 +20,21 @@ internal class StartConfirmationRepositoryImpl @Inject constructor(
                 request = StartConfirmationRequest(lessonId = lessonId),
             )
         }.map { }
-            .recoverCatching { throwable ->
-                throw mapToStartConfirmationException(throwable)
-            }
+            .mapApiException { mapStartConfirmationException(it.serverCode, it.message, it.requestId) }
 
-    private fun mapToStartConfirmationException(throwable: Throwable): Throwable {
-        if (throwable !is ApiException) return throwable
-
-        val code = throwable.serverCode
-        val message = throwable.message
-        val requestId = throwable.requestId
-
-        return when (throwable) {
-            is ApiException.Unauthorized -> when (code) {
-                "AUTH_INVALID_TOKEN" -> StartConfirmationException.AuthInvalidToken(code, message, requestId)
-                "AUTH_TOKEN_EXPIRED" -> StartConfirmationException.AuthTokenExpired(code, message, requestId)
-                else -> StartConfirmationException.Unauthenticated(code, message, requestId)
-            }
-
-            is ApiException.Forbidden ->
-                StartConfirmationException.Forbidden(code, message, requestId)
-
-            is ApiException.NotFound ->
-                StartConfirmationException.LessonNotFound(code, message, requestId)
-
-            is ApiException.Conflict -> when (code) {
-                "LESSON_INVALID_STATE" -> StartConfirmationException.LessonInvalidState(code, message, requestId)
-                else -> StartConfirmationException.LessonStartNotAllowed(code, message, requestId)
-            }
-
-            is ApiException.InternalServerError ->
-                StartConfirmationException.InternalError(code, message, requestId)
-
-            else -> throwable
-        }
+    private fun mapStartConfirmationException(
+        serverCode: String?,
+        message: String?,
+        requestId: String?,
+    ) = when (serverCode) {
+        "UNAUTHENTICATED" -> StartConfirmationException.Unauthenticated(serverCode, message, requestId)
+        "AUTH_INVALID_TOKEN" -> StartConfirmationException.AuthInvalidToken(serverCode, message, requestId)
+        "AUTH_TOKEN_EXPIRED" -> StartConfirmationException.AuthTokenExpired(serverCode, message, requestId)
+        "FORBIDDEN" -> StartConfirmationException.Forbidden(serverCode, message, requestId)
+        "LESSON_NOT_FOUND" -> StartConfirmationException.LessonNotFound(serverCode, message, requestId)
+        "LESSON_START_NOT_ALLOWED" -> StartConfirmationException.LessonStartNotAllowed(serverCode, message, requestId)
+        "LESSON_INVALID_STATE" -> StartConfirmationException.LessonInvalidState(serverCode, message, requestId)
+        "INTERNAL_ERROR" -> StartConfirmationException.InternalError(serverCode, message, requestId)
+        else -> StartConfirmationException.InternalError(serverCode, message, requestId)
     }
 }
