@@ -4,7 +4,7 @@ import com.ssing.core.network.model.BaseResponse
 import com.ssing.data.lesson.remote.dto.request.LessonRequest
 import com.ssing.data.lesson.remote.dto.response.LessonResponse
 
-interface LessonDataSource {
+internal interface LessonDataSource {
     suspend fun lesson(
         lessonId: Long,
         request: LessonRequest,
