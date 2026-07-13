@@ -7,9 +7,9 @@ import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
 
 @Serializable(with = InstructorLessonDetailResponseSerializer::class)
-internal sealed interface InstructorLessonDetailResponse
+sealed interface InstructorLessonDetailResponse
 
-internal object InstructorLessonDetailResponseSerializer :
+object InstructorLessonDetailResponseSerializer :
     JsonContentPolymorphicSerializer<InstructorLessonDetailResponse>(
         InstructorLessonDetailResponse::class
     ) {
