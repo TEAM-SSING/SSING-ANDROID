@@ -14,6 +14,7 @@ import com.ssing.presentation.consumerhome.navigation.consumerHomeNavGraph
 import com.ssing.presentation.consumerlesson.navigation.consumerLessonNavGraph
 import com.ssing.presentation.consumermatching.navigation.ConsumerMatchingCondition
 import com.ssing.presentation.consumermatching.navigation.consumerMatchingNavGraph
+import com.ssing.presentation.consumerprofile.navigation.consumerProfileNavGraph
 import com.ssing.presentation.notification.navigation.notificationNavGraph
 
 @Composable
