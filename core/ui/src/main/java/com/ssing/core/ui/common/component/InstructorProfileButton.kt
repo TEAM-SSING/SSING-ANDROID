@@ -1,5 +1,6 @@
 package com.ssing.core.ui.common.component
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -16,13 +17,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ssing.core.ui.R
 import com.ssing.core.ui.designsystem.component.SsingBasicButton
-import com.ssing.core.ui.designsystem.component.UrlImage
 import com.ssing.core.ui.designsystem.theme.SSINGTheme
 
 @Composable
@@ -75,8 +76,9 @@ private fun ProfileSection(
         horizontalArrangement = Arrangement.spacedBy(10.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        UrlImage(
-            url = imageUrl,
+        Image(
+            painter = painterResource(R.drawable.img_default_profile),
+            contentDescription = null,
             modifier = Modifier
                 .clip(CircleShape)
                 .width(44.dp)
