@@ -130,7 +130,7 @@ private fun MatchingWaitingScreenPreview() {
             waiting = MatchingWaitingUiState(
                 nickname = "김OO",
                 teamCount = 2,
-                classDateTime = "1월 7일 오전 10:00",
+                classDateTime = "강습생과 만난 후 강습 시작",
                 participants = listOf(
                     ParticipantUiModel(age = 28, isMale = true),
                     ParticipantUiModel(age = 25, isMale = false),
