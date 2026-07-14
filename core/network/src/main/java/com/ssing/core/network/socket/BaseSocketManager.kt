@@ -184,12 +184,10 @@ internal abstract class BaseSocketManager<T>(
         connectJob = null
         accessToken = null
         reissueAttempted = false
-        try {
-            session?.disconnect()
-        } finally {
-            session = null
-            _socketState.update { SocketState.Disconnected }
-        }
+        suspendRunCatching { session?.disconnect() }
+            .onFailure { Timber.w(it, "🐮 disconnect() 중 세션 종료 실패 (이미 끊겼을 수 있음)") }
+        session = null
+        _socketState.update { SocketState.Disconnected }
     }
 
     private suspend fun subscribe() {
