@@ -69,8 +69,8 @@ data class InstructorLessonDetailCanceled(
 ) : InstructorLessonDetailRequestResult
 
 data class MatchingRequest(
-    val matchingRequestId: Int,
-    val representativeMemberId: Int,
+    val matchingRequestId: Long,
+    val representativeMemberId: Long,
     val representativeMemberName: String,
     val headcount: Int,
     val teamLessonPrice: Int,
@@ -79,7 +79,7 @@ data class MatchingRequest(
 )
 
 data class Participant(
-    val participantId: Int,
+    val participantId: Long,
     val gender: String,
     val age: Int,
 )

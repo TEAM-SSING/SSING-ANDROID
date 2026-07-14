@@ -32,8 +32,8 @@ internal data class InstructorLessonDetailCompletedResponse(
 
     @Serializable
     internal data class MatchingRequest(
-        @SerialName("matchingRequestId") val matchingRequestId: Int,
-        @SerialName("representativeMemberId") val representativeMemberId: Int,
+        @SerialName("matchingRequestId") val matchingRequestId: Long,
+        @SerialName("representativeMemberId") val representativeMemberId: Long,
         @SerialName("representativeMemberName") val representativeMemberName: String,
         @SerialName("headcount") val headcount: Int,
         @SerialName("teamLessonPrice") val teamLessonPrice: Int,
@@ -42,7 +42,7 @@ internal data class InstructorLessonDetailCompletedResponse(
 
     @Serializable
     internal data class Participant(
-        @SerialName("participantId") val participantId: Int,
+        @SerialName("participantId") val participantId: Long,
         @SerialName("gender") val gender: String,
         @SerialName("age") val age: Int,
     )
