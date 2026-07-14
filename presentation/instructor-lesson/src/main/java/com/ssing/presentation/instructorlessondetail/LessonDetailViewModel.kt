@@ -208,15 +208,14 @@ private fun InstructorLessonDetailRequestResult.toPhase(): LessonDetailContract.
         )
 
         is InstructorLessonDetailCompleted -> {
-            val startedAt = LocalDateTime.parse(actualStartedAt)
-            val endedAt = LocalDateTime.parse(actualEndedAt)
-
+            val startedAt = runCatching { LocalDateTime.parse(actualStartedAt) }.getOrNull()
+            val endedAt = runCatching { LocalDateTime.parse(actualEndedAt) }.getOrNull()
             LessonDetailContract.LessonDetailPhase.LessonDetailCompleted(
                 completed = LessonDetailCompletedUiModel(
                     tags = listOf(sport, lessonLevel).toPersistentList(),
                     classTitle = representativeConsumerNames.joinToString(),
-                    lessonDate = startedAt.ssingDateFormatter(),
-                    lessonTime = "${startedAt.toClockText()} ~ ${endedAt.toClockText()}",
+                    lessonDate = startedAt?.ssingDateFormatter() ?: "",
+                    lessonTime = if (startedAt != null && endedAt != null) "${startedAt.toClockText()} ~ ${endedAt.toClockText()}" else "",
                     location = resortDisplayName,
                     duration = lessonDurationMinutes.toDurationText(),
                     price = totalLessonPrice,
