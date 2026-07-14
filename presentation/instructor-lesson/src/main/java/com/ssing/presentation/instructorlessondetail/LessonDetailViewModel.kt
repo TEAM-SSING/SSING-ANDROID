@@ -187,7 +187,7 @@ private fun InstructorLessonDetailRequestResult.toModel(): LessonDetailContract.
                 tags = listOf(sport, lessonLevel).toPersistentList(),
                 classTitle = representativeConsumerNames.joinToString(),
                 location = resortDisplayName,
-                duration = "${scheduledDurationMinutes}분",
+                duration = scheduledDurationMinutes.toDurationText(),
                 price = totalLessonPrice,
                 teams = matchingRequests.map { it.toModel() }.toPersistentList(),
             )
@@ -200,7 +200,7 @@ private fun InstructorLessonDetailRequestResult.toModel(): LessonDetailContract.
                 remainingTime = remainingSeconds.toTimeText(),
                 elapsedTime = elapsedSeconds.toTimeText(),
                 location = resortDisplayName,
-                duration = "${scheduledDurationMinutes}분",
+                duration = scheduledDurationMinutes.toDurationText(),
                 price = totalLessonPrice,
                 teams = matchingRequests.map { it.toModel() }.toPersistentList(),
             )
@@ -212,7 +212,7 @@ private fun InstructorLessonDetailRequestResult.toModel(): LessonDetailContract.
                 classTitle = representativeConsumerNames.joinToString(),
                 lessonDate = LocalDateTime.parse(actualStartedAt).ssingDateFormatter(),
                 location = resortDisplayName,
-                duration = "${actualDurationMinutes}분",
+                duration = lessonDurationMinutes.toDurationText(),
                 price = totalLessonPrice,
                 teams = matchingRequests.map { it.toModel() }.toPersistentList(),
             )
@@ -223,7 +223,7 @@ private fun InstructorLessonDetailRequestResult.toModel(): LessonDetailContract.
                 tags = listOf(sport, lessonLevel).toPersistentList(),
                 classTitle = representativeConsumerNames.joinToString(),
                 location = resortDisplayName,
-                duration = "${lessonDurationMinutes}분",
+                duration = lessonDurationMinutes.toDurationText(),
                 price = totalLessonPrice,
                 teams = matchingRequests.map { it.toModel() }.toPersistentList(),
             )
@@ -250,3 +250,10 @@ private fun Int.toTimeText(): String {
     val s = this % 60
     return "%d:%02d:%02d".format(h, m, s)
 }
+
+private fun Int.toDurationText(): String =
+    when {
+        this < 60 -> "${this}분"
+        this % 60 == 0 -> "${this / 60}시간"
+        else -> "${this / 60}시간 ${this % 60}분"
+    }
