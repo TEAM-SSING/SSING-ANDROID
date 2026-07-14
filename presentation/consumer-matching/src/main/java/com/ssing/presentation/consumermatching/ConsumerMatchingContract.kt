@@ -33,10 +33,7 @@ internal interface ConsumerMatchingContract {
         val reviews: ImmutableList<InstructorReview> = persistentListOf(),
         val estimatedFee: Int = 0,
         val lessonDuration: String = "",
-    ) {
-        val detailCardTitle: String =
-            "${nickname}님" + if (teamCount > 1) " 외 ${teamCount - 1}명" else ""
-    }
+    )
 
     sealed interface Effect {
         sealed interface Pending : Effect {
@@ -50,7 +47,7 @@ internal interface ConsumerMatchingContract {
         sealed interface Result : Effect {
             data object PopBackStack : Result
             data object NavigateToHome : Result
-            data object NavigateToPayment : Result
+            data class NavigateToPayment(val matchingRequestId: Long) : Result
             data class ShowToast(val message: String) : Result
         }
 

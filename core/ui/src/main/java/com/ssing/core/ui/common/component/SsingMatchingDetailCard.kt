@@ -2,7 +2,6 @@ package com.ssing.core.ui.common.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.ui.draw.clip
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
@@ -20,10 +19,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import com.ssing.core.ui.R
 import com.ssing.core.ui.designsystem.theme.Blue200
@@ -61,6 +63,7 @@ fun SsingMatchingDetailCard(
     location: String = "",
     duration: String = "",
     maxCapacity: Int? = null,
+    participant: String = "",
     participants: ImmutableList<Participant> = persistentListOf(),
     isPaid: Boolean = false,
     price: Int? = null,
@@ -92,22 +95,23 @@ fun SsingMatchingDetailCard(
         if (title != null || nickname.isNotEmpty()) {
             SsingClassTitleRow(
                 title = title ?: "${nickname}님 팀 ${teamCount ?: 0}명",
-                totalCount = totalCount ?: 0,
-            )
-            HorizontalDivider(
-                color = SSINGTheme.colors.borderDisabled,
-                modifier = Modifier.padding(vertical = 8.dp),
+                totalCount = totalCount,
             )
         }
+        HorizontalDivider(
+            color = SSINGTheme.colors.borderDisabled,
+            modifier = Modifier.padding(vertical = 8.dp),
+        )
 
         Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
             if (classDateTime.isNotEmpty()) SsingInfoRow(label = "강습 일시", value = classDateTime)
             if (location.isNotEmpty()) SsingInfoRow(label = "강습 장소", value = location)
             if (duration.isNotEmpty()) SsingInfoRow(label = "강습 시간", value = duration)
             if (maxCapacity != null) SsingInfoRow(label = "최대 인원", value = "${maxCapacity}명")
-            if (participants.isNotEmpty()) SsingParticipantsRow(participants = participants)
+            if (participant.isNotEmpty()) SsingInfoRow(label = "강습 인원", value = participant)
+            else if (participants.isNotEmpty()) SsingParticipantsRow(participants = participants)
             if (price != null) SsingPriceRow(isPaid = isPaid, price = price)
-            if (equipmentStatus.isNotEmpty()) SsingInfoRow(label = "장비상태", value = equipmentStatus)
+            if (equipmentStatus.isNotEmpty()) SsingInfoRow(label = "장비 상태", value = equipmentStatus)
         }
     }
 }
@@ -170,10 +174,14 @@ fun SsingMatchingDetailCardSmall(
         Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
             if (place.isNotEmpty()) SsingInfoRow(label = "강습 장소", value = place)
             if (duration.isNotEmpty()) SsingInfoRow(label = "강습 시간", value = duration)
-            if (actualTimeRange.isNotEmpty()) SsingInfoRow(label = "실제 강습 시간", value = actualTimeRange)
+            if (actualTimeRange.isNotEmpty()) SsingInfoRow(
+                label = "실제 강습 시간",
+                value = actualTimeRange
+            )
             if (price != null) SsingInfoRow(label = "강습 가격", value = "₩ ${"%,d".format(price)}")
 
-            val hasCancelInfo = cancelDateTime.isNotEmpty() || cancelSubject.isNotEmpty() || cancelReason.isNotEmpty()
+            val hasCancelInfo =
+                cancelDateTime.isNotEmpty() || cancelSubject.isNotEmpty() || cancelReason.isNotEmpty()
             if (hasCancelInfo) {
                 HorizontalDivider(
                     color = SSINGTheme.colors.borderDisabled,
@@ -288,7 +296,7 @@ private fun SsingParticipantsRow(participants: ImmutableList<Participant>) {
         )
         FlowRow(
             modifier = Modifier.weight(1f),
-            horizontalArrangement = Arrangement.End,
+            horizontalArrangement = Arrangement.spacedBy(space = 2.dp, alignment = Alignment.End),
             verticalArrangement = Arrangement.spacedBy(4.dp),
             maxItemsInEachRow = maxItemsInEachRow,
         ) {
@@ -309,7 +317,7 @@ private val Gender.label: String
     }
 
 @Composable
-private fun SsingClassTitleRow(title: String, totalCount: Int) {
+private fun SsingClassTitleRow(title: String, totalCount: Int?) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -320,11 +328,14 @@ private fun SsingClassTitleRow(title: String, totalCount: Int) {
             style = SSINGTheme.typography.body.sb20,
             color = SSINGTheme.colors.textNormal,
         )
-        Text(
-            text = "총 ${totalCount}명",
-            style = SSINGTheme.typography.caption.sb14,
-            color = SSINGTheme.colors.textAlternative,
-        )
+
+        totalCount?.let {
+            Text(
+                text = "총 ${it}명",
+                style = SSINGTheme.typography.caption.sb14,
+                color = SSINGTheme.colors.textAlternative,
+            )
+        }
     }
 }
 
@@ -357,16 +368,23 @@ data class Participant(
 
 enum class Gender { MALE, FEMALE }
 
+private class SsingClassDetailCardPreviewProvider : PreviewParameterProvider<Int?> {
+    override val values: Sequence<Int?>
+        get() = sequenceOf(0, 5, null)
+}
+
 @Preview
 @Composable
-private fun SsingClassDetailCardPreview() {
+private fun SsingClassDetailCardPreview(
+    @PreviewParameter(SsingClassDetailCardPreviewProvider::class) totalCount: Int?,
+) {
     SSINGTheme {
         SsingMatchingDetailCard(
             tags = persistentListOf("하이원", "스노보드", "처음타요"),
             nickname = "김OO",
             teamCount = 0,
-            totalCount = 0,
-            classDateTime = "0월 0일 오전 00:00",
+            totalCount = totalCount,
+            classDateTime = "강사와 만난 후 강습 시작",
             location = "OOO 리조트",
             duration = "0시간",
             maxCapacity = 0,

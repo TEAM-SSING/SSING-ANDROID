@@ -14,14 +14,14 @@ import com.ssing.core.ui.common.component.Participant
  **/
 internal enum class SportOption(val label: String) {
     SKI("스키"),
-    SNOWBOARD("보드"),
+    SNOWBOARD("스노보드"),
 }
 
 /**
  * 강습 가능 레벨 옵션
  */
 internal enum class LevelOption(val label: String) {
-    FIRST_TIME("처음 타요"),
+    FIRST_TIME("처음타요"),
     BEGINNER("1~5회 타봤어요"),
     INTERMEDIATE("중급자에요"),
     CERTIFIED("자격증이 있어요"),
@@ -38,7 +38,7 @@ internal enum class DurationOption(val label: String, val hours: Int) {
 
 
 @Immutable
-internal data class ConditionUiState(
+internal data class MatchingExposureUiState(
     val availableSports: Set<SportOption> = SportOption.entries.toSet(),
     val resortName: String = "",
     val selectedSports: SportOption? = null,
@@ -51,15 +51,15 @@ internal data class ConditionUiState(
 ) {
     val isStartEnabled: Boolean
         get() = selectedSports != null &&
-            selectedLevels.isNotEmpty() &&
-            selectedDurations.isNotEmpty() &&
-            isNoticeChecked &&
-            !isSubmitting
+                selectedLevels.isNotEmpty() &&
+                selectedDurations.isNotEmpty() &&
+                isNoticeChecked &&
+                !isSubmitting
 
     fun applyProfile(
         availableSports: Set<SportOption>,
         resortName: String,
-    ): ConditionUiState = copy(
+    ): MatchingExposureUiState = copy(
         availableSports = availableSports,
         resortName = resortName,
         selectedSports = if (availableSports.size == 1) {
@@ -88,7 +88,8 @@ internal data class MatchingOfferUiModel(
     val expiresAtMillis: Long?,
     val nickname: String = "",
     val teamCount: Int = 0,
-    val classDateTime: String = "",
+    val classDateTime: String = "강습생과 만난 직후 강습 시작",
+    val participant: String = "",
     val participants: List<ParticipantUiModel> = emptyList(),
     val isPaid: Boolean = false,
     val price: Int = 0,
@@ -116,7 +117,8 @@ internal data class LessonSummaryUiModel(
 internal data class MatchingWaitingUiState(
     val nickname: String = "",
     val teamCount: Int = 0,
-    val classDateTime: String = "",
+    val classDateTime: String = "강습생과 만난 직후 강습 시작",
+    val participant: String = "",
     val participants: List<ParticipantUiModel> = emptyList(),
     val isPaid: Boolean = false,
     val price: Int = 0,

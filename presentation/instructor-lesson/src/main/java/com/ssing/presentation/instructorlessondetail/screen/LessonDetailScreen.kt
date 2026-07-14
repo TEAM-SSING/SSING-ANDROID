@@ -3,11 +3,13 @@ package com.ssing.presentation.instructorlessondetail.screen
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ssing.core.ui.common.component.CancelReason
 import com.ssing.core.ui.common.component.LessonBannerState
 import com.ssing.core.ui.common.component.SsingModal
+import com.ssing.core.ui.extension.toast
 import com.ssing.core.ui.util.HandleUiEffects
 import com.ssing.presentation.instructorlessondetail.LessonDetailContract
 import com.ssing.presentation.instructorlessondetail.LessonDetailContract.LessonDetailPhase
@@ -20,10 +22,12 @@ internal fun LessonDetailRoute(
     viewModel: LessonDetailViewModel = hiltViewModel(),
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
+    val context = LocalContext.current
 
     HandleUiEffects(viewModel.uiEffect) { effect ->
         when (effect) {
-            is LessonDetailContract.Effect.NavigateBack -> navigateBack()
+            is LessonDetailContract.Effect.ShowToast -> context.toast(effect.message)
+            LessonDetailContract.Effect.NavigateBack -> navigateBack()
         }
     }
 

@@ -374,7 +374,7 @@ private class HomeLessonCardPreviewProvider :
                 status = Status.Matching,
             ),
             HomeLessonCardState.Reservation(
-                lessonId = 2,
+                lessonId = 1,
                 chip = "D-3",
                 displayText = "김OO님 팀 3명",
                 location = "지산리조트",

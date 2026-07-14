@@ -1,0 +1,10 @@
+package com.ssing.data.devauth.remote.dto.request
+
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+
+@Serializable
+internal data class TokenRequest (
+    @SerialName("personaKey") val personaKey: String,
+    @SerialName("autoCreate") val autoCreate: Boolean,
+)
