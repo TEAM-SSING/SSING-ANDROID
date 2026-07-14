@@ -6,7 +6,7 @@ import com.ssing.core.ui.base.BaseViewModel
 import com.ssing.core.ui.common.component.HomeLessonCardState
 import com.ssing.core.ui.common.component.HomeLessonCardState.Reservation.Status
 import com.ssing.core.ui.extension.uiMessage
-import com.ssing.data.home.model.LessonCards
+import com.ssing.data.home.model.LessonCard
 import com.ssing.data.home.repository.api.HomeRepository
 import com.ssing.presentation.consumerhome.model.DisplayStatus
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -38,16 +38,16 @@ internal class ConsumerHomeViewModel @Inject constructor(
 
             consumerHomeRepository.getConsumerHome()
                 .onSuccess { result ->
-                        Timber.d("consumer-home 응답: $result")
-                        updateState {
-                            copy(
-                                isLoading = false,
-                                matchingPeopleCount = result.matchingPeopleCount,
-                                hasUnreadNotification = result.hasUnreadNotification,
-                                lessonCards = result.lessonCards.toUiState()
-                            )
-                        }
+                    Timber.d("consumer-home 응답: $result")
+                    updateState {
+                        copy(
+                            isLoading = false,
+                            matchingPeopleCount = result.matchingPeopleCount,
+                            hasUnreadNotification = result.hasUnreadNotification,
+                            lessonCards = result.lessonCards.toUiState()
+                        )
                     }
+                }
                 .onFailure { throwable ->
                     Timber.e(throwable, "consumer-home 조회 실패")
 
@@ -62,12 +62,12 @@ internal class ConsumerHomeViewModel @Inject constructor(
         }
     }
 
-    private fun List<LessonCards>.toUiState(): ImmutableList<HomeLessonCardState> {
+    private fun List<LessonCard>.toUiState(): ImmutableList<HomeLessonCardState> {
         if (isEmpty()) return persistentListOf(HomeLessonCardState.Empty)
         return map { it.toReservation() }.toImmutableList()
     }
 
-    private fun LessonCards.toReservation(): HomeLessonCardState.Reservation =
+    private fun LessonCard.toReservation(): HomeLessonCardState.Reservation =
         HomeLessonCardState.Reservation(
             lessonId = lessonId,
             chip = toChipText(),
@@ -77,13 +77,13 @@ internal class ConsumerHomeViewModel @Inject constructor(
             status = toCardStatus(),
         )
 
-    private fun LessonCards.toChipText(): String = when {
+    private fun LessonCard.toChipText(): String = when {
         displayStatus == DisplayStatus.IN_PROGRESS.label -> "진행중"
         remainingDays == 0 -> "Now"
         else -> "D-$remainingDays"
     }
 
-    private fun LessonCards.toCardStatus(): Status = when {
+    private fun LessonCard.toCardStatus(): Status = when {
         displayStatus == DisplayStatus.IN_PROGRESS.label -> Status.Matching
         remainingDays == 0 -> Status.Matched
         else -> Status.Default
