@@ -18,6 +18,8 @@ import com.ssing.presentation.consumermatching.navigation.navigateToConsumerMatc
 import com.ssing.presentation.consumerpayment.navigation.consumerPaymentNavGraph
 import com.ssing.presentation.consumerpayment.navigation.navigateToComsumerPayment
 import com.ssing.presentation.consumerprofile.navigation.consumerProfileNavGraph
+import com.ssing.presentation.devauth.navigation.DevAuth
+import com.ssing.presentation.devauth.navigation.devAuthNavGraph
 import com.ssing.presentation.notification.navigation.notificationNavGraph
 
 @Composable
@@ -28,9 +30,18 @@ internal fun ConsumerMainNavHost(
 ) {
     SsingNavHost(
         navController = navController,
-        startDestination = ConsumerHome,
+        startDestination = DevAuth,
         modifier = modifier.fillMaxSize(),
     ) {
+        devAuthNavGraph(
+            paddingValues = paddingValues,
+            navigateToHome = {
+                navController.navigate(
+                    route = ConsumerHome,
+                    navOptions = navController.clearBackStackNavOptions(),
+                )
+            },
+        )
         consumerHomeNavGraph(
             paddingValues = paddingValues,
             navigateToLessonDetail = {
@@ -56,7 +67,7 @@ internal fun ConsumerMainNavHost(
                     navOptions = navController.clearBackStackNavOptions(),
                 )
             },
-            navigateToHome = {
+            navigateToHome =  {
                 navController.navigate(
                     route = ConsumerHome,
                     navOptions = navController.clearBackStackNavOptions(),

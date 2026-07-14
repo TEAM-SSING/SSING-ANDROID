@@ -1,5 +1,3 @@
-import org.gradle.api.initialization.resolve.RepositoriesMode
-
 pluginManagement {
     includeBuild("build-logic")
     repositories {
@@ -50,3 +48,4 @@ include(":presentation:instructor-profile")
 include(":presentation:instructor-lesson")
 include(":presentation:consumer-profile")
 include(":presentation:instructor-profile")
+include(":presentation:devauth")
