@@ -14,7 +14,6 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 internal object LessonServiceModule {
 
-    @Binds
     @Provides
     @Singleton
     fun provideLessonService(
