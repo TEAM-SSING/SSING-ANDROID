@@ -1,6 +1,6 @@
 package com.ssing.data.consumerhome.di
 
-import com.ssing.data.consumerhome.remote.datasource.api.ConsumerHomeRemoteDataSource
+import com.ssing.data.consumerhome.repository.api.ConsumerHomeRepository
 import com.ssing.data.consumerhome.repository.impl.ConsumerHomeRepositoryImpl
 import dagger.Binds
 import dagger.Module
@@ -16,5 +16,5 @@ internal abstract class ConsumerHomeRepositoryModule {
     @Singleton
     abstract fun bindConsumerRepository(
         impl: ConsumerHomeRepositoryImpl,
-    ): ConsumerHomeRemoteDataSource
+    ): ConsumerHomeRepository
 }
