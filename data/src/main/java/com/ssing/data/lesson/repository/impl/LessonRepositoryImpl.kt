@@ -23,7 +23,6 @@ internal class LessonRepositoryImpl @Inject constructor(
         apiResponseHandler.safeApiCall {
             dataSource.lessonCompleted(
                 lessonId = lessonId,
-                request = LessonRequest(lessonId = lessonId),
             )
         }.map { }
 }

@@ -12,6 +12,5 @@ internal interface LessonDataSource {
 
     suspend fun lessonCompleted(
         lessonId: Long,
-        request: LessonRequest,
     ): BaseResponse<LessonResponse>
 }

@@ -17,7 +17,7 @@ internal class LessonDataSourceImpl @Inject constructor(
         service.lessonStart(lessonId, request)
 
     override suspend fun lessonCompleted(
-        lessonId: Long, request: LessonRequest
+        lessonId: Long
     ): BaseResponse<LessonResponse> =
         service.lessonCompleted(lessonId)
 }
