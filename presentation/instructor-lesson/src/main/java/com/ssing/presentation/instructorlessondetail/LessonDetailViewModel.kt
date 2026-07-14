@@ -51,7 +51,7 @@ internal class LessonDetailViewModel @Inject constructor(
         viewModelScope.launch {
             instructorLessonDetailRepository.instructorLessonDetail(lessonId)
                 .onSuccess { result ->
-                    updateState { copy(phase = result.toModel()) }
+                    updateState { copy(phase = result.toPhase()) }
                 }
                 .onFailure {
                     if (it is ApiException) {
@@ -177,7 +177,7 @@ internal class LessonDetailViewModel @Inject constructor(
     }
 }
 
-private fun InstructorLessonDetailRequestResult.toModel(): LessonDetailContract.LessonDetailPhase =
+private fun InstructorLessonDetailRequestResult.toPhase(): LessonDetailContract.LessonDetailPhase =
     when (this) {
         is InstructorLessonDetailBefore -> LessonDetailContract.LessonDetailPhase.LessonDetailBefore(
             before = LessonDetailBeforeUiModel(
