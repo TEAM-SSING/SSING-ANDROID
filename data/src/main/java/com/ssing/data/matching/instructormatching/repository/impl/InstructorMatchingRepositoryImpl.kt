@@ -1,23 +1,40 @@
 package com.ssing.data.matching.instructormatching.repository.impl
 
+import com.ssing.core.network.socket.matching.MatchingEnvelope
 import com.ssing.core.network.util.ApiResponseHandler
+import com.ssing.data.matching.common.remote.datasource.api.MatchingSocketDataSource
 import com.ssing.data.matching.instructormatching.model.InstructorMatchingExposure
 import com.ssing.data.matching.instructormatching.model.InstructorMatchingLessonSummary
 import com.ssing.data.matching.instructormatching.model.InstructorMatchingOffer
 import com.ssing.data.matching.instructormatching.model.InstructorMatchingPriceSummary
 import com.ssing.data.matching.instructormatching.model.InstructorMatchingRequestSummary
 import com.ssing.data.matching.instructormatching.model.InstructorMatchingResort
+import com.ssing.data.matching.instructormatching.model.InstructorMatchingSocketEvent
 import com.ssing.data.matching.instructormatching.remote.datasource.api.InstructorMatchingRemoteDataSource
 import com.ssing.data.matching.instructormatching.remote.dto.request.InstructorMatchingExposureStartRequest
 import com.ssing.data.matching.instructormatching.remote.dto.response.InstructorMatchingExposureResponse
 import com.ssing.data.matching.instructormatching.remote.dto.response.InstructorMatchingOfferResponse
 import com.ssing.data.matching.instructormatching.repository.api.InstructorMatchingRepository
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.map
+import kotlinx.serialization.json.JsonElement
 import javax.inject.Inject
 
 internal class InstructorMatchingRepositoryImpl @Inject constructor(
     private val apiResponseHandler: ApiResponseHandler,
     private val remoteDataSource: InstructorMatchingRemoteDataSource,
+    private val socketDataSource: MatchingSocketDataSource,
 ) : InstructorMatchingRepository {
+
+    override val socketEvents: Flow<InstructorMatchingSocketEvent> =
+        socketDataSource.event
+            .filter { it.recipientRole == RECIPIENT_INSTRUCTOR }
+            .map { it.toSocketEvent() }
+
+    override fun connectSocket() = socketDataSource.connect()
+
+    override suspend fun disconnectSocket() = socketDataSource.disconnect()
 
     override suspend fun fetchMatchingExposure(): Result<InstructorMatchingExposure> =
         apiResponseHandler.safeApiCall {
@@ -47,6 +64,13 @@ internal class InstructorMatchingRepositoryImpl @Inject constructor(
                 ),
             )
         }.map { it.isExposed }
+
+    private fun MatchingEnvelope<JsonElement>.toSocketEvent(): InstructorMatchingSocketEvent =
+        InstructorMatchingSocketEvent(
+            eventType = this.eventType,
+            offerId = this.offerId,
+            groupId = this.groupId,
+        )
 
     private fun InstructorMatchingExposureResponse.toModel(): InstructorMatchingExposure =
         InstructorMatchingExposure(
@@ -85,4 +109,8 @@ internal class InstructorMatchingRepositoryImpl @Inject constructor(
                 totalPaymentAmount = this.priceSummary.totalPaymentAmount,
             ),
         )
+
+    companion object {
+        private const val RECIPIENT_INSTRUCTOR = "INSTRUCTOR"
+    }
 }
