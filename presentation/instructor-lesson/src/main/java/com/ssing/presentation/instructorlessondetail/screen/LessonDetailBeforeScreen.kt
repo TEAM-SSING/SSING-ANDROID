@@ -3,14 +3,10 @@ package com.ssing.presentation.instructorlessondetail.screen
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -21,17 +17,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ssing.core.ui.common.component.CancelReason
-import com.ssing.core.ui.common.component.ConsumerInfoCard
 import com.ssing.core.ui.common.component.LessonBanner
 import com.ssing.core.ui.common.component.LessonBannerState
-import com.ssing.core.ui.common.component.MatchingCancelBottomSheet
 import com.ssing.core.ui.common.component.SsingButtonStyle
-import com.ssing.core.ui.common.component.SsingMatchingDetailCardSmall
 import com.ssing.core.ui.common.component.SsingTopBar
-import com.ssing.core.ui.common.component.UserRole
 import com.ssing.core.ui.designsystem.theme.Blue50
 import com.ssing.core.ui.designsystem.theme.SSINGTheme
+import com.ssing.presentation.instructorlessondetail.component.CancelReasonBottomSheet
+import com.ssing.presentation.instructorlessondetail.component.ConsumerInfoList
+import com.ssing.presentation.instructorlessondetail.component.LessonDetailBodyContainer
 import com.ssing.presentation.instructorlessondetail.component.LessonDetailSsingButton
+import com.ssing.presentation.instructorlessondetail.component.LessonInfoSection
 import com.ssing.presentation.instructorlessondetail.component.LessonManager
 import com.ssing.presentation.instructorlessondetail.component.SectionTitle
 import com.ssing.presentation.instructorlessondetail.model.LessonDetailBeforeUiModel
@@ -106,24 +102,11 @@ internal fun LessonDetailBeforeScreen(
                     beforeLessonText = "강습을 준비해주세요",
                 )
 
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(
-                            color = SSINGTheme.colors.backgroundNormal,
-                            shape = RoundedCornerShape(
-                                topStart = 12.dp,
-                                topEnd = 12.dp,
-                            )
-                        )
-                        .padding(horizontal = 16.dp)
-                ) {
+                LessonDetailBodyContainer {
                     Spacer(modifier = Modifier.height(16.dp))
-                    SectionTitle(text = "강습 정보")
-                    Spacer(modifier = Modifier.height(8.dp))
-                    SsingMatchingDetailCardSmall(
+                    LessonInfoSection(
                         tags = before.tags,
-                        teamNicknames = before.nicknames,
+                        nicknames = before.nicknames,
                         totalCount = before.teams.size,
                         place = before.location,
                         duration = before.duration,
@@ -131,19 +114,13 @@ internal fun LessonDetailBeforeScreen(
                     )
 
                     Spacer(modifier = Modifier.height(24.dp))
+
                     SectionTitle(text = "강습생 정보")
+
                     Spacer(modifier = Modifier.height(8.dp))
-                    before.teams.forEachIndexed { index, team ->
-                        ConsumerInfoCard(
-                            isReady = team.isReady ?: false,
-                            nickname = team.teamNickname,
-                            participants = team.participants,
-                            price = team.price,
-                        )
-                        if (index != before.teams.lastIndex) {
-                            Spacer(modifier = Modifier.height(4.dp))
-                        }
-                    }
+
+                    ConsumerInfoList(teams = before.teams)
+
                     LessonManager(
                         primaryText = "강습 취소",
                         onPrimaryClick = onCancelSheetOpen,
@@ -163,31 +140,9 @@ internal fun LessonDetailBeforeScreen(
 
     CancelReasonBottomSheet(
         cancelReasonState = cancelReasonState,
-        etcState = etcState,
         onReasonClick = onCancelReasonSelect,
-        onConfirmClick = { onCancelConfirmClick(etcState.text.toString().ifBlank { null }) },
+        onConfirmClick = onCancelConfirmClick,
         onDismissRequest = onCancelSheetDismiss,
-    )
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun CancelReasonBottomSheet(
-    cancelReasonState: CancelReasonState,
-    etcState: TextFieldState,
-    onReasonClick: (CancelReason) -> Unit,
-    onConfirmClick: () -> Unit,
-    onDismissRequest: () -> Unit,
-) {
-    if (!cancelReasonState.visible) return
-
-    MatchingCancelBottomSheet(
-        userRole = UserRole.INSTRUCTOR,
-        selectedReason = cancelReasonState.selectedReason,
-        onReasonClick = onReasonClick,
-        etcState = etcState,
-        onConfirmClick = { onConfirmClick() },
-        onDismissRequest = onDismissRequest,
     )
 }
 
