@@ -32,10 +32,7 @@ private data object ConsumerMatchingResult : Route
 @Serializable
 private data object ConsumerMatchingFailure : Route
 
-private fun NavController.navigateToConsumerMatchingCondition() =
-    this.navigate(ConsumerMatchingCondition)
-
-private fun NavController.navigateToConsumerMatching() =
+fun NavController.navigateToConsumerMatching() =
     this.navigate(ConsumerMatchingGraph)
 
 private fun NavController.navigateToConsumerMatchingResult() =
@@ -46,6 +43,7 @@ private fun NavController.navigateToConsumerMatchingFailure() =
 
 fun NavGraphBuilder.consumerMatchingNavGraph(
     navigateToHome: () -> Unit,
+    navigateToPayment: (Long) -> Unit,
     navController: NavHostController,
     paddingValues: PaddingValues,
 ) {
@@ -72,7 +70,7 @@ fun NavGraphBuilder.consumerMatchingNavGraph(
             ConsumerMatchingResultRoute(
                 popBackStack = navController::popBackStack,
                 navigateToHome = navigateToHome,
-                navigateToPayment = {},
+                navigateToPayment = navigateToPayment,
                 modifier = Modifier.padding(paddingValues),
                 viewModel = sharedViewModel(backStackEntry, navController),
             )
