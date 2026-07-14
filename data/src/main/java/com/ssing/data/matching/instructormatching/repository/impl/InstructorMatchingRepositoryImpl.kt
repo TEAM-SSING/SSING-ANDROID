@@ -9,6 +9,7 @@ import com.ssing.data.matching.instructormatching.model.InstructorMatchingPriceS
 import com.ssing.data.matching.instructormatching.model.InstructorMatchingRequestSummary
 import com.ssing.data.matching.instructormatching.model.InstructorMatchingResort
 import com.ssing.data.matching.instructormatching.remote.datasource.api.InstructorMatchingRemoteDataSource
+import com.ssing.data.matching.instructormatching.remote.dto.request.InstructorMatchingExposureStartRequest
 import com.ssing.data.matching.instructormatching.remote.dto.response.InstructorMatchingExposureResponse
 import com.ssing.data.matching.instructormatching.remote.dto.response.InstructorMatchingOfferResponse
 import com.ssing.data.matching.instructormatching.remote.dto.response.InstructorMatchingOffersResponse
@@ -32,6 +33,25 @@ internal class InstructorMatchingRepositoryImpl @Inject constructor(
         apiResponseHandler.safeApiCall {
             remoteDataSource.getMatchingOffers(page = page, size = size)
         }.map { it.toModel() }
+
+    override suspend fun startMatchingExposure(
+        sport: String,
+        lessonLevels: List<String>,
+        availableDurationMinutes: List<Int>,
+        maxHeadcount: Int,
+        equipmentReady: Boolean,
+    ): Result<Boolean> =
+        apiResponseHandler.safeApiCall {
+            remoteDataSource.putMatchingExposure(
+                request = InstructorMatchingExposureStartRequest(
+                    sport = sport,
+                    lessonLevels = lessonLevels,
+                    availableDurationMinutes = availableDurationMinutes,
+                    maxHeadcount = maxHeadcount,
+                    equipmentReady = equipmentReady,
+                ),
+            )
+        }.map { it.isExposed }
 
     private fun InstructorMatchingExposureResponse.toModel(): InstructorMatchingExposure =
         InstructorMatchingExposure(

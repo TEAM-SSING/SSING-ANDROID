@@ -37,6 +37,18 @@ import timber.log.Timber
 import kotlin.math.pow
 
 /**
+ * WebSocket 연결의 public interface.
+ *
+ * 이 interface를 통해 도메인별 구현체를 바인딩한다.
+ */
+interface SocketManager<T> {
+    val socketState: StateFlow<SocketState>
+    val event: SharedFlow<T>
+    fun connect()
+    suspend fun disconnect()
+}
+
+/**
  * STOMP 프로토콜 기반 웹소켓 연결을 추상화한 베이스 클래스.
  *
  * 연결/재연결/인증(토큰 만료 시 재발급)을 내부에서 처리하므로
@@ -64,7 +76,7 @@ internal abstract class BaseSocketManager<T>(
     private val authSessionManager: AuthSessionManager,
     private val json: Json,
     private val serializer: KSerializer<T>,
-) {
+) : SocketManager<T> {
     /**
      * WebSocket 업그레이드 요청 경로
      */
@@ -87,10 +99,10 @@ internal abstract class BaseSocketManager<T>(
 
     private val _socketState: MutableStateFlow<SocketState> =
         MutableStateFlow(SocketState.Disconnected)
-    val socketState: StateFlow<SocketState> = _socketState.asStateFlow()
+    override val socketState: StateFlow<SocketState> = _socketState.asStateFlow()
 
     private val _event = MutableSharedFlow<T>(extraBufferCapacity = 64)
-    val event: SharedFlow<T> = _event.asSharedFlow()
+    override val event: SharedFlow<T> = _event.asSharedFlow()
 
     private val scope = CoroutineScope(ioDispatcher + SupervisorJob())
 
@@ -102,7 +114,7 @@ internal abstract class BaseSocketManager<T>(
 
     private var retryCount: Int = 0
 
-    fun connect() {
+    override fun connect() {
         if (_socketState.value == SocketState.Connecting || _socketState.value == SocketState.Connected) {
             Timber.d("🐮 connect() 호출됐지만 이미 연결 중 또는 연결됨 (state: ${_socketState.value})")
             return
@@ -133,6 +145,7 @@ internal abstract class BaseSocketManager<T>(
             session = newSession
 
             reissueAttempted = false
+            retryCount = 0
             Timber.d("🐮 소켓 연결 성공")
             _socketState.update { SocketState.Connected }
             subscribe()
@@ -164,7 +177,7 @@ internal abstract class BaseSocketManager<T>(
         }
     }
 
-    suspend fun disconnect() {
+    override suspend fun disconnect() {
         Timber.d("🐮 disconnect() - 연결 해제")
         isIntentionalDisconnect = true
         scope.coroutineContext.cancelChildren()
