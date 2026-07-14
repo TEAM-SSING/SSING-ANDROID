@@ -65,7 +65,9 @@ internal fun InstructorHomeReviewCard(
                 style = SsingButtonStyle.GRAY,
                 modifier = Modifier.fillMaxWidth()
             )
-        } else { InstructorHomeEmptyReviewCard() }
+        } else {
+            InstructorHomeEmptyReviewCard()
+        }
     }
 }
 
@@ -208,7 +210,7 @@ private fun LinearProgressBar(
 @Composable
 private fun InstructorHomeReviewCardPreview() {
     SSINGTheme {
-        Column() {
+        Column {
             InstructorHomeReviewCard(
                 averageRating = 4f,
                 grade = Grade.GRADE4,
