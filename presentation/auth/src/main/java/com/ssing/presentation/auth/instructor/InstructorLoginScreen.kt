@@ -97,15 +97,9 @@ private fun InstructorLoginScreen(
             .systemBarsPadding(),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        InstructorLoginLogo()
-
         Spacer(modifier = Modifier.weight(1f))
 
-        Icon(
-            imageVector = ImageVector.vectorResource(R.drawable.ic_instructor_login_graphic),
-            contentDescription = null,
-            tint = Color.Unspecified,
-        )
+        InstructorLoginLogo()
 
         Spacer(modifier = Modifier.weight(1f))
 
@@ -143,7 +137,7 @@ private fun InstructorLoginLogo(
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true)
+@Preview(showBackground = true)
 @Composable
 private fun InstructorLoginScreenPreview() {
     SSINGTheme {
