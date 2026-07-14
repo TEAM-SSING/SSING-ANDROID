@@ -15,18 +15,12 @@ internal class LessonCancelRepositoryImpl @Inject constructor(
         lessonId: Long,
         cancelReason: String,
         cancelReasonDetail: String
-    ): Result<LessonCancelModel> =
+    ): Result<Unit> =
         apiResponseHandler.safeApiCall {
             dataSource.postLessonCancel(
                 lessonId,
                 cancelReason,
                 cancelReasonDetail
             )
-        }.map { it.toModel() }
-
-    private fun LessonCancelResponse.toModel(): LessonCancelModel = LessonCancelModel(
-        lessonId = lessonId,
-        lessonStatus = lessonStatus,
-        canceledAt = canceledAt,
-    )
+        }.map { }
 }

@@ -7,5 +7,5 @@ interface LessonCancelRepository {
         lessonId: Long,
         cancelReason: String,
         cancelReasonDetail: String,
-    ): Result<LessonCancelModel>
+    ): Result<Unit>
 }

@@ -176,8 +176,7 @@ internal class ConsumerLessonViewModel @Inject constructor(
                 lessonId = lessonId,
                 cancelReason = reason.toServerCode(),
                 cancelReasonDetail = etcReason,
-            ).onSuccess { result ->
-                Timber.d("강습 취소 응답: $result")
+            ).onSuccess {
                 updateState {
                     copy(
                         lessonBannerState = LessonBannerState.Canceled,
