@@ -95,6 +95,7 @@ object NetworkModule {
         .authenticator(tokenAuthenticator)
         .build()
 
+    @Auth
     @Provides
     @Singleton
     fun provideAuthRetrofit(
