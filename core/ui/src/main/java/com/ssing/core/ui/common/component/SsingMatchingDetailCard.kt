@@ -2,7 +2,6 @@ package com.ssing.core.ui.common.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.ui.draw.clip
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
@@ -20,6 +19,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
@@ -97,11 +97,11 @@ fun SsingMatchingDetailCard(
                 title = title ?: "${nickname}님 팀 ${teamCount ?: 0}명",
                 totalCount = totalCount,
             )
-            HorizontalDivider(
-                color = SSINGTheme.colors.borderDisabled,
-                modifier = Modifier.padding(vertical = 8.dp),
-            )
         }
+        HorizontalDivider(
+            color = SSINGTheme.colors.borderDisabled,
+            modifier = Modifier.padding(vertical = 8.dp),
+        )
 
         Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
             if (classDateTime.isNotEmpty()) SsingInfoRow(label = "강습 일시", value = classDateTime)
@@ -111,7 +111,7 @@ fun SsingMatchingDetailCard(
             if (participant.isNotEmpty()) SsingInfoRow(label = "강습 인원", value = participant)
             else if (participants.isNotEmpty()) SsingParticipantsRow(participants = participants)
             if (price != null) SsingPriceRow(isPaid = isPaid, price = price)
-            if (equipmentStatus.isNotEmpty()) SsingInfoRow(label = "장비상태", value = equipmentStatus)
+            if (equipmentStatus.isNotEmpty()) SsingInfoRow(label = "장비 상태", value = equipmentStatus)
         }
     }
 }
@@ -174,10 +174,14 @@ fun SsingMatchingDetailCardSmall(
         Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
             if (place.isNotEmpty()) SsingInfoRow(label = "강습 장소", value = place)
             if (duration.isNotEmpty()) SsingInfoRow(label = "강습 시간", value = duration)
-            if (actualTimeRange.isNotEmpty()) SsingInfoRow(label = "실제 강습 시간", value = actualTimeRange)
+            if (actualTimeRange.isNotEmpty()) SsingInfoRow(
+                label = "실제 강습 시간",
+                value = actualTimeRange
+            )
             if (price != null) SsingInfoRow(label = "강습 가격", value = "₩ ${"%,d".format(price)}")
 
-            val hasCancelInfo = cancelDateTime.isNotEmpty() || cancelSubject.isNotEmpty() || cancelReason.isNotEmpty()
+            val hasCancelInfo =
+                cancelDateTime.isNotEmpty() || cancelSubject.isNotEmpty() || cancelReason.isNotEmpty()
             if (hasCancelInfo) {
                 HorizontalDivider(
                     color = SSINGTheme.colors.borderDisabled,
@@ -364,7 +368,7 @@ data class Participant(
 
 enum class Gender { MALE, FEMALE }
 
-private class SsingClassDetailCardPreviewProvider: PreviewParameterProvider<Int?> {
+private class SsingClassDetailCardPreviewProvider : PreviewParameterProvider<Int?> {
     override val values: Sequence<Int?>
         get() = sequenceOf(0, 5, null)
 }
