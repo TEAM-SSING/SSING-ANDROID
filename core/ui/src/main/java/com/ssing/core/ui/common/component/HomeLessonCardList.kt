@@ -32,6 +32,7 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import com.ssing.core.ui.state.HomeLessonCardState
@@ -111,9 +112,10 @@ private fun HomeLessonEmptyCard(
                 .padding(bottom = 5.dp),
         )
 
-        Image(
-            painter = painterResource(id = R.drawable.img_ski_86),
+        Icon(
+            imageVector = ImageVector.vectorResource(R.drawable.ic_empty_reservation_76),
             contentDescription = null,
+            tint = Color.Unspecified,
             modifier = Modifier.size(66.dp),
         )
     }
@@ -256,7 +258,7 @@ private fun EmptyLessonInfoSection(
         verticalArrangement = Arrangement.spacedBy(2.dp),
     ) {
         Icon(
-            imageVector = ImageVector.vectorResource(R.drawable.ic_reservation_24),
+            imageVector = ImageVector.vectorResource(R.drawable.ic_plus_large),
             contentDescription = null,
             tint = SSINGTheme.colors.textAlternative,
         )
@@ -264,7 +266,7 @@ private fun EmptyLessonInfoSection(
         Spacer(modifier = Modifier.height(6.dp))
 
         Text(
-            text = "아직 예약된 강습이 없어요.",
+            text = "아직 예약된 강습이 없어요",
             style = SSINGTheme.typography.body.sb16,
             color = SSINGTheme.colors.textAlternative,
         )
