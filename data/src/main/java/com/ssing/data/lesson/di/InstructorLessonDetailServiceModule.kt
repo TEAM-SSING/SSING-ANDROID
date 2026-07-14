@@ -14,7 +14,7 @@ internal object InstructorLessonDetailServiceModule {
 
     @Provides
     @Singleton
-    fun instructorLessonDetailService(
+    fun provideInstructorLessonDetailService(
         retrofit: Retrofit
     ): InstructorLessonDetailService =
         retrofit.create(InstructorLessonDetailService::class.java)
