@@ -41,7 +41,6 @@ import com.ssing.core.ui.util.ssingDateFormatter
 import kotlinx.collections.immutable.persistentListOf
 import java.time.LocalDateTime
 
-
 @Composable
 fun HomeLessonCardList(
     states: ImmutableList<HomeLessonCardState>,
