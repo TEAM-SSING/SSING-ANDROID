@@ -1,9 +1,11 @@
 package com.ssing.presentation.consumerhome
 
 import androidx.lifecycle.viewModelScope
+import com.ssing.core.network.exception.ApiException
 import com.ssing.core.ui.base.BaseViewModel
 import com.ssing.core.ui.common.component.HomeLessonCardState
 import com.ssing.core.ui.common.component.HomeLessonCardState.Reservation.Status
+import com.ssing.core.ui.extension.uiMessage
 import com.ssing.data.home.model.LessonCards
 import com.ssing.data.home.repository.api.HomeRepository
 import com.ssing.presentation.consumerhome.model.DisplayStatus
@@ -66,11 +68,9 @@ internal class ConsumerHomeViewModel @Inject constructor(
                         copy(isLoading = false)
                     }
 
-                    sendEffect(
-                        ConsumerHomeContract.Effect.ShowToast(
-                            "홈 정보를 불러오지 못했어요.",
-                        ),
-                    )
+                    if (throwable is ApiException) {
+                        sendEffect(ConsumerHomeContract.Effect.ShowToast(throwable.uiMessage))
+                    }
                 }
         }
     }
