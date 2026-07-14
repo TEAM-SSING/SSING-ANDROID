@@ -1,7 +1,5 @@
 package com.ssing.data.home.remote.dto.response
 
-import com.ssing.data.home.model.DisplayStatus
-import com.ssing.data.home.model.Sports
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -9,9 +7,9 @@ import kotlinx.serialization.Serializable
 internal data class LessonCardResponse(
     @SerialName("lessonId") val lessonId: Long,
     @SerialName("remainingDays") val remainingDays: Int,
-    @SerialName("displayStatus") val displayStatus: DisplayStatus,
+    @SerialName("displayStatus") val displayStatus: String,
     @SerialName("title") val title: String,
-    @SerialName("sport") val sport: Sports,
+    @SerialName("sport") val sport: String,
     @SerialName("scheduledAt") val scheduledAt: String,
     @SerialName("resort") val resort: ResortResponse,
 )
