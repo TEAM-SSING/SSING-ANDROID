@@ -1,12 +1,12 @@
 package com.ssing.data.home.model
 
-data class ConsumerHome(
-    val lessonCards: List<LessonCards>,
+data class ConsumerHomeSummary(
+    val lessonCards: List<LessonCard>,
     val matchingPeopleCount: Long,
     val hasUnreadNotification: Boolean,
 )
 
-data class LessonCards(
+data class LessonCard(
     val lessonId: Long,
     val remainingDays: Int,
     val displayStatus: String,

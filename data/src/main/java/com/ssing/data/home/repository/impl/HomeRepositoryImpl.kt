@@ -1,8 +1,8 @@
 package com.ssing.data.home.repository.impl
 
 import com.ssing.core.network.util.ApiResponseHandler
-import com.ssing.data.home.model.ConsumerHome
-import com.ssing.data.home.model.LessonCards
+import com.ssing.data.home.model.ConsumerHomeSummary
+import com.ssing.data.home.model.LessonCard
 import com.ssing.data.home.model.Resort
 import com.ssing.data.home.remote.datasource.api.HomeRemoteDataSource
 import com.ssing.data.home.remote.dto.response.ConsumerHomeResponse
@@ -16,18 +16,18 @@ internal class HomeRepositoryImpl @Inject constructor(
     private val dataSource: HomeRemoteDataSource,
 ) : HomeRepository {
 
-    override suspend fun getConsumerHome(): Result<ConsumerHome> =
+    override suspend fun getConsumerHome(): Result<ConsumerHomeSummary> =
         apiResponseHandler.safeApiCall {
             dataSource.getConsumerHome()
         }.map { it.toModel() }
 
-    private fun ConsumerHomeResponse.toModel(): ConsumerHome = ConsumerHome(
+    private fun ConsumerHomeResponse.toModel(): ConsumerHomeSummary = ConsumerHomeSummary(
         lessonCards = this.lessonCards.map { it.toModel() },
         matchingPeopleCount = this.matchingPeopleCount,
         hasUnreadNotification = this.hasUnreadNotification,
     )
 
-    private fun LessonCardResponse.toModel(): LessonCards = LessonCards(
+    private fun LessonCardResponse.toModel(): LessonCard = LessonCard(
         lessonId = this.lessonId,
         remainingDays = this.remainingDays,
         displayStatus = this.displayStatus,
