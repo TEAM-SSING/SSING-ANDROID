@@ -10,7 +10,7 @@ import com.ssing.presentation.consumerlesson.ConsumerLessonRoute
 import kotlinx.serialization.Serializable
 
 @Serializable
-data object ConsumerLesson : Route
+data class ConsumerLesson(val lessonId: Long) : Route
 
 
 fun NavGraphBuilder.consumerLessonNavGraph(
