@@ -1,7 +1,7 @@
 package com.ssing.presentation.instructormatching
 
 import androidx.compose.runtime.Immutable
-import com.ssing.presentation.instructormatching.model.ConditionUiState
+import com.ssing.presentation.instructormatching.model.MatchingExposureUiState
 import com.ssing.presentation.instructormatching.model.MatchingOfferUiModel
 import com.ssing.presentation.instructormatching.model.MatchingWaitingUiState
 
@@ -9,14 +9,14 @@ internal interface MatchingContract {
 
     @Immutable
     data class State(
-        val phase: MatchingPhase = MatchingPhase.SettingCondition,
-        val condition: ConditionUiState = ConditionUiState(),
+        val phase: MatchingPhase = MatchingPhase.SettingExposure,
+        val exposure: MatchingExposureUiState = MatchingExposureUiState(),
         val waiting: MatchingWaitingUiState = MatchingWaitingUiState(),
         val dialog: MatchingDialog? = null,
     )
 
     sealed interface MatchingPhase {
-        data object SettingCondition : MatchingPhase
+        data object SettingExposure : MatchingPhase
 
         data object Waiting : MatchingPhase
 

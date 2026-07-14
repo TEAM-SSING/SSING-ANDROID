@@ -5,6 +5,7 @@ import com.ssing.data.auth.remote.datasource.impl.AuthDataSourceImpl
 import com.ssing.data.auth.remote.service.AuthService
 import com.ssing.data.auth.repository.api.AuthRepository
 import com.ssing.data.auth.repository.impl.AuthRepositoryImpl
+import com.ssing.core.network.di.NoAuth
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -28,7 +29,8 @@ internal abstract class AuthModule {
     companion object {
         @Provides
         @Singleton
-        fun provideAuthService(retrofit: Retrofit): AuthService =
-            retrofit.create(AuthService::class.java)
+        fun provideAuthService(
+            @NoAuth retrofit: Retrofit,
+        ): AuthService = retrofit.create(AuthService::class.java)
     }
 }

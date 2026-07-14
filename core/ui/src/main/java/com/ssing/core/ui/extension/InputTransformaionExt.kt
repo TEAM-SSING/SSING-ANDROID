@@ -26,3 +26,18 @@ private data class CheckMaxLength(
         }
     }
 }
+
+/**
+ * 정수 입력만 제한합니다.
+ *
+ * 정수가 아닌 문자가 입력되면 입력을 취소합니다.
+ */
+fun InputTransformation.checkDigitsOnly(): InputTransformation = this.then(CheckDigitsOnly)
+
+private object CheckDigitsOnly : InputTransformation {
+    override fun TextFieldBuffer.transformInput() {
+        if (asCharSequence().any { !it.isDigit() }) {
+            revertAllChanges()
+        }
+    }
+}
