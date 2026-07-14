@@ -188,38 +188,45 @@ private fun LessonOngoingContent(
     lessonBannerState: LessonBannerState.Ongoing,
     modifier: Modifier = Modifier,
 ) {
-    Row(
+    Column(
         modifier = modifier
-            .fillMaxWidth()
-            .padding(bottom = 16.dp),
-        horizontalArrangement = Arrangement.SpaceBetween,
+            .padding(
+                vertical = 16.dp,
+            )
     ) {
-        Column {
-            Text(
-                text = "남은 시간",
-                color = SSINGTheme.colors.textNormal,
-                style = SSINGTheme.typography.body.sb16,
-            )
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 16.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Column {
+                Text(
+                    text = "남은 시간",
+                    color = SSINGTheme.colors.textNormal,
+                    style = SSINGTheme.typography.body.sb16,
+                )
 
-            Text(
-                text = lessonBannerState.remainingTime,
-                color = SSINGTheme.colors.textNormal,
-                style = SSINGTheme.typography.title.sb32,
-            )
+                Text(
+                    text = lessonBannerState.remainingTime,
+                    color = SSINGTheme.colors.textNormal,
+                    style = SSINGTheme.typography.title.sb32,
+                )
 
-            Text(
-                text = "강습 시작 후 ${lessonBannerState.elapsedTime} 경과",
-                color = SSINGTheme.colors.textAlternative,
-                style = SSINGTheme.typography.caption.md14,
+                Text(
+                    text = "강습 시작 후 ${lessonBannerState.elapsedTime} 경과",
+                    color = SSINGTheme.colors.textAlternative,
+                    style = SSINGTheme.typography.caption.md14,
+                )
+            }
+
+            Icon(
+                painter = painterResource(R.drawable.img_clock),
+                contentDescription = null,
+                tint = Color.Unspecified,
             )
         }
-
-        Icon(
-            painter = painterResource(R.drawable.img_clock),
-            contentDescription = null,
-            tint = Color.Unspecified,
-            modifier = Modifier.align(Alignment.Bottom)
-        )
     }
 }
 
@@ -230,7 +237,10 @@ private fun LessonCompletedContent(
 ) {
     Box(
         modifier = modifier
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .padding(
+                top = 16.dp,
+            ),
     ) {
         Icon(
             painter = painterResource(R.drawable.img_lesson_end),
@@ -264,7 +274,11 @@ private fun LessonCanceledContent(
 ) {
     Box(
         modifier = modifier
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .padding(
+                top = 16.dp,
+                bottom = 29.dp,
+            ),
     ) {
         Icon(
             painter = painterResource(R.drawable.img_lesson_cancel),
