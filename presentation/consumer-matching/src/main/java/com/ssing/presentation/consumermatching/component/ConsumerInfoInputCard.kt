@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.input.InputTransformation
 import androidx.compose.foundation.text.input.TextFieldLineLimits
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.rememberTextFieldState
@@ -35,9 +36,13 @@ import com.ssing.core.ui.common.component.SsingSelectButton
 import com.ssing.core.ui.common.component.SsingTextField
 import com.ssing.core.ui.designsystem.theme.Blue50
 import com.ssing.core.ui.designsystem.theme.SSINGTheme
+import com.ssing.core.ui.extension.checkDigitsOnly
+import com.ssing.core.ui.extension.checkMaxLength
 import com.ssing.core.ui.extension.noRippleClickable
 import com.ssing.core.ui.extension.roundedBackgroundWithBorder
 import com.ssing.presentation.consumermatching.type.ConsumerGender
+
+private val AgeInputTransformation: InputTransformation = InputTransformation.checkDigitsOnly().checkMaxLength(3)
 
 @Composable
 fun ConsumerInfoInputCard(
@@ -104,6 +109,7 @@ fun ConsumerInfoInputCard(
                 keyboardType = KeyboardType.Number,
                 imeAction = ImeAction.Done,
             ),
+            inputTransformation = AgeInputTransformation,
             onKeyboardAction = { onFocus(false) },
         )
 

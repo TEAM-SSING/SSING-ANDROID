@@ -18,10 +18,11 @@ internal interface ConsumerMatchingConditionContract {
         val selectedDurations: Set<LessonDuration> = setOf(),
         val consumers: PersistentList<ConsumerInfo> = persistentListOf(ConsumerInfo(id = 0)),
         val isConfirmed: Boolean = false,
+        val isLoading: Boolean = false,
     ) {
         val isStartMatchingEnabled: Boolean =
             selectedResort != null && selectedSport != null && selectedLevel != null && selectedDurations.isNotEmpty() && isConfirmed &&
-                consumers.all { it.gender != null && it.ageState.text.isNotEmpty() }
+                consumers.all { it.gender != null && it.ageState.text.isNotEmpty() } && !isLoading
 
         val showAddConsumer: Boolean = consumers.size < MAX_CONSUMER_COUNT
     }
