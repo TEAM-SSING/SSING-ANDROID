@@ -10,7 +10,7 @@ sealed interface HomeLessonCardState {
         val displayText: String,
         val location: String,
         val date: LocalDateTime,
-        val sports: Sports,
+        val sport: Sports,
         val status: Status,
     ) : HomeLessonCardState {
         sealed interface Status {

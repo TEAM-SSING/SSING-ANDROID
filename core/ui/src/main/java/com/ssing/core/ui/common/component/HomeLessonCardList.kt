@@ -217,7 +217,7 @@ private fun LessonInfoSection(
         }
 
         Image(
-            painter = painterResource(id = state.sports.imageRes),
+            painter = painterResource(id = state.sport.imageRes),
             contentDescription = null,
             modifier = Modifier.size(66.dp),
         )
@@ -310,7 +310,7 @@ private fun HomeLessonMatchingCardPreview() {
                 displayText = "매칭중",
                 date = LocalDateTime.of(2025, 7, 15, 19, 0),
                 location = "하이원",
-                sports = Sports.SNOWBOARD,
+                sport = Sports.SNOWBOARD,
                 status = Status.Matching
             ),
             onButtonClick = {},
@@ -330,7 +330,7 @@ private fun HomeLessonMatchedCardPreview() {
                 displayText = "김OO님 팀 3명",
                 date = LocalDateTime.of(2025, 7, 15, 19, 0),
                 location = "하이원",
-                sports = Sports.SKI,
+                sport = Sports.SKI,
                 status = Status.Matched,
             ),
             onButtonClick = {},
@@ -350,7 +350,7 @@ private fun HomeLessonCardPreview() {
                 displayText = "김OO님 팀 3명",
                 date = LocalDateTime.of(2025, 7, 15, 19, 0),
                 location = "하이원",
-                sports = Sports.SNOWBOARD,
+                sport = Sports.SNOWBOARD,
                 status = Status.Default
             ),
             onButtonClick = {},
@@ -370,7 +370,7 @@ private class HomeLessonCardPreviewProvider :
                 displayText = "김OO님 팀 3명",
                 location = "하이원",
                 date = LocalDateTime.of(2025, 7, 15, 19, 0),
-                sports = Sports.SKI,
+                sport = Sports.SKI,
                 status = Status.Matching,
             ),
             HomeLessonCardState.Reservation(
@@ -379,7 +379,7 @@ private class HomeLessonCardPreviewProvider :
                 displayText = "김OO님 팀 3명",
                 location = "지산리조트",
                 date = LocalDateTime.of(2026, 7, 11, 19, 0),
-                sports = Sports.SNOWBOARD,
+                sport = Sports.SNOWBOARD,
                 status = Status.Default,
             ),
         ),

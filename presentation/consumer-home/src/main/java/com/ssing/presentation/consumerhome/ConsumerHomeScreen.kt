@@ -169,7 +169,7 @@ private fun ConsumerHomeScreenPreview() {
                     displayText = "김OO님 팀 3명",
                     location = "하이원",
                     date = LocalDateTime.of(2025, 7, 15, 19, 0),
-                    sports = Sports.SKI,
+                    sport = Sports.SKI,
                     status = Status.Matching,
                 ),
                 HomeLessonCardState.Reservation(
@@ -178,7 +178,7 @@ private fun ConsumerHomeScreenPreview() {
                     displayText = "김OO님 팀 3명",
                     location = "지산리조트",
                     date = LocalDateTime.of(2026, 7, 11, 19, 0),
-                    sports = Sports.SNOWBOARD,
+                    sport = Sports.SNOWBOARD,
                     status = Status.Default,
                 ),
             ),
