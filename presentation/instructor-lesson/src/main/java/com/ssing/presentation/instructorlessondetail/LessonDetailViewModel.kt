@@ -39,8 +39,18 @@ internal class LessonDetailViewModel @Inject constructor(
     }
 
     fun onEndClick() {
+        val lessonId = currentLessonId() ?: return
+
         updateState {
-            copy(showLessonEndDialog = true)
+            copy(showLessonEndDialog = false)
+        }
+        viewModelScope.launch {
+            lessonRepository.lessonCompleted(lessonId)
+                .onFailure {
+                    if (it is ApiException) {
+                        sendEffect(LessonDetailContract.Effect.ShowToast(it.uiMessage))
+                    }
+                }
         }
     }
 
@@ -87,44 +97,50 @@ internal class LessonDetailViewModel @Inject constructor(
     }
 
 
-        fun onContinueClick() {
-            updateState {
-                copy(showLessonEndDialog = false)
-            }
-        }
-
-        fun onCancelReasonSelect(reason: CancelReason) {
-            updateState {
-                copy(cancelReasonState = cancelReasonState.copy(selectedReason = reason))
-            }
-        }
-
-        fun onCancelSheetOpen() {
-            updateState {
-                copy(cancelReasonState = cancelReasonState.copy(visible = true))
-            }
-        }
-
-        fun onCancelSheetDismiss() {
-            updateState {
-                copy(
-                    cancelReasonState = cancelReasonState.copy(
-                        visible = false,
-                        selectedReason = null
-                    )
-                )
-            }
-        }
-
-        fun onCancelConfirmClick(customReason: String?) {
-            val reason = uiState.value.cancelReasonState.selectedReason ?: return
-            updateState {
-                copy(
-                    cancelReasonState = cancelReasonState.copy(
-                        visible = false,
-                        selectedReason = null
-                    )
-                )
-            }
+    fun onContinueClick() {
+        updateState {
+            copy(showLessonEndDialog = false)
         }
     }
+
+    fun onCancelReasonSelect(reason: CancelReason) {
+        updateState {
+            copy(cancelReasonState = cancelReasonState.copy(selectedReason = reason))
+        }
+    }
+
+    fun onCancelSheetOpen() {
+        updateState {
+            copy(cancelReasonState = cancelReasonState.copy(visible = true))
+        }
+    }
+
+    fun onCancelSheetDismiss() {
+        updateState {
+            copy(
+                cancelReasonState = cancelReasonState.copy(
+                    visible = false,
+                    selectedReason = null
+                )
+            )
+        }
+    }
+
+    fun onCancelConfirmClick(customReason: String?) {
+        val reason = uiState.value.cancelReasonState.selectedReason ?: return
+        updateState {
+            copy(
+                cancelReasonState = cancelReasonState.copy(
+                    visible = false,
+                    selectedReason = null
+                )
+            )
+        }
+    }
+
+    private fun currentLessonId(): Long? =
+        when (val phase = uiState.value.phase) {
+            is LessonDetailContract.LessonDetailPhase.LessonDetailOngoing -> phase.ongoing.lessonId
+            else -> null
+        }
+}
