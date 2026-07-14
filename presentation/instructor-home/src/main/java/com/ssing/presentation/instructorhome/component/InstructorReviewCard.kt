@@ -20,6 +20,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ssing.core.ui.designsystem.theme.SSINGTheme
@@ -36,6 +37,7 @@ internal fun InstructorHomeReviewCard(
     achievementRate: Int,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
+    hasReview: Boolean = false,
 ) {
     Column(
         modifier = modifier
@@ -47,21 +49,34 @@ internal fun InstructorHomeReviewCard(
             .padding(12.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        ReviewSection(
-            averageRating = averageRating
-        )
+        if (hasReview){
+            ReviewSection(
+                averageRating = averageRating
+            )
 
-        RatingSection(
-            progress = achievementRate,
-            grade = grade
-        )
+            RatingSection(
+                progress = achievementRate,
+                grade = grade
+            )
 
-        SsingButton(
-            text = "강습 후기 보러가기",
-            onClick = onClick,
-            style = SsingButtonStyle.GRAY,
-            modifier = Modifier.fillMaxWidth()
-        )
+            SsingButton(
+                text = "강습 후기 보러가기",
+                onClick = onClick,
+                style = SsingButtonStyle.GRAY,
+                modifier = Modifier.fillMaxWidth()
+            )
+        }
+        else {
+            Text(
+                text = "아직 남겨진 후기가 없어요.\n새로운 강습을 진행해 후기를 남겨보세요",
+                style = SSINGTheme.typography.caption.sb14,
+                color = SSINGTheme.colors.textDisabled,
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally)
+                    .padding(vertical = 20.dp),
+                textAlign = TextAlign.Center,
+            )
+        }
     }
 }
 
@@ -191,11 +206,23 @@ private fun LinearProgressBar(
 @Composable
 private fun InstructorHomeReviewCardPreview() {
     SSINGTheme {
-        InstructorHomeReviewCard(
-            averageRating = 4f,
-            grade = Grade.GRADE4,
-            achievementRate = 88,
-            onClick = {},
-        )
+        Column(){
+            InstructorHomeReviewCard(
+                averageRating = 4f,
+                grade = Grade.GRADE4,
+                achievementRate = 88,
+                onClick = {},
+                hasReview = true,
+            )
+
+            Spacer(modifier = Modifier.height(10.dp))
+
+            InstructorHomeReviewCard(
+                averageRating = 4f,
+                grade = Grade.GRADE4,
+                achievementRate = 88,
+                onClick = {},
+            )
+        }
     }
 }
