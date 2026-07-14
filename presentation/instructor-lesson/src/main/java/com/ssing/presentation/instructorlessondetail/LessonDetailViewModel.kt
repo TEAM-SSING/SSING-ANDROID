@@ -7,6 +7,7 @@ import com.ssing.core.network.exception.ApiException
 import com.ssing.core.ui.base.BaseViewModel
 import com.ssing.core.ui.common.component.CancelReason
 import com.ssing.core.ui.extension.uiMessage
+import com.ssing.core.ui.util.ssingDateFormatter
 import com.ssing.data.lesson.model.InstructorLessonDetailBefore
 import com.ssing.data.lesson.model.InstructorLessonDetailCanceled
 import com.ssing.data.lesson.model.InstructorLessonDetailCompleted
@@ -24,6 +25,7 @@ import com.ssing.presentation.instructorlessondetail.navigation.InstructorLesson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.launch
+import java.time.LocalDateTime
 import javax.inject.Inject
 
 @HiltViewModel
@@ -44,6 +46,7 @@ internal class LessonDetailViewModel @Inject constructor(
 
     private fun loadLessonDetail() {
         updateState { copy(phase = LessonDetailContract.LessonDetailPhase.Loading) }
+
         viewModelScope.launch {
             instructorLessonDetailRepository.instructorLessonDetail(lessonId)
                 .onSuccess { result ->
@@ -53,7 +56,7 @@ internal class LessonDetailViewModel @Inject constructor(
                     if (it is ApiException) {
                         sendEffect(LessonDetailContract.Effect.ShowToast(it.uiMessage))
                     }
-                    updateState { copy(phase = LessonDetailContract.LessonDetailPhase.Loading) }
+                    sendEffect(LessonDetailContract.Effect.NavigateBack)
                 }
         }
     }
@@ -99,7 +102,12 @@ internal class LessonDetailViewModel @Inject constructor(
     fun onReadyClick() {
         val before =
             (uiState.value.phase as? LessonDetailContract.LessonDetailPhase.LessonDetailBefore)
-                ?.before ?: return
+                ?.before
+
+        if (before == null) {
+            loadLessonDetail()
+            return
+        }
 
         updateState {
             copy(
@@ -202,7 +210,7 @@ private fun InstructorLessonDetailRequestResult.toModel(): LessonDetailContract.
             completed = LessonDetailCompletedUiModel(
                 tags = listOf(sport, lessonLevel).toPersistentList(),
                 classTitle = representativeConsumerNames.joinToString(),
-                lessonDate = actualStartedAt,
+                lessonDate = LocalDateTime.parse(actualStartedAt).ssingDateFormatter(),
                 location = resortDisplayName,
                 duration = "${actualDurationMinutes}분",
                 price = totalLessonPrice,
