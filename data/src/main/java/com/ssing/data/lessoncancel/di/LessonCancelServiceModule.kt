@@ -1,5 +1,6 @@
 package com.ssing.data.lessoncancel.di
 
+import com.ssing.core.network.di.Auth
 import com.ssing.data.lessoncancel.remote.service.LessonCancelService
 import dagger.Module
 import dagger.Provides
@@ -14,6 +15,6 @@ internal object LessonCancelServiceModule {
     @Provides
     @Singleton
     fun provideLessonCancelService(
-        retrofit: Retrofit,
+        @Auth retrofit: Retrofit,
     ): LessonCancelService = retrofit.create(LessonCancelService::class.java)
 }
