@@ -13,6 +13,8 @@ internal data class LessonResponse(
     val statusInfo: StatusInfo? = null,
     @SerialName("startedAt")
     val startedAt: String? = null,
+    @SerialName("completedAt")
+    val completedAt: String? = null,
 ) {
     @Serializable
     data class StatusInfo(
