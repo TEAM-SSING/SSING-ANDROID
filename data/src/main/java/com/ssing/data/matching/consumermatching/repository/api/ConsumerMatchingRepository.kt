@@ -13,7 +13,7 @@ interface ConsumerMatchingRepository {
         equipmentReady: Boolean,
     ): Result<ConsumerMatchingRequestResult>
 
-    suspend fun cancelMathcing(
+    suspend fun cancelMatching(
         matchingRequestId: Long,
     ): Result<Unit>
 

@@ -35,7 +35,7 @@ internal class ConsumerMatchingRepositoryImpl @Inject constructor(
         )
     }.map { it.toModel() }
 
-    override suspend fun cancelMathcing(matchingRequestId: Long): Result<Unit> =
+    override suspend fun cancelMatching(matchingRequestId: Long): Result<Unit> =
         apiResponseHandler.safeApiCall {
             remoteDataSource.postMatchingCancellation(matchingRequestId)
         }.map { }
