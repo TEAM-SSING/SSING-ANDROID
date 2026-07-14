@@ -39,7 +39,7 @@ import com.ssing.core.ui.util.ssingDateFormatter
 import kotlinx.collections.immutable.persistentListOf
 import java.time.LocalDateTime
 
-sealed interface HomeLessonCardState {
+sealed interface HomeLessonCardState
     data class Reservation(
         val lessonId: Long,
         val chip: String,
@@ -55,14 +55,13 @@ sealed interface HomeLessonCardState {
             data object Matching : Status
         }
     }
-
     data object Empty : HomeLessonCardState
-}
+
 
 @Composable
 fun HomeLessonCardList(
     states: ImmutableList<HomeLessonCardState>,
-    onButtonClick: (HomeLessonCardState.Reservation) -> Unit,
+    onButtonClick: (Reservation) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -140,8 +139,8 @@ private fun HomeLessonEmptyCard(
 
 @Composable
 private fun HomeLessonReservationCard(
-    state: HomeLessonCardState.Reservation,
-    onButtonClick: (HomeLessonCardState.Reservation) -> Unit,
+    state: Reservation,
+    onButtonClick: (Reservation) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -153,7 +152,7 @@ private fun HomeLessonReservationCard(
         LessonInfoSection(state = state)
 
         SsingButton(
-            text = if (state.status is HomeLessonCardState.Reservation.Status.Default) "강습 상세보기" else "이어보기",
+            text = if (state.status is Reservation.Status.Default) "강습 상세보기" else "이어보기",
             onClick = { onButtonClick(state) },
             style = SsingButtonStyle.GRAY,
             modifier = Modifier.fillMaxWidth(),
@@ -164,17 +163,17 @@ private fun HomeLessonReservationCard(
 @Composable
 private fun HomeLessonCard(
     state: HomeLessonCardState,
-    onButtonClick: (HomeLessonCardState.Reservation) -> Unit,
+    onButtonClick: (Reservation) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     when (state) {
-        is HomeLessonCardState.Empty -> {
+        is Empty -> {
             HomeLessonEmptyCard(
                 modifier = modifier,
             )
         }
 
-        is HomeLessonCardState.Reservation -> {
+        is Reservation -> {
             HomeLessonReservationCard(
                 state = state,
                 onButtonClick = onButtonClick,
@@ -186,7 +185,7 @@ private fun HomeLessonCard(
 
 @Composable
 private fun LessonInfoSection(
-    state: HomeLessonCardState.Reservation,
+    state: Reservation,
     modifier: Modifier = Modifier,
 ) {
     Row(
@@ -309,7 +308,7 @@ private fun Modifier.lessonCardBackground() = this
 private fun HomeLessonEmptyCardPreview() {
     SSINGTheme {
         HomeLessonCard(
-            state = HomeLessonCardState.Empty,
+            state = Empty,
             onButtonClick = {},
             modifier = Modifier.width(328.dp),
         )
@@ -321,14 +320,14 @@ private fun HomeLessonEmptyCardPreview() {
 private fun HomeLessonMatchingCardPreview() {
     SSINGTheme {
         HomeLessonCard(
-            state = HomeLessonCardState.Reservation(
+            state = Reservation(
                 lessonId = 1,
                 chip = "Now",
                 displayText = "매칭중",
                 date = LocalDateTime.of(2025, 7, 15, 19, 0),
                 location = "하이원",
                 imageRes = R.drawable.img_ski_86,
-                status = HomeLessonCardState.Reservation.Status.Matching
+                status = Reservation.Status.Matching
             ),
             onButtonClick = {},
             modifier = Modifier.width(328.dp),
@@ -341,14 +340,14 @@ private fun HomeLessonMatchingCardPreview() {
 private fun HomeLessonMatchedCardPreview() {
     SSINGTheme {
         HomeLessonCard(
-            state = HomeLessonCardState.Reservation(
+            state = Reservation(
                 lessonId = 1,
                 chip = "Now",
                 displayText = "김OO님 팀 3명",
                 date = LocalDateTime.of(2025, 7, 15, 19, 0),
                 location = "하이원",
                 imageRes = R.drawable.img_ski_86,
-                status = HomeLessonCardState.Reservation.Status.Matched,
+                status = Reservation.Status.Matched,
             ),
             onButtonClick = {},
             modifier = Modifier.width(328.dp),
@@ -361,14 +360,14 @@ private fun HomeLessonMatchedCardPreview() {
 private fun HomeLessonCardPreview() {
     SSINGTheme {
         HomeLessonCard(
-            state = HomeLessonCardState.Reservation(
+            state = Reservation(
                 lessonId = 1,
                 chip = "D-2",
                 displayText = "김OO님 팀 3명",
                 date = LocalDateTime.of(2025, 7, 15, 19, 0),
                 location = "하이원",
                 imageRes = R.drawable.img_snowboard_86,
-                status = HomeLessonCardState.Reservation.Status.Default
+                status = Reservation.Status.Default
             ),
             onButtonClick = {},
             modifier = Modifier.width(328.dp),
@@ -376,28 +375,28 @@ private fun HomeLessonCardPreview() {
     }
 }
 
-private class HomeLessonCardPreviewProvider :
+private class HomeLessonCardPreviewProvider(Status: Any) :
     PreviewParameterProvider<ImmutableList<HomeLessonCardState>> {
     override val values = sequenceOf(
-        persistentListOf(HomeLessonCardState.Empty),
+        persistentListOf(Empty),
         persistentListOf(
-            HomeLessonCardState.Reservation(
+            Reservation(
                 lessonId = 1,
                 chip = "Now",
                 displayText = "김OO님 팀 3명",
                 location = "하이원",
                 date = LocalDateTime.of(2025, 7, 15, 19, 0),
                 imageRes = R.drawable.img_snowboard_86,
-                status = HomeLessonCardState.Reservation.Status.Matching,
+                status = Reservation.Status.Matching,
             ),
-            HomeLessonCardState.Reservation(
+            Reservation(
                 lessonId = 1,
                 chip = "D-3",
                 displayText = "김OO님 팀 3명",
                 location = "지산리조트",
                 date = LocalDateTime.of(2026, 7, 11, 19, 0),
                 imageRes = R.drawable.img_snowboard_86,
-                status = HomeLessonCardState.Reservation.Status.Default,
+                status = Reservation.Status.Default,
             ),
         ),
     )
