@@ -37,7 +37,6 @@ internal fun InstructorHomeReviewCard(
     achievementRate: Int,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    hasReview: Boolean = false,
 ) {
     Column(
         modifier = modifier
@@ -49,34 +48,34 @@ internal fun InstructorHomeReviewCard(
             .padding(12.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        if (hasReview) {
-            ReviewSection(
-                averageRating = averageRating
-            )
+        ReviewSection(
+            averageRating = averageRating
+        )
 
-            RatingSection(
-                progress = achievementRate,
-                grade = grade
-            )
+        RatingSection(
+            progress = achievementRate,
+            grade = grade
+        )
 
-            SsingButton(
-                text = "강습 후기 보러가기",
-                onClick = onClick,
-                style = SsingButtonStyle.GRAY,
-                modifier = Modifier.fillMaxWidth()
-            )
-        } else {
-            InstructorHomeEmptyReviewCard()
-        }
+        SsingButton(
+            text = "강습 후기 보러가기",
+            onClick = onClick,
+            style = SsingButtonStyle.GRAY,
+            modifier = Modifier.fillMaxWidth()
+        )
     }
 }
 
 @Composable
-private fun InstructorHomeEmptyReviewCard() {
+internal fun InstructorHomeEmptyReviewCard() {
     Text(
         modifier = Modifier
+            .background(
+                color = SSINGTheme.colors.backgroundNormal,
+                shape = RoundedCornerShape(12.dp),
+            )
             .fillMaxWidth()
-            .padding(vertical = 20.dp),
+            .padding(vertical = 32.dp),
         text = "아직 남겨진 후기가 없어요.\n새로운 강습을 진행해 후기를 남겨보세요",
         style = SSINGTheme.typography.caption.sb14,
         color = SSINGTheme.colors.textDisabled,
@@ -216,17 +215,11 @@ private fun InstructorHomeReviewCardPreview() {
                 grade = Grade.GRADE4,
                 achievementRate = 88,
                 onClick = {},
-                hasReview = true,
             )
 
             Spacer(modifier = Modifier.height(10.dp))
 
-            InstructorHomeReviewCard(
-                averageRating = 4f,
-                grade = Grade.GRADE4,
-                achievementRate = 88,
-                onClick = {},
-            )
+            InstructorHomeEmptyReviewCard()
         }
     }
 }

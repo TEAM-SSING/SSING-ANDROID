@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -37,6 +38,7 @@ import com.ssing.core.ui.common.component.StartMatchingCardStyle
 import com.ssing.core.ui.designsystem.theme.SSINGTheme
 import com.ssing.core.ui.extension.toast
 import com.ssing.core.ui.util.HandleUiEffects
+import com.ssing.presentation.instructorhome.component.InstructorHomeEmptyReviewCard
 import com.ssing.presentation.instructorhome.component.InstructorHomeReviewCard
 import kotlinx.collections.immutable.persistentListOf
 import java.time.LocalDateTime
@@ -170,13 +172,16 @@ private fun InstructorHomeScreen(
                     color = SSINGTheme.colors.textNormal,
                     style = SSINGTheme.typography.body.sb16,
                 )
-                InstructorHomeReviewCard(
-                    averageRating = state.averageRating,
-                    grade = state.grade,
-                    achievementRate = state.achievementRate,
-                    onClick = onReviewClick,
-                    hasReview = hasReview,
-                )
+
+                if (hasReview) {
+                    InstructorHomeReviewCard(
+                        averageRating = state.averageRating,
+                        grade = state.grade,
+                        achievementRate = state.achievementRate,
+                        onClick = onReviewClick,
+                    )
+                }
+                else { InstructorHomeEmptyReviewCard() }
             }
         }
     }
