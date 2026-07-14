@@ -214,7 +214,7 @@ private fun LessonInfoSection(
             ) {
                 InfoRow(
                     iconRes = R.drawable.ic_reservation_16,
-                    text = if (state.date != null) state.date.ssingDateFormatter() else "",
+                    text = state.date?.ssingDateFormatter() ?: "",
                 )
 
                 Icon(
