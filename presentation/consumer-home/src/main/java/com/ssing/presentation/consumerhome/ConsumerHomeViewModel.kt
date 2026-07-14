@@ -1,7 +1,6 @@
 package com.ssing.presentation.consumerhome
 
 import androidx.lifecycle.viewModelScope
-import coil.util.CoilUtils.result
 import com.ssing.core.network.exception.ApiException
 import com.ssing.core.ui.base.BaseViewModel
 import com.ssing.core.ui.common.component.HomeLessonCardState
@@ -9,7 +8,6 @@ import com.ssing.core.ui.common.component.HomeLessonCardState.Reservation.Status
 import com.ssing.core.ui.extension.uiMessage
 import com.ssing.data.home.model.LessonCard
 import com.ssing.data.home.repository.api.HomeRepository
-import com.ssing.presentation.consumerhome.model.DisplayStatus
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
@@ -85,15 +83,19 @@ internal class ConsumerHomeViewModel @Inject constructor(
         )
 
     private fun LessonCard.toChipText(): String = when {
-        displayStatus == DisplayStatus.IN_PROGRESS.label -> "진행중"
+        displayStatus == IN_PROGRESS -> "진행중"
         remainingDays == 0 -> "Now"
         else -> "D-$remainingDays"
     }
 
     private fun LessonCard.toCardStatus(): Status = when {
-        displayStatus == DisplayStatus.IN_PROGRESS.label -> Status.Matching
+        displayStatus == IN_PROGRESS -> Status.Matching
         remainingDays == 0 -> Status.Matched
         else -> Status.Default
+    }
+
+    private companion object {
+        const val IN_PROGRESS = "IN_PROGRESS"
     }
 
     fun onMatchingClick() {
