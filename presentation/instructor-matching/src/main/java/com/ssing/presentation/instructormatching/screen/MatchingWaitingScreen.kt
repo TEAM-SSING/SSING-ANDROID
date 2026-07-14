@@ -81,14 +81,13 @@ internal fun MatchingWaitingScreen(
             stepLabel = "현재 매칭 조건",
             tags = (listOfNotNull(exposure.selectedSports?.label) + exposure.selectedLevels.map { it.label })
                 .toPersistentList(),
-            nickname = waiting.nickname,
-            teamCount = waiting.teamCount,
             totalCount = exposure.maxHeadcount,
-            classDateTime = waiting.classDateTime,
             location = exposure.resortName,
             duration = exposure.selectedDurations.joinToString(" / ") { it.label },
-            participants = waiting.participants.map { it.toParticipant() }.toPersistentList(),
+            maxCapacity = exposure.maxHeadcount,
+            participant = waiting.participant,
             price = waiting.price,
+            equipmentStatus = waiting.equipmentStatus,
             modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp),
         )
 
