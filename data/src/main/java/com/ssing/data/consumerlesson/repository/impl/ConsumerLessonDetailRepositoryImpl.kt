@@ -27,56 +27,56 @@ internal class ConsumerLessonDetailRepositoryImpl @Inject constructor(
         }.mapCatching { it.toModel() }
 
     private fun ConsumerLessonDetailResponse.toModel(): ConsumerLessonDetail {
-        val dtoLessonInfo = requireNotNull(lessonInfo) { "강습 정보가 없습니다." }
+        val dtoLessonInfo = lessonInfo!!
         val lessonInfo = dtoLessonInfo.toModel()
-        val instructorProfile = requireNotNull(instructorProfile) { "강사 프로필 정보가 없습니다." }.toModel()
+        val instructorProfile = instructorProfile!!.toModel()
 
         return when (lessonStatus) {
             "CONFIRMED" -> {
-                val status = requireNotNull(statusInfo) { "강습 상태 정보가 없습니다." }
+                val status = statusInfo!!
 
                 ConsumerLessonDetail.Confirmed(
                     lessonId = lessonId,
                     lessonInfo = lessonInfo,
                     instructorProfile = instructorProfile,
-                    confirmedCount = requireNotNull(status.confirmedCount),
-                    requiredCount = requireNotNull(status.requiredCount),
-                    currentActorConfirmed = requireNotNull(status.currentActorConfirmed),
-                    instructorConfirmed = requireNotNull(status.instructorConfirmed),
-                    scheduledDurationMinutes = requireNotNull(dtoLessonInfo.scheduledDurationMinutes),
+                    confirmedCount = status.confirmedCount!!,
+                    requiredCount = status.requiredCount!!,
+                    currentActorConfirmed = status.currentActorConfirmed!!,
+                    instructorConfirmed = status.instructorConfirmed!!,
+                    scheduledDurationMinutes = dtoLessonInfo.scheduledDurationMinutes!!,
                     lessonMatchingRequest = matchingRequests.orEmpty().map { it.toModel() },
                 )
             }
 
             "IN_PROGRESS" -> {
-                val status = requireNotNull(statusInfo) { "강습 상태 정보가 없습니다." }
+                val status = statusInfo!!
 
                 ConsumerLessonDetail.InProgress(
                     lessonId = lessonId,
                     lessonInfo = lessonInfo,
                     instructorProfile = instructorProfile,
-                    serverTime = requireNotNull(status.serverTime),
-                    actualStartedAt = requireNotNull(status.actualStartedAt),
-                    expectedEndedAt = requireNotNull(status.expectedEndedAt),
-                    elapsedSeconds = requireNotNull(status.elapsedSeconds),
-                    remainingSeconds = requireNotNull(status.remainingSeconds),
-                    scheduledDurationMinutes = requireNotNull(dtoLessonInfo.scheduledDurationMinutes),
+                    serverTime = status.serverTime!!,
+                    actualStartedAt = status.actualStartedAt!!,
+                    expectedEndedAt = status.expectedEndedAt!!,
+                    elapsedSeconds = status.elapsedSeconds!!,
+                    remainingSeconds = status.remainingSeconds!!,
+                    scheduledDurationMinutes = dtoLessonInfo.scheduledDurationMinutes!!,
                     lessonMatchingRequest = matchingRequests.orEmpty().map { it.toModel() },
                 )
             }
 
-            "COMPLETED" -> ConsumerLessonDetail.Completed (
+            "COMPLETED" -> ConsumerLessonDetail.Completed(
                 lessonId = lessonId,
                 lessonInfo = lessonInfo,
                 instructorProfile = instructorProfile,
-                lessonDurationMinutes = requireNotNull(dtoLessonInfo.lessonDurationMinutes),
-                actualStartedAt = requireNotNull(dtoLessonInfo.actualStartedAt),
-                actualEndedAt = requireNotNull(dtoLessonInfo.actualEndedAt),
-                actualDurationMinutes = requireNotNull(dtoLessonInfo.actualDurationMinutes),
+                lessonDurationMinutes = dtoLessonInfo.lessonDurationMinutes!!,
+                actualStartedAt = dtoLessonInfo.actualStartedAt!!,
+                actualEndedAt = dtoLessonInfo.actualEndedAt!!,
+                actualDurationMinutes = dtoLessonInfo.actualDurationMinutes!!,
             )
 
             "CANCELED" -> {
-                val cancel = requireNotNull(cancelInfo) { "취소 정보가 없습니다." }
+                val cancel = cancelInfo!!
 
                 ConsumerLessonDetail.Canceled(
                     lessonId = lessonId,
@@ -86,7 +86,7 @@ internal class ConsumerLessonDetailRepositoryImpl @Inject constructor(
                     canceledByMemberId = cancel.canceledBy.memberId,
                     canceledByName = cancel.canceledBy.name,
                     cancelReason = cancel.cancelReason,
-                    lessonDurationMinutes = requireNotNull(dtoLessonInfo.lessonDurationMinutes),
+                    lessonDurationMinutes = dtoLessonInfo.lessonDurationMinutes!!,
                 )
             }
 
