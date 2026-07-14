@@ -108,6 +108,7 @@ private fun LessonDetailScreen(
             completed = phase.completed,
             lessonBannerState = LessonBannerState.Completed(
                 lessonDate = phase.completed.lessonDate,
+                lessonTime = phase.completed.lessonTime,
             ),
             onBack = onBackClick,
             onChatRoomClick = onChatRoomClick,

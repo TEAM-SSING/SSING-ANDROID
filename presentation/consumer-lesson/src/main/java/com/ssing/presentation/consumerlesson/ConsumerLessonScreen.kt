@@ -218,6 +218,7 @@ private class LessonBannerStatePreviewProvider : PreviewParameterProvider<Lesson
         ),
         LessonBannerState.Completed(
             lessonDate = "2026년 12월 31일",
+            lessonTime = "10:00 ~ 12:00",
         ),
         LessonBannerState.Canceled,
     )

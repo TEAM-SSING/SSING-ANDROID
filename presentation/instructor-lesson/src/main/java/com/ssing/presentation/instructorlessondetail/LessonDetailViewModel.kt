@@ -26,6 +26,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
 @HiltViewModel
@@ -206,17 +207,23 @@ private fun InstructorLessonDetailRequestResult.toModel(): LessonDetailContract.
             )
         )
 
-        is InstructorLessonDetailCompleted -> LessonDetailContract.LessonDetailPhase.LessonDetailCompleted(
-            completed = LessonDetailCompletedUiModel(
-                tags = listOf(sport, lessonLevel).toPersistentList(),
-                classTitle = representativeConsumerNames.joinToString(),
-                lessonDate = LocalDateTime.parse(actualStartedAt).ssingDateFormatter(),
-                location = resortDisplayName,
-                duration = lessonDurationMinutes.toDurationText(),
-                price = totalLessonPrice,
-                teams = matchingRequests.map { it.toModel() }.toPersistentList(),
+        is InstructorLessonDetailCompleted -> {
+            val startedAt = LocalDateTime.parse(actualStartedAt)
+            val endedAt = LocalDateTime.parse(actualEndedAt)
+
+            LessonDetailContract.LessonDetailPhase.LessonDetailCompleted(
+                completed = LessonDetailCompletedUiModel(
+                    tags = listOf(sport, lessonLevel).toPersistentList(),
+                    classTitle = representativeConsumerNames.joinToString(),
+                    lessonDate = startedAt.ssingDateFormatter(),
+                    lessonTime = "${startedAt.toClockText()} ~ ${endedAt.toClockText()}",
+                    location = resortDisplayName,
+                    duration = lessonDurationMinutes.toDurationText(),
+                    price = totalLessonPrice,
+                    teams = matchingRequests.map { it.toModel() }.toPersistentList(),
+                )
             )
-        )
+        }
 
         is InstructorLessonDetailCanceled -> LessonDetailContract.LessonDetailPhase.LessonDetailCanceled(
             cancel = LessonDetailCanceledUiModel(
@@ -257,3 +264,6 @@ private fun Int.toDurationText(): String =
         this % 60 == 0 -> "${this / 60}시간"
         else -> "${this / 60}시간 ${this % 60}분"
     }
+
+private fun LocalDateTime.toClockText(): String =
+    format(DateTimeFormatter.ofPattern("HH:mm"))
