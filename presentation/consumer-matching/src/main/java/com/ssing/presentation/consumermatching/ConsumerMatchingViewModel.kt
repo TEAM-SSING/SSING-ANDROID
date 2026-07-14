@@ -1,11 +1,13 @@
 package com.ssing.presentation.consumermatching
 
 import androidx.lifecycle.viewModelScope
+import com.ssing.core.network.di.ApplicationScope
 import com.ssing.core.network.socket.SocketState
 import com.ssing.core.ui.base.BaseViewModel
 import com.ssing.data.matching.consumermatching.event.ConsumerMatchingEvent
 import com.ssing.data.matching.consumermatching.repository.api.ConsumerMatchingRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -14,6 +16,7 @@ import javax.inject.Inject
 @HiltViewModel
 internal class ConsumerMatchingViewModel @Inject constructor(
     private val consumerMatchingRepository: ConsumerMatchingRepository,
+    @param:ApplicationScope private val applicationScope: CoroutineScope,
 ) : BaseViewModel<ConsumerMatchingContract.State, ConsumerMatchingContract.Effect>(
     initialState = ConsumerMatchingContract.State(),
 ) {
@@ -27,6 +30,12 @@ internal class ConsumerMatchingViewModel @Inject constructor(
         consumerMatchingRepository.socketState
             .onEach { state -> handleSocketState(state) }
             .launchIn(viewModelScope)
+    }
+
+    override fun onCleared() {
+        applicationScope.launch {
+            consumerMatchingRepository.disconnect()
+        }
     }
 
     private fun handleMatchingEvent(event: ConsumerMatchingEvent) {
