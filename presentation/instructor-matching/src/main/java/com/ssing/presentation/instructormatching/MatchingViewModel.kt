@@ -15,6 +15,9 @@ import com.ssing.presentation.instructormatching.model.MatchingOfferUiModel
 import com.ssing.presentation.instructormatching.model.OfferStatusOption
 import com.ssing.presentation.instructormatching.model.SportOption
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
@@ -29,6 +32,22 @@ internal class MatchingViewModel @Inject constructor(
 
     init {
         loadMatchingExposure()
+        instructorMatchingRepository.connectSocket()
+        observeSocketEvents()
+    }
+
+    private fun observeSocketEvents() {
+        viewModelScope.launch {
+            instructorMatchingRepository.socketEvents.collect { event ->
+                Timber.d("matching 소켓 이벤트: ${event.eventType}")
+                when (event.eventType) {
+                    EVENT_OFFER_RECEIVED,
+                    EVENT_OFFER_CLOSED,
+                    EVENT_MATCHING_CANCELED,
+                    -> restoreActiveOffer()
+                }
+            }
+        }
     }
 
     private fun loadMatchingExposure() {
@@ -150,17 +169,18 @@ internal class MatchingViewModel @Inject constructor(
 
     fun dismissDialog() = updateState { copy(dialog = null) }
 
-    /**
-     * 현재 노출된 활성 매칭 제안을 REST로 조회해 화면을 복구한다.
-     * WebSocket [MatchingPhase.OfferArrived] 이벤트를 놓쳤거나 화면 재진입 시 호출한다.
-     */
     fun restoreActiveOffer() {
         viewModelScope.launch {
             instructorMatchingRepository.fetchActiveOffer()
                 .onSuccess { offer ->
                     Timber.d("matching-offers 응답: $offer")
-                    offer ?: return@onSuccess
-                    updateState { copy(phase = MatchingPhase.OfferArrived(offer = offer.toUiModel())) }
+                    updateState {
+                        when {
+                            offer != null -> copy(phase = MatchingPhase.OfferArrived(offer.toUiModel()))
+                            phase is MatchingPhase.OfferArrived || phase is MatchingPhase.PendingConfirm -> copy(phase = MatchingPhase.Waiting)
+                            else -> this
+                        }
+                    }
                 }
                 .onFailure {
                     Timber.e(it, "matching-offers 실패")
@@ -183,22 +203,20 @@ internal class MatchingViewModel @Inject constructor(
         groupId = groupId,
         status = runCatching { OfferStatusOption.valueOf(offerStatus) }
             .getOrDefault(OfferStatusOption.UNKNOWN),
-        expiresAtMillis = null,
+        expiresAtMillis = expiresAt?.let { runCatching { java.time.Instant.parse(it).toEpochMilli() }.getOrNull() },
         nickname = requestSummary.requesterName,
-        teamCount = requestSummary.matchingRequestCount,
+        teamCount = requestSummary.headcount,
         price = priceSummary.totalPaymentAmount,
-        // TODO(#151, 기획 확인): classDateTime(강습 일시) — 즉시매칭(startType=IMMEDIATE)인데
-        //  Figma엔 일시가 있고 계약(REST/WS)엔 없음. 즉시매칭에 이 시간이 왜 필요한지 기획에 확인 필요.
-        classDateTime = "",
-        // TODO(#151, 서버 대기): participants(수강생 나이/성별) —offer 상세 응답에 추가 예정.
-        //  필드 내려오면 상세 API 매퍼에서 채워 연결.
+        // TODO(#151, 서버 대기): participants(수강생 나이/성별) — offer 응답에 추가 예정. 내려오면 여기서 채운다.
         participants = emptyList(),
         lesson = LessonSummaryUiModel(
             resortLabel = lessonSummary.resort.displayName,
             sportLabel = lessonSummary.sport.toSportLabel(),
             levelLabel = lessonSummary.level.toLevelLabel(),
             headcount = lessonSummary.totalHeadcount,
-            durationHours = lessonSummary.durationMinutes / 60,
+            durationHours = DurationOption.entries
+                .firstOrNull { it.hours * 60 == lessonSummary.durationMinutes }?.hours
+                ?: (lessonSummary.durationMinutes / 60),
         ),
     )
 
@@ -210,4 +228,15 @@ internal class MatchingViewModel @Inject constructor(
 
     private fun <T> Set<T>.toggle(item: T): Set<T> =
         if (item in this) this - item else this + item
+
+    override fun onCleared() {
+        super.onCleared()
+        CoroutineScope(Dispatchers.IO).launch { instructorMatchingRepository.disconnectSocket() }
+    }
+
+    private companion object {
+        const val EVENT_OFFER_RECEIVED = "MATCHING_OFFER_RECEIVED"
+        const val EVENT_OFFER_CLOSED = "MATCHING_OFFER_CLOSED"
+        const val EVENT_MATCHING_CANCELED = "MATCHING_CANCELED"
+    }
 }

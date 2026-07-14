@@ -205,7 +205,7 @@ private val previewOffer = MatchingOfferUiModel(
     lesson = LessonSummaryUiModel(
         resortLabel = "하이원 리조트",
         sportLabel = "스키",
-        levelLabel = "처음 타요",
+        levelLabel = "처음타요",
         headcount = 4,
         durationHours = 3,
     ),
