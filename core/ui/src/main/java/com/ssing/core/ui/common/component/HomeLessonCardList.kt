@@ -35,12 +35,34 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
-import com.ssing.core.ui.state.HomeLessonCardState
-import com.ssing.core.ui.state.HomeLessonCardState.Reservation.Status
-import com.ssing.core.ui.state.HomeSport
 import com.ssing.core.ui.util.ssingDateFormatter
 import kotlinx.collections.immutable.persistentListOf
 import java.time.LocalDateTime
+
+sealed interface HomeLessonCardState {
+    data class Reservation(
+        val lessonId: Long,
+        val chip: String,
+        val displayText: String,
+        val location: String,
+        val date: LocalDateTime,
+        val sport: HomeSport,
+        val status: Status,
+    ) : HomeLessonCardState {
+        sealed interface Status {
+            data object Default : Status
+            data object Matched : Status
+            data object Matching : Status
+        }
+    }
+
+    data object Empty : HomeLessonCardState
+}
+
+enum class HomeSport(val imageRes: Int) {
+    SKI(R.drawable.img_ski_86),
+    SNOWBOARD(R.drawable.img_snowboard_86),
+}
 
 @Composable
 fun HomeLessonCardList(
@@ -136,7 +158,7 @@ private fun HomeLessonReservationCard(
         LessonInfoSection(state = state)
 
         SsingButton(
-            text = if (state.status is Status.Default) "강습 상세보기" else "이어보기",
+            text = if (state.status is HomeLessonCardState.Reservation.Status.Default) "강습 상세보기" else "이어보기",
             onClick = { onButtonClick(state) },
             style = SsingButtonStyle.GRAY,
             modifier = Modifier.fillMaxWidth(),
@@ -311,7 +333,7 @@ private fun HomeLessonMatchingCardPreview() {
                 date = LocalDateTime.of(2025, 7, 15, 19, 0),
                 location = "하이원",
                 sport = HomeSport.SNOWBOARD,
-                status = Status.Matching
+                status = HomeLessonCardState.Reservation.Status.Matching
             ),
             onButtonClick = {},
             modifier = Modifier.width(328.dp),
@@ -331,7 +353,7 @@ private fun HomeLessonMatchedCardPreview() {
                 date = LocalDateTime.of(2025, 7, 15, 19, 0),
                 location = "하이원",
                 sport = HomeSport.SKI,
-                status = Status.Matched,
+                status = HomeLessonCardState.Reservation.Status.Matched,
             ),
             onButtonClick = {},
             modifier = Modifier.width(328.dp),
@@ -351,7 +373,7 @@ private fun HomeLessonCardPreview() {
                 date = LocalDateTime.of(2025, 7, 15, 19, 0),
                 location = "하이원",
                 sport = HomeSport.SNOWBOARD,
-                status = Status.Default
+                status = HomeLessonCardState.Reservation.Status.Default
             ),
             onButtonClick = {},
             modifier = Modifier.width(328.dp),
@@ -371,7 +393,7 @@ private class HomeLessonCardPreviewProvider :
                 location = "하이원",
                 date = LocalDateTime.of(2025, 7, 15, 19, 0),
                 sport = HomeSport.SKI,
-                status = Status.Matching,
+                status = HomeLessonCardState.Reservation.Status.Matching,
             ),
             HomeLessonCardState.Reservation(
                 lessonId = 1,
@@ -380,7 +402,7 @@ private class HomeLessonCardPreviewProvider :
                 location = "지산리조트",
                 date = LocalDateTime.of(2026, 7, 11, 19, 0),
                 sport = HomeSport.SNOWBOARD,
-                status = Status.Default,
+                status = HomeLessonCardState.Reservation.Status.Default,
             ),
         ),
     )
