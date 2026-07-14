@@ -3,6 +3,7 @@ package com.ssing.data.consumerlesson.repository.impl
 import com.ssing.core.network.util.ApiResponseHandler
 import com.ssing.data.consumerlesson.exception.ConsumerLessonDetailException
 import com.ssing.data.consumerlesson.model.ConsumerLessonDetail
+import com.ssing.data.consumerlesson.model.ConsumerLessonSocketEvent
 import com.ssing.data.consumerlesson.model.InstructorProfile
 import com.ssing.data.consumerlesson.model.LessonInfo
 import com.ssing.data.consumerlesson.model.LessonMatchingRequest
@@ -14,14 +15,40 @@ import com.ssing.data.consumerlesson.remote.dto.response.lessoninfo.ConsumerLess
 import com.ssing.data.consumerlesson.remote.dto.response.matchingrequest.ConsumerLessonMatchingRequest
 import com.ssing.data.consumerlesson.remote.dto.response.matchingrequest.Participant
 import com.ssing.data.consumerlesson.repository.api.ConsumerLessonDetailRepository
+import com.ssing.data.lesson.common.remote.datasource.api.LessonSocketDataSource
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onStart
 import javax.inject.Inject
 
 internal class ConsumerLessonDetailRepositoryImpl @Inject constructor(
     private val apiResponseHandler: ApiResponseHandler,
     private val dataSource: ConsumerLessonDetailDataSource,
+    private val socketDataSource: LessonSocketDataSource,
 ) : ConsumerLessonDetailRepository {
 
-    override suspend fun getConsumerLessonDetail(lessonId: Long): Result<ConsumerLessonDetail> =
+    private val relevantEventTypes = setOf(
+        "LESSON_START_CONFIRMATION_UPDATED",
+        "LESSON_STARTED",
+        "LESSON_COMPLETED",
+        "LESSON_CANCELED",
+    )
+
+    override val socketEvents: Flow<ConsumerLessonSocketEvent> = socketDataSource.event
+        .filter { it.recipientRole == RECIPIENT_CONSUMER }
+        .filter { it.eventType in relevantEventTypes }
+        .map { ConsumerLessonSocketEvent(lessonId = it.lessonId, lessonStatus = it.lessonStatus) }
+
+    override fun connectSocket() {
+        socketDataSource.connect()
+    }
+
+    override suspend fun disconnectSocket() {
+        socketDataSource.disconnect()
+    }
+
+    override suspend fun fetchConsumerLessonDetail(lessonId: Long): Result<ConsumerLessonDetail> =
         apiResponseHandler.safeApiCall {
             dataSource.getConsumerLessonDetail(lessonId)
         }.mapCatching { it.toModel() }
@@ -133,4 +160,8 @@ internal class ConsumerLessonDetailRepositoryImpl @Inject constructor(
         gender = gender,
         age = age,
     )
+
+    companion object {
+        private const val RECIPIENT_CONSUMER = "CONSUMER"
+    }
 }
