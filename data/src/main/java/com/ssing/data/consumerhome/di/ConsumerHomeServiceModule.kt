@@ -1,8 +1,6 @@
 package com.ssing.data.consumerhome.di
 
-import com.ssing.data.consumerhome.remote.datasource.api.ConsumerHomeRemoteDataSource
 import com.ssing.data.consumerhome.remote.service.ConsumerHomeService
-import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
