@@ -11,9 +11,7 @@ internal interface LessonDataSource {
         request: LessonRequest,
     ):
             BaseResponse<LessonResponse>
-}
 
-internal interface InstructorLessonDetailDataSource {
     suspend fun instructorLessonDetail(
         lessonId: Long,
     ): BaseResponse<InstructorLessonDetailResponse>

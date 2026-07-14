@@ -5,10 +5,9 @@ import com.ssing.data.lesson.model.InstructorLessonDetailBefore
 import com.ssing.data.lesson.model.InstructorLessonDetailCanceled
 import com.ssing.data.lesson.model.InstructorLessonDetailCompleted
 import com.ssing.data.lesson.model.InstructorLessonDetailOngoing
+import com.ssing.data.lesson.model.InstructorLessonDetailRequestResult
 import com.ssing.data.lesson.model.MatchingRequest
 import com.ssing.data.lesson.model.Participant
-import com.ssing.data.lesson.model.InstructorLessonDetailRequestResult
-import com.ssing.data.lesson.remote.datasource.api.InstructorLessonDetailDataSource
 import com.ssing.data.lesson.remote.datasource.api.LessonDataSource
 import com.ssing.data.lesson.remote.dto.request.LessonRequest
 import com.ssing.data.lesson.remote.dto.response.InstructorLessonDetailBeforeResponse
@@ -37,7 +36,7 @@ internal class LessonRepositoryImpl @Inject constructor(
 
 internal class InstructorLessonDetailRepositoryImpl @Inject constructor(
     private val apiResponseHandler: ApiResponseHandler,
-    private val dataSource: InstructorLessonDetailDataSource,
+    private val dataSource: LessonDataSource,
 ) : InstructorLessonDetailRepository {
 
     override suspend fun instructorLessonDetail(lessonId: Long): Result<InstructorLessonDetailRequestResult> =
