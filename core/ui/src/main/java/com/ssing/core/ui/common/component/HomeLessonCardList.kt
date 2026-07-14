@@ -37,7 +37,7 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import com.ssing.core.ui.state.HomeLessonCardState
 import com.ssing.core.ui.state.HomeLessonCardState.Reservation.Status
-import com.ssing.core.ui.state.Sports
+import com.ssing.core.ui.state.HomeSport
 import com.ssing.core.ui.util.ssingDateFormatter
 import kotlinx.collections.immutable.persistentListOf
 import java.time.LocalDateTime
@@ -310,7 +310,7 @@ private fun HomeLessonMatchingCardPreview() {
                 displayText = "매칭중",
                 date = LocalDateTime.of(2025, 7, 15, 19, 0),
                 location = "하이원",
-                sport = Sports.SNOWBOARD,
+                sport = HomeSport.SNOWBOARD,
                 status = Status.Matching
             ),
             onButtonClick = {},
@@ -330,7 +330,7 @@ private fun HomeLessonMatchedCardPreview() {
                 displayText = "김OO님 팀 3명",
                 date = LocalDateTime.of(2025, 7, 15, 19, 0),
                 location = "하이원",
-                sport = Sports.SKI,
+                sport = HomeSport.SKI,
                 status = Status.Matched,
             ),
             onButtonClick = {},
@@ -350,7 +350,7 @@ private fun HomeLessonCardPreview() {
                 displayText = "김OO님 팀 3명",
                 date = LocalDateTime.of(2025, 7, 15, 19, 0),
                 location = "하이원",
-                sport = Sports.SNOWBOARD,
+                sport = HomeSport.SNOWBOARD,
                 status = Status.Default
             ),
             onButtonClick = {},
@@ -370,7 +370,7 @@ private class HomeLessonCardPreviewProvider :
                 displayText = "김OO님 팀 3명",
                 location = "하이원",
                 date = LocalDateTime.of(2025, 7, 15, 19, 0),
-                sport = Sports.SKI,
+                sport = HomeSport.SKI,
                 status = Status.Matching,
             ),
             HomeLessonCardState.Reservation(
@@ -379,7 +379,7 @@ private class HomeLessonCardPreviewProvider :
                 displayText = "김OO님 팀 3명",
                 location = "지산리조트",
                 date = LocalDateTime.of(2026, 7, 11, 19, 0),
-                sport = Sports.SNOWBOARD,
+                sport = HomeSport.SNOWBOARD,
                 status = Status.Default,
             ),
         ),

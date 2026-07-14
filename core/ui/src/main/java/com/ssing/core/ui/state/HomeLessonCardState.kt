@@ -10,7 +10,7 @@ sealed interface HomeLessonCardState {
         val displayText: String,
         val location: String,
         val date: LocalDateTime,
-        val sport: Sports,
+        val sport: HomeSport,
         val status: Status,
     ) : HomeLessonCardState {
         sealed interface Status {
@@ -23,7 +23,7 @@ sealed interface HomeLessonCardState {
     data object Empty : HomeLessonCardState
 }
 
-enum class Sports(val imageRes: Int) {
+enum class HomeSport(val imageRes: Int) {
     SKI(R.drawable.img_ski_86),
     SNOWBOARD(R.drawable.img_snowboard_86),
 }
