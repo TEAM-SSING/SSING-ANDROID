@@ -5,9 +5,13 @@ import com.ssing.data.lesson.remote.dto.request.LessonRequest
 import com.ssing.data.lesson.remote.dto.response.LessonResponse
 
 internal interface LessonDataSource {
-    suspend fun lesson(
+    suspend fun lessonStart(
         lessonId: Long,
         request: LessonRequest,
-    ):
-            BaseResponse<LessonResponse>
+    ): BaseResponse<LessonResponse>
+
+    suspend fun lessonCompleted(
+        lessonId: Long,
+        request: LessonRequest,
+    ): BaseResponse<LessonResponse>
 }

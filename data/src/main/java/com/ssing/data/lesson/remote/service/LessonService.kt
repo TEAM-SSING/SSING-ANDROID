@@ -9,13 +9,13 @@ import retrofit2.http.Path
 
 internal interface LessonService {
     @POST("api/v1/lessons/{lessonId}/start-confirmation")
-    suspend fun lesson(
+    suspend fun lessonStart(
         @Path("lessonId") lessonId: Long,
         @Body request: LessonRequest,
     ): BaseResponse<LessonResponse>
 
     @POST("api/v1/lessons/{lessonId}/completion")
-    suspend fun lesson(
+    suspend fun lessonCompleted(
         @Path("lessonId") lessonId: Long,
     ): BaseResponse<LessonResponse>
 }

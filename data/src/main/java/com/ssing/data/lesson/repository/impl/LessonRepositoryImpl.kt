@@ -13,7 +13,15 @@ internal class LessonRepositoryImpl @Inject constructor(
 
     override suspend fun lessonStart(lessonId: Long): Result<Unit> =
         apiResponseHandler.safeApiCall {
-            dataSource.lesson(
+            dataSource.lessonStart(
+                lessonId = lessonId,
+                request = LessonRequest(lessonId = lessonId),
+            )
+        }.map { }
+
+    override suspend fun lessonCompleted(lessonId: Long): Result<Unit> =
+        apiResponseHandler.safeApiCall {
+            dataSource.lessonCompleted(
                 lessonId = lessonId,
                 request = LessonRequest(lessonId = lessonId),
             )
