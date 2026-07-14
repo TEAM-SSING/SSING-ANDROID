@@ -16,7 +16,6 @@ import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.LaunchedEffect
@@ -35,6 +34,7 @@ import com.ssing.core.ui.common.component.SsingTopBar
 import com.ssing.core.ui.common.component.UserRole
 import com.ssing.core.ui.designsystem.theme.Blue50
 import com.ssing.core.ui.designsystem.theme.SSINGTheme
+import com.ssing.presentation.instructorlessondetail.component.LessonDetailSsingButton
 import com.ssing.presentation.instructorlessondetail.component.SectionTitle
 import com.ssing.presentation.instructorlessondetail.model.LessonDetailBeforeUiModel
 import com.ssing.presentation.instructorlessondetail.model.TeamParticipantsInfo
@@ -122,6 +122,7 @@ internal fun LessonDetailBeforeScreen(
                 ) {
                     Spacer(modifier = Modifier.height(16.dp))
                     SectionTitle(text = "강습 정보")
+                    Spacer(modifier = Modifier.height(8.dp))
                     SsingMatchingDetailCardSmall(
                         tags = before.tags,
                         teamNicknames = before.nicknames,
@@ -147,12 +148,8 @@ internal fun LessonDetailBeforeScreen(
                     }
 
                     Spacer(modifier = Modifier.height(24.dp))
-                    Text(
-                        text = "강습 관리",
-                        style = SSINGTheme.typography.caption.sb12,
-                        color = SSINGTheme.colors.textAlternative,
-                        modifier = Modifier.padding(bottom = 8.dp),
-                    )
+                    SectionTitle(text = "강습 관리")
+                    Spacer(modifier = Modifier.height(8.dp))
                     Row(
                         horizontalArrangement = Arrangement.spacedBy(8.dp),
                         modifier = Modifier.fillMaxWidth(),
@@ -175,15 +172,9 @@ internal fun LessonDetailBeforeScreen(
                 }
             }
         }
-        SsingButton(
+        LessonDetailSsingButton(
             text = if (before.isInstructorReady) "강습 대기중" else "강습 준비 완료",
             onClick = onReadyButtonClick,
-            style = if (before.isInstructorReady) SsingButtonStyle.GRAY else SsingButtonStyle.BLUE,
-            enabled = !before.isInstructorReady,
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(SSINGTheme.colors.backgroundNormal)
-                .padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
         )
     }
 

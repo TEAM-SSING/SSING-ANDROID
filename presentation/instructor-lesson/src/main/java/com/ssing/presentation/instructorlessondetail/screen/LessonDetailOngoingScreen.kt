@@ -27,6 +27,7 @@ import com.ssing.core.ui.common.component.SsingMatchingDetailCardSmall
 import com.ssing.core.ui.common.component.SsingTopBar
 import com.ssing.core.ui.designsystem.theme.Blue50
 import com.ssing.core.ui.designsystem.theme.SSINGTheme
+import com.ssing.presentation.instructorlessondetail.component.LessonDetailSsingButton
 import com.ssing.presentation.instructorlessondetail.component.SectionTitle
 import com.ssing.presentation.instructorlessondetail.model.LessonDetailOngoingUiModel
 import com.ssing.presentation.instructorlessondetail.model.TeamParticipantsInfo
@@ -137,14 +138,9 @@ internal fun LessonDetailOngoingScreen(
                 }
             }
         }
-        SsingButton(
+        LessonDetailSsingButton(
             text = "강습 종료",
             onClick = onEndClick,
-            style = SsingButtonStyle.BLUE,
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(SSINGTheme.colors.backgroundNormal)
-                .padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
         )
     }
 }
