@@ -16,7 +16,7 @@ import androidx.compose.ui.unit.dp
 import com.ssing.core.ui.designsystem.theme.SSINGTheme
 
 @Composable
-internal fun MatchingConditionSection(
+internal fun MatchingExposureSection(
     label: String,
     modifier: Modifier = Modifier,
     labelSuffix: (@Composable RowScope.() -> Unit)? = null,
@@ -54,9 +54,9 @@ internal fun MultiSelectBadge(modifier: Modifier = Modifier) {
 
 @Preview(showBackground = true)
 @Composable
-private fun MatchingConditionSectionPreview() {
+private fun MatchingExposureSectionPreview() {
     SSINGTheme {
-        MatchingConditionSection(
+        MatchingExposureSection(
             label = "강습 가능 레벨",
             labelSuffix = { MultiSelectBadge() },
         ) {

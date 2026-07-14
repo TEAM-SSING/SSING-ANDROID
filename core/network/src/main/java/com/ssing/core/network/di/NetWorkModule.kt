@@ -73,19 +73,19 @@ object NetworkModule {
             }
         }
 
-    @WithoutTokenOkHttpClient
+    @NoAuth
     @Provides
     @Singleton
-    fun provideWithoutTokenOkHttpClient(
+    fun provideNoAuthOkHttpClient(
         loggingInterceptor: HttpLoggingInterceptor,
     ): OkHttpClient = OkHttpClient.Builder()
         .addInterceptor(loggingInterceptor)
         .build()
 
-    @WithTokenOkHttpClient
+    @Auth
     @Provides
     @Singleton
-    internal fun provideWithTokenOkHttpClient(
+    internal fun provideAuthOkHttpClient(
         loggingInterceptor: HttpLoggingInterceptor,
         authInterceptor: AuthInterceptor,
         tokenAuthenticator: TokenAuthenticator,
@@ -97,8 +97,20 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideRetrofit(
-        @WithoutTokenOkHttpClient client: OkHttpClient,
+    fun provideAuthRetrofit(
+        @Auth client: OkHttpClient,
+        factory: Converter.Factory,
+    ): Retrofit = Retrofit.Builder()
+        .baseUrl(BASE_URL)
+        .client(client)
+        .addConverterFactory(factory)
+        .build()
+
+    @NoAuth
+    @Provides
+    @Singleton
+    fun provideNoAuthRetrofit(
+        @NoAuth client: OkHttpClient,
         factory: Converter.Factory,
     ): Retrofit = Retrofit.Builder()
         .baseUrl(BASE_URL)
@@ -108,10 +120,11 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    internal fun provideReissueService(retrofit: Retrofit): ReissueService =
-        retrofit.create(ReissueService::class.java)
+    internal fun provideReissueService(
+        @NoAuth retrofit: Retrofit,
+    ): ReissueService = retrofit.create(ReissueService::class.java)
 
-    @SocketOkHttpClient
+    @Socket
     @Provides
     @Singleton
     fun provideSocketOkHttpClient(): OkHttpClient = OkHttpClient.Builder()
@@ -121,7 +134,7 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun providerStompClient(@SocketOkHttpClient okHttpClient: OkHttpClient): StompClient =
+    fun provideStompClient(@Socket okHttpClient: OkHttpClient): StompClient =
         StompClient(OkHttpWebSocketClient(okHttpClient))
 }
 

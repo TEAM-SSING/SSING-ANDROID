@@ -1,12 +1,19 @@
 package com.ssing.presentation.instructorlessondetail
 
+import androidx.lifecycle.viewModelScope
+import com.ssing.core.network.exception.ApiException
 import com.ssing.core.ui.base.BaseViewModel
 import com.ssing.core.ui.common.component.CancelReason
+import com.ssing.core.ui.extension.uiMessage
+import com.ssing.data.lesson.repository.api.LessonRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-internal class LessonDetailViewModel @Inject constructor() :
+internal class LessonDetailViewModel @Inject constructor(
+    private val lessonRepository: LessonRepository,
+) :
     BaseViewModel<LessonDetailContract.State, LessonDetailContract.Effect>(
         LessonDetailContract.State()
     ) {
@@ -53,6 +60,7 @@ internal class LessonDetailViewModel @Inject constructor() :
         val before =
             (uiState.value.phase as? LessonDetailContract.LessonDetailPhase.LessonDetailBefore)
                 ?.before ?: return
+
         updateState {
             copy(
                 phase = LessonDetailContract.LessonDetailPhase.LessonDetailBefore(
@@ -61,36 +69,62 @@ internal class LessonDetailViewModel @Inject constructor() :
                 showReadyDialog = false,
             )
         }
-    }
-
-    fun onContinueClick() {
-        updateState {
-            copy(showLessonEndDialog = false)
+        viewModelScope.launch {
+            lessonRepository.lessonStart(before.lessonId)
+                .onFailure {
+                    updateState {
+                        copy(
+                            phase = LessonDetailContract.LessonDetailPhase.LessonDetailBefore(
+                                before = before.copy(isInstructorReady = false)
+                            ),
+                        )
+                    }
+                    if (it is ApiException) {
+                        sendEffect(LessonDetailContract.Effect.ShowToast(it.uiMessage))
+                    }
+                }
         }
     }
 
-    fun onCancelReasonSelect(reason: CancelReason) {
-        updateState {
-            copy(cancelReasonState = cancelReasonState.copy(selectedReason = reason))
-        }
-    }
 
-    fun onCancelSheetOpen() {
-        updateState {
-            copy(cancelReasonState = cancelReasonState.copy(visible = true))
+        fun onContinueClick() {
+            updateState {
+                copy(showLessonEndDialog = false)
+            }
         }
-    }
 
-    fun onCancelSheetDismiss() {
-        updateState {
-            copy(cancelReasonState = cancelReasonState.copy(visible = false, selectedReason = null))
+        fun onCancelReasonSelect(reason: CancelReason) {
+            updateState {
+                copy(cancelReasonState = cancelReasonState.copy(selectedReason = reason))
+            }
         }
-    }
 
-    fun onCancelConfirmClick(customReason: String?) {
-        val reason = uiState.value.cancelReasonState.selectedReason ?: return
-        updateState {
-            copy(cancelReasonState = cancelReasonState.copy(visible = false, selectedReason = null))
+        fun onCancelSheetOpen() {
+            updateState {
+                copy(cancelReasonState = cancelReasonState.copy(visible = true))
+            }
+        }
+
+        fun onCancelSheetDismiss() {
+            updateState {
+                copy(
+                    cancelReasonState = cancelReasonState.copy(
+                        visible = false,
+                        selectedReason = null
+                    )
+                )
+            }
+        }
+
+        fun onCancelConfirmClick(customReason: String?) {
+            val reason = uiState.value.cancelReasonState.selectedReason ?: return
+            updateState {
+                copy(
+                    cancelReasonState = cancelReasonState.copy(
+                        visible = false,
+                        selectedReason = null
+                    )
+                )
+            }
         }
     }
-}
