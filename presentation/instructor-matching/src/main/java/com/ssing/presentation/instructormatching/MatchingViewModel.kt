@@ -8,6 +8,7 @@ import com.ssing.data.matching.instructormatching.model.InstructorMatchingOffer
 import com.ssing.data.matching.instructormatching.repository.api.InstructorMatchingRepository
 import com.ssing.presentation.instructormatching.MatchingContract.MatchingDialog
 import com.ssing.presentation.instructormatching.MatchingContract.MatchingPhase
+import com.ssing.presentation.instructormatching.di.ApplicationScope
 import com.ssing.presentation.instructormatching.model.DurationOption
 import com.ssing.presentation.instructormatching.model.LessonSummaryUiModel
 import com.ssing.presentation.instructormatching.model.LevelOption
@@ -16,7 +17,6 @@ import com.ssing.presentation.instructormatching.model.OfferStatusOption
 import com.ssing.presentation.instructormatching.model.SportOption
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -25,6 +25,7 @@ import javax.inject.Inject
 @HiltViewModel
 internal class MatchingViewModel @Inject constructor(
     private val instructorMatchingRepository: InstructorMatchingRepository,
+    @param:ApplicationScope private val applicationScope: CoroutineScope,
 ) :
     BaseViewModel<MatchingContract.State, MatchingContract.Effect>(
         MatchingContract.State()
@@ -231,7 +232,7 @@ internal class MatchingViewModel @Inject constructor(
 
     override fun onCleared() {
         super.onCleared()
-        CoroutineScope(Dispatchers.IO).launch { instructorMatchingRepository.disconnectSocket() }
+        applicationScope.launch { instructorMatchingRepository.disconnectSocket() }
     }
 
     private companion object {
