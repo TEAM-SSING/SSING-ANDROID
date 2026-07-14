@@ -29,7 +29,7 @@ import kotlinx.collections.immutable.persistentListOf
 internal fun ConsumerMatchingResultRoute(
     popBackStack: () -> Unit,
     navigateToHome: () -> Unit,
-    navigateToPayment: () -> Unit,
+    navigateToPayment: (Long) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: ConsumerMatchingViewModel = hiltViewModel(),
 ) {
@@ -40,7 +40,7 @@ internal fun ConsumerMatchingResultRoute(
         if (effect is ConsumerMatchingContract.Effect.Result) {
             when (effect) {
                 ConsumerMatchingContract.Effect.Result.NavigateToHome -> navigateToHome()
-                ConsumerMatchingContract.Effect.Result.NavigateToPayment -> navigateToPayment()
+                is ConsumerMatchingContract.Effect.Result.NavigateToPayment -> navigateToPayment(effect.matchingRequestId)
                 ConsumerMatchingContract.Effect.Result.PopBackStack -> popBackStack()
                 is ConsumerMatchingContract.Effect.Result.ShowToast -> context.toast(effect.message)
             }
