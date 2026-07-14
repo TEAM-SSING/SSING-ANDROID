@@ -53,7 +53,6 @@ sealed interface LessonBannerState {
 
     data class Completed(
         val lessonDate: String,
-        val lessonTime: String,
     ) : LessonBannerState
 
     data object Canceled : LessonBannerState
@@ -251,7 +250,7 @@ private fun LessonCompletedContent(
             )
 
             Text(
-                text = "${lessonBannerState.lessonDate} · ${lessonBannerState.lessonTime}",
+                text = lessonBannerState.lessonDate,
                 color = SSINGTheme.colors.textAlternative,
                 style = SSINGTheme.typography.caption.md14,
             )
@@ -307,7 +306,6 @@ private class LessonBannerPreviewProvider : PreviewParameterProvider<LessonBanne
             ),
             LessonBannerState.Completed(
                 lessonDate = "2026년 12월 31일",
-                lessonTime = "10:00 ~ 12:00"
             ),
             LessonBannerState.Canceled,
         )
