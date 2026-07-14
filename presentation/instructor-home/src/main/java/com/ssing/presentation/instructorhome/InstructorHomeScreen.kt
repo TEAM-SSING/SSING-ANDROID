@@ -67,6 +67,7 @@ internal fun InstructorHomeRoute(
         onReservationClick = viewModel::onReservationClick,
         onReviewClick = viewModel::onReviewClick,
         contentPadding = contentPadding,
+        hasReview = false,
         modifier = modifier,
     )
 }
@@ -79,6 +80,7 @@ private fun InstructorHomeScreen(
     onReservationClick: () -> Unit,
     onReviewClick: () -> Unit,
     contentPadding: PaddingValues,
+    hasReview: Boolean,
     modifier: Modifier = Modifier,
 ) {
     Scaffold(
@@ -168,12 +170,12 @@ private fun InstructorHomeScreen(
                     color = SSINGTheme.colors.textNormal,
                     style = SSINGTheme.typography.body.sb16,
                 )
-
                 InstructorHomeReviewCard(
                     averageRating = state.averageRating,
                     grade = state.grade,
                     achievementRate = state.achievementRate,
                     onClick = onReviewClick,
+                    hasReview = hasReview,
                 )
             }
         }
@@ -216,6 +218,7 @@ private fun InstructorHomeScreenPreview() {
             onMatchingClick = {},
             onReservationClick = {},
             onReviewClick = {},
+            hasReview = true,
             contentPadding = PaddingValues(0.dp),
         )
     }
@@ -238,6 +241,7 @@ private fun InstructorHomeScreen2Preview() {
             onMatchingClick = {},
             onReservationClick = {},
             onReviewClick = {},
+            hasReview = false,
             contentPadding = PaddingValues(0.dp),
         )
     }

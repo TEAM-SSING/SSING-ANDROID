@@ -49,7 +49,7 @@ internal fun InstructorHomeReviewCard(
             .padding(12.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        if (hasReview){
+        if (hasReview) {
             ReviewSection(
                 averageRating = averageRating
             )
@@ -65,19 +65,21 @@ internal fun InstructorHomeReviewCard(
                 style = SsingButtonStyle.GRAY,
                 modifier = Modifier.fillMaxWidth()
             )
-        }
-        else {
-            Text(
-                text = "아직 남겨진 후기가 없어요.\n새로운 강습을 진행해 후기를 남겨보세요",
-                style = SSINGTheme.typography.caption.sb14,
-                color = SSINGTheme.colors.textDisabled,
-                modifier = Modifier
-                    .align(Alignment.CenterHorizontally)
-                    .padding(vertical = 20.dp),
-                textAlign = TextAlign.Center,
-            )
-        }
+        } else { InstructorHomeEmptyReviewCard() }
     }
+}
+
+@Composable
+private fun InstructorHomeEmptyReviewCard() {
+    Text(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 20.dp),
+        text = "아직 남겨진 후기가 없어요.\n새로운 강습을 진행해 후기를 남겨보세요",
+        style = SSINGTheme.typography.caption.sb14,
+        color = SSINGTheme.colors.textDisabled,
+        textAlign = TextAlign.Center,
+    )
 }
 
 @Composable
@@ -206,7 +208,7 @@ private fun LinearProgressBar(
 @Composable
 private fun InstructorHomeReviewCardPreview() {
     SSINGTheme {
-        Column(){
+        Column() {
             InstructorHomeReviewCard(
                 averageRating = 4f,
                 grade = Grade.GRADE4,
