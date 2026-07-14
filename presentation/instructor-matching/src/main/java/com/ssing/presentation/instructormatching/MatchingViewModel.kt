@@ -1,6 +1,7 @@
 package com.ssing.presentation.instructormatching
 
 import androidx.lifecycle.viewModelScope
+import com.ssing.core.network.di.ApplicationScope
 import com.ssing.core.network.exception.ApiException
 import com.ssing.core.ui.base.BaseViewModel
 import com.ssing.core.ui.extension.uiMessage
@@ -8,7 +9,6 @@ import com.ssing.data.matching.instructormatching.model.InstructorMatchingOffer
 import com.ssing.data.matching.instructormatching.repository.api.InstructorMatchingRepository
 import com.ssing.presentation.instructormatching.MatchingContract.MatchingDialog
 import com.ssing.presentation.instructormatching.MatchingContract.MatchingPhase
-import com.ssing.presentation.instructormatching.di.ApplicationScope
 import com.ssing.presentation.instructormatching.model.DurationOption
 import com.ssing.presentation.instructormatching.model.LessonSummaryUiModel
 import com.ssing.presentation.instructormatching.model.LevelOption

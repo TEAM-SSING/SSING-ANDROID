@@ -1,4 +1,4 @@
-package com.ssing.presentation.instructormatching.di
+package com.ssing.core.network.di
 
 import dagger.Module
 import dagger.Provides
@@ -13,7 +13,8 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-internal object CoroutineScopeModule {
+object CoroutineScopeModule {
+
     @Provides
     @Singleton
     @ApplicationScope
