@@ -63,6 +63,7 @@ fun SsingMatchingDetailCard(
     location: String = "",
     duration: String = "",
     maxCapacity: Int? = null,
+    participant: String = "",
     participants: ImmutableList<Participant> = persistentListOf(),
     isPaid: Boolean = false,
     price: Int? = null,
@@ -107,7 +108,8 @@ fun SsingMatchingDetailCard(
             if (location.isNotEmpty()) SsingInfoRow(label = "강습 장소", value = location)
             if (duration.isNotEmpty()) SsingInfoRow(label = "강습 시간", value = duration)
             if (maxCapacity != null) SsingInfoRow(label = "최대 인원", value = "${maxCapacity}명")
-            if (participants.isNotEmpty()) SsingParticipantsRow(participants = participants)
+            if (participant.isNotEmpty()) SsingInfoRow(label = "강습 인원", value = participant)
+            else if (participants.isNotEmpty()) SsingParticipantsRow(participants = participants)
             if (price != null) SsingPriceRow(isPaid = isPaid, price = price)
             if (equipmentStatus.isNotEmpty()) SsingInfoRow(label = "장비상태", value = equipmentStatus)
         }
