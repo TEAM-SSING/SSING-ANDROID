@@ -8,13 +8,13 @@ import com.ssing.core.ui.base.BaseViewModel
 import com.ssing.core.ui.common.component.CancelReason
 import com.ssing.core.ui.extension.uiMessage
 import com.ssing.core.ui.util.ssingDateFormatter
+import com.ssing.data.lesson.instructorlesson.repository.api.InstructorLessonRepository
 import com.ssing.data.lesson.model.InstructorLessonDetailBefore
 import com.ssing.data.lesson.model.InstructorLessonDetailCanceled
 import com.ssing.data.lesson.model.InstructorLessonDetailCompleted
 import com.ssing.data.lesson.model.InstructorLessonDetailOngoing
 import com.ssing.data.lesson.model.InstructorLessonDetailRequestResult
 import com.ssing.data.lesson.model.MatchingRequest
-import com.ssing.data.lesson.repository.api.InstructorLessonDetailRepository
 import com.ssing.data.lesson.repository.api.LessonRepository
 import com.ssing.presentation.instructorlessondetail.model.LessonDetailBeforeUiModel
 import com.ssing.presentation.instructorlessondetail.model.LessonDetailCanceledUiModel
@@ -33,7 +33,7 @@ import javax.inject.Inject
 internal class LessonDetailViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val lessonRepository: LessonRepository,
-    private val instructorLessonDetailRepository: InstructorLessonDetailRepository,
+    private val instructorLessonDetailRepository: InstructorLessonRepository,
 ) :
     BaseViewModel<LessonDetailContract.State, LessonDetailContract.Effect>(
         LessonDetailContract.State()

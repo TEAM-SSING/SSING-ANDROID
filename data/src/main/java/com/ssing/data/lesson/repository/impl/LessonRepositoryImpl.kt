@@ -1,6 +1,7 @@
 package com.ssing.data.lesson.repository.impl
 
 import com.ssing.core.network.util.ApiResponseHandler
+import com.ssing.data.lesson.instructorlesson.repository.api.InstructorLessonRepository
 import com.ssing.data.lesson.model.InstructorLessonDetailBefore
 import com.ssing.data.lesson.model.InstructorLessonDetailCanceled
 import com.ssing.data.lesson.model.InstructorLessonDetailCompleted
@@ -15,7 +16,6 @@ import com.ssing.data.lesson.remote.dto.response.InstructorLessonDetailCanceledR
 import com.ssing.data.lesson.remote.dto.response.InstructorLessonDetailCompletedResponse
 import com.ssing.data.lesson.remote.dto.response.InstructorLessonDetailOngoingResponse
 import com.ssing.data.lesson.remote.dto.response.InstructorLessonDetailResponse
-import com.ssing.data.lesson.repository.api.InstructorLessonDetailRepository
 import com.ssing.data.lesson.repository.api.LessonRepository
 import javax.inject.Inject
 
@@ -34,10 +34,10 @@ internal class LessonRepositoryImpl @Inject constructor(
         }.map { }
 }
 
-internal class InstructorLessonDetailRepositoryImpl @Inject constructor(
+internal class InstructorLessonRepositoryImpl @Inject constructor(
     private val apiResponseHandler: ApiResponseHandler,
     private val dataSource: LessonDataSource,
-) : InstructorLessonDetailRepository {
+) : InstructorLessonRepository {
 
     override suspend fun instructorLessonDetail(lessonId: Long): Result<InstructorLessonDetailRequestResult> =
         apiResponseHandler.safeApiCall {
