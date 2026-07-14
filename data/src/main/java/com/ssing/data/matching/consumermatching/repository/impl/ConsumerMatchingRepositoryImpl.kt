@@ -34,6 +34,11 @@ internal class ConsumerMatchingRepositoryImpl @Inject constructor(
         )
     }.map { it.toModel() }
 
+    override suspend fun cancelMathcing(matchingRequestId: Long): Result<Unit> =
+        apiResponseHandler.safeApiCall {
+            remoteDataSource.postMatchingCancellation(matchingRequestId)
+        }.map { }
+
     private fun ConsumerMatchingParticipant.toRequest(): ConsumerMatchingParticipantRequest =
         ConsumerMatchingParticipantRequest(
             age = this.age,
