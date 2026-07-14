@@ -36,14 +36,27 @@ internal class ConsumerHomeViewModel @Inject constructor(
 
             consumerHomeRepository.getConsumerHome()
                 .onSuccess { result ->
-                    Timber.d("consumer-home 응답: $result")
-                    updateState {
-                        copy(
-                            isLoading = false,
-                            matchingPeopleCount = result.matchingPeopleCount,
-                            hasUnreadNotification = result.hasUnreadNotification,
-                            lessonCards = result.lessonCards.toUiState()
-                        )
+                    runCatching {
+                        result.lessonCards.toUiState()
+                    }.onSuccess { cards ->
+                        Timber.d("consumer-home 응답: $result")
+                        updateState {
+                            copy(
+                                isLoading = false,
+                                matchingPeopleCount = result.matchingPeopleCount,
+                                hasUnreadNotification = result.hasUnreadNotification,
+                                lessonCards = cards,
+                            )
+                        }
+
+                    }.onFailure { parsingError ->
+                        Timber.e(parsingError, "consumer-home 응답 파싱 실패")
+                        updateState {
+                            copy(
+                                isLoading = false,
+                            )
+                        }
+                        sendEffect(ConsumerHomeContract.Effect.ShowToast("데이터를 처리하는 중 오류가 발생했어요."))
                     }
                 }
                 .onFailure { throwable ->
