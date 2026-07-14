@@ -130,7 +130,7 @@ private fun ConsumerHomeScreen(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
             ) {
                 StartMatchingButton(
-                    badgeText = "${state.matchingConsumerCount}명 매칭중",
+                    badgeText = "${state.matchingPeopleCount}명 매칭중",
                     title = "씽 매칭",
                     description = "준비된 강습생과\n바로 연결하기",
                     iconRes = R.drawable.img_fast_dark,
@@ -160,7 +160,7 @@ private fun ConsumerHomeScreen(
 private fun ConsumerHomeScreenPreview() {
     ConsumerHomeScreen(
         state = ConsumerHomeContract.State(
-            matchingConsumerCount = 99,
+            matchingPeopleCount = 99,
             lessonCards = persistentListOf(
                 HomeLessonCardState.Reservation(
                     lessonId = 1,
@@ -192,7 +192,7 @@ private fun ConsumerHomeScreenPreview() {
 private fun ConsumerHomeScreen2Preview() {
     ConsumerHomeScreen(
         state = ConsumerHomeContract.State(
-            matchingConsumerCount = 99,
+            matchingPeopleCount = 99,
             lessonCards = persistentListOf(
                 HomeLessonCardState.Empty,
             ),
