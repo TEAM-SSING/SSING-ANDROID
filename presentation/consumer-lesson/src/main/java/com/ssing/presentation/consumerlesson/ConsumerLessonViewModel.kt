@@ -127,7 +127,6 @@ internal class ConsumerLessonViewModel @Inject constructor() :
                 showEndLessonAlert = false,
                 lessonBannerState = LessonBannerState.Completed(
                     lessonDate = "2026년 12월 31일",
-                    lessonTime = "10:00 ~ 12:00",
                 ),
             )
         }
