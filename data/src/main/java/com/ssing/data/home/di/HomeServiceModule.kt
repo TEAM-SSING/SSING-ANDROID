@@ -1,6 +1,6 @@
 package com.ssing.data.home.di
 
-import com.ssing.core.network.di.Auth
+import com.ssing.core.network.di.NoAuth
 import com.ssing.data.home.remote.service.HomeService
 import dagger.Module
 import dagger.Provides
@@ -16,6 +16,6 @@ internal class HomeServiceModule {
     @Provides
     @Singleton
     fun provideConsumerService(
-        @Auth retrofit: Retrofit,
+        @NoAuth retrofit: Retrofit,
     ): HomeService = retrofit.create(HomeService::class.java)
 }
