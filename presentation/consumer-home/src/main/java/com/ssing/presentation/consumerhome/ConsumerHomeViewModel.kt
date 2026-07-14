@@ -1,7 +1,7 @@
 package com.ssing.presentation.consumerhome
 
 import com.ssing.core.ui.base.BaseViewModel
-import com.ssing.core.ui.state.HomeLessonCardState
+import com.ssing.core.ui.common.component.HomeLessonCardState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
