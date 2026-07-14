@@ -13,7 +13,7 @@ internal interface PaymentContract {
         val showCancelModal: Boolean = false,
         val nickname: String = "",
         val tags: ImmutableList<String> = persistentListOf(),
-        val classDateTime: String = "강사와 만난 뒤 강습이 시작됩니다",
+        val classDateTime: String = "강사와 만난 뒤 강습 시작",
         val location: String = "",
         val duration: String = "",
         val participant: String = "",
