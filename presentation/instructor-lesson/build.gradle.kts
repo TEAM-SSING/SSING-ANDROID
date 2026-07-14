@@ -5,3 +5,6 @@ plugins {
 android {
     namespace = "com.ssing.presentation.instructorlesson"
 }
+dependencies {
+    implementation(libs.androidx.core.i18n)
+}
