@@ -3,6 +3,7 @@ package com.ssing.data.matching.instructormatching.remote.datasource.impl
 import com.ssing.core.network.model.BaseResponse
 import com.ssing.data.matching.instructormatching.remote.datasource.api.InstructorMatchingRemoteDataSource
 import com.ssing.data.matching.instructormatching.remote.dto.response.InstructorMatchingExposureResponse
+import com.ssing.data.matching.instructormatching.remote.dto.response.InstructorMatchingOffersResponse
 import com.ssing.data.matching.instructormatching.remote.service.InstructorMatchingService
 import javax.inject.Inject
 
@@ -12,4 +13,10 @@ internal class InstructorMatchingRemoteDataSourceImpl @Inject constructor(
 
     override suspend fun getMatchingExposure(): BaseResponse<InstructorMatchingExposureResponse> =
         instructorMatchingService.getMatchingExposure()
+
+    override suspend fun getMatchingOffers(
+        page: Int?,
+        size: Int?,
+    ): BaseResponse<InstructorMatchingOffersResponse> =
+        instructorMatchingService.getMatchingOffers(page = page, size = size)
 }
