@@ -375,7 +375,7 @@ private fun HomeLessonCardPreview() {
     }
 }
 
-private class HomeLessonCardPreviewProvider(Status: Any) :
+private class HomeLessonCardPreviewProvider() :
     PreviewParameterProvider<ImmutableList<HomeLessonCardState>> {
     override val values = sequenceOf(
         persistentListOf(Empty),
