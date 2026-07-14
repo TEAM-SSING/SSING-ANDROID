@@ -4,6 +4,7 @@ import androidx.compose.foundation.text.input.TextFieldState
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
+import com.ssing.core.network.di.ApplicationScope
 import com.ssing.core.network.exception.ApiException
 import com.ssing.core.ui.base.BaseViewModel
 import com.ssing.core.ui.common.component.CancelReason
@@ -22,6 +23,7 @@ import com.ssing.presentation.consumerlesson.util.formatTime
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
@@ -30,6 +32,7 @@ import javax.inject.Inject
 internal class ConsumerLessonViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val consumerLessonDetailRepository: ConsumerLessonDetailRepository,
+    @param:ApplicationScope private val applicationScope: CoroutineScope,
 ) :
     BaseViewModel<ConsumerLessonContract.State, ConsumerLessonContract.Effect>(
         ConsumerLessonContract.State()
@@ -41,11 +44,24 @@ internal class ConsumerLessonViewModel @Inject constructor(
 
     init {
         loadLessonDetail(lessonId)
+        consumerLessonDetailRepository.connectSocket()
+        observeSocketEvents()
+    }
+
+    private fun observeSocketEvents() {
+        viewModelScope.launch {
+            consumerLessonDetailRepository.socketEvents.collect { event ->
+                Timber.d("강습 상세 조회 소켓 이벤트: lessonId = ${event.lessonId}, lessonStatus = ${event.lessonStatus}")
+                if (event.lessonId == lessonId) {
+                    loadLessonDetail(lessonId)
+                }
+            }
+        }
     }
 
     fun loadLessonDetail(lessonId: Long) {
         viewModelScope.launch {
-            consumerLessonDetailRepository.getConsumerLessonDetail(lessonId)
+            consumerLessonDetailRepository.fetchConsumerLessonDetail(lessonId)
                 .onSuccess { result ->
                     Timber.d("consumer-lesson: $result")
                     updateState { applyLessonDetail(result) }
@@ -57,6 +73,11 @@ internal class ConsumerLessonViewModel @Inject constructor(
                     }
                 }
         }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        applicationScope.launch { consumerLessonDetailRepository.disconnectSocket() }
     }
 
     private fun ConsumerLessonContract.State.applyLessonDetail(
