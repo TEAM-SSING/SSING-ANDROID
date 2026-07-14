@@ -1,5 +1,6 @@
 package com.ssing.presentation.instructorlessondetail.component
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -11,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.ssing.core.ui.common.component.SsingButton
 import com.ssing.core.ui.common.component.SsingButtonStyle
+import com.ssing.core.ui.designsystem.theme.SSINGTheme
 
 @Composable
 fun LessonManager(
@@ -22,7 +24,7 @@ fun LessonManager(
     secondaryStyle: SsingButtonStyle,
     modifier: Modifier = Modifier,
 ) {
-    Column(modifier = modifier) {
+    Column(modifier = modifier.background(SSINGTheme.colors.backgroundNormal)) {
         Spacer(modifier = Modifier.height(24.dp))
         SectionTitle(text = "강습 관리")
         Spacer(modifier = Modifier.height(8.dp))
