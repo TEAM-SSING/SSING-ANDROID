@@ -20,10 +20,9 @@ internal interface LessonService {
     suspend fun lessonCompleted(
         @Path("lessonId") lessonId: Long,
     ): BaseResponse<LessonResponse>
-}
 
-@GET("api/v1/instructor/lessons/{lessonId}")
-suspend fun getInstructorLessonDetail(
-    @Path("lessonId") lessonId: Long,
-): BaseResponse<InstructorLessonDetailResponse>
+    @GET("api/v1/instructor/lessons/{lessonId}")
+    suspend fun getInstructorLessonDetail(
+        @Path("lessonId") lessonId: Long,
+    ): BaseResponse<InstructorLessonDetailResponse>
 }

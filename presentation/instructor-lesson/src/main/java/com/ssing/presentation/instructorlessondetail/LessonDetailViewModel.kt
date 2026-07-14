@@ -146,11 +146,11 @@ internal class LessonDetailViewModel @Inject constructor(
     }
 
 
-        fun onContinueClick() {
-            updateState {
-                copy(showLessonEndDialog = false)
-            }
+    fun onContinueClick() {
+        updateState {
+            copy(showLessonEndDialog = false)
         }
+    }
 
     fun onCancelReasonSelect(reason: CancelReason) {
         updateState {
@@ -191,58 +191,62 @@ internal class LessonDetailViewModel @Inject constructor(
         when (val phase = uiState.value.phase) {
             is LessonDetailContract.LessonDetailPhase.LessonDetailOngoing -> phase.ongoing.lessonId
             else -> null
-    fun onCancelConfirmClick(customReason: String?) {
-        val reason = uiState.value.cancelReasonState.selectedReason ?: return
-        updateState {
-            copy(
-                cancelReasonState = cancelReasonState.copy(
-                    visible = false,
-                    selectedReason = null
-                )
-            )
         }
-    }
-}
 
-private fun InstructorLessonDetailRequestResult.toPhase(): LessonDetailContract.LessonDetailPhase =
-    when (this) {
-        is InstructorLessonDetailBefore -> LessonDetailContract.LessonDetailPhase.LessonDetailBefore(
-            before = LessonDetailBeforeUiModel(
-                lessonId = lessonId,
-                isInstructorReady = instructorConfirmed,
-                participantReadyCount = confirmedCount,
-                participantTotalCount = requiredCount,
-                tags = listOf(sport, lessonLevel).toPersistentList(),
-                classTitle = representativeConsumerNames.joinToString(),
-                location = resortDisplayName,
-                duration = scheduledDurationMinutes.toDurationText(),
-                price = totalLessonPrice,
-                teams = matchingRequests.map { it.toModel() }.toPersistentList(),
-            )
-        )
-
-        is InstructorLessonDetailOngoing -> LessonDetailContract.LessonDetailPhase.LessonDetailOngoing(
-            ongoing = LessonDetailOngoingUiModel(
-                tags = listOf(sport, lessonLevel).toPersistentList(),
-                classTitle = representativeConsumerNames.joinToString(),
-                remainingTime = remainingSeconds.toTimeText(),
-                elapsedTime = elapsedSeconds.toTimeText(),
-                location = resortDisplayName,
-                duration = scheduledDurationMinutes.toDurationText(),
-                price = totalLessonPrice,
-                teams = matchingRequests.map { it.toModel() }.toPersistentList(),
-            )
-        )
-
-        is InstructorLessonDetailCompleted -> {
-            val startedAt = runCatching { LocalDateTime.parse(actualStartedAt) }.getOrNull()
-            val endedAt = runCatching { LocalDateTime.parse(actualEndedAt) }.getOrNull()
-            LessonDetailContract.LessonDetailPhase.LessonDetailCompleted(
-                completed = LessonDetailCompletedUiModel(
+    private fun InstructorLessonDetailRequestResult.toPhase(): LessonDetailContract.LessonDetailPhase =
+        when (this) {
+            is InstructorLessonDetailBefore -> LessonDetailContract.LessonDetailPhase.LessonDetailBefore(
+                before = LessonDetailBeforeUiModel(
+                    lessonId = lessonId,
+                    isInstructorReady = instructorConfirmed,
+                    participantReadyCount = confirmedCount,
+                    participantTotalCount = requiredCount,
                     tags = listOf(sport, lessonLevel).toPersistentList(),
                     classTitle = representativeConsumerNames.joinToString(),
-                    lessonDate = startedAt?.ssingDateFormatter() ?: "",
-                    lessonTime = if (startedAt != null && endedAt != null) "${startedAt.toClockText()} ~ ${endedAt.toClockText()}" else "",
+                    location = resortDisplayName,
+                    duration = scheduledDurationMinutes.toDurationText(),
+                    price = totalLessonPrice,
+                    teams = matchingRequests.map { it.toModel() }.toPersistentList(),
+                )
+            )
+
+            is InstructorLessonDetailOngoing -> LessonDetailContract.LessonDetailPhase.LessonDetailOngoing(
+                ongoing = LessonDetailOngoingUiModel(
+                    lessonId = lessonId,
+                    tags = listOf(sport, lessonLevel).toPersistentList(),
+                    classTitle = representativeConsumerNames.joinToString(),
+                    remainingTime = remainingSeconds.toTimeText(),
+                    elapsedTime = elapsedSeconds.toTimeText(),
+                    location = resortDisplayName,
+                    duration = scheduledDurationMinutes.toDurationText(),
+                    price = totalLessonPrice,
+                    teams = matchingRequests.map { it.toModel() }.toPersistentList(),
+                )
+            )
+
+            is InstructorLessonDetailCompleted -> {
+                val startedAt = runCatching { LocalDateTime.parse(actualStartedAt) }.getOrNull()
+                val endedAt = runCatching { LocalDateTime.parse(actualEndedAt) }.getOrNull()
+                LessonDetailContract.LessonDetailPhase.LessonDetailCompleted(
+                    completed = LessonDetailCompletedUiModel(
+                        lessonId = lessonId,
+                        tags = listOf(sport, lessonLevel).toPersistentList(),
+                        classTitle = representativeConsumerNames.joinToString(),
+                        lessonDate = startedAt?.ssingDateFormatter() ?: "",
+                        lessonTime = if (startedAt != null && endedAt != null) "${startedAt.toClockText()} ~ ${endedAt.toClockText()}" else "",
+                        location = resortDisplayName,
+                        duration = lessonDurationMinutes.toDurationText(),
+                        price = totalLessonPrice,
+                        teams = matchingRequests.map { it.toModel() }.toPersistentList(),
+                    )
+                )
+            }
+
+            is InstructorLessonDetailCanceled -> LessonDetailContract.LessonDetailPhase.LessonDetailCanceled(
+                cancel = LessonDetailCanceledUiModel(
+                    lessonId = lessonId,
+                    tags = listOf(sport, lessonLevel).toPersistentList(),
+                    classTitle = representativeConsumerNames.joinToString(),
                     location = resortDisplayName,
                     duration = lessonDurationMinutes.toDurationText(),
                     price = totalLessonPrice,
@@ -251,46 +255,35 @@ private fun InstructorLessonDetailRequestResult.toPhase(): LessonDetailContract.
             )
         }
 
-        is InstructorLessonDetailCanceled -> LessonDetailContract.LessonDetailPhase.LessonDetailCanceled(
-            cancel = LessonDetailCanceledUiModel(
-                tags = listOf(sport, lessonLevel).toPersistentList(),
-                classTitle = representativeConsumerNames.joinToString(),
-                location = resortDisplayName,
-                duration = lessonDurationMinutes.toDurationText(),
-                price = totalLessonPrice,
-                teams = matchingRequests.map { it.toModel() }.toPersistentList(),
-            )
-        )
+    private fun MatchingRequest.toModel() = TeamParticipantsInfo(
+        teamNickname = representativeMemberName,
+        teamCount = headcount,
+        participants = participants.map { "${it.age}세 ${it.gender.toGenderText()}" }
+            .toPersistentList(),
+        price = teamLessonPrice,
+        isReady = startConfirmed,
+    )
+
+    private fun String.toGenderText() = when (this) {
+        "MALE" -> "남"
+        "FEMALE" -> "여"
+        else -> this
     }
 
-private fun MatchingRequest.toModel() = TeamParticipantsInfo(
-    teamNickname = representativeMemberName,
-    teamCount = headcount,
-    participants = participants.map { "${it.age}세 ${it.gender.toGenderText()}" }.toPersistentList(),
-    price = teamLessonPrice,
-    isReady = startConfirmed,
-)
-
-private fun String.toGenderText() = when (this) {
-    "MALE" -> "남"
-    "FEMALE" -> "여"
-    else -> this
-}
-
-private fun Int.toTimeText(): String {
-    val h = this / 3600
-    val m = (this % 3600) / 60
-    val s = this % 60
-    return "%d:%02d:%02d".format(h, m, s)
-}
-
-private fun Int.toDurationText(): String =
-    when {
-        this < 60 -> "${this}분"
-        this % 60 == 0 -> "${this / 60}시간"
-        else -> "${this / 60}시간 ${this % 60}분"
+    private fun Int.toTimeText(): String {
+        val h = this / 3600
+        val m = (this % 3600) / 60
+        val s = this % 60
+        return "%d:%02d:%02d".format(h, m, s)
     }
 
-private fun LocalDateTime.toClockText(): String =
-    format(DateTimeFormatter.ofPattern("HH:mm"))
+    private fun Int.toDurationText(): String =
+        when {
+            this < 60 -> "${this}분"
+            this % 60 == 0 -> "${this / 60}시간"
+            else -> "${this / 60}시간 ${this % 60}분"
+        }
+
+    private fun LocalDateTime.toClockText(): String =
+        format(DateTimeFormatter.ofPattern("HH:mm"))
 }
