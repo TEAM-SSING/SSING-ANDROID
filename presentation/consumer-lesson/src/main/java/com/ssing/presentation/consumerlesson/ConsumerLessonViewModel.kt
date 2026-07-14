@@ -168,7 +168,7 @@ internal class ConsumerLessonViewModel @Inject constructor(
         val etcReason = if (uiState.value.selectedReason == CancelReason.ETC) {
             etcState.text.toString()
         } else {
-            ""
+            null
         }
 
         viewModelScope.launch {

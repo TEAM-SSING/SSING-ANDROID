@@ -7,6 +7,6 @@ internal interface LessonCancelDataSource {
     suspend fun postLessonCancel(
         lessonId: Long,
         cancelReason: String,
-        cancelReasonDetail: String,
+        cancelReasonDetail: String?,
     ): BaseResponse<LessonCancelResponse>
 }

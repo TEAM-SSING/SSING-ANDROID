@@ -13,7 +13,7 @@ internal class LessonCancelDataSourceImpl @Inject constructor(
     override suspend fun postLessonCancel(
         lessonId: Long,
         cancelReason: String,
-        cancelReasonDetail: String
+        cancelReasonDetail: String?
     ): BaseResponse<LessonCancelResponse> = service.postLessonCancel(
         lessonId = lessonId,
         request = LessonCancelRequest(
