@@ -7,7 +7,6 @@ import com.ssing.data.home.model.Resort
 import com.ssing.data.home.remote.datasource.api.HomeRemoteDataSource
 import com.ssing.data.home.remote.dto.response.ConsumerHomeResponse
 import com.ssing.data.home.remote.dto.response.LessonCardResponse
-import com.ssing.data.home.remote.dto.response.ResortResponse
 import com.ssing.data.home.repository.api.HomeRepository
 import javax.inject.Inject
 
