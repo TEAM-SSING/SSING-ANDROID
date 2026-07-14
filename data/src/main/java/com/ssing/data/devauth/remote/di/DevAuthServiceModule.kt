@@ -1,5 +1,6 @@
 package com.ssing.data.devauth.remote.di
 
+import com.ssing.core.network.di.NoAuth
 import com.ssing.data.devauth.remote.service.DevAuthService
 import dagger.Module
 import dagger.Provides
@@ -13,6 +14,6 @@ import javax.inject.Singleton
 internal object DevAuthServiceModule {
     @Provides
     @Singleton
-    fun provideDevAuthService(retrofit: Retrofit): DevAuthService =
+    fun provideDevAuthService(@NoAuth retrofit: Retrofit): DevAuthService =
         retrofit.create(DevAuthService::class.java)
 }
