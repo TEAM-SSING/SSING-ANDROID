@@ -2,6 +2,7 @@ package com.ssing.data.lesson.di
 
 import com.ssing.core.network.di.Auth
 import com.ssing.data.lesson.remote.service.LessonService
+import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -13,6 +14,7 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 internal object LessonServiceModule {
 
+    @Binds
     @Provides
     @Singleton
     fun provideLessonService(
