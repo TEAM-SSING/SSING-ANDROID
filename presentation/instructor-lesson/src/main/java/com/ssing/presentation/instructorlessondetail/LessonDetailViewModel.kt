@@ -1,22 +1,61 @@
 package com.ssing.presentation.instructorlessondetail
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.toRoute
 import com.ssing.core.network.exception.ApiException
 import com.ssing.core.ui.base.BaseViewModel
 import com.ssing.core.ui.common.component.CancelReason
 import com.ssing.core.ui.extension.uiMessage
+import com.ssing.data.lesson.model.InstructorLessonDetailBefore
+import com.ssing.data.lesson.model.InstructorLessonDetailCanceled
+import com.ssing.data.lesson.model.InstructorLessonDetailCompleted
+import com.ssing.data.lesson.model.InstructorLessonDetailOngoing
+import com.ssing.data.lesson.model.InstructorLessonDetailRequestResult
+import com.ssing.data.lesson.model.MatchingRequest
+import com.ssing.data.lesson.repository.api.InstructorLessonDetailRepository
 import com.ssing.data.lesson.repository.api.LessonRepository
+import com.ssing.presentation.instructorlessondetail.model.LessonDetailBeforeUiModel
+import com.ssing.presentation.instructorlessondetail.model.LessonDetailCanceledUiModel
+import com.ssing.presentation.instructorlessondetail.model.LessonDetailCompletedUiModel
+import com.ssing.presentation.instructorlessondetail.model.LessonDetailOngoingUiModel
+import com.ssing.presentation.instructorlessondetail.model.TeamParticipantsInfo
+import com.ssing.presentation.instructorlessondetail.navigation.InstructorLesson
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 internal class LessonDetailViewModel @Inject constructor(
+    savedStateHandle: SavedStateHandle,
     private val lessonRepository: LessonRepository,
+    private val instructorLessonDetailRepository: InstructorLessonDetailRepository,
 ) :
     BaseViewModel<LessonDetailContract.State, LessonDetailContract.Effect>(
         LessonDetailContract.State()
     ) {
+
+    private val lessonId = savedStateHandle.toRoute<InstructorLesson>().lessonId
+
+    init {
+        loadLessonDetail()
+    }
+
+    private fun loadLessonDetail() {
+        updateState { copy(phase = LessonDetailContract.LessonDetailPhase.Loading) }
+        viewModelScope.launch {
+            instructorLessonDetailRepository.instructorLessonDetail(lessonId)
+                .onSuccess { result ->
+                    updateState { copy(phase = result.toModel()) }
+                }
+                .onFailure {
+                    if (it is ApiException) {
+                        sendEffect(LessonDetailContract.Effect.ShowToast(it.uiMessage))
+                    }
+                }
+        }
+    }
 
     fun onBackClick() = sendEffect(LessonDetailContract.Effect.NavigateBack)
 
@@ -86,45 +125,119 @@ internal class LessonDetailViewModel @Inject constructor(
         }
     }
 
-
-        fun onContinueClick() {
-            updateState {
-                copy(showLessonEndDialog = false)
-            }
-        }
-
-        fun onCancelReasonSelect(reason: CancelReason) {
-            updateState {
-                copy(cancelReasonState = cancelReasonState.copy(selectedReason = reason))
-            }
-        }
-
-        fun onCancelSheetOpen() {
-            updateState {
-                copy(cancelReasonState = cancelReasonState.copy(visible = true))
-            }
-        }
-
-        fun onCancelSheetDismiss() {
-            updateState {
-                copy(
-                    cancelReasonState = cancelReasonState.copy(
-                        visible = false,
-                        selectedReason = null
-                    )
-                )
-            }
-        }
-
-        fun onCancelConfirmClick(customReason: String?) {
-            val reason = uiState.value.cancelReasonState.selectedReason ?: return
-            updateState {
-                copy(
-                    cancelReasonState = cancelReasonState.copy(
-                        visible = false,
-                        selectedReason = null
-                    )
-                )
-            }
+    fun onContinueClick() {
+        updateState {
+            copy(showLessonEndDialog = false)
         }
     }
+
+    fun onCancelReasonSelect(reason: CancelReason) {
+        updateState {
+            copy(cancelReasonState = cancelReasonState.copy(selectedReason = reason))
+        }
+    }
+
+    fun onCancelSheetOpen() {
+        updateState {
+            copy(cancelReasonState = cancelReasonState.copy(visible = true))
+        }
+    }
+
+    fun onCancelSheetDismiss() {
+        updateState {
+            copy(
+                cancelReasonState = cancelReasonState.copy(
+                    visible = false,
+                    selectedReason = null
+                )
+            )
+        }
+    }
+
+    fun onCancelConfirmClick(customReason: String?) {
+        val reason = uiState.value.cancelReasonState.selectedReason ?: return
+        updateState {
+            copy(
+                cancelReasonState = cancelReasonState.copy(
+                    visible = false,
+                    selectedReason = null
+                )
+            )
+        }
+    }
+}
+
+private fun InstructorLessonDetailRequestResult.toModel(): LessonDetailContract.LessonDetailPhase =
+    when (this) {
+        is InstructorLessonDetailBefore -> LessonDetailContract.LessonDetailPhase.LessonDetailBefore(
+            before = LessonDetailBeforeUiModel(
+                lessonId = lessonId,
+                isInstructorReady = instructorConfirmed,
+                participantReadyCount = confirmedCount,
+                participantTotalCount = requiredCount,
+                tags = listOf(sport, lessonLevel).toPersistentList(),
+                classTitle = representativeConsumerNames.joinToString(),
+                location = resortDisplayName,
+                duration = "${scheduledDurationMinutes}분",
+                price = totalLessonPrice,
+                teams = matchingRequests.map { it.toModel() }.toPersistentList(),
+            )
+        )
+
+        is InstructorLessonDetailOngoing -> LessonDetailContract.LessonDetailPhase.LessonDetailOngoing(
+            ongoing = LessonDetailOngoingUiModel(
+                tags = listOf(sport, lessonLevel).toPersistentList(),
+                classTitle = representativeConsumerNames.joinToString(),
+                remainingTime = remainingSeconds.toTimeText(),
+                elapsedTime = elapsedSeconds.toTimeText(),
+                location = resortDisplayName,
+                duration = "${scheduledDurationMinutes}분",
+                price = totalLessonPrice,
+                teams = matchingRequests.map { it.toModel() }.toPersistentList(),
+            )
+        )
+
+        is InstructorLessonDetailCompleted -> LessonDetailContract.LessonDetailPhase.LessonDetailCompleted(
+            completed = LessonDetailCompletedUiModel(
+                tags = listOf(sport, lessonLevel).toPersistentList(),
+                classTitle = representativeConsumerNames.joinToString(),
+                lessonDate = actualStartedAt,
+                location = resortDisplayName,
+                duration = "${actualDurationMinutes}분",
+                price = totalLessonPrice,
+                teams = matchingRequests.map { it.toModel() }.toPersistentList(),
+            )
+        )
+
+        is InstructorLessonDetailCanceled -> LessonDetailContract.LessonDetailPhase.LessonDetailCanceled(
+            cancel = LessonDetailCanceledUiModel(
+                tags = listOf(sport, lessonLevel).toPersistentList(),
+                classTitle = representativeConsumerNames.joinToString(),
+                location = resortDisplayName,
+                duration = "${lessonDurationMinutes}분",
+                price = totalLessonPrice,
+                teams = matchingRequests.map { it.toModel() }.toPersistentList(),
+            )
+        )
+    }
+
+private fun MatchingRequest.toModel() = TeamParticipantsInfo(
+    teamNickname = representativeMemberName,
+    teamCount = headcount,
+    participants = participants.map { "${it.age}세 ${it.gender.toGenderText()}" }.toPersistentList(),
+    price = teamLessonPrice,
+    isReady = startConfirmed,
+)
+
+private fun String.toGenderText() = when (this) {
+    "MALE" -> "남"
+    "FEMALE" -> "여"
+    else -> this
+}
+
+private fun Int.toTimeText(): String {
+    val h = this / 3600
+    val m = (this % 3600) / 60
+    val s = this % 60
+    return "%d:%02d:%02d".format(h, m, s)
+}
