@@ -1,8 +1,7 @@
 package com.ssing.data.lesson.instructorlesson.di
 
-import com.ssing.core.network.di.Auth
 import com.ssing.data.lesson.instructorlesson.repository.api.InstructorLessonRepository
-import com.ssing.data.lesson.repository.impl.InstructorLessonRepositoryImpl
+import com.ssing.data.lesson.instructorlesson.repository.impl.InstructorLessonRepositoryImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
