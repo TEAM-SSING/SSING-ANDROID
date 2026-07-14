@@ -77,7 +77,36 @@ internal class MatchingViewModel @Inject constructor(
     fun onBack() = sendEffect(MatchingContract.Effect.NavigateBack)
 
     fun startMatching() {
-        updateState { copy(phase = MatchingPhase.Waiting) }
+        val current = uiState.value.exposure
+        val sport = current.selectedSports ?: return
+        if (!current.isStartEnabled) return
+
+        updateState { copy(exposure = exposure.copy(isSubmitting = true)) }
+        viewModelScope.launch {
+            instructorMatchingRepository.startMatchingExposure(
+                sport = sport.name,
+                lessonLevels = current.selectedLevels.map { it.name },
+                availableDurationMinutes = current.selectedDurations.map { it.hours * 60 },
+                maxHeadcount = current.maxHeadcount,
+                equipmentReady = current.isNoticeChecked,
+            )
+                .onSuccess { isExposed ->
+                    Timber.d("matching-exposure 저장 응답 isExposed=$isExposed")
+                    updateState {
+                        copy(
+                            phase = MatchingPhase.Waiting,
+                            exposure = exposure.copy(isSubmitting = false),
+                        )
+                    }
+                }
+                .onFailure {
+                    Timber.e(it, "matching-exposure 저장 실패")
+                    if (it is ApiException) {
+                        sendEffect(MatchingContract.Effect.ShowToast(it.uiMessage))
+                    }
+                    updateState { copy(exposure = exposure.copy(isSubmitting = false)) }
+                }
+        }
     }
 
     fun editExposure() = updateState {

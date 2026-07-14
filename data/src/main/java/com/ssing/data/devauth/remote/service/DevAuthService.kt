@@ -1,0 +1,19 @@
+package com.ssing.data.devauth.remote.service
+
+import com.ssing.core.network.model.BaseResponse
+import com.ssing.data.devauth.remote.dto.response.PersonasResponse
+import com.ssing.data.devauth.remote.dto.request.TokenRequest
+import com.ssing.data.devauth.remote.dto.response.TokenResponse
+import retrofit2.http.Body
+import retrofit2.http.GET
+import retrofit2.http.POST
+
+internal interface DevAuthService {
+    @GET("dev/auth/personas")
+    suspend fun getPersonas(): BaseResponse<PersonasResponse>
+
+    @POST("dev/auth/token")
+    suspend fun postToken(
+        @Body request: TokenRequest,
+    ): BaseResponse<TokenResponse>
+}
