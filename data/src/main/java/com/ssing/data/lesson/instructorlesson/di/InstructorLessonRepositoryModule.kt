@@ -16,6 +16,6 @@ internal abstract class InstructorLessonRepositoryModule {
     @Binds
     @Singleton
     abstract fun bindInstructorLessonRepository(
-        @Auth impl: InstructorLessonRepositoryImpl,
+        impl: InstructorLessonRepositoryImpl,
     ): InstructorLessonRepository
 }

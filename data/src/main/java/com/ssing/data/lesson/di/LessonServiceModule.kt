@@ -17,6 +17,6 @@ internal object LessonServiceModule {
     @Provides
     @Singleton
     fun provideLessonService(
-        @Auth retrofit: Retrofit
+        retrofit: Retrofit
     ): LessonService = retrofit.create(LessonService::class.java)
 }
