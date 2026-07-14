@@ -1,12 +1,5 @@
 package com.ssing.data.matching.instructormatching.model
 
-data class InstructorMatchingOffers(
-    val items: List<InstructorMatchingOffer>,
-    val currentPage: Int,
-    val size: Int,
-    val hasNext: Boolean,
-)
-
 data class InstructorMatchingOffer(
     val offerId: Long,
     val groupId: Long,

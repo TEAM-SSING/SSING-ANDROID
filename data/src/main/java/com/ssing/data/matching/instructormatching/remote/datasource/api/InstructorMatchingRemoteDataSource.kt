@@ -9,10 +9,7 @@ import com.ssing.data.matching.instructormatching.remote.dto.response.Instructor
 internal interface InstructorMatchingRemoteDataSource {
     suspend fun getMatchingExposure(): BaseResponse<InstructorMatchingExposureResponse>
 
-    suspend fun getMatchingOffers(
-        page: Int? = null,
-        size: Int? = null,
-    ): BaseResponse<InstructorMatchingOffersResponse>
+    suspend fun getMatchingOffers(): BaseResponse<InstructorMatchingOffersResponse>
 
     suspend fun putMatchingExposure(
         request: InstructorMatchingExposureStartRequest,

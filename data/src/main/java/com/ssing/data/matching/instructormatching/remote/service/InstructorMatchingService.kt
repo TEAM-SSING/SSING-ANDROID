@@ -8,7 +8,6 @@ import retrofit2.http.Body
 import com.ssing.data.matching.instructormatching.remote.dto.response.InstructorMatchingOffersResponse
 import retrofit2.http.GET
 import retrofit2.http.PUT
-import retrofit2.http.Query
 
 internal interface InstructorMatchingService {
     @GET("/api/v1/instructor/matching-exposure")
@@ -20,8 +19,5 @@ internal interface InstructorMatchingService {
     ): BaseResponse<InstructorMatchingExposureStartResponse>
 
     @GET("/api/v1/instructor/matching-offers")
-    suspend fun getMatchingOffers(
-        @Query("page") page: Int? = null,
-        @Query("size") size: Int? = null,
-    ): BaseResponse<InstructorMatchingOffersResponse>
+    suspend fun getMatchingOffers(): BaseResponse<InstructorMatchingOffersResponse>
 }

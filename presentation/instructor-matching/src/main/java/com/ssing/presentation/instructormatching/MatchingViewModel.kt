@@ -156,10 +156,10 @@ internal class MatchingViewModel @Inject constructor(
      */
     fun restoreActiveOffer() {
         viewModelScope.launch {
-            instructorMatchingRepository.fetchMatchingOffers()
-                .onSuccess { offers ->
-                    Timber.d("matching-offers 응답: $offers")
-                    val offer = offers.items.firstOrNull() ?: return@onSuccess
+            instructorMatchingRepository.fetchActiveOffer()
+                .onSuccess { offer ->
+                    Timber.d("matching-offers 응답: $offer")
+                    offer ?: return@onSuccess
                     updateState { copy(phase = MatchingPhase.OfferArrived(offer = offer.toUiModel())) }
                 }
                 .onFailure {

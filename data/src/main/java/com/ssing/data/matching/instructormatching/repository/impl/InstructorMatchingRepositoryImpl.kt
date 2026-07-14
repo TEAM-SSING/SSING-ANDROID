@@ -4,7 +4,6 @@ import com.ssing.core.network.util.ApiResponseHandler
 import com.ssing.data.matching.instructormatching.model.InstructorMatchingExposure
 import com.ssing.data.matching.instructormatching.model.InstructorMatchingLessonSummary
 import com.ssing.data.matching.instructormatching.model.InstructorMatchingOffer
-import com.ssing.data.matching.instructormatching.model.InstructorMatchingOffers
 import com.ssing.data.matching.instructormatching.model.InstructorMatchingPriceSummary
 import com.ssing.data.matching.instructormatching.model.InstructorMatchingRequestSummary
 import com.ssing.data.matching.instructormatching.model.InstructorMatchingResort
@@ -12,7 +11,6 @@ import com.ssing.data.matching.instructormatching.remote.datasource.api.Instruct
 import com.ssing.data.matching.instructormatching.remote.dto.request.InstructorMatchingExposureStartRequest
 import com.ssing.data.matching.instructormatching.remote.dto.response.InstructorMatchingExposureResponse
 import com.ssing.data.matching.instructormatching.remote.dto.response.InstructorMatchingOfferResponse
-import com.ssing.data.matching.instructormatching.remote.dto.response.InstructorMatchingOffersResponse
 import com.ssing.data.matching.instructormatching.repository.api.InstructorMatchingRepository
 import javax.inject.Inject
 
@@ -26,13 +24,10 @@ internal class InstructorMatchingRepositoryImpl @Inject constructor(
             remoteDataSource.getMatchingExposure()
         }.map { it.toModel() }
 
-    override suspend fun fetchMatchingOffers(
-        page: Int?,
-        size: Int?,
-    ): Result<InstructorMatchingOffers> =
+    override suspend fun fetchActiveOffer(): Result<InstructorMatchingOffer?> =
         apiResponseHandler.safeApiCall {
-            remoteDataSource.getMatchingOffers(page = page, size = size)
-        }.map { it.toModel() }
+            remoteDataSource.getMatchingOffers()
+        }.map { it.items.firstOrNull()?.toModel() }
 
     override suspend fun startMatchingExposure(
         sport: String,
@@ -60,14 +55,6 @@ internal class InstructorMatchingRepositoryImpl @Inject constructor(
                 displayName = this.resort.displayName,
             ),
             availableSports = this.availableSports,
-        )
-
-    private fun InstructorMatchingOffersResponse.toModel(): InstructorMatchingOffers =
-        InstructorMatchingOffers(
-            items = this.items.map { it.toModel() },
-            currentPage = this.currentPage,
-            size = this.size,
-            hasNext = this.hasNext,
         )
 
     private fun InstructorMatchingOfferResponse.toModel(): InstructorMatchingOffer =

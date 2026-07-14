@@ -21,9 +21,6 @@ internal class InstructorMatchingRemoteDataSourceImpl @Inject constructor(
     ): BaseResponse<InstructorMatchingExposureStartResponse> =
         instructorMatchingService.putMatchingExposure(request)
 
-    override suspend fun getMatchingOffers(
-        page: Int?,
-        size: Int?,
-    ): BaseResponse<InstructorMatchingOffersResponse> =
-        instructorMatchingService.getMatchingOffers(page = page, size = size)
+    override suspend fun getMatchingOffers(): BaseResponse<InstructorMatchingOffersResponse> =
+        instructorMatchingService.getMatchingOffers()
 }
