@@ -16,7 +16,7 @@ internal abstract class ConsumerHomeServiceModule {
 
     @Provides
     @Singleton
-    fun provideConsumerServiceSource(
+    fun provideConsumerService(
         retrofit: Retrofit,
     ): ConsumerHomeService = retrofit.create(ConsumerHomeService::class.java)
 }

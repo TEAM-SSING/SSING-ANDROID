@@ -14,7 +14,7 @@ internal abstract class ConsumerHomeRepositoryModule {
 
     @Binds
     @Singleton
-    abstract fun bindConsumerRepositorySource(
+    abstract fun bindConsumerRepository(
         impl: ConsumerHomeRepositoryImpl,
     ): ConsumerHomeRemoteDataSource
 }
