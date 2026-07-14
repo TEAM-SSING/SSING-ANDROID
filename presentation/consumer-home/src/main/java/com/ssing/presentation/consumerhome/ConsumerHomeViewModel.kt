@@ -38,29 +38,16 @@ internal class ConsumerHomeViewModel @Inject constructor(
 
             consumerHomeRepository.getConsumerHome()
                 .onSuccess { result ->
-                    runCatching {
-                        result.lessonCards.toUiState()
-                    }.onSuccess { cards ->
                         Timber.d("consumer-home 응답: $result")
                         updateState {
                             copy(
                                 isLoading = false,
                                 matchingPeopleCount = result.matchingPeopleCount,
                                 hasUnreadNotification = result.hasUnreadNotification,
-                                lessonCards = cards,
+                                lessonCards = result.lessonCards.toUiState()
                             )
                         }
-
-                    }.onFailure { parsingError ->
-                        Timber.e(parsingError, "consumer-home 응답 파싱 실패")
-                        updateState {
-                            copy(
-                                isLoading = false,
-                            )
-                        }
-                        sendEffect(ConsumerHomeContract.Effect.ShowToast("데이터를 처리하는 중 오류가 발생했어요."))
                     }
-                }
                 .onFailure { throwable ->
                     Timber.e(throwable, "consumer-home 조회 실패")
 
@@ -86,7 +73,7 @@ internal class ConsumerHomeViewModel @Inject constructor(
             chip = toChipText(),
             displayText = title,
             location = resort.displayName,
-            date = OffsetDateTime.parse(scheduledAt).toLocalDateTime(),
+            date = runCatching { OffsetDateTime.parse(scheduledAt).toLocalDateTime() }.getOrNull(),
             status = toCardStatus(),
         )
 
