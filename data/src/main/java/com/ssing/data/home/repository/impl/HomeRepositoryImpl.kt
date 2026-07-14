@@ -1,20 +1,20 @@
-package com.ssing.data.consumerhome.repository.impl
+package com.ssing.data.home.repository.impl
 
 import com.ssing.core.network.util.ApiResponseHandler
-import com.ssing.data.consumerhome.model.ConsumerHome
-import com.ssing.data.consumerhome.model.LessonCards
-import com.ssing.data.consumerhome.model.Resort
-import com.ssing.data.consumerhome.remote.datasource.api.ConsumerHomeRemoteDataSource
-import com.ssing.data.consumerhome.remote.dto.response.ConsumerHomeResponse
-import com.ssing.data.consumerhome.remote.dto.response.LessonCardResponse
-import com.ssing.data.consumerhome.remote.dto.response.ResortResponse
-import com.ssing.data.consumerhome.repository.api.ConsumerHomeRepository
+import com.ssing.data.home.model.ConsumerHome
+import com.ssing.data.home.model.LessonCards
+import com.ssing.data.home.model.Resort
+import com.ssing.data.home.remote.datasource.api.HomeRemoteDataSource
+import com.ssing.data.home.remote.dto.response.ConsumerHomeResponse
+import com.ssing.data.home.remote.dto.response.LessonCardResponse
+import com.ssing.data.home.remote.dto.response.ResortResponse
+import com.ssing.data.home.repository.api.HomeRepository
 import javax.inject.Inject
 
-internal class ConsumerHomeRepositoryImpl @Inject constructor(
+internal class HomeRepositoryImpl @Inject constructor(
     private val apiResponseHandler: ApiResponseHandler,
-    private val dataSource: ConsumerHomeRemoteDataSource,
-) : ConsumerHomeRepository {
+    private val dataSource: HomeRemoteDataSource,
+) : HomeRepository {
 
     override suspend fun getConsumerHome(): Result<ConsumerHome> =
         apiResponseHandler.safeApiCall {

@@ -1,4 +1,4 @@
-package com.ssing.data.consumerhome.model
+package com.ssing.data.home.model
 
 data class ConsumerHome(
     val lessonCards: List<LessonCards>,

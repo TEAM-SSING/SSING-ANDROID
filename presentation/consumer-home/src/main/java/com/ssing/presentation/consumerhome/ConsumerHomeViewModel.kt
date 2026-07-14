@@ -4,9 +4,9 @@ import androidx.lifecycle.viewModelScope
 import com.ssing.core.ui.base.BaseViewModel
 import com.ssing.core.ui.common.component.HomeLessonCardState
 import com.ssing.core.ui.common.component.HomeLessonCardState.Reservation.Status
-import com.ssing.data.consumerhome.model.DisplayStatus
-import com.ssing.data.consumerhome.model.LessonCards
-import com.ssing.data.consumerhome.repository.api.ConsumerHomeRepository
+import com.ssing.data.home.model.DisplayStatus
+import com.ssing.data.home.model.LessonCards
+import com.ssing.data.home.repository.api.HomeRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
@@ -18,7 +18,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 internal class ConsumerHomeViewModel @Inject constructor(
-    private val consumerHomeRepository: ConsumerHomeRepository,
+    private val consumerHomeRepository: HomeRepository,
 ) :
     BaseViewModel<ConsumerHomeContract.State, ConsumerHomeContract.Effect>(
         ConsumerHomeContract.State()

@@ -1,7 +1,7 @@
-package com.ssing.data.consumerhome.remote.dto.response
+package com.ssing.data.home.remote.dto.response
 
-import com.ssing.data.consumerhome.model.DisplayStatus
-import com.ssing.data.consumerhome.model.Sports
+import com.ssing.data.home.model.DisplayStatus
+import com.ssing.data.home.model.Sports
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 

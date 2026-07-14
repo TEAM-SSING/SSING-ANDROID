@@ -1,6 +1,6 @@
-package com.ssing.data.consumerhome.di
+package com.ssing.data.home.di
 
-import com.ssing.data.consumerhome.remote.service.ConsumerHomeService
+import com.ssing.data.home.remote.service.HomeService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -10,11 +10,11 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-internal class ConsumerHomeServiceModule {
+internal class HomeServiceModule {
 
     @Provides
     @Singleton
     fun provideConsumerService(
         retrofit: Retrofit,
-    ): ConsumerHomeService = retrofit.create(ConsumerHomeService::class.java)
+    ): HomeService = retrofit.create(HomeService::class.java)
 }

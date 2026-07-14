@@ -1,4 +1,4 @@
-package com.ssing.data.consumerhome.remote.dto.response
+package com.ssing.data.home.remote.dto.response
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
