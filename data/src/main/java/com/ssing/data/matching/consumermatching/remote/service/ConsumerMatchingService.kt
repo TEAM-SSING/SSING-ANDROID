@@ -24,6 +24,7 @@ internal interface ConsumerMatchingService {
 
     @PATCH("/api/v1/consumer/matching-requests/{matchingRequestId}/confirmation")
     suspend fun patchMatchingConfirmation(
+        @Path("matchingRequestId") matchingRequestId: Long,
         @Body request: ConsumerMatchingConfirmationRequest,
     ): BaseResponse<ConsumerMatchingConfirmationResponse>
 }

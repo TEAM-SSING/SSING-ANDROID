@@ -25,7 +25,11 @@ internal class ConsumerMatchingRemoteDataSourceImpl @Inject constructor(
         consumerMatchingService.postMatchingCancellation(matchingRequestId)
 
     override suspend fun patchMatchingConfirmation(
+        matchingRequestId: Long,
         request: ConsumerMatchingConfirmationRequest,
     ): BaseResponse<ConsumerMatchingConfirmationResponse> =
-        consumerMatchingService.patchMatchingConfirmation(request)
+        consumerMatchingService.patchMatchingConfirmation(
+            matchingRequestId = matchingRequestId,
+            request = request,
+        )
 }

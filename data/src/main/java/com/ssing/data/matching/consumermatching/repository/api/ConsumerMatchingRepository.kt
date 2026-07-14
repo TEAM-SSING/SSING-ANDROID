@@ -18,6 +18,7 @@ interface ConsumerMatchingRepository {
     ): Result<Unit>
 
     suspend fun confirmMatching(
+        matchingRequestId: Long,
         decision: String,
     ): Result<Unit>
 }

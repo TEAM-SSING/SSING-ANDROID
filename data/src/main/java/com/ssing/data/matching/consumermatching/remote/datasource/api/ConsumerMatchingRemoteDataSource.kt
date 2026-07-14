@@ -17,6 +17,7 @@ internal interface ConsumerMatchingRemoteDataSource {
     ): BaseResponse<ConsumerMatchingCancellationResponse>
 
     suspend fun patchMatchingConfirmation(
+        matchingRequestId: Long,
         request: ConsumerMatchingConfirmationRequest,
     ): BaseResponse<ConsumerMatchingConfirmationResponse>
 }

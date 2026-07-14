@@ -40,9 +40,13 @@ internal class ConsumerMatchingRepositoryImpl @Inject constructor(
             remoteDataSource.postMatchingCancellation(matchingRequestId)
         }.map { }
 
-    override suspend fun confirmMatching(decision: String): Result<Unit> =
+    override suspend fun confirmMatching(
+        matchingRequestId: Long,
+        decision: String,
+    ): Result<Unit> =
         apiResponseHandler.safeApiCall {
             remoteDataSource.patchMatchingConfirmation(
+                matchingRequestId = matchingRequestId,
                 request = ConsumerMatchingConfirmationRequest(decision)
             )
         }.map { }
