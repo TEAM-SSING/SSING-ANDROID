@@ -132,7 +132,7 @@ private fun HomeLessonEmptyCard(
             imageVector = ImageVector.vectorResource(R.drawable.ic_empty_reservation_76),
             contentDescription = null,
             tint = Color.Unspecified,
-            modifier = Modifier.size(66.dp),
+            modifier = Modifier.size(76.dp),
         )
     }
 }
@@ -235,7 +235,7 @@ private fun LessonInfoSection(
         Image(
             painter = painterResource(id = state.imageRes),
             contentDescription = null,
-            modifier = Modifier.size(66.dp),
+            modifier = Modifier.size(86.dp),
         )
     }
 }
@@ -276,7 +276,7 @@ private fun EmptyLessonInfoSection(
         Icon(
             imageVector = ImageVector.vectorResource(R.drawable.ic_plus_large),
             contentDescription = null,
-            tint = SSINGTheme.colors.textAlternative,
+            tint = SSINGTheme.colors.textDisabled,
         )
 
         Spacer(modifier = Modifier.height(6.dp))
