@@ -5,10 +5,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class LessonCancelResponse(
-    @SerialName("lessonId")
-    val lessonId: Long,
-    @SerialName("lessonStatus")
-    val lessonStatus: String,
-    @SerialName("canceledAt")
-    val canceledAt: String,
+    @SerialName("lessonId") val lessonId: Long,
+    @SerialName("lessonStatus") val lessonStatus: String,
+    @SerialName("canceledAt") val canceledAt: String,
 )
