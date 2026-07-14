@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -97,15 +96,9 @@ private fun InstructorLoginScreen(
             .systemBarsPadding(),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        InstructorLoginLogo()
-
         Spacer(modifier = Modifier.weight(1f))
 
-        Icon(
-            imageVector = ImageVector.vectorResource(R.drawable.ic_instructor_login_graphic),
-            contentDescription = null,
-            tint = Color.Unspecified,
-        )
+        InstructorLoginLogo()
 
         Spacer(modifier = Modifier.weight(1f))
 
@@ -124,8 +117,7 @@ private fun InstructorLoginLogo(
     modifier: Modifier = Modifier,
 ) {
     Column(
-        modifier = modifier
-            .padding(top = 53.dp),
+        modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(8.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
@@ -143,7 +135,7 @@ private fun InstructorLoginLogo(
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true)
+@Preview(showBackground = true)
 @Composable
 private fun InstructorLoginScreenPreview() {
     SSINGTheme {

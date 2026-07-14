@@ -84,6 +84,7 @@ internal fun PaymentRoute(
         modifier = modifier,
     )
 }
+
 @Composable
 internal fun PaymentScreen(
     state: PaymentContract.State,
@@ -117,14 +118,14 @@ internal fun PaymentScreen(
                     .padding(bottom = 16.dp),
             )
         }
-    ) { innerPadding->
+    ) { innerPadding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(color = SSINGTheme.colors.backgroundAlternative,)
+                .background(color = SSINGTheme.colors.backgroundAlternative)
                 .padding(innerPadding)
                 .verticalScroll(rememberScrollState())
-        ){
+        ) {
             SsingHeader(
                 title = "결제 정보를 확인해요",
                 subText = "강습은 강사님과 만나 양측 확인 후 시작돼요",
@@ -152,7 +153,7 @@ private fun PayInfoSection(
     Column(
         modifier = modifier
     ) {
-         SsingMatchingDetailCard(
+        SsingMatchingDetailCard(
             nickname = state.nickname,
             stepLabel = "결제 정보",
             stepLabelColor = SSINGTheme.colors.textAlternative,
@@ -160,11 +161,12 @@ private fun PayInfoSection(
             classDateTime = state.classDateTime,
             location = state.location,
             duration = state.duration,
+            participant = state.participant,
             participants = state.participants,
             equipmentStatus = state.equipmentStatus,
             borderColor = SSINGTheme.colors.backgroundAlternative,
         )
-        
+
         Spacer(modifier = Modifier.height(8.dp))
 
         Column(
@@ -206,7 +208,8 @@ private fun PayInfoSection(
                 )
 
                 Text(
-                    text = "%,d원".format(state.resortCost),                    style = SSINGTheme.typography.caption.sb14,
+                    text = "%,d원".format(state.resortCost),
+                    style = SSINGTheme.typography.caption.sb14,
                     color = SSINGTheme.colors.textStrong,
                 )
             }
@@ -228,7 +231,8 @@ private fun PayInfoSection(
                 )
 
                 Text(
-                    text = "%,d원".format(state.lessonCost + state.resortCost),                    style = SSINGTheme.typography.title.b16,
+                    text = "%,d원".format(state.lessonCost + state.resortCost),
+                    style = SSINGTheme.typography.title.b16,
                     color = SSINGTheme.colors.primaryNormal,
                 )
             }
