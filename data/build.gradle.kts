@@ -5,3 +5,6 @@ plugins {
 android {
     namespace = "com.ssing.data"
 }
+dependencies {
+    implementation(libs.play.services.auth)
+}

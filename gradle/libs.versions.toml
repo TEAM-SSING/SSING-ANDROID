@@ -33,6 +33,7 @@ appcompat = "1.7.1"
 annotationExperimental = "1.4.1"
 splashscreen = "1.0.1"
 lottieCompose = "6.6.6"
+playServicesAuth = "21.6.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -116,6 +117,7 @@ annotationExperimental = { group = "androidx.annotation", name = "annotation-exp
 
 # lottie
 lottie-compose = { group = "com.airbnb.android", name = "lottie-compose", version.ref = "lottieCompose" }
+play-services-auth = { group = "com.google.android.gms", name = "play-services-auth", version.ref = "playServicesAuth" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
