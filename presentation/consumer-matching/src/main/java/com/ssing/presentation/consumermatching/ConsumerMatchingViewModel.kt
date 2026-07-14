@@ -45,7 +45,8 @@ internal class ConsumerMatchingViewModel @Inject constructor() :
     }
 
     fun acceptMatching() {
-        sendEffect(ConsumerMatchingContract.Effect.Result.NavigateToPayment)
+        // TODO: API 연동 시 실제 matchingRequestId 넣어주기
+        sendEffect(ConsumerMatchingContract.Effect.Result.NavigateToPayment(1L))
     }
 
     fun navigateToReview() =
