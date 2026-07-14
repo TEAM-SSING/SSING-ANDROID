@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class ConsumerLessonCancelInfo(
+internal data class ConsumerLessonCancelInfo(
     @SerialName("canceledAt")
     val canceledAt: String,
     @SerialName("canceledBy")

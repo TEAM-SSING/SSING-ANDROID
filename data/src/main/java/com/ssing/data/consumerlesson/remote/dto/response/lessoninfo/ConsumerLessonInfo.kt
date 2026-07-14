@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class ConsumerLessonInfo(
+internal data class ConsumerLessonInfo(
     @SerialName("representativeConsumerNames")
     val representativeConsumerNames: List<String>,
     @SerialName("totalHeadcount")

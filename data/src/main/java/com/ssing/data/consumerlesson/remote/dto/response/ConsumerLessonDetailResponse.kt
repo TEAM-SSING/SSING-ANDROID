@@ -9,7 +9,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class ConsumerLessonDetailResponse(
+internal data class ConsumerLessonDetailResponse(
     @SerialName("lessonId")
     val lessonId: Long,
     @SerialName("lessonStatus")
