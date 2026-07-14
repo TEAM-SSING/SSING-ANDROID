@@ -13,4 +13,9 @@ internal interface LessonService {
         @Path("lessonId") lessonId: Long,
         @Body request: LessonRequest,
     ): BaseResponse<LessonResponse>
+
+    @POST("api/v1/lessons/{lessonId}/completion")
+    suspend fun lesson(
+        @Path("lessonId") lessonId: Long,
+    ): BaseResponse<LessonResponse>
 }
