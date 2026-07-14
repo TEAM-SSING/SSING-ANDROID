@@ -5,82 +5,53 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 internal data class InstructorLessonDetailBeforeResponse(
-    @SerialName("lessonId")
-    val lessonId: Long,
-    @SerialName("lessonStatus")
-    val lessonStatus: LessonStatus,
-    @SerialName("statusInfo")
-    val statusInfo: StatusInfo,
-    @SerialName("lessonInfo")
-    val lessonInfo: LessonInfo,
-    @SerialName("matchingRequests")
-    val matchingRequests: List<MatchingRequest>,
+    @SerialName("lessonId") val lessonId: Long,
+    @SerialName("lessonStatus") val lessonStatus: LessonStatus,
+    @SerialName("statusInfo") val statusInfo: StatusInfo,
+    @SerialName("lessonInfo") val lessonInfo: LessonInfo,
+    @SerialName("matchingRequests") val matchingRequests: List<MatchingRequest>,
 ) : InstructorLessonDetailResponse {
     @Serializable
     internal data class StatusInfo(
-        @SerialName("confirmedCount")
-        val confirmedCount: Int,
-        @SerialName("requiredCount")
-        val requiredCount: Int,
-        @SerialName("currentActorConfirmed")
-        val currentActorConfirmed: Boolean,
-        @SerialName("instructorConfirmed")
-        val instructorConfirmed: Boolean,
+        @SerialName("confirmedCount") val confirmedCount: Int,
+        @SerialName("requiredCount") val requiredCount: Int,
+        @SerialName("currentActorConfirmed") val currentActorConfirmed: Boolean,
+        @SerialName("instructorConfirmed") val instructorConfirmed: Boolean,
     )
 
     @Serializable
     internal data class LessonInfo(
-        @SerialName("representativeConsumerNames")
-        val representativeConsumerNames: List<String>,
-        @SerialName("totalHeadcount")
-        val totalHeadcount: Int,
-        @SerialName("resort")
-        val resort: Resort,
-        @SerialName("sport")
-        val sport: String,
-        @SerialName("lessonLevel")
-        val lessonLevel: String,
-        @SerialName("scheduledAt")
-        val scheduledAt: String,
-        @SerialName("scheduledDurationMinutes")
-        val scheduledDurationMinutes: Int,
-        @SerialName("totalLessonPrice")
-        val totalLessonPrice: Int,
+        @SerialName("representativeConsumerNames") val representativeConsumerNames: List<String>,
+        @SerialName("totalHeadcount") val totalHeadcount: Int,
+        @SerialName("resort") val resort: Resort,
+        @SerialName("sport") val sport: String,
+        @SerialName("lessonLevel") val lessonLevel: String,
+        @SerialName("scheduledAt") val scheduledAt: String,
+        @SerialName("scheduledDurationMinutes") val scheduledDurationMinutes: Int,
+        @SerialName("totalLessonPrice") val totalLessonPrice: Int,
     )
 
     @Serializable
     internal data class Resort(
-        @SerialName("code")
-        val code: String,
-        @SerialName("displayName")
-        val displayName: String,
+        @SerialName("code") val code: String,
+        @SerialName("displayName") val displayName: String,
     )
 
     @Serializable
     internal data class MatchingRequest(
-        @SerialName("matchingRequestId")
-        val matchingRequestId: Int,
-        @SerialName("representativeMemberId")
-        val representativeMemberId: Int,
-        @SerialName("representativeMemberName")
-        val representativeMemberName: String,
-        @SerialName("headcount")
-        val headcount: Int,
-        @SerialName("teamLessonPrice")
-        val teamLessonPrice: Int,
-        @SerialName("startConfirmed")
-        val startConfirmed: Boolean,
-        @SerialName("participants")
-        val participants: List<Participant>,
+        @SerialName("matchingRequestId") val matchingRequestId: Int,
+        @SerialName("representativeMemberId") val representativeMemberId: Int,
+        @SerialName("representativeMemberName") val representativeMemberName: String,
+        @SerialName("headcount") val headcount: Int,
+        @SerialName("teamLessonPrice") val teamLessonPrice: Int,
+        @SerialName("startConfirmed") val startConfirmed: Boolean,
+        @SerialName("participants") val participants: List<Participant>,
     )
 
     @Serializable
     internal data class Participant(
-        @SerialName("participantId")
-        val participantId: Int,
-        @SerialName("gender")
-        val gender: String,
-        @SerialName("age")
-        val age: Int,
+        @SerialName("participantId") val participantId: Int,
+        @SerialName("gender") val gender: String,
+        @SerialName("age") val age: Int,
     )
 }
