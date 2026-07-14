@@ -70,10 +70,8 @@ fun LessonBanner(
             .fillMaxWidth()
             .background(Blue50)
             .padding(
-                top = 16.dp,
-                start = 16.dp,
-                end = 16.dp,
-            )
+                horizontal = 16.dp,
+            ),
     ) {
         when (lessonBannerState) {
             is LessonBannerState.Before -> LessonBeforeContent(
@@ -98,7 +96,7 @@ private fun LessonBeforeContent(
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .padding(bottom = 16.dp),
+            .padding(vertical = 16.dp),
     ) {
         Text(
             text = beforeLessonText,
@@ -191,8 +189,9 @@ private fun LessonOngoingContent(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .padding(bottom = 16.dp),
+            .padding(vertical = 24.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         Column {
             Text(
@@ -230,7 +229,10 @@ private fun LessonCompletedContent(
 ) {
     Box(
         modifier = modifier
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .padding(
+                top = 24.dp,
+            ),
     ) {
         Icon(
             painter = painterResource(R.drawable.img_lesson_end),
@@ -264,7 +266,10 @@ private fun LessonCanceledContent(
 ) {
     Box(
         modifier = modifier
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .padding(
+                vertical = 24.dp,
+            ),
     ) {
         Icon(
             painter = painterResource(R.drawable.img_lesson_cancel),
