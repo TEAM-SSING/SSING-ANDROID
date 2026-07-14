@@ -1,9 +1,7 @@
 package com.ssing.presentation.instructorlessondetail.screen
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -27,7 +25,6 @@ import com.ssing.core.ui.common.component.ConsumerInfoCard
 import com.ssing.core.ui.common.component.LessonBanner
 import com.ssing.core.ui.common.component.LessonBannerState
 import com.ssing.core.ui.common.component.MatchingCancelBottomSheet
-import com.ssing.core.ui.common.component.SsingButton
 import com.ssing.core.ui.common.component.SsingButtonStyle
 import com.ssing.core.ui.common.component.SsingMatchingDetailCardSmall
 import com.ssing.core.ui.common.component.SsingTopBar
@@ -35,6 +32,7 @@ import com.ssing.core.ui.common.component.UserRole
 import com.ssing.core.ui.designsystem.theme.Blue50
 import com.ssing.core.ui.designsystem.theme.SSINGTheme
 import com.ssing.presentation.instructorlessondetail.component.LessonDetailSsingButton
+import com.ssing.presentation.instructorlessondetail.component.LessonManager
 import com.ssing.presentation.instructorlessondetail.component.SectionTitle
 import com.ssing.presentation.instructorlessondetail.model.LessonDetailBeforeUiModel
 import com.ssing.presentation.instructorlessondetail.model.TeamParticipantsInfo
@@ -146,29 +144,14 @@ internal fun LessonDetailBeforeScreen(
                             Spacer(modifier = Modifier.height(4.dp))
                         }
                     }
-
-                    Spacer(modifier = Modifier.height(24.dp))
-                    SectionTitle(text = "강습 관리")
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Row(
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
-                        modifier = Modifier.fillMaxWidth(),
-                    ) {
-                        SsingButton(
-                            text = "강습 취소",
-                            onClick = onCancelSheetOpen,
-                            style = SsingButtonStyle.RED,
-                            modifier = Modifier.weight(1f),
-                        )
-
-                        SsingButton(
-                            text = "채팅방",
-                            onClick = onChatRoomClick,
-                            style = SsingButtonStyle.GRAY,
-                            modifier = Modifier.weight(1f),
-                        )
-                    }
-                    Spacer(modifier = Modifier.height(16.dp))
+                    LessonManager(
+                        primaryText = "강습 취소",
+                        onPrimaryClick = onCancelSheetOpen,
+                        primaryStyle = SsingButtonStyle.RED,
+                        secondaryText = "채팅방",
+                        onSecondaryClick = onChatRoomClick,
+                        secondaryStyle = SsingButtonStyle.GRAY,
+                    )
                 }
             }
         }
