@@ -1,6 +1,7 @@
 package com.ssing.presentation.consumerhome
 
 import androidx.lifecycle.viewModelScope
+import coil.util.CoilUtils.result
 import com.ssing.core.network.exception.ApiException
 import com.ssing.core.ui.base.BaseViewModel
 import com.ssing.core.ui.common.component.HomeLessonCardState
@@ -64,7 +65,13 @@ internal class ConsumerHomeViewModel @Inject constructor(
 
     private fun List<LessonCard>.toUiState(): ImmutableList<HomeLessonCardState> {
         if (isEmpty()) return persistentListOf(HomeLessonCardState.Empty)
-        return map { it.toReservation() }.toImmutableList()
+        return mapNotNull { card ->
+            runCatching {
+                card.toReservation()
+            }.onFailure { throwable ->
+                Timber.e(throwable, "${card.lessonId} 조회 실패")
+            }.getOrNull()
+        }.toImmutableList()
     }
 
     private fun LessonCard.toReservation(): HomeLessonCardState.Reservation =
