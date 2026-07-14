@@ -12,10 +12,11 @@ import com.ssing.presentation.auth.consumer.navigation.consumerAuthNavGraph
 import com.ssing.presentation.consumerhome.navigation.ConsumerHome
 import com.ssing.presentation.consumerhome.navigation.consumerHomeNavGraph
 import com.ssing.presentation.consumerlesson.navigation.ConsumerLesson
-import com.ssing.presentation.consumerpayment.navigation.consumerPaymentNavGraph
 import com.ssing.presentation.consumerlesson.navigation.consumerLessonNavGraph
-import com.ssing.presentation.consumermatching.navigation.ConsumerMatchingCondition
 import com.ssing.presentation.consumermatching.navigation.consumerMatchingNavGraph
+import com.ssing.presentation.consumermatching.navigation.navigateToConsumerMatching
+import com.ssing.presentation.consumerpayment.navigation.consumerPaymentNavGraph
+import com.ssing.presentation.consumerpayment.navigation.navigateToComsumerPayment
 import com.ssing.presentation.consumerprofile.navigation.consumerProfileNavGraph
 import com.ssing.presentation.notification.navigation.notificationNavGraph
 
@@ -37,11 +38,7 @@ internal fun ConsumerMainNavHost(
                     route = ConsumerLesson,
                 )
             },
-            navigateToMatching = {
-                navController.navigate(
-                    route = ConsumerMatchingCondition,
-                )
-            },
+            navigateToMatching = { navController.navigateToConsumerMatching() },
         )
         consumerProfileNavGraph(
             paddingValues = paddingValues,
@@ -59,7 +56,7 @@ internal fun ConsumerMainNavHost(
                     navOptions = navController.clearBackStackNavOptions(),
                 )
             },
-            navigateToHome =  {
+            navigateToHome = {
                 navController.navigate(
                     route = ConsumerHome,
                     navOptions = navController.clearBackStackNavOptions(),
@@ -79,6 +76,7 @@ internal fun ConsumerMainNavHost(
                     navOptions = navController.clearBackStackNavOptions(),
                 )
             },
+            navigateToPayment = { navController.navigateToComsumerPayment(it) },
         )
         consumerAuthNavGraph(
             paddingValues = paddingValues,
