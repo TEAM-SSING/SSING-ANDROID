@@ -46,7 +46,7 @@ sealed interface HomeLessonCardState {
         val displayText: String,
         val location: String,
         val date: LocalDateTime,
-        val sport: HomeSport,
+        val imageRes: Int,
         val status: Status,
     ) : HomeLessonCardState {
         sealed interface Status {
@@ -57,11 +57,6 @@ sealed interface HomeLessonCardState {
     }
 
     data object Empty : HomeLessonCardState
-}
-
-enum class HomeSport(val imageRes: Int) {
-    SKI(R.drawable.img_ski_86),
-    SNOWBOARD(R.drawable.img_snowboard_86),
 }
 
 @Composable
@@ -239,7 +234,7 @@ private fun LessonInfoSection(
         }
 
         Image(
-            painter = painterResource(id = state.sport.imageRes),
+            painter = painterResource(id = state.imageRes),
             contentDescription = null,
             modifier = Modifier.size(66.dp),
         )
@@ -332,7 +327,7 @@ private fun HomeLessonMatchingCardPreview() {
                 displayText = "매칭중",
                 date = LocalDateTime.of(2025, 7, 15, 19, 0),
                 location = "하이원",
-                sport = HomeSport.SNOWBOARD,
+                imageRes = R.drawable.img_ski_86,
                 status = HomeLessonCardState.Reservation.Status.Matching
             ),
             onButtonClick = {},
@@ -352,7 +347,7 @@ private fun HomeLessonMatchedCardPreview() {
                 displayText = "김OO님 팀 3명",
                 date = LocalDateTime.of(2025, 7, 15, 19, 0),
                 location = "하이원",
-                sport = HomeSport.SKI,
+                imageRes = R.drawable.img_ski_86,
                 status = HomeLessonCardState.Reservation.Status.Matched,
             ),
             onButtonClick = {},
@@ -372,7 +367,7 @@ private fun HomeLessonCardPreview() {
                 displayText = "김OO님 팀 3명",
                 date = LocalDateTime.of(2025, 7, 15, 19, 0),
                 location = "하이원",
-                sport = HomeSport.SNOWBOARD,
+                imageRes = R.drawable.img_snowboard_86,
                 status = HomeLessonCardState.Reservation.Status.Default
             ),
             onButtonClick = {},
@@ -392,7 +387,7 @@ private class HomeLessonCardPreviewProvider :
                 displayText = "김OO님 팀 3명",
                 location = "하이원",
                 date = LocalDateTime.of(2025, 7, 15, 19, 0),
-                sport = HomeSport.SKI,
+                imageRes = R.drawable.img_snowboard_86,
                 status = HomeLessonCardState.Reservation.Status.Matching,
             ),
             HomeLessonCardState.Reservation(
@@ -401,7 +396,7 @@ private class HomeLessonCardPreviewProvider :
                 displayText = "김OO님 팀 3명",
                 location = "지산리조트",
                 date = LocalDateTime.of(2026, 7, 11, 19, 0),
-                sport = HomeSport.SNOWBOARD,
+                imageRes = R.drawable.img_snowboard_86,
                 status = HomeLessonCardState.Reservation.Status.Default,
             ),
         ),
