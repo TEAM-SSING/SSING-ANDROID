@@ -53,6 +53,7 @@ internal class LessonDetailViewModel @Inject constructor(
                     if (it is ApiException) {
                         sendEffect(LessonDetailContract.Effect.ShowToast(it.uiMessage))
                     }
+                    updateState { copy(phase = LessonDetailContract.LessonDetailPhase.Loading) }
                 }
         }
     }
