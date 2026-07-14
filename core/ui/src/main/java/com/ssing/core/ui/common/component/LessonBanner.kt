@@ -70,10 +70,8 @@ fun LessonBanner(
             .fillMaxWidth()
             .background(Blue50)
             .padding(
-                top = 16.dp,
-                start = 16.dp,
-                end = 16.dp,
-            )
+                horizontal = 16.dp,
+            ),
     ) {
         when (lessonBannerState) {
             is LessonBannerState.Before -> LessonBeforeContent(
@@ -98,7 +96,7 @@ private fun LessonBeforeContent(
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .padding(bottom = 16.dp),
+            .padding(vertical = 16.dp),
     ) {
         Text(
             text = beforeLessonText,
@@ -188,45 +186,39 @@ private fun LessonOngoingContent(
     lessonBannerState: LessonBannerState.Ongoing,
     modifier: Modifier = Modifier,
 ) {
-    Column(
+    Row(
         modifier = modifier
-            .padding(
-                vertical = 16.dp,
-            )
+            .fillMaxWidth()
+            .padding(vertical = 24.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically,
     ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 16.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Column {
-                Text(
-                    text = "남은 시간",
-                    color = SSINGTheme.colors.textNormal,
-                    style = SSINGTheme.typography.body.sb16,
-                )
+        Column {
+            Text(
+                text = "남은 시간",
+                color = SSINGTheme.colors.textNormal,
+                style = SSINGTheme.typography.body.sb16,
+            )
 
-                Text(
-                    text = lessonBannerState.remainingTime,
-                    color = SSINGTheme.colors.textNormal,
-                    style = SSINGTheme.typography.title.sb32,
-                )
+            Text(
+                text = lessonBannerState.remainingTime,
+                color = SSINGTheme.colors.textNormal,
+                style = SSINGTheme.typography.title.sb32,
+            )
 
-                Text(
-                    text = "강습 시작 후 ${lessonBannerState.elapsedTime} 경과",
-                    color = SSINGTheme.colors.textAlternative,
-                    style = SSINGTheme.typography.caption.md14,
-                )
-            }
-
-            Icon(
-                painter = painterResource(R.drawable.img_clock),
-                contentDescription = null,
-                tint = Color.Unspecified,
+            Text(
+                text = "강습 시작 후 ${lessonBannerState.elapsedTime} 경과",
+                color = SSINGTheme.colors.textAlternative,
+                style = SSINGTheme.typography.caption.md14,
             )
         }
+
+        Icon(
+            painter = painterResource(R.drawable.img_clock),
+            contentDescription = null,
+            tint = Color.Unspecified,
+            modifier = Modifier.align(Alignment.Bottom)
+        )
     }
 }
 
@@ -239,7 +231,7 @@ private fun LessonCompletedContent(
         modifier = modifier
             .fillMaxWidth()
             .padding(
-                top = 16.dp,
+                top = 24.dp,
             ),
     ) {
         Icon(
@@ -276,8 +268,7 @@ private fun LessonCanceledContent(
         modifier = modifier
             .fillMaxWidth()
             .padding(
-                top = 16.dp,
-                bottom = 29.dp,
+                vertical = 24.dp,
             ),
     ) {
         Icon(
