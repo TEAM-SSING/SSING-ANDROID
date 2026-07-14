@@ -145,6 +145,7 @@ internal abstract class BaseSocketManager<T>(
             session = newSession
 
             reissueAttempted = false
+            retryCount = 0
             Timber.d("🐮 소켓 연결 성공")
             _socketState.update { SocketState.Connected }
             subscribe()
