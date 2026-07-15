@@ -83,11 +83,13 @@ internal class LessonDetailViewModel @Inject constructor(
     }
 
     fun onEndClick() {
+        updateState { copy(showLessonEndDialog = true) }
+    }
+
+    fun onEndConfirmClick() {
         if (uiState.value.phase !is LessonDetailContract.LessonDetailPhase.LessonDetailOngoing) return
 
-        updateState {
-            copy(showLessonEndDialog = false)
-        }
+        updateState { copy(showLessonEndDialog = false) }
         viewModelScope.launch {
             lessonRepository.lessonCompleted(lessonId)
                 .onSuccess {
