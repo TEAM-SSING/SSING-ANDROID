@@ -180,8 +180,9 @@ private fun InstructorHomeScreen(
                         achievementRate = state.achievementRate,
                         onClick = onReviewClick,
                     )
+                } else {
+                    InstructorHomeEmptyReviewCard()
                 }
-                else { InstructorHomeEmptyReviewCard() }
             }
         }
     }
