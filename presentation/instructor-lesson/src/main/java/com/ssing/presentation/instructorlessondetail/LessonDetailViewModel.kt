@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.ssing.core.network.di.ApplicationScope
 import com.ssing.core.network.exception.ApiException
+import com.ssing.core.network.socket.SocketState
 import com.ssing.core.ui.base.BaseViewModel
 import com.ssing.core.ui.common.component.CancelReason
 import com.ssing.core.ui.extension.uiMessage
@@ -54,6 +55,7 @@ internal class LessonDetailViewModel @Inject constructor(
 
         lessonSocketRepository.connect()
         observeSocketEvents()
+        observeSocketState()
     }
 
     private fun observeSocketEvents() {
@@ -61,6 +63,21 @@ internal class LessonDetailViewModel @Inject constructor(
             .filter { it.lessonId == lessonId }
             .onEach { loadLessonDetail() }
             .launchIn(viewModelScope)
+    }
+
+    private fun observeSocketState() {
+        lessonSocketRepository.socketState
+            .onEach { state -> handleSocketState(state) }
+            .launchIn(viewModelScope)
+    }
+
+    private fun handleSocketState(state: SocketState) {
+        when (state) {
+            is SocketState.Error, SocketState.Forbidden ->
+                sendEffect(LessonDetailContract.Effect.ShowToast("연결에 문제가 발생했어요."))
+
+            SocketState.Connected, SocketState.Connecting, SocketState.Disconnected -> Unit
+        }
     }
 
     private fun loadLessonDetail() {
