@@ -157,8 +157,8 @@ internal class ConsumerLessonViewModel @Inject constructor(
 
     private fun CancelReason.toServerCode(): String = when (this) {
         CancelReason.SCHEDULE_CHANGE -> "SCHEDULE_CHANGED"
-        CancelReason.CONSUMER_NO_SHOW -> "INSTRUCTOR_NOT_MET"
-        CancelReason.INSTRUCTOR_NO_SHOW -> "CONSUMER_NOT_MET"
+        CancelReason.INSTRUCTOR_NO_SHOW -> "INSTRUCTOR_NOT_MET"
+        CancelReason.CONSUMER_NO_SHOW -> "CONSUMER_NOT_MET"
         CancelReason.ETC -> "ETC"
     }
 
