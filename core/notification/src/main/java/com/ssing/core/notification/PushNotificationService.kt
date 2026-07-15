@@ -5,10 +5,11 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import androidx.core.app.NotificationCompat
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
-import com.ssing.core.notification.data.repository.NotificationRepository
+import com.ssing.core.notification.data.repository.FcmTokenRepository
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -40,7 +41,7 @@ class PushNotificationService : FirebaseMessagingService() {
     lateinit var notificationTokenProvider: NotificationTokenProvider
 
     @Inject
-    lateinit var notificationRepository: NotificationRepository
+    lateinit var notificationRepository: FcmTokenRepository
 
     private val serviceScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
@@ -63,18 +64,15 @@ class PushNotificationService : FirebaseMessagingService() {
         createChannels(this)
         val title = message.data["title"] ?: return
         val body = message.data["body"] ?: return
-        showNotification(title, body)
+        val deepLink = message.data["deepLink"]
+        showNotification(title, body, deepLink)
     }
 
-    private fun showNotification(title: String, body: String) {
+    private fun showNotification(title: String, body: String, deepLink: String?) {
         val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
 
-        val launchIntent = packageManager.getLaunchIntentForPackage(packageName)?.apply {
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
-        }
-
         val id = System.currentTimeMillis().toInt()
-        val pendingIntent = launchIntent?.let {
+        val pendingIntent = buildClickIntent(deepLink)?.let {
             PendingIntent.getActivity(
                 this,
                 id,
@@ -91,6 +89,24 @@ class PushNotificationService : FirebaseMessagingService() {
             .build()
 
         notificationManager.notify(id, notification)
+    }
+
+    private fun buildClickIntent(deepLink: String?): Intent? {
+        if (deepLink.isNullOrBlank()) {
+            return packageManager.getLaunchIntentForPackage(packageName)?.apply {
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+            }
+        }
+
+        val launchComponent =
+            packageManager.getLaunchIntentForPackage(packageName)?.component ?: return null
+
+        return Intent(Intent.ACTION_VIEW, Uri.parse(deepLink)).apply {
+            component = launchComponent
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or
+                Intent.FLAG_ACTIVITY_CLEAR_TOP or
+                Intent.FLAG_ACTIVITY_SINGLE_TOP
+        }
     }
 
     companion object {

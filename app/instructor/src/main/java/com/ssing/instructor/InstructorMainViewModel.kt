@@ -55,7 +55,7 @@ class InstructorMainViewModel @Inject constructor(
             .fold(
                 onSuccess = { offer ->
                     if (offer != null) {
-                        InstructorMatching
+                        InstructorMatching()
                     } else {
                         InstructorHome
                     }

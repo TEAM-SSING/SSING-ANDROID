@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
+import androidx.navigation.navDeepLink
 import com.ssing.core.ui.navigation.Route
 import com.ssing.presentation.instructorlessondetail.screen.LessonDetailRoute
 import kotlinx.serialization.Serializable
@@ -15,7 +16,11 @@ fun NavGraphBuilder.instructorLessonNavGraph(
     paddingValues: PaddingValues,
     navController: NavController,
 ) {
-    composable<InstructorLesson> {
+    composable<InstructorLesson>(
+        deepLinks = listOf(
+            navDeepLink { uriPattern = "ssing://instructor/lessons/{lessonId}" },
+        ),
+    ) {
         LessonDetailRoute(
             navigateBack = navController::popBackStack,
         )
