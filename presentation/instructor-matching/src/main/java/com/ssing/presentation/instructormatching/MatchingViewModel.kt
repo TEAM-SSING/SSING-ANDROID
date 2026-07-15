@@ -39,6 +39,7 @@ internal class MatchingViewModel @Inject constructor(
 
     init {
         loadMatchingExposure()
+        restoreActiveOffer()
         instructorMatchingRepository.connectSocket()
 
         instructorMatchingRepository.event

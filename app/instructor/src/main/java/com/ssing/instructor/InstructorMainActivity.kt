@@ -10,6 +10,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.getValue
@@ -18,11 +19,11 @@ import androidx.core.content.ContextCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.ssing.core.ui.designsystem.theme.SSINGTheme
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.ssing.core.network.session.AuthSessionManager
 import com.ssing.core.ui.common.component.SsingBottomBar
+import com.ssing.core.ui.designsystem.theme.SSINGTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.launch
@@ -30,6 +31,7 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class InstructorMainActivity : ComponentActivity() {
+    private val viewModel: InstructorMainViewModel by viewModels()
 
     @Inject
     lateinit var authSessionManager: AuthSessionManager
@@ -43,32 +45,40 @@ class InstructorMainActivity : ComponentActivity() {
         }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        installSplashScreen()
+        val splashScreen = installSplashScreen()
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         observeSessionExpired()
         requestNotificationPermission()
+
+        splashScreen.setKeepOnScreenCondition { viewModel.startDestination.value == null }
+
         setContent {
             SSINGTheme {
-                val appState = rememberInstructorMainAppState()
-                val isBottomBarVisible by appState.isBottomBarVisible.collectAsStateWithLifecycle()
-                val currentTab by appState.currentTab.collectAsStateWithLifecycle()
+                val startDestination by viewModel.startDestination.collectAsStateWithLifecycle()
 
-                Scaffold(
-                    modifier = Modifier.fillMaxSize(),
-                    bottomBar = {
-                        SsingBottomBar(
-                            isVisible = isBottomBarVisible,
-                            tabs = InstructorMainTab.entries.toImmutableList(),
-                            currentTab = currentTab,
-                            onTabSelected = appState::navigate,
+                startDestination?.let { destination ->
+                    val appState = rememberInstructorMainAppState()
+                    val isBottomBarVisible by appState.isBottomBarVisible.collectAsStateWithLifecycle()
+                    val currentTab by appState.currentTab.collectAsStateWithLifecycle()
+
+                    Scaffold(
+                        modifier = Modifier.fillMaxSize(),
+                        bottomBar = {
+                            SsingBottomBar(
+                                isVisible = isBottomBarVisible,
+                                tabs = InstructorMainTab.entries.toImmutableList(),
+                                currentTab = currentTab,
+                                onTabSelected = appState::navigate,
+                            )
+                        },
+                    ) { innerPadding ->
+                        InstructorMainNavHost(
+                            navController = appState.navController,
+                            paddingValues = innerPadding,
+                            startDestination = destination,
                         )
-                    },
-                ) { innerPadding ->
-                    InstructorMainNavHost(
-                        navController = appState.navController,
-                        paddingValues = innerPadding,
-                    )
+                    }
                 }
             }
         }
@@ -84,11 +94,6 @@ class InstructorMainActivity : ComponentActivity() {
         }
     }
 
-    /**
-     * 세션 만료(refresh token 만료) 이벤트 구독.
-     * 토큰은 이미 clear된 상태이므로 앱을 재시작하면
-     * startDestination 결정 로직이 자연스럽게 로그인 화면으로 보낸다.
-     */
     private fun observeSessionExpired() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
