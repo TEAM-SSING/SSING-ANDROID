@@ -65,14 +65,15 @@ class PushNotificationService : FirebaseMessagingService() {
         val title = message.data["title"] ?: return
         val body = message.data["body"] ?: return
         val deepLink = message.data["deepLink"]
-        showNotification(title, body, deepLink)
+        val offerId = message.data["offerId"]
+        showNotification(title, body, deepLink, offerId)
     }
 
-    private fun showNotification(title: String, body: String, deepLink: String?) {
+    private fun showNotification(title: String, body: String, deepLink: String?, offerId: String?) {
         val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
 
         val id = System.currentTimeMillis().toInt()
-        val pendingIntent = buildClickIntent(deepLink)?.let {
+        val pendingIntent = buildClickIntent(deepLink, offerId)?.let {
             PendingIntent.getActivity(
                 this,
                 id,
@@ -91,7 +92,7 @@ class PushNotificationService : FirebaseMessagingService() {
         notificationManager.notify(id, notification)
     }
 
-    private fun buildClickIntent(deepLink: String?): Intent? {
+    private fun buildClickIntent(deepLink: String?, offerId: String?): Intent? {
         if (deepLink.isNullOrBlank()) {
             return packageManager.getLaunchIntentForPackage(packageName)?.apply {
                 flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
@@ -101,7 +102,9 @@ class PushNotificationService : FirebaseMessagingService() {
         val launchComponent =
             packageManager.getLaunchIntentForPackage(packageName)?.component ?: return null
 
-        return Intent(Intent.ACTION_VIEW, Uri.parse(deepLink)).apply {
+        val uri = if (offerId.isNullOrBlank()) deepLink else "$deepLink?offerId=$offerId"
+
+        return Intent(Intent.ACTION_VIEW, Uri.parse(uri)).apply {
             component = launchComponent
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or
                 Intent.FLAG_ACTIVITY_CLEAR_TOP or

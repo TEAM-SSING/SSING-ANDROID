@@ -26,10 +26,7 @@ fun NavGraphBuilder.instructorMatchingNavGraph(
 ) {
     composable<InstructorMatching>(
         deepLinks = listOf(
-            // 새 강습 도착: ssing://instructor/matching/offers/10 → offerId=10
-            navDeepLink { uriPattern = "ssing://instructor/matching/offers/{offerId}" },
-            // 수락 후 거절: ssing://instructor/matching → offerId=null
-            navDeepLink { uriPattern = "ssing://instructor/matching" },
+            navDeepLink<InstructorMatching>(basePath = "https://ssing.app/instructor-matching"),
         ),
     ) {
         MatchingRoute(

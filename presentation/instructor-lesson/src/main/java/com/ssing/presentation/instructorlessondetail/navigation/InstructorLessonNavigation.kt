@@ -18,7 +18,7 @@ fun NavGraphBuilder.instructorLessonNavGraph(
 ) {
     composable<InstructorLesson>(
         deepLinks = listOf(
-            navDeepLink { uriPattern = "ssing://instructor/lessons/{lessonId}" },
+            navDeepLink<InstructorLesson>(basePath = "https://ssing.app/instructor-lesson"),
         ),
     ) {
         LessonDetailRoute(
