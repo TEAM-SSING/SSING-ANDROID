@@ -5,21 +5,19 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 internal data class InstructorMatchingOffersResponse(
-    @SerialName("items") val items: List<InstructorMatchingOfferResponse>,
-    @SerialName("currentPage") val currentPage: Int,
-    @SerialName("size") val size: Int,
-    @SerialName("hasNext") val hasNext: Boolean,
+    @SerialName("offerId") val offerId: Long? = null,
+    @SerialName("matchingSetting") val matchingSetting: InstructorMatchingSettingResponse,
 )
 
 @Serializable
-internal data class InstructorMatchingOfferResponse(
-    @SerialName("offerId") val offerId: Long,
-    @SerialName("groupId") val groupId: Long,
-    @SerialName("offerStatus") val offerStatus: String,
-    @SerialName("expiresAt") val expiresAt: String? = null,
-    @SerialName("requestSummary") val requestSummary: InstructorMatchingRequestSummaryResponse,
-    @SerialName("lessonSummary") val lessonSummary: InstructorMatchingLessonSummaryResponse,
-    @SerialName("priceSummary") val priceSummary: InstructorMatchingPriceSummaryResponse,
+internal data class InstructorMatchingSettingResponse(
+    @SerialName("isExposed") val isExposed: Boolean,
+    @SerialName("resort") val resort: InstructorMatchingResortResponse,
+    @SerialName("sport") val sport: String,
+    @SerialName("lessonLevels") val lessonLevels: List<String>,
+    @SerialName("availableDurationMinutes") val availableDurationMinutes: List<Int>,
+    @SerialName("maxHeadcount") val maxHeadcount: Int,
+    @SerialName("equipmentReady") val equipmentReady: Boolean,
 )
 
 @Serializable

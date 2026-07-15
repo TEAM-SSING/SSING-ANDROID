@@ -50,11 +50,15 @@ class InstructorMainViewModel @Inject constructor(
         }
     }
 
+    /**
+     * 로그인 상태의 시작 지점: 활성 제안이 있거나 노출 중이면 매칭 화면, 아니면 홈.
+     * 활성 매칭 조회 실패 시에도 홈으로 폴백한다.
+     */
     private suspend fun resolveLoggedInDestination(): Route =
-        instructorMatchingRepository.fetchActiveOffer()
+        instructorMatchingRepository.fetchMatchingActive()
             .fold(
-                onSuccess = { offer ->
-                    if (offer != null) {
+                onSuccess = { active ->
+                    if (active.offerId != null || active.setting.isExposed) {
                         InstructorMatching
                     } else {
                         InstructorHome
