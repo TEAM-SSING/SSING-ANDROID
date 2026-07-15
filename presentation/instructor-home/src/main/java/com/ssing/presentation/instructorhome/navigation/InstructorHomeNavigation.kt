@@ -14,12 +14,14 @@ fun NavGraphBuilder.instructorHomeNavGraph(
     paddingValues: PaddingValues,
     navigateToMatching: () -> Unit,
     navigateToLessonDetail: (Long) -> Unit,
+    navigateToNotification: () -> Unit,
 ) {
     composable<InstructorHome> {
         InstructorHomeRoute(
             contentPadding = paddingValues,
             navigateToMatching = navigateToMatching,
             navigateToLessonDetail = navigateToLessonDetail,
+            navigateToNotification = navigateToNotification,
         )
     }
 }

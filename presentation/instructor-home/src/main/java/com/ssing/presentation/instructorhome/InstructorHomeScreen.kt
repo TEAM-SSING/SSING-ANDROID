@@ -48,6 +48,7 @@ internal fun InstructorHomeRoute(
     contentPadding: PaddingValues,
     navigateToLessonDetail: (Long) -> Unit,
     navigateToMatching: () -> Unit,
+    navigateToNotification: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: InstructorHomeViewModel = hiltViewModel(),
 ) {
@@ -68,6 +69,7 @@ internal fun InstructorHomeRoute(
         onMatchingClick = viewModel::onMatchingClick,
         onReservationClick = viewModel::onReservationClick,
         onReviewClick = viewModel::onReviewClick,
+        onNotificationClick = navigateToNotification,
         contentPadding = contentPadding,
         hasReview = false,
         modifier = modifier,
@@ -81,6 +83,7 @@ private fun InstructorHomeScreen(
     onMatchingClick: () -> Unit,
     onReservationClick: () -> Unit,
     onReviewClick: () -> Unit,
+    onNotificationClick: () -> Unit,
     contentPadding: PaddingValues,
     hasReview: Boolean,
     modifier: Modifier = Modifier,
@@ -95,7 +98,7 @@ private fun InstructorHomeScreen(
                         contentDescription = null,
                     )
                 },
-                onNotificationClick = {},
+                onNotificationClick = onNotificationClick,
                 modifier = Modifier.statusBarsPadding(),
             )
         },
@@ -223,6 +226,7 @@ private fun InstructorHomeScreenPreview() {
             onMatchingClick = {},
             onReservationClick = {},
             onReviewClick = {},
+            onNotificationClick = {},
             hasReview = true,
             contentPadding = PaddingValues(0.dp),
         )
@@ -246,6 +250,7 @@ private fun InstructorHomeScreen2Preview() {
             onMatchingClick = {},
             onReservationClick = {},
             onReviewClick = {},
+            onNotificationClick = {},
             hasReview = false,
             contentPadding = PaddingValues(0.dp),
         )
