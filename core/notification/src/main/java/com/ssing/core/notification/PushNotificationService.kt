@@ -16,7 +16,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import timber.log.Timber
 import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
@@ -52,7 +51,7 @@ class PushNotificationService : FirebaseMessagingService() {
 
     override fun onNewToken(token: String) {
         super.onNewToken(token)
-        runBlocking {
+        serviceScope.launch {
             notificationRepository.registerFcmToken(token)
                 .onFailure { Timber.e(it, "FCM 토큰 저장 실패") }
         }
@@ -60,10 +59,11 @@ class PushNotificationService : FirebaseMessagingService() {
 
     override fun onMessageReceived(message: RemoteMessage) {
         super.onMessageReceived(message)
+        Timber.d("FCM 수신: data=${message.data}, notification=${message.notification?.title}")
 
         createChannels(this)
-        val title = message.data["title"] ?: return
-        val body = message.data["body"] ?: return
+        val title = message.data["title"] ?: message.notification?.title ?: return
+        val body = message.data["body"] ?: message.notification?.body ?: return
         val deepLink = message.data["deepLink"]
         val offerId = message.data["offerId"]
         showNotification(title, body, deepLink, offerId)
