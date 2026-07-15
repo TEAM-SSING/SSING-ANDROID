@@ -30,10 +30,6 @@ internal interface MatchingContract {
 
     sealed interface MatchingDialog {
         data object StopWaiting : MatchingDialog
-
-        data object ConsumerRejected : MatchingDialog
-
-        data object MatchingFailed : MatchingDialog
     }
 
     sealed interface Effect {
