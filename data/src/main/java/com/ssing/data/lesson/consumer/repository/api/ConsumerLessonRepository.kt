@@ -1,7 +1,6 @@
 package com.ssing.data.lesson.consumer.repository.api
 
 import com.ssing.core.network.socket.SocketState
-import com.ssing.data.consumerlesson.model.ConsumerLessonDetail
 import com.ssing.data.lesson.consumer.model.ConsumerLessonDetail
 import com.ssing.data.lesson.consumer.model.ConsumerLessonSocketEvent
 import kotlinx.coroutines.flow.Flow
