@@ -21,7 +21,7 @@ import kotlinx.serialization.Serializable
 data object ConsumerMatchingCondition : Route
 
 @Serializable
-private data object ConsumerMatchingGraph : Route
+data class ConsumerMatchingGraph(val matchingRequestId: Long) : Route
 
 @Serializable
 private data object ConsumerMatchingPending : Route
@@ -35,8 +35,8 @@ private data object ConsumerMatchingFailure : Route
 fun NavController.navigateToConsumerMatchingCondition() =
     this.navigate(ConsumerMatchingCondition)
 
-private fun NavController.navigateToConsumerMatching() =
-    this.navigate(ConsumerMatchingGraph)
+fun NavController.navigateToConsumerMatching(matchingRequestId: Long) =
+    this.navigate(ConsumerMatchingGraph(matchingRequestId))
 
 private fun NavController.navigateToConsumerMatchingResult() =
     this.navigate(ConsumerMatchingResult)
