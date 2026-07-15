@@ -10,6 +10,7 @@ import com.ssing.core.ui.base.BaseViewModel
 import com.ssing.core.ui.common.component.CancelReason
 import com.ssing.core.ui.extension.uiMessage
 import com.ssing.core.ui.util.ssingDateFormatter
+import com.ssing.data.lesson.common.model.LessonStartConfirmationResult
 import com.ssing.data.lesson.common.repository.api.LessonRepository
 import com.ssing.data.lesson.instructor.model.InstructorConfirmedMatchingRequest
 import com.ssing.data.lesson.instructor.model.InstructorLessonDetail
@@ -147,32 +148,35 @@ internal class LessonDetailViewModel @Inject constructor(
 
     fun onReadyClick() {
         val before =
-            (uiState.value.phase as? LessonDetailContract.LessonDetailPhase.LessonDetailBefore)
-                ?.before
+            (uiState.value.phase as? LessonDetailContract.LessonDetailPhase.LessonDetailBefore)?.before
 
         if (before == null) {
             loadLessonDetail()
             return
         }
 
-        updateState {
-            copy(
-                phase = LessonDetailContract.LessonDetailPhase.LessonDetailBefore(
-                    before = before.copy(isInstructorReady = true)
-                ),
-                showReadyDialog = false,
-            )
-        }
+        updateState { copy(showReadyDialog = false) }
+
         viewModelScope.launch {
             lessonRepository.lessonStart(lessonId)
-                .onFailure {
-                    updateState {
-                        copy(
-                            phase = LessonDetailContract.LessonDetailPhase.LessonDetailBefore(
-                                before = before.copy(isInstructorReady = false)
-                            ),
-                        )
+                .onSuccess { result ->
+                    when (result) {
+                        is LessonStartConfirmationResult.Pending -> updateState {
+                            copy(
+                                phase = LessonDetailContract.LessonDetailPhase.LessonDetailBefore(
+                                    before = before.copy(
+                                        isInstructorReady = result.instructorConfirmed,
+                                        participantReadyCount = result.confirmedCount,
+                                        participantTotalCount = result.requiredCount,
+                                    )
+                                )
+                            )
+                        }
+
+                        is LessonStartConfirmationResult.Started -> loadLessonDetail()
                     }
+                }
+                .onFailure {
                     if (it is ApiException) {
                         sendEffect(LessonDetailContract.Effect.ShowToast(it.uiMessage))
                     }
@@ -233,6 +237,7 @@ internal class LessonDetailViewModel @Inject constructor(
                         )
                     )
                 }
+                loadLessonDetail()
             }.onFailure {
                 if (it is ApiException) {
                     sendEffect(LessonDetailContract.Effect.ShowToast(it.uiMessage))

@@ -15,6 +15,7 @@ import com.ssing.core.ui.type.formatDate
 import com.ssing.core.ui.type.formatDateTime
 import com.ssing.core.ui.type.formatMinutesText
 import com.ssing.core.ui.type.formatTime
+import com.ssing.data.lesson.common.model.LessonStartConfirmationResult
 import com.ssing.data.lesson.common.repository.api.LessonRepository
 import com.ssing.data.lesson.consumer.model.ConsumerLessonDetail
 import com.ssing.data.lesson.consumer.repository.api.ConsumerLessonRepository
@@ -168,22 +169,27 @@ internal class ConsumerLessonViewModel @Inject constructor(
 
     fun onReadyConfirmed() {
         val before = uiState.value.lessonBannerState as? LessonBannerState.Before ?: return
-        val updatedBanner = before.copy(participantReadyCount = before.participantReadyCount + 1)
-
-        updateState {
-            copy(
-                isReady = true,
-                showReadyAlert = false,
-                lessonBannerState = updatedBanner,
-            )
-        }
+        updateState { copy(showReadyAlert = false) }
 
         viewModelScope.launch {
             lessonRepository.lessonStart(lessonId)
-                .onFailure {
-                    updateState {
-                        copy(isReady = false, lessonBannerState = before)
+                .onSuccess { result ->
+                    when (result) {
+                        is LessonStartConfirmationResult.Pending -> updateState {
+                            copy(
+                                isReady = result.currentActorConfirmed,
+                                lessonBannerState = before.copy(
+                                    isInstructorReady = result.instructorConfirmed,
+                                    participantReadyCount = result.confirmedCount,
+                                    participantTotalCount = result.requiredCount,
+                                ),
+                            )
+                        }
+
+                        is LessonStartConfirmationResult.Started -> loadLessonDetail(lessonId)
                     }
+                }
+                .onFailure {
                     if (it is ApiException) {
                         sendEffect(ConsumerLessonContract.Effect.ShowToast(it.uiMessage))
                     }
@@ -204,6 +210,9 @@ internal class ConsumerLessonViewModel @Inject constructor(
 
         viewModelScope.launch {
             lessonRepository.lessonCompleted(lessonId)
+                .onSuccess {
+                    loadLessonDetail(lessonId)
+                }
                 .onFailure {
                     if (it is ApiException) {
                         sendEffect(ConsumerLessonContract.Effect.ShowToast(it.uiMessage))
@@ -245,12 +254,12 @@ internal class ConsumerLessonViewModel @Inject constructor(
             ).onSuccess {
                 updateState {
                     copy(
-                        lessonBannerState = LessonBannerState.Canceled,
                         showCancelConfirmSheet = false,
                         selectedReason = null,
                     )
                 }
                 etcState.edit { replace(0, length, "") }
+                loadLessonDetail(lessonId)
             }.onFailure {
                 Timber.e(it, "강습 취소 실패")
                 if (it is ApiException) {
