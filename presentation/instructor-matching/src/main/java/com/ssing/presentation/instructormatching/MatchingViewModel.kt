@@ -52,12 +52,8 @@ internal class MatchingViewModel @Inject constructor(
         when (event) {
             is InstructorMatchingEvent.OfferReceivedEvent,
             is InstructorMatchingEvent.OfferClosedEvent,
-            -> restoreActiveOffer()
-
-            is InstructorMatchingEvent.MatchingCanceledEvent -> {
-                updateState { copy(phase = MatchingPhase.Waiting) }
-                sendEffect(MatchingContract.Effect.ShowToast(MSG_CONSUMER_REJECTED))
-            }
+            is InstructorMatchingEvent.MatchingCanceledEvent,
+                -> restoreActiveOffer()
 
             is InstructorMatchingEvent.MatchingConfirmedEvent -> onMatchingConfirmed(event.lessonId)
         }

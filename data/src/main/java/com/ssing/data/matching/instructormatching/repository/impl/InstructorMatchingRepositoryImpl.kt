@@ -80,7 +80,6 @@ internal class InstructorMatchingRepositoryImpl @Inject constructor(
                 ),
             )
         }.map { it.isExposed }
-
     private fun MatchingEnvelope<JsonElement>.toInstructorMatchingEventOrNull(): InstructorMatchingEvent? =
         runCatching {
             when (eventType) {
