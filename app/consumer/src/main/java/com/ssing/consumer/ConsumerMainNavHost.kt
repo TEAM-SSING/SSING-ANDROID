@@ -48,6 +48,7 @@ internal fun ConsumerMainNavHost(
             paddingValues = paddingValues,
             navigateToLessonDetail = { lessonId ->
                 navController.navigate(
+                    // TODO: 검토 필요 (nullable)
                     route = ConsumerLesson(lessonId ?: 0),
                 )
             },
