@@ -58,9 +58,12 @@ internal class LessonDetailViewModel @Inject constructor(
         observeSocketState()
     }
 
+    private val seenEventIds = mutableSetOf<String>()
+
     private fun observeSocketEvents() {
         lessonSocketRepository.event
             .filter { it.lessonId == lessonId }
+            .filter { seenEventIds.add(it.eventId) }
             .onEach { loadLessonDetail() }
             .launchIn(viewModelScope)
     }
