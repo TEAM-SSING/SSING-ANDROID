@@ -100,7 +100,6 @@ internal fun ConsumerMainNavHost(
             },
         )
         consumerLessonNavGraph(
-            paddingValues = paddingValues,
             navigateToHome = {
                 navController.navigate(
                     route = ConsumerHome,
