@@ -87,7 +87,8 @@ internal class ConsumerMatchingViewModel @Inject constructor(
                         content = "스노우 보드 처음 타는 저희 아이두명 강습 해주셨습니다.아이들이 겁이 많은데 정말 즐거운 시간 보낸 것 같습니다.",
                         date = "2026.12.11",
                     )
-                )
+                ),
+                totalReviewCount = 128,
             )
         }
     }
