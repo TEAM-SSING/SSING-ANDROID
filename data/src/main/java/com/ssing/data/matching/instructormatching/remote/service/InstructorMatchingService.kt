@@ -5,6 +5,7 @@ import com.ssing.data.matching.instructormatching.remote.dto.request.InstructorM
 import com.ssing.data.matching.instructormatching.remote.dto.response.InstructorMatchingExposureResponse
 import com.ssing.data.matching.instructormatching.remote.dto.response.InstructorMatchingExposureStartResponse
 import retrofit2.http.Body
+import com.ssing.data.matching.instructormatching.remote.dto.response.InstructorMatchingOffersResponse
 import retrofit2.http.GET
 import retrofit2.http.PUT
 
@@ -16,4 +17,7 @@ internal interface InstructorMatchingService {
     suspend fun putMatchingExposure(
         @Body request: InstructorMatchingExposureStartRequest,
     ): BaseResponse<InstructorMatchingExposureStartResponse>
+
+    @GET("/api/v1/instructor/matching-offers")
+    suspend fun getMatchingOffers(): BaseResponse<InstructorMatchingOffersResponse>
 }

@@ -194,7 +194,7 @@ private val previewOffer = MatchingOfferUiModel(
     expiresAtMillis = null,
     nickname = "홍지민",
     teamCount = 4,
-    classDateTime = "7월 8일 오후 12:30",
+    classDateTime = "강습생과 만난 직후 강습 시작",
     participants = listOf(
         ParticipantUiModel(age = 28, isMale = true),
         ParticipantUiModel(age = 25, isMale = false),
@@ -205,7 +205,7 @@ private val previewOffer = MatchingOfferUiModel(
     lesson = LessonSummaryUiModel(
         resortLabel = "하이원 리조트",
         sportLabel = "스키",
-        levelLabel = "처음 타요",
+        levelLabel = "처음타요",
         headcount = 4,
         durationHours = 3,
     ),
@@ -214,7 +214,7 @@ private val previewOffer = MatchingOfferUiModel(
 private val previewWaiting = MatchingWaitingUiState(
     nickname = "홍지민",
     teamCount = 2,
-    classDateTime = "7월 8일 오후 12:30",
+    classDateTime = "강습생과 만난 직후 강습 시작",
     participants = listOf(
         ParticipantUiModel(age = 28, isMale = true),
         ParticipantUiModel(age = 25, isMale = false),
