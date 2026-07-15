@@ -9,7 +9,6 @@ internal interface PaymentContract {
 
     @Immutable
     data class State(
-        val lessonId: Long = 0,
         val isLoading: Boolean = false,
         val showCancelModal: Boolean = false,
         val nickname: String = "",
@@ -22,6 +21,7 @@ internal interface PaymentContract {
         val equipmentStatus: String = "",
         val lessonCost: Int = 0,
         val resortCost: Int = 0,
+        val totalPaymentAmount: Int = 0,
     )
 
     sealed interface Effect {

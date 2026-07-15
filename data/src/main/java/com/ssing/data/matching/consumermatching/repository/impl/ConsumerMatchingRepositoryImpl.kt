@@ -5,12 +5,20 @@ import com.ssing.core.network.socket.matching.MatchingEnvelope
 import com.ssing.core.network.util.ApiResponseHandler
 import com.ssing.data.matching.common.remote.datasource.api.MatchingSocketDataSource
 import com.ssing.data.matching.consumermatching.event.ConsumerMatchingEvent
+import com.ssing.data.matching.consumermatching.model.ConsumerMatchingActive
+import com.ssing.data.matching.consumermatching.model.ConsumerMatchingInstructorProfile
+import com.ssing.data.matching.consumermatching.model.ConsumerMatchingLessonSummary
 import com.ssing.data.matching.consumermatching.model.ConsumerMatchingParticipant
+import com.ssing.data.matching.consumermatching.model.ConsumerMatchingPriceSummary
+import com.ssing.data.matching.consumermatching.model.ConsumerMatchingProgressSummary
 import com.ssing.data.matching.consumermatching.model.ConsumerMatchingRequestResult
+import com.ssing.data.matching.consumermatching.model.ConsumerMatchingRequestSummary
+import com.ssing.data.matching.consumermatching.model.ConsumerMatchingResort
 import com.ssing.data.matching.consumermatching.remote.datasource.api.ConsumerMatchingRemoteDataSource
 import com.ssing.data.matching.consumermatching.remote.dto.request.ConsumerMatchingConditionRequest
 import com.ssing.data.matching.consumermatching.remote.dto.request.ConsumerMatchingConfirmationRequest
 import com.ssing.data.matching.consumermatching.remote.dto.request.ConsumerMatchingParticipantRequest
+import com.ssing.data.matching.consumermatching.remote.dto.response.ConsumerMatchingActiveResponse
 import com.ssing.data.matching.consumermatching.remote.dto.response.ConsumerMatchingRequestResponse
 import com.ssing.data.matching.consumermatching.remote.payload.InstructorAcceptedPayload
 import com.ssing.data.matching.consumermatching.remote.payload.MatchingCanceledPayload
@@ -87,6 +95,87 @@ internal class ConsumerMatchingRepositoryImpl @Inject constructor(
         apiResponseHandler.safeApiCall {
             remoteDataSource.getMatchingActive()
         }.map { it.matchingRequestId }
+
+    override suspend fun refetchMatching(): Result<ConsumerMatchingActive> =
+        apiResponseHandler.safeApiCall {
+            remoteDataSource.getMatchingActive()
+        }.map { it.toActiveModel() }
+
+    private fun ConsumerMatchingActiveResponse.toActiveModel(): ConsumerMatchingActive =
+        when (recoveryState) {
+            RECOVERY_STATE_ACTIVE -> toActiveModelOrNull() ?: ConsumerMatchingActive.None
+            else -> ConsumerMatchingActive.None
+        }
+
+    private fun ConsumerMatchingActiveResponse.toActiveModelOrNull(): ConsumerMatchingActive.Active? {
+        val matchingRequestId = matchingRequestId ?: return logMissingFieldAndReturnNull("matchingRequestId")
+        val matchingStatus = matchingStatus ?: return logMissingFieldAndReturnNull("matchingStatus")
+        val requestStatus = requestStatus ?: return logMissingFieldAndReturnNull("requestStatus")
+        val requestSummary = requestSummary ?: return logMissingFieldAndReturnNull("requestSummary")
+
+        return ConsumerMatchingActive.Active(
+            matchingRequestId = matchingRequestId,
+            matchingStatus = matchingStatus,
+            requestStatus = requestStatus,
+            requestStatusReason = requestStatusReason,
+            groupId = groupId,
+            groupStatus = groupStatus,
+            itemStatus = itemStatus,
+            offerStatus = offerStatus,
+            paymentStatus = paymentStatus,
+            requestSummary = ConsumerMatchingRequestSummary(
+                resort = ConsumerMatchingResort(
+                    code = requestSummary.resort.code,
+                    displayName = requestSummary.resort.displayName,
+                ),
+                sport = requestSummary.sport,
+                lessonLevel = requestSummary.lessonLevel,
+                headcount = requestSummary.headcount,
+            ),
+            lessonSummary = lessonSummary?.let {
+                ConsumerMatchingLessonSummary(
+                    durationMinutes = it.durationMinutes,
+                    totalHeadcount = it.totalHeadcount,
+                    startType = it.startType,
+                )
+            },
+            instructorProfile = instructorProfile?.let {
+                ConsumerMatchingInstructorProfile(
+                    instructorId = it.instructorId,
+                    name = it.name,
+                    profileImageUrl = it.profileImageUrl,
+                    gender = it.gender,
+                    birthYear = it.birthYear,
+                    level = it.level,
+                    careerYears = it.careerYears,
+                    completedLessonCount = it.completedLessonCount,
+                    averageRating = it.averageRating,
+                    introduction = it.introduction,
+                    certificateTypes = it.certificateTypes,
+                    latestReviewContent = it.latestReview?.content,
+                )
+            },
+            progressSummary = progressSummary?.let {
+                ConsumerMatchingProgressSummary(
+                    acceptedRequesterCount = it.acceptedRequesterCount,
+                    totalRequesterCount = it.totalRequesterCount,
+                    paidRequesterCount = it.paidRequesterCount,
+                )
+            },
+            priceSummary = priceSummary?.let {
+                ConsumerMatchingPriceSummary(
+                    lessonPriceAmount = it.lessonPriceAmount,
+                    resortPassFeeAmount = it.resortPassFeeAmount,
+                    totalPaymentAmount = it.totalPaymentAmount,
+                )
+            },
+        )
+    }
+
+    private fun ConsumerMatchingActiveResponse.logMissingFieldAndReturnNull(fieldName: String): Nothing? {
+        Timber.w("ACTIVE 응답에 %s 누락, matchingRequestId=%s — NONE으로 폴백", fieldName, matchingRequestId)
+        return null
+    }
 
     private fun ConsumerMatchingParticipant.toRequest(): ConsumerMatchingParticipantRequest =
         ConsumerMatchingParticipantRequest(
@@ -214,4 +303,8 @@ internal class ConsumerMatchingRepositoryImpl @Inject constructor(
             }
         }.onFailure { Timber.e(it, "소비자 매칭 소켓 이벤트 디코딩 실패 (eventType=$eventType)") }
             .getOrNull()
+
+    private companion object {
+        const val RECOVERY_STATE_ACTIVE = "ACTIVE"
+    }
 }
