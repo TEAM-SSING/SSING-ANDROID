@@ -9,13 +9,18 @@ import com.ssing.core.network.socket.SocketState
 import com.ssing.core.ui.base.BaseViewModel
 import com.ssing.core.ui.extension.uiMessage
 import com.ssing.data.matching.consumermatching.event.ConsumerMatchingEvent
+import com.ssing.data.matching.consumermatching.model.ConsumerMatchingActive
 import com.ssing.data.matching.consumermatching.repository.api.ConsumerMatchingRepository
 import com.ssing.presentation.consumermatching.navigation.ConsumerMatchingGraph
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import timber.log.Timber
+import java.time.Year
 import javax.inject.Inject
 
 @HiltViewModel
@@ -67,13 +72,13 @@ internal class ConsumerMatchingViewModel @Inject constructor(
     private fun handleMatchingEvent(event: ConsumerMatchingEvent) {
         when (event) {
             is ConsumerMatchingEvent.MatchingCanceledEvent -> onMatchingCanceled()
-            is ConsumerMatchingEvent.MatchingStatusChangedEvent -> refetching(event.matchingRequestId)
-            is ConsumerMatchingEvent.InstructorAcceptedEvent -> refetching(event.matchingRequestId)
-            is ConsumerMatchingEvent.RequesterConfirmationUpdatedEvent -> refetching(event.matchingRequestId)
-            is ConsumerMatchingEvent.PaymentPendingEvent -> refetching(event.matchingRequestId)
-            is ConsumerMatchingEvent.PaymentStatusChangedEvent -> refetching(event.matchingRequestId)
-            is ConsumerMatchingEvent.MatchingConfirmedEvent -> refetching(event.matchingRequestId)
-            is ConsumerMatchingEvent.MatchingFailedEvent -> refetching(event.matchingRequestId)
+            is ConsumerMatchingEvent.MatchingConfirmedEvent -> refetching(noneFallback = RecoveryNoneFallback.HOME)
+            is ConsumerMatchingEvent.MatchingFailedEvent -> refetching(noneFallback = RecoveryNoneFallback.FAILURE)
+            is ConsumerMatchingEvent.MatchingStatusChangedEvent -> refetching(noneFallback = RecoveryNoneFallback.FAILURE)
+            is ConsumerMatchingEvent.InstructorAcceptedEvent -> refetching(noneFallback = RecoveryNoneFallback.FAILURE)
+            is ConsumerMatchingEvent.RequesterConfirmationUpdatedEvent -> refetching(noneFallback = RecoveryNoneFallback.FAILURE)
+            is ConsumerMatchingEvent.PaymentPendingEvent -> refetching(noneFallback = RecoveryNoneFallback.FAILURE)
+            is ConsumerMatchingEvent.PaymentStatusChangedEvent -> refetching(noneFallback = RecoveryNoneFallback.FAILURE)
         }
     }
 
@@ -91,16 +96,97 @@ internal class ConsumerMatchingViewModel @Inject constructor(
         sendEffect(ConsumerMatchingContract.Effect.Pending.NavigateToHome)
     }
 
-    private fun refetching(matchingRequestId: Long) = viewModelScope.launch {
-        // TODO: 소비자 매칭 상태 조회 API 연동 / matchingStatus로 화면 구성
-        // WAITING_FOR_CONFIRMATION, WAITING_FOR_OTHER_CONFIRMATIONS
-        //     -> Pending.NavigateToResult
-        // PAYMENT_PENDING, WAITING_FOR_OTHER_PAYMENTS
-        //     -> NavigationPayment
-        // NO_AVAILABLE_INSTRUCTOR, FAILED, PAYMENT_EXPIRED
-        //     -> consumerMatchingRepository.disconnect() 후 Pending.NavigateToFailure
-        // CANCELED
-        //     -> consumerMatchingRepository.disconnect() 후 Pending.NavigateToHome
+    private fun refetching(noneFallback: RecoveryNoneFallback) = viewModelScope.launch {
+        consumerMatchingRepository.refetchMatching()
+            .onSuccess { active ->
+                when (active) {
+                    is ConsumerMatchingActive.Active -> handleActiveMatching(active)
+                    ConsumerMatchingActive.None -> handleNoneRecovery(noneFallback)
+                }
+            }
+            .onFailure { throwable ->
+                Timber.e(throwable, "매칭 상태 재조회 실패")
+                sendEffect(ConsumerMatchingContract.Effect.Pending.ShowToast("매칭 상태를 불러오지 못했어요."))
+            }
+    }
+
+    private suspend fun handleNoneRecovery(fallback: RecoveryNoneFallback) {
+        consumerMatchingRepository.disconnect()
+        val effect = when (fallback) {
+            RecoveryNoneFallback.HOME -> ConsumerMatchingContract.Effect.Pending.NavigateToHome
+            RecoveryNoneFallback.FAILURE -> ConsumerMatchingContract.Effect.Pending.NavigateToFailure
+        }
+        sendEffect(effect)
+    }
+
+    private fun handleActiveMatching(active: ConsumerMatchingActive.Active) {
+        updateState { mergeFrom(active) }
+
+        when (active.matchingStatus) {
+            STATUS_WAITING_FOR_CONFIRMATION, STATUS_WAITING_FOR_OTHER_CONFIRMATIONS ->
+                sendEffect(ConsumerMatchingContract.Effect.Pending.NavigateToResult)
+
+            STATUS_PAYMENT_PENDING, STATUS_WAITING_FOR_OTHER_PAYMENTS ->
+                sendEffect(ConsumerMatchingContract.Effect.Pending.NavigateToPayment(active.matchingRequestId))
+
+            else -> Unit
+        }
+    }
+
+    private fun ConsumerMatchingContract.State.mergeFrom(
+        active: ConsumerMatchingActive.Active,
+    ): ConsumerMatchingContract.State {
+        val requestSummary = active.requestSummary
+        val lessonSummary = active.lessonSummary
+        val instructorProfile = active.instructorProfile
+        val priceSummary = active.priceSummary
+
+        return copy(
+            tags = persistentListOf(requestSummary.sport.toSport(), requestSummary.lessonLevel.toLessonLevel()),
+            location = requestSummary.resort.displayName,
+            duration = lessonSummary?.durationMinutes?.toDurationText() ?: duration,
+            price = priceSummary?.totalPaymentAmount ?: price,
+            name = instructorProfile?.name ?: name,
+            age = instructorProfile?.birthYear?.toAge() ?: age,
+            gender = instructorProfile?.gender?.toGenderText() ?: gender,
+            level = instructorProfile?.level?.let { "grade$it" } ?: level,
+            career = instructorProfile?.careerYears?.let { "${it}년" } ?: career,
+            lessonCount = instructorProfile?.completedLessonCount?.let { "${it}회" } ?: lessonCount,
+            rating = instructorProfile?.averageRating?.let { "%.1f".format(it) } ?: rating,
+            introduction = instructorProfile?.introduction ?: introduction,
+            certifications = instructorProfile?.certificateTypes?.toPersistentList() ?: certifications,
+            estimatedFee = priceSummary?.totalPaymentAmount ?: estimatedFee,
+            lessonDuration = lessonSummary?.durationMinutes?.toDurationText() ?: lessonDuration,
+        )
+    }
+
+    private fun String.toSport(): String = when (this) {
+        "SKI" -> "스키"
+        "SNOWBOARD" -> "스노보드"
+        else -> this
+    }
+
+    private fun String.toLessonLevel() = when (this) {
+        "FIRST_TIME" -> "처음 타요"
+        "BEGINNER" -> "1~5회 타봤어요"
+        "INTERMEDIATE" -> "중급자에요"
+        "CERTIFIED" -> "자격증이 있어요"
+        else -> this
+    }
+
+    private fun Int.toAge(): Int = Year.now().value - this
+
+    private fun Int.toDurationText(): String =
+        when {
+            this < 60 -> "${this}분"
+            this % 60 == 0 -> "${this / 60}시간"
+            else -> "${this / 60}시간 ${this % 60}분"
+        }
+
+    private fun String.toGenderText(): String = when (this) {
+        "MALE" -> "남"
+        "FEMALE" -> "여"
+        else -> this
     }
 
     // pending
@@ -193,6 +279,8 @@ internal class ConsumerMatchingViewModel @Inject constructor(
     fun navigateToHome() =
         sendEffect(ConsumerMatchingContract.Effect.Failure.NavigateToHome)
 
+    private enum class RecoveryNoneFallback { HOME, FAILURE }
+
     private companion object {
         const val ACCEPTED_DECISION = "ACCEPTED"
         const val REJECTED_DECISION = "REJECTED"
@@ -200,5 +288,10 @@ internal class ConsumerMatchingViewModel @Inject constructor(
         const val ACCEPT_FAILURE_FALLBACK_MSG = "강사 수락에 실패했어요."
         const val REJECT_FAILURE_FALLBACK_MSG = "강사 거절에 실패했어요."
         const val IN_DEVELOPMENT_MSG = "준비 중인 기능이에요."
+
+        const val STATUS_WAITING_FOR_CONFIRMATION = "WAITING_FOR_CONFIRMATION"
+        const val STATUS_WAITING_FOR_OTHER_CONFIRMATIONS = "WAITING_FOR_OTHER_CONFIRMATIONS"
+        const val STATUS_PAYMENT_PENDING = "PAYMENT_PENDING"
+        const val STATUS_WAITING_FOR_OTHER_PAYMENTS = "WAITING_FOR_OTHER_PAYMENTS"
     }
 }
