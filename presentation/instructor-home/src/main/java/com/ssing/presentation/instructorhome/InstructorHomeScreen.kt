@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -86,7 +85,6 @@ private fun InstructorHomeScreen(
     modifier: Modifier = Modifier,
 ) {
     Scaffold(
-        modifier = modifier,
         topBar = {
             SsingHomeTopBar(
                 logo = {
@@ -139,7 +137,7 @@ private fun InstructorHomeScreen(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
             ) {
                 StartMatchingButton(
-                    badgeText = "${state.matchingCount}명 매칭중",
+                    badgeText = "${state.matchingPeopleCount}명 매칭중",
                     title = "씽 매칭",
                     description = "준비된 강습생과\n바로 연결하기",
                     iconRes = R.drawable.img_fast_dark,
@@ -194,7 +192,7 @@ private fun InstructorHomeScreenPreview() {
         InstructorHomeScreen(
             state = InstructorHomeContract.State(
                 nickname = "김씽씽",
-                matchingCount = 99,
+                matchingPeopleCount = 99,
                 lessonCards = persistentListOf(
                     Reservation(
                         lessonId = 1,
@@ -236,7 +234,7 @@ private fun InstructorHomeScreen2Preview() {
         InstructorHomeScreen(
             state = InstructorHomeContract.State(
                 nickname = "김씽씽",
-                matchingCount = 99,
+                matchingPeopleCount = 99,
                 lessonCards = persistentListOf(Empty),
                 averageRating = 3.0f,
                 grade = Grade.GRADE4,
