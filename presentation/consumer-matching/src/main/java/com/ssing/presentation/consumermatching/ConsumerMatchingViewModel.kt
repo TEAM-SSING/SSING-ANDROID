@@ -276,8 +276,12 @@ internal class ConsumerMatchingViewModel @Inject constructor(
         sendEffect(ConsumerMatchingContract.Effect.Result.ShowToast(IN_DEVELOPMENT_MSG))
 
     // failure
-    fun navigateToHome() =
+    fun navigateToHome() = launchExclusive {
+        consumerMatchingRepository.cancelMatching(matchingRequestId)
+            .onFailure { Timber.w(it, "실패 화면에서 매칭 중지 요청 실패 - 이미 종료된 매칭일 수 있음") }
+        consumerMatchingRepository.disconnect()
         sendEffect(ConsumerMatchingContract.Effect.Failure.NavigateToHome)
+    }
 
     private enum class RecoveryNoneFallback { HOME, FAILURE }
 
