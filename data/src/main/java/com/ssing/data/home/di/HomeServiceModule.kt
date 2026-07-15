@@ -15,7 +15,7 @@ internal class HomeServiceModule {
 
     @Provides
     @Singleton
-    fun provideConsumerService(
+    fun provideHomeService(
         @Auth retrofit: Retrofit,
     ): HomeService = retrofit.create(HomeService::class.java)
 }

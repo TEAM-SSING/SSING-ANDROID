@@ -42,7 +42,7 @@ import java.time.LocalDateTime
 
 @Composable
 internal fun ConsumerHomeRoute(
-    navigateToLessonDetail: (Long) -> Unit,
+    navigateToLessonDetail: (Long?) -> Unit,
     contentPadding : PaddingValues,
     navigateToMatching: () -> Unit,
     navigateToActiveMatching: (Long) -> Unit,

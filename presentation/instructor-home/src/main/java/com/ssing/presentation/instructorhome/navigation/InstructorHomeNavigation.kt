@@ -13,13 +13,15 @@ data object InstructorHome : MainTabRoute
 fun NavGraphBuilder.instructorHomeNavGraph(
     paddingValues: PaddingValues,
     navigateToMatching: () -> Unit,
-    navigateToLessonDetail: (Long) -> Unit,
+    navigateToLessonDetail: (Long?) -> Unit,
+    navigateToMatchingWaiting: () -> Unit,
 ) {
     composable<InstructorHome> {
         InstructorHomeRoute(
             contentPadding = paddingValues,
             navigateToMatching = navigateToMatching,
             navigateToLessonDetail = navigateToLessonDetail,
+            navigateToMatchingWaiting = navigateToMatchingWaiting,
         )
     }
 }

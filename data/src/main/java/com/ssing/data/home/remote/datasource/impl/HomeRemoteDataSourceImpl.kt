@@ -3,6 +3,7 @@ package com.ssing.data.home.remote.datasource.impl
 import com.ssing.core.network.model.BaseResponse
 import com.ssing.data.home.remote.datasource.api.HomeRemoteDataSource
 import com.ssing.data.home.remote.dto.response.ConsumerHomeResponse
+import com.ssing.data.home.remote.dto.response.InstructorHomeResponse
 import com.ssing.data.home.remote.service.HomeService
 import javax.inject.Inject
 
@@ -12,4 +13,8 @@ internal class HomeRemoteDataSourceImpl @Inject constructor(
 
     override suspend fun getConsumerHome():
             BaseResponse<ConsumerHomeResponse> = service.getConsumerHome()
+
+
+    override suspend fun getInstructorHome():
+            BaseResponse<InstructorHomeResponse> = service.getInstructorHome()
 }

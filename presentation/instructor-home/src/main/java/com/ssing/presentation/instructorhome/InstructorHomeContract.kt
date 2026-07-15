@@ -11,30 +11,35 @@ internal interface InstructorHomeContract {
 
     @Immutable
     data class State(
-        val lessonId: Long = 0,
-        val nickname: String = "",
-        val matchingCount: Int = 0,
+        val isLoading: Boolean = false,
         val lessonCards: ImmutableList<HomeLessonCardState> = persistentListOf(),
+        val hasUnreadNotification: Boolean = false,
+        val instructorName: String = "",
+        val matchingPeopleCount: Long = 0,
         val averageRating: Float = 0f,
         val grade: Grade = Grade.GRADE1,
         val achievementRate: Int = 0,
-        val isLoading: Boolean = false,
     )
 
     sealed interface Effect {
         data class ShowToast(val message: String) : Effect
         data object NavigateToMatching : Effect
-        data class NavigateToLessonDetail(val lessonId: Long) : Effect
+        data class NavigateToLessonDetail(
+            val lessonId: Long? = null,
+            val offerId: Long? = null,
+        ) : Effect
+
+        data object NavigateToMatchingWaiting : Effect
     }
 }
 
-enum class Grade (
+enum class Grade(
     val label: String,
     @get:DrawableRes val icon: Int
 ) {
     GRADE1(
         label = "Grade1",
-        icon =  R.drawable.img_grade1_badge
+        icon = R.drawable.img_grade1_badge
     ),
     GRADE2(
         label = "Grade2",

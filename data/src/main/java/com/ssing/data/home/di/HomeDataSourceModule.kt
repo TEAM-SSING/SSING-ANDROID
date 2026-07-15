@@ -14,7 +14,7 @@ internal abstract class HomeDataSourceModule {
 
     @Binds
     @Singleton
-    abstract fun bindConsumerHomeDataSource(
+    abstract fun bindHomeDataSource(
         impl: HomeRemoteDataSourceImpl,
     ): HomeRemoteDataSource
 }
