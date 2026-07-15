@@ -10,7 +10,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.ssing.core.ui.common.component.SsingButtonStyle
 import com.ssing.core.ui.common.component.SsingModal
 import com.ssing.core.ui.designsystem.theme.SSINGTheme
 import com.ssing.core.ui.extension.toast
@@ -32,6 +31,7 @@ import com.ssing.presentation.instructormatching.model.SportOption
 @Composable
 internal fun MatchingRoute(
     navigateBack: () -> Unit,
+    navigateToLessonDetail: (Long) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: MatchingViewModel = hiltViewModel(),
 ) {
@@ -42,6 +42,7 @@ internal fun MatchingRoute(
         when (effect) {
             is MatchingContract.Effect.ShowToast -> context.toast(effect.message)
             MatchingContract.Effect.NavigateBack -> navigateBack()
+            is MatchingContract.Effect.NavigateToLessonDetail -> navigateToLessonDetail(effect.lessonId)
         }
     }
 
@@ -58,8 +59,6 @@ internal fun MatchingRoute(
         onAcceptOfferClick = viewModel::acceptOffer,
         onRejectOfferClick = viewModel::rejectOffer,
         onStopWaitingConfirm = viewModel::confirmStopWaiting,
-        onContinueMatchingClick = viewModel::continueMatching,
-        onRetryMatchingClick = viewModel::retryMatching,
         onDialogDismiss = viewModel::dismissDialog,
         onBackClick = viewModel::onBack,
         modifier = modifier,
@@ -80,8 +79,6 @@ private fun MatchingScreen(
     onAcceptOfferClick: () -> Unit,
     onRejectOfferClick: () -> Unit,
     onStopWaitingConfirm: () -> Unit,
-    onContinueMatchingClick: () -> Unit,
-    onRetryMatchingClick: () -> Unit,
     onDialogDismiss: () -> Unit,
     onBackClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -127,8 +124,6 @@ private fun MatchingScreen(
         MatchingDialogHost(
             dialog = dialog,
             onStopWaitingConfirm = onStopWaitingConfirm,
-            onContinueMatchingClick = onContinueMatchingClick,
-            onRetryMatchingClick = onRetryMatchingClick,
             onDialogDismiss = onDialogDismiss,
         )
     }
@@ -138,8 +133,6 @@ private fun MatchingScreen(
 private fun MatchingDialogHost(
     dialog: MatchingDialog,
     onStopWaitingConfirm: () -> Unit,
-    onContinueMatchingClick: () -> Unit,
-    onRetryMatchingClick: () -> Unit,
     onDialogDismiss: () -> Unit,
 ) {
     when (dialog) {
@@ -151,27 +144,6 @@ private fun MatchingDialogHost(
             onPrimary = onStopWaitingConfirm,
             secondaryText = "계속 대기",
             onSecondary = onDialogDismiss,
-        )
-
-        MatchingDialog.ConsumerRejected -> SsingModal(
-            onDismissRequest = onDialogDismiss,
-            title = "강습생이 매칭을 거절했어요",
-            text = "이전에 설정한 조건을 유지한 채\n씽 매칭을 계속 할까요?",
-            primaryText = "계속하기",
-            onPrimary = onContinueMatchingClick,
-            secondaryText = "그만두기",
-            onSecondary = onStopWaitingConfirm,
-        )
-
-        MatchingDialog.MatchingFailed -> SsingModal(
-            onDismissRequest = onDialogDismiss,
-            title = "매칭이 실패했어요",
-            text = "연결 상태를 확인한 후 다시 시도해주세요",
-            primaryText = "계속하기",
-            onPrimary = onRetryMatchingClick,
-            secondaryText = "그만하기",
-            onSecondary = onDialogDismiss,
-            secondaryStyle = SsingButtonStyle.GRAY,
         )
     }
 }
@@ -194,7 +166,7 @@ private val previewOffer = MatchingOfferUiModel(
     expiresAtMillis = null,
     nickname = "홍지민",
     teamCount = 4,
-    classDateTime = "7월 8일 오후 12:30",
+    classDateTime = "강습생과 만난 직후 강습 시작",
     participants = listOf(
         ParticipantUiModel(age = 28, isMale = true),
         ParticipantUiModel(age = 25, isMale = false),
@@ -205,7 +177,7 @@ private val previewOffer = MatchingOfferUiModel(
     lesson = LessonSummaryUiModel(
         resortLabel = "하이원 리조트",
         sportLabel = "스키",
-        levelLabel = "처음 타요",
+        levelLabel = "처음타요",
         headcount = 4,
         durationHours = 3,
     ),
@@ -214,7 +186,7 @@ private val previewOffer = MatchingOfferUiModel(
 private val previewWaiting = MatchingWaitingUiState(
     nickname = "홍지민",
     teamCount = 2,
-    classDateTime = "7월 8일 오후 12:30",
+    classDateTime = "강습생과 만난 직후 강습 시작",
     participants = listOf(
         ParticipantUiModel(age = 28, isMale = true),
         ParticipantUiModel(age = 25, isMale = false),
@@ -245,8 +217,6 @@ private fun MatchingFlowExposurePreview() {
             onAcceptOfferClick = { (state.phase as? MatchingPhase.OfferArrived)?.let { state = state.copy(phase = MatchingPhase.PendingConfirm(it.offer)) } },
             onRejectOfferClick = { state = state.copy(phase = MatchingPhase.Waiting) },
             onStopWaitingConfirm = { state = state.copy(dialog = null, phase = MatchingPhase.SettingExposure) },
-            onContinueMatchingClick = { state = state.copy(dialog = null, phase = MatchingPhase.Waiting) },
-            onRetryMatchingClick = { state = state.copy(dialog = null) },
             onDialogDismiss = { state = state.copy(dialog = null) },
             onBackClick = {},
         )
@@ -278,8 +248,6 @@ private fun MatchingFlowOfferPreview() {
             onAcceptOfferClick = { (state.phase as? MatchingPhase.OfferArrived)?.let { state = state.copy(phase = MatchingPhase.PendingConfirm(it.offer)) } },
             onRejectOfferClick = { state = state.copy(phase = MatchingPhase.Waiting, waiting = previewWaiting) },
             onStopWaitingConfirm = { state = state.copy(dialog = null, phase = MatchingPhase.SettingExposure) },
-            onContinueMatchingClick = { state = state.copy(dialog = null, phase = MatchingPhase.Waiting) },
-            onRetryMatchingClick = { state = state.copy(dialog = null) },
             onDialogDismiss = { state = state.copy(dialog = null) },
             onBackClick = {},
         )

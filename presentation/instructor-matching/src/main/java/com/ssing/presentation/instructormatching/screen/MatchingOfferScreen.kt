@@ -103,7 +103,7 @@ private fun MatchingOfferScreenPreview() {
                 expiresAtMillis = null,
                 nickname = "홍지민",
                 teamCount = 4,
-                classDateTime = "7월 8일 수요일 오후 12:30",
+                classDateTime = "강습생과 만난 직후 강습 시작",
                 participants = listOf(
                     ParticipantUiModel(age = 11, isMale = true),
                     ParticipantUiModel(age = 11, isMale = true),

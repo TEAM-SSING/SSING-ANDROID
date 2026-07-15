@@ -154,7 +154,6 @@ internal fun ConsumerMatchingPendingScreen(
                 stepLabel = "현재 매칭 조건",
                 stepLabelColor = SSINGTheme.colors.textAlternative,
                 tags = state.tags,
-                title = state.detailCardTitle,
                 location = state.location,
                 duration = state.duration,
                 price = state.price,
