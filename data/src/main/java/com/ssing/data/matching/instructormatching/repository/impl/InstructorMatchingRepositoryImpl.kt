@@ -6,13 +6,16 @@ import com.ssing.data.matching.common.remote.datasource.api.MatchingSocketDataSo
 import com.ssing.data.matching.instructormatching.model.InstructorMatchingExposure
 import com.ssing.data.matching.instructormatching.model.InstructorMatchingLessonSummary
 import com.ssing.data.matching.instructormatching.model.InstructorMatchingOffer
+import com.ssing.data.matching.instructormatching.model.InstructorMatchingOfferDecision
 import com.ssing.data.matching.instructormatching.model.InstructorMatchingPriceSummary
 import com.ssing.data.matching.instructormatching.model.InstructorMatchingRequestSummary
 import com.ssing.data.matching.instructormatching.model.InstructorMatchingResort
 import com.ssing.data.matching.instructormatching.model.InstructorMatchingSocketEvent
 import com.ssing.data.matching.instructormatching.remote.datasource.api.InstructorMatchingRemoteDataSource
 import com.ssing.data.matching.instructormatching.remote.dto.request.InstructorMatchingExposureStartRequest
+import com.ssing.data.matching.instructormatching.remote.dto.request.InstructorMatchingOfferDecisionRequest
 import com.ssing.data.matching.instructormatching.remote.dto.response.InstructorMatchingExposureResponse
+import com.ssing.data.matching.instructormatching.remote.dto.response.InstructorMatchingOfferDecisionResponse
 import com.ssing.data.matching.instructormatching.remote.dto.response.InstructorMatchingOfferResponse
 import com.ssing.data.matching.instructormatching.repository.api.InstructorMatchingRepository
 import kotlinx.coroutines.flow.Flow
@@ -64,6 +67,31 @@ internal class InstructorMatchingRepositoryImpl @Inject constructor(
                 ),
             )
         }.map { it.isExposed }
+
+    override suspend fun cancelMatchingExposure(): Result<Boolean> =
+        apiResponseHandler.safeApiCall {
+            remoteDataSource.postMatchingExposureCancellation()
+        }.map { it.isExposed }
+
+    override suspend fun respondMatchingOffer(
+        offerId: Long,
+        decision: String,
+    ): Result<InstructorMatchingOfferDecision> =
+        apiResponseHandler.safeApiCall {
+            remoteDataSource.patchMatchingOffer(
+                offerId = offerId,
+                request = InstructorMatchingOfferDecisionRequest(decision = decision),
+            )
+        }.map { it.toModel() }
+
+    private fun InstructorMatchingOfferDecisionResponse.toModel(): InstructorMatchingOfferDecision =
+        InstructorMatchingOfferDecision(
+            offerId = this.offerId,
+            offerStatus = this.offerStatus,
+            groupId = this.groupId,
+            groupStatus = this.groupStatus,
+            requesterConfirmationExpiresAt = this.requesterConfirmationExpiresAt,
+        )
 
     private fun MatchingEnvelope<JsonElement>.toSocketEvent(): InstructorMatchingSocketEvent =
         InstructorMatchingSocketEvent(
