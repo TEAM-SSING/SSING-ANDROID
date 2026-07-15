@@ -14,13 +14,7 @@ internal abstract class HomeRepositoryModule {
 
     @Binds
     @Singleton
-    abstract fun bindConsumerRepository(
-        impl: HomeRepositoryImpl,
-    ): HomeRepository
-
-    @Binds
-    @Singleton
-    abstract fun bindInstructorRepository(
+    abstract fun bindHomeRepository(
         impl: HomeRepositoryImpl,
     ): HomeRepository
 }
