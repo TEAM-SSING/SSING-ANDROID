@@ -132,7 +132,7 @@ internal class LessonDetailViewModel @Inject constructor(
             )
         }
         viewModelScope.launch {
-            lessonRepository.lessonStart(before.lessonId)
+            lessonRepository.lessonStart(lessonId)
                 .onFailure {
                     updateState {
                         copy(
@@ -193,7 +193,6 @@ internal class LessonDetailViewModel @Inject constructor(
         when (this) {
             is InstructorLessonDetailBefore -> LessonDetailContract.LessonDetailPhase.LessonDetailBefore(
                 before = LessonDetailBeforeUiModel(
-                    lessonId = lessonId,
                     isInstructorReady = instructorConfirmed,
                     participantReadyCount = confirmedCount,
                     participantTotalCount = requiredCount,
@@ -208,7 +207,6 @@ internal class LessonDetailViewModel @Inject constructor(
 
             is InstructorLessonDetailOngoing -> LessonDetailContract.LessonDetailPhase.LessonDetailOngoing(
                 ongoing = LessonDetailOngoingUiModel(
-                    lessonId = lessonId,
                     tags = listOf(sport, lessonLevel).toPersistentList(),
                     classTitle = representativeConsumerNames.joinToString(),
                     remainingTime = remainingSeconds.toTimeText(),
@@ -225,7 +223,6 @@ internal class LessonDetailViewModel @Inject constructor(
                 val endedAt = runCatching { LocalDateTime.parse(actualEndedAt) }.getOrNull()
                 LessonDetailContract.LessonDetailPhase.LessonDetailCompleted(
                     completed = LessonDetailCompletedUiModel(
-                        lessonId = lessonId,
                         tags = listOf(sport, lessonLevel).toPersistentList(),
                         classTitle = representativeConsumerNames.joinToString(),
                         lessonDate = startedAt?.ssingDateFormatter() ?: "",
@@ -240,7 +237,6 @@ internal class LessonDetailViewModel @Inject constructor(
 
             is InstructorLessonDetailCanceled -> LessonDetailContract.LessonDetailPhase.LessonDetailCanceled(
                 cancel = LessonDetailCanceledUiModel(
-                    lessonId = lessonId,
                     tags = listOf(sport, lessonLevel).toPersistentList(),
                     classTitle = representativeConsumerNames.joinToString(),
                     location = resortDisplayName,

@@ -7,7 +7,6 @@ import kotlinx.collections.immutable.toPersistentList
 
 @Immutable
 internal data class LessonDetailBeforeUiModel(
-    val lessonId: Long,
     val teams: ImmutableList<TeamParticipantsInfo>,
     val tags: ImmutableList<String>,
     val isInstructorReady: Boolean = false,
@@ -24,7 +23,6 @@ internal data class LessonDetailBeforeUiModel(
 
 @Immutable
 internal data class LessonDetailOngoingUiModel(
-    val lessonId: Long,
     val teams: ImmutableList<TeamParticipantsInfo>,
     val tags: ImmutableList<String>,
     val isContinue: Boolean = false,
@@ -41,7 +39,6 @@ internal data class LessonDetailOngoingUiModel(
 
 @Immutable
 internal data class LessonDetailCompletedUiModel(
-    val lessonId: Long,
     val teams: ImmutableList<TeamParticipantsInfo>,
     val tags: ImmutableList<String>,
     val classTitle: String = "",
@@ -54,7 +51,6 @@ internal data class LessonDetailCompletedUiModel(
 
 @Immutable
 internal data class LessonDetailCanceledUiModel(
-    val lessonId: Long,
     val teams: ImmutableList<TeamParticipantsInfo>,
     val tags: ImmutableList<String>,
     val classTitle: String = "",
