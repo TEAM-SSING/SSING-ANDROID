@@ -2,12 +2,15 @@ package com.ssing.presentation.consumerhome
 
 import androidx.lifecycle.viewModelScope
 import com.ssing.core.network.exception.ApiException
+import com.ssing.core.ui.R
 import com.ssing.core.ui.base.BaseViewModel
+import com.ssing.core.ui.common.component.Empty
 import com.ssing.core.ui.common.component.HomeLessonCardState
-import com.ssing.core.ui.common.component.HomeLessonCardState.Reservation.Status
 import com.ssing.core.ui.extension.uiMessage
 import com.ssing.data.home.model.LessonCard
 import com.ssing.data.home.repository.api.HomeRepository
+import com.ssing.core.ui.common.component.Reservation
+import com.ssing.core.ui.common.component.Reservation.Status
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
@@ -62,7 +65,7 @@ internal class ConsumerHomeViewModel @Inject constructor(
     }
 
     private fun List<LessonCard>.toUiState(): ImmutableList<HomeLessonCardState> {
-        if (isEmpty()) return persistentListOf(HomeLessonCardState.Empty)
+        if (isEmpty()) return persistentListOf(Empty)
         return mapNotNull { card ->
             runCatching {
                 card.toReservation()
@@ -72,15 +75,22 @@ internal class ConsumerHomeViewModel @Inject constructor(
         }.toImmutableList()
     }
 
-    private fun LessonCard.toReservation(): HomeLessonCardState.Reservation =
-        HomeLessonCardState.Reservation(
+    private fun LessonCard.toReservation(): Reservation =
+        Reservation(
             lessonId = lessonId,
             chip = toChipText(),
             displayText = title,
             location = resort.displayName,
             date = runCatching { OffsetDateTime.parse(scheduledAt).toLocalDateTime() }.getOrNull(),
+            imageRes = toImageRes(),
             status = toCardStatus(),
         )
+
+    private fun LessonCard.toImageRes(): Int = when (sport) {
+        "SKI" -> R.drawable.img_ski_86
+        "SNOWBOARD "-> R.drawable.img_snowboard_86
+        else -> R.drawable.img_ski_86
+    }
 
     private fun LessonCard.toChipText(): String = when {
         displayStatus == IN_PROGRESS -> "진행중"
@@ -103,7 +113,7 @@ internal class ConsumerHomeViewModel @Inject constructor(
     }
 
     fun onLessonClick(
-        lesson: HomeLessonCardState.Reservation,
+        lesson: Reservation,
     ) {
         sendEffect(ConsumerHomeContract.Effect.NavigateToLessonDetail(lessonId = lesson.lessonId))
     }
