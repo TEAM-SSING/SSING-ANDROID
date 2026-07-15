@@ -141,23 +141,61 @@ internal class MatchingViewModel @Inject constructor(
     }
 
     fun confirmStopWaiting() {
-        updateState { copy(dialog = null, phase = MatchingPhase.SettingExposure) }
+        viewModelScope.launch {
+            instructorMatchingRepository.cancelMatchingExposure()
+                .onSuccess { isExposed ->
+                    Timber.d("즉시노출 중단 응답 isExposed=$isExposed")
+                    updateState { copy(dialog = null, phase = MatchingPhase.SettingExposure) }
+                }
+                .onFailure {
+                    Timber.e(it, "즉시노출 중단 실패")
+                    if (it is ApiException) {
+                        sendEffect(MatchingContract.Effect.ShowToast(it.uiMessage))
+                    }
+                    updateState { copy(dialog = null) }
+                }
+        }
     }
 
     fun acceptOffer() {
         val offer = currentOffer() ?: return
-        updateState {
-            copy(
-                phase = MatchingPhase.PendingConfirm(
-                    offer = offer,
-                    confirmationExpiresAtMillis = null
-                )
-            )
+        viewModelScope.launch {
+            instructorMatchingRepository.respondMatchingOffer(offer.offerId, DECISION_ACCEPTED)
+                .onSuccess { result ->
+                    Timber.d("매칭 제안 수락 응답: $result")
+                    updateState {
+                        copy(
+                            phase = MatchingPhase.PendingConfirm(
+                                offer = offer,
+                                confirmationExpiresAtMillis = null,
+                            )
+                        )
+                    }
+                }
+                .onFailure {
+                    Timber.e(it, "매칭 제안 수락 실패")
+                    if (it is ApiException) {
+                        sendEffect(MatchingContract.Effect.ShowToast(it.uiMessage))
+                    }
+                }
         }
     }
 
     fun rejectOffer() {
-        updateState { copy(phase = MatchingPhase.Waiting) }
+        val offer = currentOffer() ?: return
+        viewModelScope.launch {
+            instructorMatchingRepository.respondMatchingOffer(offer.offerId, DECISION_REJECTED)
+                .onSuccess { result ->
+                    Timber.d("매칭 제안 거절 응답: $result")
+                    updateState { copy(phase = MatchingPhase.Waiting) }
+                }
+                .onFailure {
+                    Timber.e(it, "매칭 제안 거절 실패")
+                    if (it is ApiException) {
+                        sendEffect(MatchingContract.Effect.ShowToast(it.uiMessage))
+                    }
+                }
+        }
     }
 
     fun continueMatching() = updateState {
@@ -239,5 +277,8 @@ internal class MatchingViewModel @Inject constructor(
         const val EVENT_OFFER_RECEIVED = "MATCHING_OFFER_RECEIVED"
         const val EVENT_OFFER_CLOSED = "MATCHING_OFFER_CLOSED"
         const val EVENT_MATCHING_CANCELED = "MATCHING_CANCELED"
+
+        const val DECISION_ACCEPTED = "ACCEPTED"
+        const val DECISION_REJECTED = "REJECTED"
     }
 }
