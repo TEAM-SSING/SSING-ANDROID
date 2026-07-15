@@ -40,6 +40,7 @@ internal fun LessonDetailRoute(
         onReadyDialogDismiss = viewModel::onReadyDialogDismiss,
         onChatRoomClick = viewModel::onChatRoomClick,
         onEndClick = viewModel::onEndClick,
+        onEndConfirmClick = viewModel::onEndConfirmClick,
         onLessonEndDialogDismiss = viewModel::onLessonEndDialogDismiss,
         onContinueClick = viewModel::onContinueClick,
         onCancelReasonSelect = viewModel::onCancelReasonSelect,
@@ -61,6 +62,7 @@ private fun LessonDetailScreen(
     onReadyDialogDismiss: () -> Unit,
     onReadyButtonClick: () -> Unit,
     onEndClick: () -> Unit,
+    onEndConfirmClick: () -> Unit,
     onLessonEndDialogDismiss: () -> Unit,
     onContinueClick: () -> Unit,
     onCancelReasonSelect: (CancelReason) -> Unit,
@@ -130,7 +132,7 @@ private fun LessonDetailScreen(
         showLessonEndDialog = state.showLessonEndDialog,
         onReadyClick = onReadyClick,
         onReadyDialogDismiss = onReadyDialogDismiss,
-        onEndClick = onEndClick,
+        onEndConfirmClick = onEndConfirmClick,
         onLessonEndDialogDismiss = onLessonEndDialogDismiss,
         onContinueClick = onContinueClick,
     )
@@ -142,7 +144,7 @@ private fun LessonDetailDialogHost(
     showLessonEndDialog: Boolean,
     onReadyClick: () -> Unit,
     onReadyDialogDismiss: () -> Unit,
-    onEndClick: () -> Unit,
+    onEndConfirmClick: () -> Unit,
     onLessonEndDialogDismiss: () -> Unit,
     onContinueClick: () -> Unit,
 ) {
@@ -164,7 +166,7 @@ private fun LessonDetailDialogHost(
             title = "강습을 종료할까요?",
             text = "강습을 종료하면 모든 참여자의 강습이\n종료 상태로 변경되어요",
             primaryText = "강습 종료하기",
-            onPrimary = onEndClick,
+            onPrimary = onEndConfirmClick,
             secondaryText = "계속 진행하기",
             onSecondary = onContinueClick,
         )

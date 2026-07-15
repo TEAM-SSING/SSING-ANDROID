@@ -29,7 +29,7 @@ internal interface ConsumerMatchingConditionContract {
 
     sealed interface Effect {
         data class ShowToast(val message: String) : Effect
-        data object NavigateToMatching : Effect
+        data class NavigateToMatching(val matchingRequestId: Long) : Effect
     }
 }
 

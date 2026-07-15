@@ -89,8 +89,8 @@ internal class ConsumerMatchingConditionViewModel @Inject constructor(
                 participants = uiState.value.consumers.map { it.toParticipant() },
                 equipmentReady = uiState.value.isConfirmed,
             )
-                .onSuccess {
-                    sendEffect(ConsumerMatchingConditionContract.Effect.NavigateToMatching)
+                .onSuccess { result ->
+                    sendEffect(ConsumerMatchingConditionContract.Effect.NavigateToMatching(result.matchingRequestId))
                     updateState { copy(isLoading = false) }
                 }
                 .onFailure {

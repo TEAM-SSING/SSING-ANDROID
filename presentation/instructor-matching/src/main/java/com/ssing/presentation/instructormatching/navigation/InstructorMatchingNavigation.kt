@@ -16,10 +16,12 @@ data object InstructorMatching: Route
 fun NavGraphBuilder.instructorMatchingNavGraph(
     paddingValues: PaddingValues,
     navController: NavController,
+    navigateToLessonDetail: (Long) -> Unit,
 ) {
     composable<InstructorMatching> {
         MatchingRoute(
             navigateBack = { navController.popBackStack() },
+            navigateToLessonDetail = navigateToLessonDetail,
             modifier = Modifier.padding(paddingValues),
         )
     }
