@@ -44,8 +44,11 @@ internal class MatchingViewModel @Inject constructor(
                 when (event.eventType) {
                     EVENT_OFFER_RECEIVED,
                     EVENT_OFFER_CLOSED,
-                    EVENT_MATCHING_CANCELED,
                     -> restoreActiveOffer()
+                    EVENT_MATCHING_CANCELED -> {
+                        updateState { copy(phase = MatchingPhase.Waiting) }
+                        sendEffect(MatchingContract.Effect.ShowToast(MSG_CONSUMER_REJECTED))
+                    }
                 }
             }
         }
@@ -198,14 +201,6 @@ internal class MatchingViewModel @Inject constructor(
         }
     }
 
-    fun continueMatching() = updateState {
-        copy(dialog = null, phase = MatchingPhase.Waiting)
-    }
-
-    fun retryMatching() {
-        updateState { copy(dialog = null) }
-    }
-
     fun dismissDialog() = updateState { copy(dialog = null) }
 
     fun restoreActiveOffer() {
@@ -280,5 +275,7 @@ internal class MatchingViewModel @Inject constructor(
 
         const val DECISION_ACCEPTED = "ACCEPTED"
         const val DECISION_REJECTED = "REJECTED"
+
+        const val MSG_CONSUMER_REJECTED = "강습생이 매칭을 거절했어요.\n같은 조건으로 바로 다른 강습생을 찾고있어요."
     }
 }
