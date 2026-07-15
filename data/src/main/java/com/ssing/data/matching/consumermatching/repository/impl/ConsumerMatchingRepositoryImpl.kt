@@ -1,19 +1,52 @@
 package com.ssing.data.matching.consumermatching.repository.impl
 
+import com.ssing.core.network.socket.SocketState
+import com.ssing.core.network.socket.matching.MatchingEnvelope
 import com.ssing.core.network.util.ApiResponseHandler
+import com.ssing.data.matching.common.remote.datasource.api.MatchingSocketDataSource
+import com.ssing.data.matching.consumermatching.event.ConsumerMatchingEvent
 import com.ssing.data.matching.consumermatching.model.ConsumerMatchingParticipant
 import com.ssing.data.matching.consumermatching.model.ConsumerMatchingRequestResult
 import com.ssing.data.matching.consumermatching.remote.datasource.api.ConsumerMatchingRemoteDataSource
 import com.ssing.data.matching.consumermatching.remote.dto.request.ConsumerMatchingConditionRequest
+import com.ssing.data.matching.consumermatching.remote.dto.request.ConsumerMatchingConfirmationRequest
 import com.ssing.data.matching.consumermatching.remote.dto.request.ConsumerMatchingParticipantRequest
 import com.ssing.data.matching.consumermatching.remote.dto.response.ConsumerMatchingRequestResponse
+import com.ssing.data.matching.consumermatching.remote.payload.InstructorAcceptedPayload
+import com.ssing.data.matching.consumermatching.remote.payload.MatchingCanceledPayload
+import com.ssing.data.matching.consumermatching.remote.payload.MatchingConfirmedPayload
+import com.ssing.data.matching.consumermatching.remote.payload.MatchingFailedPayload
+import com.ssing.data.matching.consumermatching.remote.payload.MatchingStatusChangedPayload
+import com.ssing.data.matching.consumermatching.remote.payload.PaymentPendingPayload
+import com.ssing.data.matching.consumermatching.remote.payload.PaymentStatusChangedPayload
+import com.ssing.data.matching.consumermatching.remote.payload.RequesterConfirmationUpdatedPayload
 import com.ssing.data.matching.consumermatching.repository.api.ConsumerMatchingRepository
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.mapNotNull
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.json.decodeFromJsonElement
+import timber.log.Timber
 import javax.inject.Inject
 
 internal class ConsumerMatchingRepositoryImpl @Inject constructor(
     private val apiResponseHandler: ApiResponseHandler,
     private val remoteDataSource: ConsumerMatchingRemoteDataSource,
+    private val socketDataSource: MatchingSocketDataSource,
+    private val json: Json,
 ) : ConsumerMatchingRepository {
+    override val event: Flow<ConsumerMatchingEvent> = socketDataSource.event
+        .filter { envelope -> envelope.recipientRole == "CONSUMER" }
+        .mapNotNull { envelope -> envelope.toConsumerMatchingEventOrNull() }
+
+    override val socketState: StateFlow<SocketState> = socketDataSource.socketState
+
+    override fun connect() = socketDataSource.connect()
+
+    override suspend fun disconnect() = socketDataSource.disconnect()
+
     override suspend fun requestMatching(
         resort: String,
         sport: String,
@@ -34,6 +67,27 @@ internal class ConsumerMatchingRepositoryImpl @Inject constructor(
         )
     }.map { it.toModel() }
 
+    override suspend fun cancelMatching(matchingRequestId: Long): Result<Unit> =
+        apiResponseHandler.safeApiCall {
+            remoteDataSource.postMatchingCancellation(matchingRequestId)
+        }.map { }
+
+    override suspend fun confirmMatching(
+        matchingRequestId: Long,
+        decision: String,
+    ): Result<Unit> =
+        apiResponseHandler.safeApiCall {
+            remoteDataSource.patchMatchingConfirmation(
+                matchingRequestId = matchingRequestId,
+                request = ConsumerMatchingConfirmationRequest(decision)
+            )
+        }.map { }
+
+    override suspend fun getMatchingActive(): Result<Long?> =
+        apiResponseHandler.safeApiCall {
+            remoteDataSource.getMatchingActive()
+        }.map { it.matchingRequestId }
+
     private fun ConsumerMatchingParticipant.toRequest(): ConsumerMatchingParticipantRequest =
         ConsumerMatchingParticipantRequest(
             age = this.age,
@@ -48,4 +102,116 @@ internal class ConsumerMatchingRepositoryImpl @Inject constructor(
             expiresAt = this.expiresAt,
             requestStatusReason = this.requestStatusReason,
         )
+
+    private fun MatchingEnvelope<JsonElement>.toConsumerMatchingEventOrNull(): ConsumerMatchingEvent? =
+        runCatching {
+            when (eventType) {
+                "MATCHING_STATUS_CHANGED" -> {
+                    val payload = json.decodeFromJsonElement<MatchingStatusChangedPayload>(payload)
+                    ConsumerMatchingEvent.MatchingStatusChangedEvent(
+                        matchingRequestId = requireNotNull(matchingRequestId),
+                        matchingStatus = requireNotNull(matchingStatus),
+                        message = payload.message,
+                        groupId = groupId,
+                        requestStatusReason = payload.requestStatusReason,
+                    )
+                }
+
+                "INSTRUCTOR_ACCEPTED" -> {
+                    val payload = json.decodeFromJsonElement<InstructorAcceptedPayload>(payload)
+                    ConsumerMatchingEvent.InstructorAcceptedEvent(
+                        matchingRequestId = requireNotNull(matchingRequestId),
+                        groupId = requireNotNull(groupId),
+                        matchingStatus = requireNotNull(matchingStatus),
+                        instructorProfileId = payload.instructor.instructorProfileId,
+                        instructorName = payload.instructor.name,
+                        instructorProfileImageUrl = payload.instructor.profileImageUrl,
+                        resortName = payload.lessonSummary.resortName,
+                        sport = payload.lessonSummary.sport,
+                        level = payload.lessonSummary.level,
+                        durationMinutes = payload.lessonSummary.durationMinutes,
+                        totalHeadcount = payload.lessonSummary.totalHeadcount,
+                        startType = payload.lessonSummary.startType,
+                    )
+                }
+
+                "REQUESTER_CONFIRMATION_UPDATED" -> {
+                    val payload =
+                        json.decodeFromJsonElement<RequesterConfirmationUpdatedPayload>(payload)
+                    ConsumerMatchingEvent.RequesterConfirmationUpdatedEvent(
+                        matchingRequestId = requireNotNull(matchingRequestId),
+                        groupId = requireNotNull(groupId),
+                        matchingStatus = requireNotNull(matchingStatus),
+                        acceptedRequesterCount = payload.progressSummary.acceptedRequesterCount,
+                        totalRequesterCount = payload.progressSummary.totalRequesterCount,
+                        paidRequesterCount = payload.progressSummary.paidRequesterCount,
+                    )
+                }
+
+                "PAYMENT_PENDING" -> {
+                    val payload = json.decodeFromJsonElement<PaymentPendingPayload>(payload)
+                    ConsumerMatchingEvent.PaymentPendingEvent(
+                        matchingRequestId = requireNotNull(matchingRequestId),
+                        groupId = requireNotNull(groupId),
+                        matchingStatus = requireNotNull(matchingStatus),
+                        matchingRequestPaymentId = payload.matchingRequestPaymentId,
+                    )
+                }
+
+                "PAYMENT_STATUS_CHANGED" -> {
+                    val payload = json.decodeFromJsonElement<PaymentStatusChangedPayload>(payload)
+                    ConsumerMatchingEvent.PaymentStatusChangedEvent(
+                        matchingRequestId = requireNotNull(matchingRequestId),
+                        groupId = requireNotNull(groupId),
+                        matchingStatus = requireNotNull(matchingStatus),
+                        acceptedRequesterCount = payload.progressSummary.acceptedRequesterCount,
+                        totalRequesterCount = payload.progressSummary.totalRequesterCount,
+                        paidRequesterCount = payload.progressSummary.paidRequesterCount,
+                    )
+                }
+
+                "MATCHING_CONFIRMED" -> {
+                    val payload = json.decodeFromJsonElement<MatchingConfirmedPayload>(payload)
+                    ConsumerMatchingEvent.MatchingConfirmedEvent(
+                        matchingRequestId = requireNotNull(matchingRequestId),
+                        groupId = requireNotNull(groupId),
+                        matchingStatus = requireNotNull(matchingStatus),
+                        lessonId = payload.lessonId,
+                        resortName = payload.lessonSummary.resortName,
+                        sport = payload.lessonSummary.sport,
+                        level = payload.lessonSummary.level,
+                        durationMinutes = payload.lessonSummary.durationMinutes,
+                        totalHeadcount = payload.lessonSummary.totalHeadcount,
+                        startType = payload.lessonSummary.startType,
+                    )
+                }
+
+                "MATCHING_FAILED" -> {
+                    val payload = json.decodeFromJsonElement<MatchingFailedPayload>(payload)
+                    ConsumerMatchingEvent.MatchingFailedEvent(
+                        matchingRequestId = requireNotNull(matchingRequestId),
+                        matchingStatus = requireNotNull(matchingStatus),
+                        requestStatusReason = payload.requestStatusReason,
+                        message = payload.message,
+                        groupId = groupId,
+                    )
+                }
+
+                "MATCHING_CANCELED" -> {
+                    val payload = json.decodeFromJsonElement<MatchingCanceledPayload>(payload)
+                    ConsumerMatchingEvent.MatchingCanceledEvent(
+                        matchingRequestId = requireNotNull(matchingRequestId),
+                        matchingStatus = requireNotNull(matchingStatus),
+                        requestStatusReason = payload.requestStatusReason,
+                        message = payload.message,
+                    )
+                }
+
+                else -> {
+                    Timber.w("알 수 없는 소비자 매칭 소켓 이벤트: $eventType")
+                    null
+                }
+            }
+        }.onFailure { Timber.e(it, "소비자 매칭 소켓 이벤트 디코딩 실패 (eventType=$eventType)") }
+            .getOrNull()
 }

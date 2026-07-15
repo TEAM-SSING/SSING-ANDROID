@@ -9,7 +9,8 @@ internal data class LessonResponse(
     @SerialName("lessonStatus") val lessonStatus: String,
     @SerialName("statusInfo") val statusInfo: StatusInfo? = null,
     @SerialName("startedAt") val startedAt: String? = null,
-) {
+    @SerialName("completedAt") val completedAt: String? = null,
+    ) {
     @Serializable
     data class StatusInfo(
         @SerialName("confirmedCount") val confirmedCount: Int,

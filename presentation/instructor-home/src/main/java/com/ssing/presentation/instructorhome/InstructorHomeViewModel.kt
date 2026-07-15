@@ -1,7 +1,7 @@
 package com.ssing.presentation.instructorhome
 
 import com.ssing.core.ui.base.BaseViewModel
-import com.ssing.core.ui.common.component.HomeLessonCardState
+import com.ssing.core.ui.common.component.Reservation
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
@@ -16,7 +16,7 @@ internal class InstructorHomeViewModel @Inject constructor() :
     }
 
     fun onLessonClick(
-        lesson: HomeLessonCardState.Reservation,
+        lesson: Reservation,
     ) {
         sendEffect(InstructorHomeContract.Effect.NavigateToLessonDetail(lessonId = lesson.lessonId))
     }
