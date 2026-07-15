@@ -13,8 +13,10 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Scaffold
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.ContextCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.Lifecycle
@@ -24,6 +26,9 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.ssing.core.ui.common.component.SsingBottomBar
 import com.ssing.core.network.session.AuthSessionManager
 import com.ssing.core.ui.designsystem.theme.SSINGTheme
+import com.ssing.core.ui.extension.clearBackStackNavOptions
+import com.ssing.core.ui.extension.toast
+import com.ssing.presentation.consumermatching.navigation.ConsumerMatchingGraph
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.launch
@@ -61,6 +66,18 @@ class ConsumerMainActivity : ComponentActivity() {
                     val appState = rememberConsumerMainAppState()
                     val isBottomBarVisible by appState.isBottomBarVisible.collectAsStateWithLifecycle()
                     val currentTab by appState.currentTab.collectAsStateWithLifecycle()
+                    val matchingRecoveryTarget by viewModel.matchingRecoveryTarget.collectAsStateWithLifecycle()
+                    val context = LocalContext.current
+
+                    LaunchedEffect(matchingRecoveryTarget) {
+                        matchingRecoveryTarget?.let { matchingRequestId ->
+                            context.toast("진행 중인 강습이 있어요.")
+                            appState.navController.navigate(
+                                route = ConsumerMatchingGraph(matchingRequestId, isRecoveredEntry = true),
+                                navOptions = appState.navController.clearBackStackNavOptions(),
+                            )
+                        }
+                    }
 
                     Scaffold(
                         modifier = Modifier.fillMaxSize(),

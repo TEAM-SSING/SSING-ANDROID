@@ -43,7 +43,7 @@ import kotlinx.collections.immutable.persistentListOf
 
 @Composable
 internal fun PaymentRoute(
-    navigateToLesson: () -> Unit,
+    navigateToLesson: (Long) -> Unit,
     navigateToHome: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: PaymentViewModel = hiltViewModel(),
@@ -53,7 +53,7 @@ internal fun PaymentRoute(
 
     HandleUiEffects(viewModel.uiEffect) { effect ->
         when (effect) {
-            PaymentContract.Effect.NavigateToLesson -> navigateToLesson()
+            is PaymentContract.Effect.NavigateToLesson -> navigateToLesson(effect.lessonId)
             PaymentContract.Effect.NavigateToHome -> navigateToHome()
             is PaymentContract.Effect.ShowToast -> context.toast(effect.message)
         }
@@ -79,7 +79,7 @@ internal fun PaymentRoute(
 
     PaymentScreen(
         state = state,
-        onPaymentClick = viewModel::navigateToLesson,
+        onPaymentClick = viewModel::onPaymentClick,
         onBackClick = viewModel::showCancelModal,
         modifier = modifier,
     )
@@ -111,6 +111,7 @@ internal fun PaymentScreen(
                 text = "결제하기",
                 onClick = onPaymentClick,
                 style = SsingButtonStyle.BLUE,
+                enabled = !state.isLoading,
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(color = White)
@@ -231,7 +232,7 @@ private fun PayInfoSection(
                 )
 
                 Text(
-                    text = "%,d원".format(state.lessonCost + state.resortCost),
+                    text = "%,d원".format(state.totalPaymentAmount),
                     style = SSINGTheme.typography.title.b16,
                     color = SSINGTheme.colors.primaryNormal,
                 )
@@ -259,6 +260,7 @@ private fun PaymentScreenPreview() {
                 equipmentStatus = "착용 완료",
                 lessonCost = 60000,
                 resortCost = 20000,
+                totalPaymentAmount = 80000,
             ),
             onPaymentClick = {},
             onBackClick = {},

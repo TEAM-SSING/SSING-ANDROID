@@ -3,6 +3,7 @@ package com.ssing.instructor
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ssing.core.network.token.TokenAccessManager
+import com.ssing.core.notification.NotificationTokenProvider
 import com.ssing.core.ui.navigation.Route
 import com.ssing.data.matching.instructormatching.repository.api.InstructorMatchingRepository
 import com.ssing.presentation.auth.instructor.navigation.InstructorLogin
@@ -22,6 +23,7 @@ import javax.inject.Inject
 class InstructorMainViewModel @Inject constructor(
     private val tokenAccessManager: TokenAccessManager,
     private val instructorMatchingRepository: InstructorMatchingRepository,
+    private val notificationTokenProvider: NotificationTokenProvider,
 ) : ViewModel() {
 
     private val _startDestination = MutableStateFlow<Route?>(null)
@@ -32,10 +34,19 @@ class InstructorMainViewModel @Inject constructor(
             val destination = when {
                 START_AT_DEV_AUTH -> DevAuth
                 tokenAccessManager.getAccessToken().isNullOrBlank() -> InstructorLogin
-                else -> resolveLoggedInDestination()
+                else -> {
+                    registerFcmToken()
+                    resolveLoggedInDestination()
+                }
             }
             _startDestination.update { destination }
             Timber.d("startDestination : $destination")
+        }
+    }
+
+    private fun registerFcmToken() {
+        viewModelScope.launch {
+            notificationTokenProvider.registerCurrentToken()
         }
     }
 

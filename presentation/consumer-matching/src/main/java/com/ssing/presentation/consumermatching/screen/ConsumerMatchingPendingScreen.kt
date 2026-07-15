@@ -18,8 +18,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewParameter
-import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -45,8 +43,10 @@ import kotlinx.collections.immutable.persistentListOf
 internal fun ConsumerMatchingPendingRoute(
     popBackStack: () -> Unit,
     navigateToResult: () -> Unit,
+    navigateToPayment: (Long) -> Unit,
     navigateToFailure: () -> Unit,
     navigateToHome: () -> Unit,
+    navigateToConditionFromRecovery: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: ConsumerMatchingViewModel = hiltViewModel(),
 ) {
@@ -57,9 +57,14 @@ internal fun ConsumerMatchingPendingRoute(
         if (effect is ConsumerMatchingContract.Effect.Pending) {
             when (effect) {
                 ConsumerMatchingContract.Effect.Pending.NavigateToResult -> navigateToResult()
+                is ConsumerMatchingContract.Effect.Pending.NavigateToPayment -> navigateToPayment(
+                    effect.matchingRequestId
+                )
+
                 ConsumerMatchingContract.Effect.Pending.NavigateToFailure -> navigateToFailure()
                 ConsumerMatchingContract.Effect.Pending.NavigateToHome -> navigateToHome()
                 ConsumerMatchingContract.Effect.Pending.PopBackStack -> popBackStack()
+                ConsumerMatchingContract.Effect.Pending.NavigateToConditionFromRecovery -> navigateToConditionFromRecovery()
                 is ConsumerMatchingContract.Effect.Pending.ShowToast -> context.toast(effect.message)
             }
         }
@@ -71,7 +76,7 @@ internal fun ConsumerMatchingPendingRoute(
         state = state,
         onEditClick = viewModel::editCondition,
         onStopClick = viewModel::stopPending,
-        navigateToResult  = viewModel::navigateToResult,
+        navigateToResult = viewModel::navigateToResult,
         navigateToFailure = viewModel::navigateToFailure,
         modifier = modifier,
     )
@@ -132,18 +137,13 @@ internal fun ConsumerMatchingPendingScreen(
             SsingHeader(
                 title = "조건에 맞는 강사님을 찾고있어요",
                 subText = "요청 조건에 맞는 강사님을 확인하고 있어요",
-                // TODO: 소켓 연결 후 수정 / 플로우 확인용 임시 콜백
-                modifier = Modifier
-                    .clickable(onClick = navigateToFailure)
-                    .padding(vertical = 16.dp),
+                modifier = Modifier.padding(vertical = 16.dp),
             )
 
-            // TODO: 소켓 연결 후 수정 / 플로우 확인용 임시 콜백
             LottieAnimation(
                 composition = composition,
                 progress = { progress },
                 modifier = Modifier
-                    .clickable(onClick = navigateToResult)
                     .padding(all = 16.dp)
                     .fillMaxWidth()
                     .widthIn(max = 328.dp),
@@ -164,22 +164,13 @@ internal fun ConsumerMatchingPendingScreen(
     }
 }
 
-private class ConsumerMatchingPendingScreenPreviewProvider : PreviewParameterProvider<Int> {
-    override val values: Sequence<Int>
-        get() = sequenceOf(1, 5)
-}
-
 @Preview
 @Composable
-private fun ConsumerMatchingPendingScreenPreview(
-    @PreviewParameter(ConsumerMatchingPendingScreenPreviewProvider::class) teamCount: Int,
-) {
+private fun ConsumerMatchingPendingScreenPreview() {
     SSINGTheme {
         ConsumerMatchingPendingScreen(
             state = ConsumerMatchingContract.State(
                 tags = persistentListOf("스노보드", "처음타요"),
-                nickname = "홍지민",
-                teamCount = teamCount,
                 location = "OOO 리조트",
                 duration = "2시간",
                 price = 87500

@@ -8,7 +8,6 @@ import androidx.navigation.navOptions
  * 백스택을 완전히 초기화하고 루트(0)로 이동하는 NavOptions를 생성합니다.
  *
  * 상태 저장 및 복원을 수행하지 않으므로, 화면 이동 시 이전 상태가 초기화됩니다.
- *
  * 사용 사례:
  * - 로그아웃 후 로그인 화면으로 이동 (이전 사용자 상태 초기화 필요)
  * - 특정 플로우 완료 후 완전히 새로운 화면으로 시작
@@ -17,7 +16,7 @@ import androidx.navigation.navOptions
  */
 fun NavController.clearBackStackNavOptions() =
     navOptions {
-        popUpTo(graph.findStartDestination().id) {
+        popUpTo(graph.id) {
             inclusive = true
         }
         launchSingleTop = true
