@@ -1,17 +1,17 @@
 package com.ssing.core.notification.data.repository.impl
 
 import com.ssing.core.network.util.ApiResponseHandler
-import com.ssing.core.notification.data.remote.datasource.NotificationDataSource
+import com.ssing.core.notification.data.remote.datasource.FcmTokenDataSource
 import com.ssing.core.notification.data.remote.dto.FcmTokenRegisterRequest
 import com.ssing.core.notification.data.remote.dto.FcmTokenUnregisterRequest
-import com.ssing.core.notification.data.repository.api.NotificationService
+import com.ssing.core.notification.data.repository.api.FcmTokenService
 import javax.inject.Inject
 
 
-class NotificationDataSourceImpl @Inject constructor(
-    private val api: NotificationService,
+class FcmTokenDataSourceImpl @Inject constructor(
+    private val api: FcmTokenService,
     private val apiResponseHandler: ApiResponseHandler,
-) : NotificationDataSource {
+) : FcmTokenDataSource {
 
     override suspend fun registerFcmToken(request: FcmTokenRegisterRequest): Result<Unit> =
         apiResponseHandler.safeUnitApiCall { api.registerFcmToken(request) }

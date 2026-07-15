@@ -5,17 +5,17 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import androidx.core.app.NotificationCompat
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
-import com.ssing.core.notification.data.repository.NotificationRepository
+import com.ssing.core.notification.data.repository.FcmTokenRepository
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import timber.log.Timber
 import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
@@ -40,7 +40,7 @@ class PushNotificationService : FirebaseMessagingService() {
     lateinit var notificationTokenProvider: NotificationTokenProvider
 
     @Inject
-    lateinit var notificationRepository: NotificationRepository
+    lateinit var notificationRepository: FcmTokenRepository
 
     private val serviceScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
@@ -51,7 +51,7 @@ class PushNotificationService : FirebaseMessagingService() {
 
     override fun onNewToken(token: String) {
         super.onNewToken(token)
-        runBlocking {
+        serviceScope.launch {
             notificationRepository.registerFcmToken(token)
                 .onFailure { Timber.e(it, "FCM 토큰 저장 실패") }
         }
@@ -59,22 +59,21 @@ class PushNotificationService : FirebaseMessagingService() {
 
     override fun onMessageReceived(message: RemoteMessage) {
         super.onMessageReceived(message)
+        Timber.d("FCM 수신: data=${message.data}, notification=${message.notification?.title}")
 
         createChannels(this)
-        val title = message.data["title"] ?: return
-        val body = message.data["body"] ?: return
-        showNotification(title, body)
+        val title = message.data["title"] ?: message.notification?.title ?: return
+        val body = message.data["body"] ?: message.notification?.body ?: return
+        val deepLink = message.data["deepLink"]
+        val offerId = message.data["offerId"]
+        showNotification(title, body, deepLink, offerId)
     }
 
-    private fun showNotification(title: String, body: String) {
+    private fun showNotification(title: String, body: String, deepLink: String?, offerId: String?) {
         val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
 
-        val launchIntent = packageManager.getLaunchIntentForPackage(packageName)?.apply {
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
-        }
-
         val id = System.currentTimeMillis().toInt()
-        val pendingIntent = launchIntent?.let {
+        val pendingIntent = buildClickIntent(deepLink, offerId)?.let {
             PendingIntent.getActivity(
                 this,
                 id,
@@ -91,6 +90,26 @@ class PushNotificationService : FirebaseMessagingService() {
             .build()
 
         notificationManager.notify(id, notification)
+    }
+
+    private fun buildClickIntent(deepLink: String?, offerId: String?): Intent? {
+        if (deepLink.isNullOrBlank()) {
+            return packageManager.getLaunchIntentForPackage(packageName)?.apply {
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+            }
+        }
+
+        val launchComponent =
+            packageManager.getLaunchIntentForPackage(packageName)?.component ?: return null
+
+        val uri = if (offerId.isNullOrBlank()) deepLink else "$deepLink?offerId=$offerId"
+
+        return Intent(Intent.ACTION_VIEW, Uri.parse(uri)).apply {
+            component = launchComponent
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or
+                Intent.FLAG_ACTIVITY_CLEAR_TOP or
+                Intent.FLAG_ACTIVITY_SINGLE_TOP
+        }
     }
 
     companion object {

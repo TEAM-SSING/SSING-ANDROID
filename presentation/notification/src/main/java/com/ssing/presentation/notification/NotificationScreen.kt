@@ -8,9 +8,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -55,6 +58,7 @@ internal fun NotificationRoute(
         state = state,
         onBackClick = navigateBack,
         onAlarmClick = viewModel::onAlarmClick,
+        onLoadMore = viewModel::loadMore,
         modifier = modifier,
     )
 }
@@ -64,6 +68,7 @@ private fun NotificationScreen(
     state: NotificationContract.State,
     onBackClick: () -> Unit,
     onAlarmClick: (AlarmUiModel) -> Unit,
+    onLoadMore: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -79,13 +84,26 @@ private fun NotificationScreen(
         if (state.isEmpty) {
             NotificationEmptyContent(modifier = Modifier.weight(1f))
         } else {
-            LazyColumn {
+            val listState = rememberLazyListState()
+
+            // 마지막 항목이 보이면 다음 페이지를 요청한다. (중복 호출은 ViewModel에서 가드)
+            LaunchedEffect(listState, state.alarms.size) {
+                snapshotFlow {
+                    listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: 0
+                }.collect { lastVisibleIndex ->
+                    if (state.alarms.isNotEmpty() && lastVisibleIndex >= state.alarms.size - 1) {
+                        onLoadMore()
+                    }
+                }
+            }
+
+            LazyColumn(state = listState) {
                 items(
                     items = state.alarms,
                     key = { alarm -> alarm.id },
                 ) { alarm ->
                     NotificationAlarmCard(
-                        category = alarm.type.label,
+                        category = alarm.title,
                         content = alarm.content,
                         date = alarm.date,
                         isRead = alarm.isRead,
@@ -142,6 +160,7 @@ private class NotificationStatePreviewProvider :
                     AlarmUiModel(
                         id = 1L,
                         type = AlarmType.LESSON_ARRIVAL,
+                        title = "씽 매칭 강습 도착",
                         content = "새로운 강습이 도착했어요. 강습생 정보를 확인하고 강습을 수락해보세요.",
                         date = "07.08 (화) 09:15",
                         isRead = false,
@@ -149,6 +168,7 @@ private class NotificationStatePreviewProvider :
                     AlarmUiModel(
                         id = 2L,
                         type = AlarmType.LESSON_CONFIRMED,
+                        title = "강습 확정",
                         content = "강습이 확정되었어요. 강습 시작 전 준비를 완료해보세요.",
                         date = "07.07 (월) 18:30",
                         isRead = false,
@@ -156,6 +176,7 @@ private class NotificationStatePreviewProvider :
                     AlarmUiModel(
                         id = 3L,
                         type = AlarmType.LESSON_REJECTED,
+                        title = "강습 거절",
                         content = "강습생이 강습을 거절했어요. 다른 강습생을 기다려보세요.",
                         date = "07.06 (일) 14:00",
                         isRead = true,
@@ -163,6 +184,7 @@ private class NotificationStatePreviewProvider :
                     AlarmUiModel(
                         id = 4L,
                         type = AlarmType.LESSON_ARRIVAL,
+                        title = "씽 매칭 강습 도착",
                         content = "새로운 강습이 도착했어요. 강습생 정보를 확인하고 강습을 수락해보세요.",
                         date = "07.04 (금) 12:59",
                         isRead = true,
@@ -184,6 +206,7 @@ private fun NotificationScreenPreview(
             state = state,
             onBackClick = {},
             onAlarmClick = {},
+            onLoadMore = {},
         )
     }
 }

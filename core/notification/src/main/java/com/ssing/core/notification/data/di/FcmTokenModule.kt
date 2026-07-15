@@ -2,11 +2,11 @@ package com.ssing.core.notification.data.di
 
 import android.content.Context
 import com.ssing.core.notification.ClientApp
-import com.ssing.core.notification.data.remote.datasource.NotificationDataSource
-import com.ssing.core.notification.data.repository.NotificationRepository
-import com.ssing.core.notification.data.repository.api.NotificationService
-import com.ssing.core.notification.data.repository.impl.NotificationDataSourceImpl
-import com.ssing.core.notification.data.repository.impl.NotificationRepositoryImpl
+import com.ssing.core.notification.data.remote.datasource.FcmTokenDataSource
+import com.ssing.core.notification.data.repository.FcmTokenRepository
+import com.ssing.core.notification.data.repository.api.FcmTokenService
+import com.ssing.core.notification.data.repository.impl.FcmTokenDataSourceImpl
+import com.ssing.core.notification.data.repository.impl.FcmTokenRepositoryImpl
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -20,25 +20,25 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-abstract class NotificationModule {
+abstract class FcmTokenModule {
 
     @Binds
     @Singleton
     abstract fun bindNotificationDataSource(
-        impl: NotificationDataSourceImpl
-    ): NotificationDataSource
+        impl: FcmTokenDataSourceImpl
+    ): FcmTokenDataSource
 
     @Binds
     @Singleton
     abstract fun bindNotificationRepository(
-        impl: NotificationRepositoryImpl
-    ): NotificationRepository
+        impl: FcmTokenRepositoryImpl
+    ): FcmTokenRepository
 
     companion object {
         @Provides
         @Singleton
-        fun provideNotificationApi(@Auth retrofit: Retrofit): NotificationService =
-            retrofit.create(NotificationService::class.java)
+        fun provideNotificationApi(@Auth retrofit: Retrofit): FcmTokenService =
+            retrofit.create(FcmTokenService::class.java)
 
         @Provides
         @Singleton

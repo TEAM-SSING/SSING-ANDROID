@@ -1,7 +1,7 @@
 package com.ssing.core.notification
 
 import com.google.firebase.messaging.FirebaseMessaging
-import com.ssing.core.notification.data.repository.NotificationRepository
+import com.ssing.core.notification.data.repository.FcmTokenRepository
 import kotlinx.coroutines.suspendCancellableCoroutine
 import timber.log.Timber
 import javax.inject.Inject
@@ -17,7 +17,7 @@ import kotlin.coroutines.resume
  */
 @Singleton
 class NotificationTokenProvider @Inject constructor(
-    private val notificationRepository: NotificationRepository,
+    private val notificationRepository: FcmTokenRepository,
 ) {
 
     suspend fun registerCurrentToken() {

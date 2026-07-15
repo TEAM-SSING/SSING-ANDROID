@@ -1,6 +1,8 @@
 package com.ssing.presentation.instructormatching
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.toRoute
 import com.ssing.core.network.di.ApplicationScope
 import com.ssing.core.network.exception.ApiException
 import com.ssing.core.network.socket.SocketState
@@ -12,6 +14,7 @@ import com.ssing.data.matching.instructormatching.model.InstructorMatchingSettin
 import com.ssing.data.matching.instructormatching.repository.api.InstructorMatchingRepository
 import com.ssing.presentation.instructormatching.MatchingContract.MatchingDialog
 import com.ssing.presentation.instructormatching.MatchingContract.MatchingPhase
+import com.ssing.presentation.instructormatching.navigation.InstructorMatching
 import com.ssing.presentation.instructormatching.model.DurationOption
 import com.ssing.presentation.instructormatching.model.LessonSummaryUiModel
 import com.ssing.presentation.instructormatching.model.LevelOption
@@ -33,6 +36,7 @@ import javax.inject.Inject
 internal class MatchingViewModel @Inject constructor(
     private val instructorMatchingRepository: InstructorMatchingRepository,
     @param:ApplicationScope private val applicationScope: CoroutineScope,
+    savedStateHandle: SavedStateHandle,
 ) :
     BaseViewModel<MatchingContract.State, MatchingContract.Effect>(
         MatchingContract.State()
@@ -40,7 +44,14 @@ internal class MatchingViewModel @Inject constructor(
 
     init {
         loadMatchingExposure()
-        restoreActiveOffer()
+        // FCM '새 강습 도착' 딥링크로 진입하면 offerId가 담겨온다.
+        // offerId가 있으면 그 제안 상세를, 없으면(거절/일반 진입) 활성 제안을 조회한다.
+        val offerId = savedStateHandle.toRoute<InstructorMatching>().offerId
+        if (offerId != null) {
+            restoreOfferDetail(offerId)
+        } else {
+            restoreActiveOffer()
+        }
         instructorMatchingRepository.connectSocket()
 
         instructorMatchingRepository.event

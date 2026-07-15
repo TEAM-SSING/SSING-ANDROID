@@ -19,6 +19,7 @@ import com.ssing.presentation.instructorlessondetail.navigation.instructorLesson
 import com.ssing.presentation.instructormatching.navigation.InstructorMatching
 import com.ssing.presentation.instructormatching.navigation.instructorMatchingNavGraph
 import com.ssing.presentation.instructorprofile.navigation.instructorProfileNavGraph
+import com.ssing.presentation.notification.navigation.navigateToNotification
 import com.ssing.presentation.notification.navigation.notificationNavGraph
 
 @Composable
@@ -54,7 +55,7 @@ internal fun InstructorMainNavHost(
             paddingValues = paddingValues,
             navigateToMatching = {
                 navController.navigate(
-                    route = InstructorMatching,
+                    route = InstructorMatching(),
                 )
             },
             navigateToLessonDetail = { lessonId ->
@@ -66,6 +67,9 @@ internal fun InstructorMainNavHost(
                 navController.navigate(
                     route = InstructorMatching
                 )
+            },
+            navigateToNotification = {
+                navController.navigateToNotification()
             }
         )
         notificationNavGraph(

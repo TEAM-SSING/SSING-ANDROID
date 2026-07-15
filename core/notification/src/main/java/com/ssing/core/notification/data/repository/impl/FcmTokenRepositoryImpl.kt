@@ -2,19 +2,19 @@ package com.ssing.core.notification.data.repository.impl
 
 import com.ssing.core.network.token.TokenAccessManager
 import com.ssing.core.notification.ClientApp
-import com.ssing.core.notification.data.remote.datasource.NotificationDataSource
+import com.ssing.core.notification.data.remote.datasource.FcmTokenDataSource
 import com.ssing.core.notification.data.remote.dto.FcmTokenRegisterRequest
 import com.ssing.core.notification.data.remote.dto.FcmTokenUnregisterRequest
-import com.ssing.core.notification.data.repository.NotificationRepository
+import com.ssing.core.notification.data.repository.FcmTokenRepository
 import timber.log.Timber
 import javax.inject.Inject
 
 
-class NotificationRepositoryImpl @Inject constructor(
-    private val dataSource: NotificationDataSource,
+class FcmTokenRepositoryImpl @Inject constructor(
+    private val dataSource: FcmTokenDataSource,
     private val tokenAccessManager: TokenAccessManager,
     private val clientApp: ClientApp,
-) : NotificationRepository {
+) : FcmTokenRepository {
 
     override suspend fun registerFcmToken(token: String): Result<Unit> {
         val accessToken = tokenAccessManager.getAccessToken()

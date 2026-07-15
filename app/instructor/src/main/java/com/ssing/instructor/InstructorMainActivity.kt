@@ -13,6 +13,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Scaffold
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.core.content.ContextCompat
@@ -26,6 +27,8 @@ import com.ssing.core.ui.common.component.SsingBottomBar
 import com.ssing.core.ui.designsystem.theme.SSINGTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.collections.immutable.toImmutableList
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -36,6 +39,7 @@ class InstructorMainActivity : ComponentActivity() {
     @Inject
     lateinit var authSessionManager: AuthSessionManager
 
+    private val deepLinkIntent = Channel<Intent>(Channel.BUFFERED)
     private val requestNotificationPermissionLauncher =
         registerForActivityResult(
             ActivityResultContracts.RequestPermission()
@@ -62,6 +66,12 @@ class InstructorMainActivity : ComponentActivity() {
                     val isBottomBarVisible by appState.isBottomBarVisible.collectAsStateWithLifecycle()
                     val currentTab by appState.currentTab.collectAsStateWithLifecycle()
 
+                    LaunchedEffect(appState) {
+                        deepLinkIntent.receiveAsFlow().collect { intent ->
+                            appState.navController.handleDeepLink(intent)
+                        }
+                    }
+
                     Scaffold(
                         modifier = Modifier.fillMaxSize(),
                         bottomBar = {
@@ -82,6 +92,12 @@ class InstructorMainActivity : ComponentActivity() {
                 }
             }
         }
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+        deepLinkIntent.trySend(intent)
     }
 
     private fun requestNotificationPermission() {

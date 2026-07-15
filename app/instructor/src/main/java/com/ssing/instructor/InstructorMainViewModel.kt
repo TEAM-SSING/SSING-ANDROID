@@ -59,7 +59,7 @@ class InstructorMainViewModel @Inject constructor(
             .fold(
                 onSuccess = { active ->
                     if (active.offerId != null || active.setting.isExposed) {
-                        InstructorMatching
+                        InstructorMatching()
                     } else {
                         InstructorHome
                     }

@@ -13,6 +13,7 @@ data object InstructorHome : MainTabRoute
 fun NavGraphBuilder.instructorHomeNavGraph(
     paddingValues: PaddingValues,
     navigateToMatching: () -> Unit,
+    navigateToNotification: () -> Unit,
     navigateToLessonDetail: (Long?) -> Unit,
     navigateToMatchingWaiting: () -> Unit,
 ) {
@@ -22,6 +23,7 @@ fun NavGraphBuilder.instructorHomeNavGraph(
             navigateToMatching = navigateToMatching,
             navigateToLessonDetail = navigateToLessonDetail,
             navigateToMatchingWaiting = navigateToMatchingWaiting,
+            navigateToNotification = navigateToNotification,
         )
     }
 }
