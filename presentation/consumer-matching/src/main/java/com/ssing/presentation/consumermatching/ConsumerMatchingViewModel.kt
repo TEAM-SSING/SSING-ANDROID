@@ -219,9 +219,9 @@ internal class ConsumerMatchingViewModel @Inject constructor(
 
     // pending
     fun editCondition() = launchExclusive {
+        consumerMatchingRepository.disconnect()
         consumerMatchingRepository.cancelMatching(matchingRequestId)
             .onSuccess {
-                consumerMatchingRepository.disconnect()
                 val effect = if (isRecoveredEntry) {
                     ConsumerMatchingContract.Effect.Pending.NavigateToConditionFromRecovery
                 } else {
@@ -230,18 +230,20 @@ internal class ConsumerMatchingViewModel @Inject constructor(
                 sendEffect(effect)
             }
             .onFailure {
+                consumerMatchingRepository.connect()
                 val message = if (it is ApiException) it.uiMessage else CANCEL_FAILURE_FALLBACK_MSG
                 sendEffect(ConsumerMatchingContract.Effect.Pending.ShowToast(message))
             }
     }
 
     fun stopPending() = launchExclusive {
+        consumerMatchingRepository.disconnect()
         consumerMatchingRepository.cancelMatching(matchingRequestId)
             .onSuccess {
-                consumerMatchingRepository.disconnect()
                 sendEffect(ConsumerMatchingContract.Effect.Pending.NavigateToHome)
             }
             .onFailure {
+                consumerMatchingRepository.connect()
                 val message = if (it is ApiException) it.uiMessage else CANCEL_FAILURE_FALLBACK_MSG
                 sendEffect(ConsumerMatchingContract.Effect.Pending.ShowToast(message))
             }
