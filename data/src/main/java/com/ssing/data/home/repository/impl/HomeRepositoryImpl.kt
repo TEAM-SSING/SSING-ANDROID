@@ -40,6 +40,7 @@ internal class HomeRepositoryImpl @Inject constructor(
         lessonCards = this.lessonCards.map { it.toModel() },
         matchingPeopleCount = this.matchingPeopleCount,
         hasUnreadNotification = this.hasUnreadNotification,
+        nickname = this.nickname,
         reviewSummary = this.reviewSummary.toModel(),
     )
 

@@ -1,5 +1,6 @@
 package com.ssing.data.home.remote.dto.response
 
+import kotlinx.serialization.SerialInfo
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -16,6 +17,7 @@ internal data class InstructorHomeResponse(
     @SerialName("matchingPeopleCount") val matchingPeopleCount: Long,
     @SerialName("hasUnreadNotification") val hasUnreadNotification: Boolean,
     @SerialName("reviewSummary") val reviewSummary: ReviewSummaryResponse,
+    @SerialName("nickname") val nickname: String,
 )
 
 @Serializable

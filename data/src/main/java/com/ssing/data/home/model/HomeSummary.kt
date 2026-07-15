@@ -11,6 +11,7 @@ data class InstructorHomeSummary(
     val matchingPeopleCount: Long,
     val hasUnreadNotification: Boolean,
     val reviewSummary: ReviewSummary,
+    val nickname: String,
 )
 
 data class LessonCard(
