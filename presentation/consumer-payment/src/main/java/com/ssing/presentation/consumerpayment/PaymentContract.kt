@@ -22,6 +22,7 @@ internal interface PaymentContract {
         val equipmentStatus: String = "",
         val lessonCost: Int = 0,
         val resortCost: Int = 0,
+        val totalPaymentAmount: Int = 0,
     )
 
     sealed interface Effect {

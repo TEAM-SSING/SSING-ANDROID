@@ -231,7 +231,7 @@ private fun PayInfoSection(
                 )
 
                 Text(
-                    text = "%,d원".format(state.lessonCost + state.resortCost),
+                    text = "%,d원".format(state.totalPaymentAmount),
                     style = SSINGTheme.typography.title.b16,
                     color = SSINGTheme.colors.primaryNormal,
                 )
@@ -260,6 +260,7 @@ private fun PaymentScreenPreview() {
                 equipmentStatus = "착용 완료",
                 lessonCost = 60000,
                 resortCost = 20000,
+                totalPaymentAmount = 80000,
             ),
             onPaymentClick = {},
             onBackClick = {},
