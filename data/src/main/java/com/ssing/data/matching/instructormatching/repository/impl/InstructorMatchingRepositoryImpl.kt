@@ -1,39 +1,54 @@
 package com.ssing.data.matching.instructormatching.repository.impl
 
+import com.ssing.core.network.socket.SocketState
 import com.ssing.core.network.socket.matching.MatchingEnvelope
 import com.ssing.core.network.util.ApiResponseHandler
 import com.ssing.data.matching.common.remote.datasource.api.MatchingSocketDataSource
+import com.ssing.data.matching.instructormatching.event.InstructorMatchingEvent
 import com.ssing.data.matching.instructormatching.model.InstructorMatchingExposure
 import com.ssing.data.matching.instructormatching.model.InstructorMatchingLessonSummary
 import com.ssing.data.matching.instructormatching.model.InstructorMatchingOffer
+import com.ssing.data.matching.instructormatching.model.InstructorMatchingOfferDecision
 import com.ssing.data.matching.instructormatching.model.InstructorMatchingOfferDetail
 import com.ssing.data.matching.instructormatching.model.InstructorMatchingParticipant
 import com.ssing.data.matching.instructormatching.model.InstructorMatchingPriceSummary
 import com.ssing.data.matching.instructormatching.model.InstructorMatchingRequestSummary
 import com.ssing.data.matching.instructormatching.model.InstructorMatchingResort
-import com.ssing.data.matching.instructormatching.model.InstructorMatchingSocketEvent
 import com.ssing.data.matching.instructormatching.remote.datasource.api.InstructorMatchingRemoteDataSource
 import com.ssing.data.matching.instructormatching.remote.dto.request.InstructorMatchingExposureStartRequest
+import com.ssing.data.matching.instructormatching.remote.dto.request.InstructorMatchingOfferDecisionRequest
 import com.ssing.data.matching.instructormatching.remote.dto.response.InstructorMatchingExposureResponse
+import com.ssing.data.matching.instructormatching.remote.dto.response.InstructorMatchingOfferDecisionResponse
 import com.ssing.data.matching.instructormatching.remote.dto.response.InstructorMatchingOfferDetailResponse
 import com.ssing.data.matching.instructormatching.remote.dto.response.InstructorMatchingOfferResponse
+import com.ssing.data.matching.instructormatching.remote.payload.MatchingCanceledPayload
+import com.ssing.data.matching.instructormatching.remote.payload.MatchingConfirmedPayload
+import com.ssing.data.matching.instructormatching.remote.payload.MatchingOfferClosedPayload
+import com.ssing.data.matching.instructormatching.remote.payload.MatchingOfferReceivedPayload
 import com.ssing.data.matching.instructormatching.repository.api.InstructorMatchingRepository
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.filter
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.mapNotNull
+import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.json.decodeFromJsonElement
+import timber.log.Timber
 import javax.inject.Inject
 
 internal class InstructorMatchingRepositoryImpl @Inject constructor(
     private val apiResponseHandler: ApiResponseHandler,
     private val remoteDataSource: InstructorMatchingRemoteDataSource,
     private val socketDataSource: MatchingSocketDataSource,
+    private val json: Json,
 ) : InstructorMatchingRepository {
 
-    override val socketEvents: Flow<InstructorMatchingSocketEvent> =
+    override val event: Flow<InstructorMatchingEvent> =
         socketDataSource.event
             .filter { it.recipientRole == RECIPIENT_INSTRUCTOR }
-            .map { it.toSocketEvent() }
+            .mapNotNull { it.toInstructorMatchingEventOrNull() }
+
+    override val socketState: StateFlow<SocketState> = socketDataSource.socketState
 
     override fun connectSocket() = socketDataSource.connect()
 
@@ -72,12 +87,92 @@ internal class InstructorMatchingRepositoryImpl @Inject constructor(
                 ),
             )
         }.map { it.isExposed }
+    private fun MatchingEnvelope<JsonElement>.toInstructorMatchingEventOrNull(): InstructorMatchingEvent? =
+        runCatching {
+            when (eventType) {
+                "MATCHING_OFFER_RECEIVED" -> {
+                    val payload = json.decodeFromJsonElement<MatchingOfferReceivedPayload>(payload)
+                    InstructorMatchingEvent.OfferReceivedEvent(
+                        offerId = requireNotNull(offerId),
+                        groupId = requireNotNull(groupId),
+                        requesterName = payload.requestSummary.requesterName,
+                        headcount = payload.requestSummary.headcount,
+                        matchingRequestCount = payload.requestSummary.matchingRequestCount,
+                        resortName = payload.lessonSummary.resortName,
+                        sport = payload.lessonSummary.sport,
+                        level = payload.lessonSummary.level,
+                        durationMinutes = payload.lessonSummary.durationMinutes,
+                        totalHeadcount = payload.lessonSummary.totalHeadcount,
+                        startType = payload.lessonSummary.startType,
+                    )
+                }
 
-    private fun MatchingEnvelope<JsonElement>.toSocketEvent(): InstructorMatchingSocketEvent =
-        InstructorMatchingSocketEvent(
-            eventType = this.eventType,
+                "MATCHING_OFFER_CLOSED" -> {
+                    val payload = json.decodeFromJsonElement<MatchingOfferClosedPayload>(payload)
+                    InstructorMatchingEvent.OfferClosedEvent(
+                        offerId = requireNotNull(offerId),
+                        groupId = requireNotNull(groupId),
+                        closedReason = payload.closedReason,
+                        message = payload.message,
+                    )
+                }
+
+                "MATCHING_CONFIRMED" -> {
+                    val payload = json.decodeFromJsonElement<MatchingConfirmedPayload>(payload)
+                    InstructorMatchingEvent.MatchingConfirmedEvent(
+                        offerId = requireNotNull(offerId),
+                        groupId = requireNotNull(groupId),
+                        lessonId = payload.lessonId,
+                        resortName = payload.lessonSummary.resortName,
+                        sport = payload.lessonSummary.sport,
+                        level = payload.lessonSummary.level,
+                        durationMinutes = payload.lessonSummary.durationMinutes,
+                        totalHeadcount = payload.lessonSummary.totalHeadcount,
+                        startType = payload.lessonSummary.startType,
+                    )
+                }
+
+                "MATCHING_CANCELED" -> {
+                    val payload = json.decodeFromJsonElement<MatchingCanceledPayload>(payload)
+                    InstructorMatchingEvent.MatchingCanceledEvent(
+                        offerId = requireNotNull(offerId),
+                        groupId = requireNotNull(groupId),
+                        requestStatusReason = payload.requestStatusReason,
+                        message = payload.message,
+                    )
+                }
+
+                else -> {
+                    Timber.w("알 수 없는 강사 매칭 소켓 이벤트: $eventType")
+                    null
+                }
+            }
+        }.onFailure { Timber.e(it, "강사 매칭 소켓 이벤트 디코딩 실패 (eventType=$eventType)") }
+            .getOrNull()
+
+    override suspend fun cancelMatchingExposure(): Result<Boolean> =
+        apiResponseHandler.safeApiCall {
+            remoteDataSource.postMatchingExposureCancellation()
+        }.map { it.isExposed }
+
+    override suspend fun respondMatchingOffer(
+        offerId: Long,
+        decision: String,
+    ): Result<InstructorMatchingOfferDecision> =
+        apiResponseHandler.safeApiCall {
+            remoteDataSource.patchMatchingOffer(
+                offerId = offerId,
+                request = InstructorMatchingOfferDecisionRequest(decision = decision),
+            )
+        }.map { it.toModel() }
+
+    private fun InstructorMatchingOfferDecisionResponse.toModel(): InstructorMatchingOfferDecision =
+        InstructorMatchingOfferDecision(
             offerId = this.offerId,
+            offerStatus = this.offerStatus,
             groupId = this.groupId,
+            groupStatus = this.groupStatus,
+            requesterConfirmationExpiresAt = this.requesterConfirmationExpiresAt,
         )
 
     private fun InstructorMatchingExposureResponse.toModel(): InstructorMatchingExposure =

@@ -3,8 +3,10 @@ package com.ssing.presentation.instructormatching
 import androidx.lifecycle.viewModelScope
 import com.ssing.core.network.di.ApplicationScope
 import com.ssing.core.network.exception.ApiException
+import com.ssing.core.network.socket.SocketState
 import com.ssing.core.ui.base.BaseViewModel
 import com.ssing.core.ui.extension.uiMessage
+import com.ssing.data.matching.instructormatching.event.InstructorMatchingEvent
 import com.ssing.data.matching.instructormatching.model.InstructorMatchingOffer
 import com.ssing.data.matching.instructormatching.model.InstructorMatchingOfferDetail
 import com.ssing.data.matching.instructormatching.repository.api.InstructorMatchingRepository
@@ -19,6 +21,8 @@ import com.ssing.presentation.instructormatching.model.ParticipantUiModel
 import com.ssing.presentation.instructormatching.model.SportOption
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
@@ -35,23 +39,52 @@ internal class MatchingViewModel @Inject constructor(
     init {
         loadMatchingExposure()
         instructorMatchingRepository.connectSocket()
-        observeSocketEvents()
+
+        instructorMatchingRepository.event
+            .onEach { handleMatchingEvent(it) }
+            .launchIn(viewModelScope)
+
+        instructorMatchingRepository.socketState
+            .onEach { handleSocketState(it) }
+            .launchIn(viewModelScope)
     }
 
-    private fun observeSocketEvents() {
-        viewModelScope.launch {
-            instructorMatchingRepository.socketEvents.collect { event ->
-                Timber.d("matching 소켓 이벤트: ${event.eventType}")
-                when (event.eventType) {
-                    EVENT_OFFER_RECEIVED,
-                    EVENT_OFFER_CLOSED,
-                    EVENT_MATCHING_CANCELED,
-                        -> {
-                        val offerId = event.offerId
-                        if (offerId != null) restoreOfferDetail(offerId) else restoreActiveOffer()
-                    }
+    private fun handleMatchingEvent(event: InstructorMatchingEvent) {
+        Timber.d("matching 소켓 이벤트: ${event::class.simpleName}")
+        when (event) {
+            is InstructorMatchingEvent.OfferReceivedEvent -> restoreOfferDetail(event.offerId)
+            is InstructorMatchingEvent.OfferClosedEvent -> restoreOfferDetail(event.offerId)
+
+            is InstructorMatchingEvent.MatchingCanceledEvent -> {
+                updateState { copy(phase = MatchingPhase.Waiting) }
+                sendEffect(MatchingContract.Effect.ShowToast(MSG_CONSUMER_REJECTED))
+            }
+
+            is InstructorMatchingEvent.MatchingConfirmedEvent -> onMatchingConfirmed(event.lessonId)
+        }
+    }
+
+    private var socketErrorToastShown = false
+
+    private fun handleSocketState(state: SocketState) {
+        when (state) {
+            is SocketState.Error, SocketState.Forbidden -> {
+                if (!socketErrorToastShown) {
+                    socketErrorToastShown = true
+                    sendEffect(MatchingContract.Effect.ShowToast("연결에 문제가 발생했어요."))
                 }
             }
+            SocketState.Connected -> socketErrorToastShown = false
+            SocketState.Connecting, SocketState.Disconnected -> Unit
+        }
+    }
+
+    private fun onMatchingConfirmed(lessonId: Long) = viewModelScope.launch {
+        Timber.d("매칭 확정 수신 → 강습 상세 이동 (lessonId=$lessonId)")
+        try {
+            instructorMatchingRepository.disconnectSocket()
+        } finally {
+            sendEffect(MatchingContract.Effect.NavigateToLessonDetail(lessonId))
         }
     }
 
@@ -145,31 +178,61 @@ internal class MatchingViewModel @Inject constructor(
     }
 
     fun confirmStopWaiting() {
-        updateState { copy(dialog = null, phase = MatchingPhase.SettingExposure) }
+        viewModelScope.launch {
+            instructorMatchingRepository.cancelMatchingExposure()
+                .onSuccess { isExposed ->
+                    Timber.d("즉시노출 중단 응답 isExposed=$isExposed")
+                    updateState { copy(dialog = null, phase = MatchingPhase.SettingExposure) }
+                }
+                .onFailure {
+                    Timber.e(it, "즉시노출 중단 실패")
+                    if (it is ApiException) {
+                        sendEffect(MatchingContract.Effect.ShowToast(it.uiMessage))
+                    }
+                    updateState { copy(dialog = null) }
+                }
+        }
     }
 
     fun acceptOffer() {
         val offer = currentOffer() ?: return
-        updateState {
-            copy(
-                phase = MatchingPhase.PendingConfirm(
-                    offer = offer,
-                    confirmationExpiresAtMillis = null
-                )
-            )
+        viewModelScope.launch {
+            instructorMatchingRepository.respondMatchingOffer(offer.offerId, DECISION_ACCEPTED)
+                .onSuccess { result ->
+                    Timber.d("매칭 제안 수락 응답: $result")
+                    updateState {
+                        copy(
+                            phase = MatchingPhase.PendingConfirm(
+                                offer = offer,
+                                confirmationExpiresAtMillis = null,
+                            )
+                        )
+                    }
+                }
+                .onFailure {
+                    Timber.e(it, "매칭 제안 수락 실패")
+                    if (it is ApiException) {
+                        sendEffect(MatchingContract.Effect.ShowToast(it.uiMessage))
+                    }
+                }
         }
     }
 
     fun rejectOffer() {
-        updateState { copy(phase = MatchingPhase.Waiting) }
-    }
-
-    fun continueMatching() = updateState {
-        copy(dialog = null, phase = MatchingPhase.Waiting)
-    }
-
-    fun retryMatching() {
-        updateState { copy(dialog = null) }
+        val offer = currentOffer() ?: return
+        viewModelScope.launch {
+            instructorMatchingRepository.respondMatchingOffer(offer.offerId, DECISION_REJECTED)
+                .onSuccess { result ->
+                    Timber.d("매칭 제안 거절 응답: $result")
+                    updateState { copy(phase = MatchingPhase.Waiting) }
+                }
+                .onFailure {
+                    Timber.e(it, "매칭 제안 거절 실패")
+                    if (it is ApiException) {
+                        sendEffect(MatchingContract.Effect.ShowToast(it.uiMessage))
+                    }
+                }
+        }
     }
 
     fun dismissDialog() = updateState { copy(dialog = null) }
@@ -314,9 +377,10 @@ internal class MatchingViewModel @Inject constructor(
     }
 
     private companion object {
-        const val EVENT_OFFER_RECEIVED = "MATCHING_OFFER_RECEIVED"
-        const val EVENT_OFFER_CLOSED = "MATCHING_OFFER_CLOSED"
-        const val EVENT_MATCHING_CANCELED = "MATCHING_CANCELED"
+        const val DECISION_ACCEPTED = "ACCEPTED"
+        const val DECISION_REJECTED = "REJECTED"
+
+        const val MSG_CONSUMER_REJECTED = "강습생이 매칭을 거절했어요.\n같은 조건으로 바로 다른 강습생을 찾고있어요."
 
         const val MATCHING_STATUS_WAITING_FOR_INSTRUCTOR = "WAITING_FOR_INSTRUCTOR"
         const val MATCHING_STATUS_WAITING_FOR_CONFIRMATION = "WAITING_FOR_CONFIRMATION"
