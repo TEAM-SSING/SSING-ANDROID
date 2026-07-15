@@ -8,6 +8,7 @@ import com.ssing.data.matching.instructormatching.remote.dto.response.Instructor
 import com.ssing.data.matching.instructormatching.remote.dto.response.InstructorMatchingExposureResponse
 import com.ssing.data.matching.instructormatching.remote.dto.response.InstructorMatchingExposureStartResponse
 import com.ssing.data.matching.instructormatching.remote.dto.response.InstructorMatchingOfferDecisionResponse
+import com.ssing.data.matching.instructormatching.remote.dto.response.InstructorMatchingOfferDetailResponse
 import com.ssing.data.matching.instructormatching.remote.dto.response.InstructorMatchingOffersResponse
 import com.ssing.data.matching.instructormatching.remote.service.InstructorMatchingService
 import javax.inject.Inject
@@ -29,6 +30,11 @@ internal class InstructorMatchingRemoteDataSourceImpl @Inject constructor(
 
     override suspend fun getMatchingOffers(): BaseResponse<InstructorMatchingOffersResponse> =
         instructorMatchingService.getMatchingOffers()
+
+    override suspend fun getMatchingOfferDetail(
+        offerId: Long,
+    ): BaseResponse<InstructorMatchingOfferDetailResponse> =
+        instructorMatchingService.getMatchingOfferDetail(offerId)
 
     override suspend fun patchMatchingOffer(
         offerId: Long,
