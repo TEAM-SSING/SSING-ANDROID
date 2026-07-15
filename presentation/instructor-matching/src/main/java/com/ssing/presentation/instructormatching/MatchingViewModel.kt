@@ -48,7 +48,7 @@ internal class MatchingViewModel @Inject constructor(
     }
 
     private fun handleMatchingEvent(event: InstructorMatchingEvent) {
-        Timber.d("matching 소켓 이벤트: $event")
+        Timber.d("matching 소켓 이벤트: ${event::class.simpleName}")
         when (event) {
             is InstructorMatchingEvent.OfferReceivedEvent,
             is InstructorMatchingEvent.OfferClosedEvent,
@@ -75,8 +75,11 @@ internal class MatchingViewModel @Inject constructor(
     }
 
     private fun onMatchingConfirmed(lessonId: Long) = viewModelScope.launch {
-        instructorMatchingRepository.disconnectSocket()
-        sendEffect(MatchingContract.Effect.NavigateToLessonDetail(lessonId))
+        try {
+            instructorMatchingRepository.disconnectSocket()
+        } finally {
+            sendEffect(MatchingContract.Effect.NavigateToLessonDetail(lessonId))
+        }
     }
 
     private fun loadMatchingExposure() {
