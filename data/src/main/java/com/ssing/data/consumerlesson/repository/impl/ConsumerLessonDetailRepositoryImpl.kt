@@ -1,5 +1,6 @@
 package com.ssing.data.consumerlesson.repository.impl
 
+import com.ssing.core.network.socket.SocketState
 import com.ssing.core.network.util.ApiResponseHandler
 import com.ssing.data.consumerlesson.exception.ConsumerLessonDetailException
 import com.ssing.data.consumerlesson.model.ConsumerLessonDetail
@@ -17,6 +18,7 @@ import com.ssing.data.consumerlesson.remote.dto.response.matchingrequest.Partici
 import com.ssing.data.consumerlesson.repository.api.ConsumerLessonDetailRepository
 import com.ssing.data.lesson.common.remote.datasource.api.LessonSocketDataSource
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
@@ -39,6 +41,8 @@ internal class ConsumerLessonDetailRepositoryImpl @Inject constructor(
         .filter { it.recipientRole == RECIPIENT_CONSUMER }
         .filter { it.eventType in relevantEventTypes }
         .map { ConsumerLessonSocketEvent(lessonId = it.lessonId, lessonStatus = it.lessonStatus) }
+
+    override val socketState: StateFlow<SocketState> = socketDataSource.socketState
 
     override fun connectSocket() {
         socketDataSource.connect()
