@@ -7,7 +7,7 @@ import com.ssing.core.ui.base.BaseViewModel
 import com.ssing.core.ui.common.component.Empty
 import com.ssing.core.ui.common.component.HomeLessonCardState
 import com.ssing.core.ui.extension.uiMessage
-import com.ssing.data.home.model.LessonCard
+import com.ssing.data.home.model.ConsumerLessonCard
 import com.ssing.data.home.repository.api.HomeRepository
 import com.ssing.core.ui.common.component.Reservation
 import com.ssing.core.ui.common.component.Reservation.Status
@@ -66,7 +66,7 @@ internal class ConsumerHomeViewModel @Inject constructor(
         }
     }
 
-    private fun List<LessonCard>.toUiState(): ImmutableList<HomeLessonCardState> {
+    private fun List<ConsumerLessonCard>.toUiState(): ImmutableList<HomeLessonCardState> {
         if (isEmpty()) return persistentListOf(Empty)
         return mapNotNull { card ->
             runCatching {
@@ -77,7 +77,7 @@ internal class ConsumerHomeViewModel @Inject constructor(
         }.toImmutableList()
     }
 
-    private fun LessonCard.toReservation(): Reservation =
+    private fun ConsumerLessonCard.toReservation(): Reservation =
         Reservation(
             lessonId = lessonId,
             chip = toChipText(),
@@ -88,19 +88,19 @@ internal class ConsumerHomeViewModel @Inject constructor(
             status = toCardStatus(),
         )
 
-    private fun LessonCard.toImageRes(): Int = when (sport) {
+    private fun ConsumerLessonCard.toImageRes(): Int = when (sport) {
         "SKI" -> R.drawable.img_ski_86
         "SNOWBOARD " -> R.drawable.img_snowboard_86
         else -> R.drawable.img_ski_86
     }
 
-    private fun LessonCard.toChipText(): String = when {
+    private fun ConsumerLessonCard.toChipText(): String = when {
         displayStatus == IN_PROGRESS -> "진행중"
         remainingDays == 0 -> "Now"
         else -> "D-$remainingDays"
     }
 
-    private fun LessonCard.toCardStatus(): Status = when {
+    private fun ConsumerLessonCard.toCardStatus(): Status = when {
         displayStatus == IN_PROGRESS -> Status.Matching
         remainingDays == 0 -> Status.Matched
         else -> Status.Default

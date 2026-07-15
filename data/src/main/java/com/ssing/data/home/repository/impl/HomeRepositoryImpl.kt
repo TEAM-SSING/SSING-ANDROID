@@ -3,13 +3,15 @@ package com.ssing.data.home.repository.impl
 import com.ssing.core.network.util.ApiResponseHandler
 import com.ssing.data.home.model.ConsumerHomeSummary
 import com.ssing.data.home.model.InstructorHomeSummary
-import com.ssing.data.home.model.LessonCard
+import com.ssing.data.home.model.ConsumerLessonCard
+import com.ssing.data.home.model.InstructorLessonCard
 import com.ssing.data.home.model.Resort
 import com.ssing.data.home.model.ReviewSummary
 import com.ssing.data.home.remote.datasource.api.HomeRemoteDataSource
 import com.ssing.data.home.remote.dto.response.ConsumerHomeResponse
 import com.ssing.data.home.remote.dto.response.InstructorHomeResponse
-import com.ssing.data.home.remote.dto.response.LessonCardResponse
+import com.ssing.data.home.remote.dto.response.ConsumerLessonCardResponse
+import com.ssing.data.home.remote.dto.response.InstructorLessonCardResponse
 import com.ssing.data.home.remote.dto.response.ResortResponse
 import com.ssing.data.home.remote.dto.response.ReviewSummaryResponse
 import com.ssing.data.home.repository.api.HomeRepository
@@ -44,8 +46,19 @@ internal class HomeRepositoryImpl @Inject constructor(
         reviewSummary = this.reviewSummary.toModel(),
     )
 
-    private fun LessonCardResponse.toModel(): LessonCard = LessonCard(
+    private fun ConsumerLessonCardResponse.toModel(): ConsumerLessonCard = ConsumerLessonCard(
         lessonId = this.lessonId,
+        remainingDays = this.remainingDays,
+        displayStatus = this.displayStatus,
+        title = this.title,
+        sport = this.sport,
+        scheduledAt = this.scheduledAt,
+        resort = this.resort.toModel(),
+    )
+
+    private fun InstructorLessonCardResponse.toModel(): InstructorLessonCard = InstructorLessonCard(
+        lessonId = this.lessonId,
+        offerId = this.offerId,
         remainingDays = this.remainingDays,
         displayStatus = this.displayStatus,
         title = this.title,

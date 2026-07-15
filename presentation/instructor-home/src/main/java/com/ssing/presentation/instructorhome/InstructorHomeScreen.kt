@@ -45,7 +45,7 @@ import java.time.LocalDateTime
 @Composable
 internal fun InstructorHomeRoute(
     contentPadding: PaddingValues,
-    navigateToLessonDetail: (Long) -> Unit,
+    navigateToLessonDetail: (Long?) -> Unit,
     navigateToMatching: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: InstructorHomeViewModel = hiltViewModel(),
@@ -166,7 +166,7 @@ private fun InstructorHomeScreen(
                 verticalArrangement = Arrangement.spacedBy(8.dp),
             ) {
                 Text(
-                    text = "${state.nickname}님의 강습 후기",
+                    text = "${state.instructorName}님의 강습 후기",
                     color = SSINGTheme.colors.textNormal,
                     style = SSINGTheme.typography.body.sb16,
                 )
@@ -191,7 +191,7 @@ private fun InstructorHomeScreenPreview() {
     SSINGTheme {
         InstructorHomeScreen(
             state = InstructorHomeContract.State(
-                nickname = "김씽씽",
+                instructorName = "김씽씽",
                 matchingPeopleCount = 99,
                 lessonCards = persistentListOf(
                     Reservation(
@@ -233,7 +233,7 @@ private fun InstructorHomeScreen2Preview() {
     SSINGTheme {
         InstructorHomeScreen(
             state = InstructorHomeContract.State(
-                nickname = "김씽씽",
+                instructorName = "김씽씽",
                 matchingPeopleCount = 99,
                 lessonCards = persistentListOf(Empty),
                 averageRating = 3.0f,

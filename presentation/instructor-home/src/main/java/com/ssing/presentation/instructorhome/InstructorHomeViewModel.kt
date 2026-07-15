@@ -9,7 +9,7 @@ import com.ssing.core.ui.common.component.HomeLessonCardState
 import com.ssing.core.ui.common.component.Reservation
 import com.ssing.core.ui.common.component.Reservation.Status
 import com.ssing.core.ui.extension.uiMessage
-import com.ssing.data.home.model.LessonCard
+import com.ssing.data.home.model.InstructorLessonCard
 import com.ssing.data.home.repository.api.HomeRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.ImmutableList
@@ -19,6 +19,7 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.time.OffsetDateTime
 import javax.inject.Inject
+import kotlin.collections.mapNotNull
 
 @HiltViewModel
 internal class InstructorHomeViewModel @Inject constructor(
@@ -47,7 +48,7 @@ internal class InstructorHomeViewModel @Inject constructor(
                             isLoading = false,
                             lessonCards = result.lessonCards.toUiState(),
                             hasUnreadNotification = result.hasUnreadNotification,
-                            nickname = result.nickname,
+                            instructorName = result.instructorName,
                             matchingPeopleCount = result.matchingPeopleCount,
                             averageRating = result.reviewSummary.averageRating,
                             grade = result.reviewSummary.grade.toGrade(),
@@ -69,7 +70,7 @@ internal class InstructorHomeViewModel @Inject constructor(
         }
     }
 
-    private fun List<LessonCard>.toUiState(): ImmutableList<HomeLessonCardState> {
+    private fun List<InstructorLessonCard>.toUiState(): ImmutableList<HomeLessonCardState> {
         if (isEmpty()) return persistentListOf(Empty)
         return mapNotNull { card ->
             runCatching {
@@ -80,9 +81,10 @@ internal class InstructorHomeViewModel @Inject constructor(
         }.toImmutableList()
     }
 
-    private fun LessonCard.toReservation(): Reservation =
+    private fun InstructorLessonCard.toReservation(): Reservation =
         Reservation(
             lessonId = lessonId,
+            offerId = offerId,
             chip = toChipText(),
             displayText = title,
             location = resort.displayName,
@@ -91,19 +93,19 @@ internal class InstructorHomeViewModel @Inject constructor(
             status = toCardStatus(),
         )
 
-    private fun LessonCard.toImageRes(): Int = when (sport) {
+    private fun InstructorLessonCard.toImageRes(): Int = when (sport) {
         "SKI" -> R.drawable.img_ski_86
         "SNOWBOARD" -> R.drawable.img_snowboard_86
         else -> R.drawable.img_ski_86
     }
 
-    private fun LessonCard.toChipText(): String = when {
+    private fun InstructorLessonCard.toChipText(): String = when {
         displayStatus == IN_PROGRESS -> "진행중"
         remainingDays == 0 -> "Now"
         else -> "D-$remainingDays"
     }
 
-    private fun LessonCard.toCardStatus(): Status = when {
+    private fun InstructorLessonCard.toCardStatus(): Status = when {
         displayStatus == IN_PROGRESS -> Status.Matching
         remainingDays == 0 -> Status.Matched
         else -> Status.Default

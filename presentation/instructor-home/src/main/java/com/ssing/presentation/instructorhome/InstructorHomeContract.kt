@@ -11,11 +11,12 @@ internal interface InstructorHomeContract {
 
     @Immutable
     data class State(
+        val lessonId: Long? = 0,
+        val offerId: Long? = 0,
         val isLoading: Boolean = false,
         val lessonCards: ImmutableList<HomeLessonCardState> = persistentListOf(),
         val hasUnreadNotification: Boolean = false,
-        val lessonId: Long = 0,
-        val nickname: String = "",
+        val instructorName: String = "",
         val matchingPeopleCount: Long = 0,
         val averageRating: Float = 0f,
         val grade: Grade = Grade.GRADE1,
@@ -25,7 +26,7 @@ internal interface InstructorHomeContract {
     sealed interface Effect {
         data class ShowToast(val message: String) : Effect
         data object NavigateToMatching : Effect
-        data class NavigateToLessonDetail(val lessonId: Long) : Effect
+        data class NavigateToLessonDetail(val lessonId: Long?) : Effect
     }
 }
 

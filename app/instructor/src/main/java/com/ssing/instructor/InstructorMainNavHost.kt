@@ -10,6 +10,7 @@ import com.ssing.core.ui.navigation.Route
 import com.ssing.core.ui.navigation.SsingNavHost
 import com.ssing.presentation.auth.instructor.navigation.InstructorLogin
 import com.ssing.presentation.auth.instructor.navigation.instructorAuthNavGraph
+import com.ssing.presentation.devauth.navigation.DevAuth
 import com.ssing.presentation.devauth.navigation.devAuthNavGraph
 import com.ssing.presentation.instructorhome.navigation.InstructorHome
 import com.ssing.presentation.instructorhome.navigation.instructorHomeNavGraph
@@ -29,7 +30,7 @@ internal fun InstructorMainNavHost(
 ) {
     SsingNavHost(
         navController = navController,
-        startDestination = startDestination,
+        startDestination = DevAuth,
         modifier = modifier.fillMaxSize(),
     ) {
         devAuthNavGraph(
@@ -58,7 +59,7 @@ internal fun InstructorMainNavHost(
             },
             navigateToLessonDetail = { lessonId ->
                 navController.navigate(
-                    route = InstructorLesson(lessonId = lessonId),
+                    route = InstructorLesson(lessonId = lessonId ?: 0),
                 )
             }
         )

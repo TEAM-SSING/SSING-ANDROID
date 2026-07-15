@@ -13,7 +13,7 @@ data object InstructorHome : MainTabRoute
 fun NavGraphBuilder.instructorHomeNavGraph(
     paddingValues: PaddingValues,
     navigateToMatching: () -> Unit,
-    navigateToLessonDetail: (Long) -> Unit,
+    navigateToLessonDetail: (Long?) -> Unit,
 ) {
     composable<InstructorHome> {
         InstructorHomeRoute(
