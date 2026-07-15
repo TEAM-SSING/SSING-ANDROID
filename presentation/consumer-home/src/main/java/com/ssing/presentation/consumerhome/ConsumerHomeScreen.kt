@@ -26,9 +26,10 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ssing.core.ui.R
+import com.ssing.core.ui.common.component.Empty
 import com.ssing.core.ui.common.component.HomeLessonCardList
-import com.ssing.core.ui.common.component.HomeLessonCardState
-import com.ssing.core.ui.common.component.HomeLessonCardState.Reservation.Status
+import com.ssing.core.ui.common.component.Reservation
+import com.ssing.core.ui.common.component.Reservation.Status
 import com.ssing.core.ui.common.component.SsingChipStyle
 import com.ssing.core.ui.common.component.SsingHomeTopBar
 import com.ssing.core.ui.common.component.StartMatchingButton
@@ -71,7 +72,7 @@ internal fun ConsumerHomeRoute(
 @Composable
 private fun ConsumerHomeScreen(
     state: ConsumerHomeContract.State,
-    onLessonClick: (HomeLessonCardState.Reservation) -> Unit,
+    onLessonClick: (Reservation) -> Unit,
     onMatchingClick: () -> Unit,
     onReservationClick: () -> Unit,
     contentPadding: PaddingValues,
@@ -162,20 +163,22 @@ private fun ConsumerHomeScreenPreview() {
         state = ConsumerHomeContract.State(
             matchingConsumerCount = 99,
             lessonCards = persistentListOf(
-                HomeLessonCardState.Reservation(
+                Reservation(
                     lessonId = 1,
                     chip = "Now",
                     displayText = "김OO님 팀 3명",
                     location = "하이원",
                     date = LocalDateTime.of(2025, 7, 15, 19, 0),
+                    imageRes = R.drawable.img_ski_86,
                     status = Status.Matching,
                 ),
-                HomeLessonCardState.Reservation(
+                Reservation(
                     lessonId = 1,
                     chip = "D-3",
                     displayText = "김OO님 팀 3명",
                     location = "지산리조트",
                     date = LocalDateTime.of(2026, 7, 11, 19, 0),
+                    imageRes = R.drawable.img_snowboard_86,
                     status = Status.Default,
                 ),
             ),
@@ -193,9 +196,7 @@ private fun ConsumerHomeScreen2Preview() {
     ConsumerHomeScreen(
         state = ConsumerHomeContract.State(
             matchingConsumerCount = 99,
-            lessonCards = persistentListOf(
-                HomeLessonCardState.Empty,
-            ),
+            lessonCards = persistentListOf(Empty),
         ),
         onLessonClick = {},
         onMatchingClick = {},

@@ -26,26 +26,27 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ssing.core.ui.R
-import com.ssing.core.ui.common.component.HomeLessonCardState.Reservation.Status
 import com.ssing.core.ui.designsystem.theme.SSINGTheme
 import kotlinx.collections.immutable.ImmutableList
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import com.ssing.core.ui.util.ssingDateFormatter
 import kotlinx.collections.immutable.persistentListOf
 import java.time.LocalDateTime
 
-sealed interface HomeLessonCardState {
+sealed interface HomeLessonCardState
     data class Reservation(
         val lessonId: Long,
         val chip: String,
         val displayText: String,
         val location: String,
         val date: LocalDateTime,
+        val imageRes: Int,
         val status: Status,
     ) : HomeLessonCardState {
         sealed interface Status {
@@ -54,14 +55,13 @@ sealed interface HomeLessonCardState {
             data object Matching : Status
         }
     }
-
     data object Empty : HomeLessonCardState
-}
+
 
 @Composable
 fun HomeLessonCardList(
     states: ImmutableList<HomeLessonCardState>,
-    onButtonClick: (HomeLessonCardState.Reservation) -> Unit,
+    onButtonClick: (Reservation) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -128,18 +128,19 @@ private fun HomeLessonEmptyCard(
                 .padding(bottom = 5.dp),
         )
 
-        Image(
-            painter = painterResource(id = R.drawable.img_ski_66),
+        Icon(
+            imageVector = ImageVector.vectorResource(R.drawable.ic_empty_reservation_76),
             contentDescription = null,
-            modifier = Modifier.size(66.dp),
+            tint = Color.Unspecified,
+            modifier = Modifier.size(76.dp),
         )
     }
 }
 
 @Composable
 private fun HomeLessonReservationCard(
-    state: HomeLessonCardState.Reservation,
-    onButtonClick: (HomeLessonCardState.Reservation) -> Unit,
+    state: Reservation,
+    onButtonClick: (Reservation) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -151,7 +152,7 @@ private fun HomeLessonReservationCard(
         LessonInfoSection(state = state)
 
         SsingButton(
-            text = if (state.status is Status.Default) "강습 상세보기" else "이어보기",
+            text = if (state.status is Reservation.Status.Default) "강습 상세보기" else "이어보기",
             onClick = { onButtonClick(state) },
             style = SsingButtonStyle.GRAY,
             modifier = Modifier.fillMaxWidth(),
@@ -162,17 +163,17 @@ private fun HomeLessonReservationCard(
 @Composable
 private fun HomeLessonCard(
     state: HomeLessonCardState,
-    onButtonClick: (HomeLessonCardState.Reservation) -> Unit,
+    onButtonClick: (Reservation) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     when (state) {
-        is HomeLessonCardState.Empty -> {
+        is Empty -> {
             HomeLessonEmptyCard(
                 modifier = modifier,
             )
         }
 
-        is HomeLessonCardState.Reservation -> {
+        is Reservation -> {
             HomeLessonReservationCard(
                 state = state,
                 onButtonClick = onButtonClick,
@@ -184,7 +185,7 @@ private fun HomeLessonCard(
 
 @Composable
 private fun LessonInfoSection(
-    state: HomeLessonCardState.Reservation,
+    state: Reservation,
     modifier: Modifier = Modifier,
 ) {
     Row(
@@ -232,9 +233,9 @@ private fun LessonInfoSection(
         }
 
         Image(
-            painter = painterResource(id = R.drawable.img_ski_66),
+            painter = painterResource(id = state.imageRes),
             contentDescription = null,
-            modifier = Modifier.size(66.dp),
+            modifier = Modifier.size(86.dp),
         )
     }
 }
@@ -273,15 +274,15 @@ private fun EmptyLessonInfoSection(
         verticalArrangement = Arrangement.spacedBy(2.dp),
     ) {
         Icon(
-            imageVector = ImageVector.vectorResource(R.drawable.ic_reservation_24),
+            imageVector = ImageVector.vectorResource(R.drawable.ic_plus_large),
             contentDescription = null,
-            tint = SSINGTheme.colors.textAlternative,
+            tint = SSINGTheme.colors.textDisabled,
         )
 
         Spacer(modifier = Modifier.height(6.dp))
 
         Text(
-            text = "아직 예약된 강습이 없어요.",
+            text = "아직 예약된 강습이 없어요",
             style = SSINGTheme.typography.body.sb16,
             color = SSINGTheme.colors.textAlternative,
         )
@@ -307,7 +308,7 @@ private fun Modifier.lessonCardBackground() = this
 private fun HomeLessonEmptyCardPreview() {
     SSINGTheme {
         HomeLessonCard(
-            state = HomeLessonCardState.Empty,
+            state = Empty,
             onButtonClick = {},
             modifier = Modifier.width(328.dp),
         )
@@ -319,13 +320,14 @@ private fun HomeLessonEmptyCardPreview() {
 private fun HomeLessonMatchingCardPreview() {
     SSINGTheme {
         HomeLessonCard(
-            state = HomeLessonCardState.Reservation(
+            state = Reservation(
                 lessonId = 1,
                 chip = "Now",
                 displayText = "매칭중",
                 date = LocalDateTime.of(2025, 7, 15, 19, 0),
                 location = "하이원",
-                status = Status.Matching
+                imageRes = R.drawable.img_ski_86,
+                status = Reservation.Status.Matching
             ),
             onButtonClick = {},
             modifier = Modifier.width(328.dp),
@@ -338,13 +340,14 @@ private fun HomeLessonMatchingCardPreview() {
 private fun HomeLessonMatchedCardPreview() {
     SSINGTheme {
         HomeLessonCard(
-            state = HomeLessonCardState.Reservation(
+            state = Reservation(
                 lessonId = 1,
                 chip = "Now",
                 displayText = "김OO님 팀 3명",
                 date = LocalDateTime.of(2025, 7, 15, 19, 0),
                 location = "하이원",
-                status = Status.Matched,
+                imageRes = R.drawable.img_ski_86,
+                status = Reservation.Status.Matched,
             ),
             onButtonClick = {},
             modifier = Modifier.width(328.dp),
@@ -357,13 +360,14 @@ private fun HomeLessonMatchedCardPreview() {
 private fun HomeLessonCardPreview() {
     SSINGTheme {
         HomeLessonCard(
-            state = HomeLessonCardState.Reservation(
+            state = Reservation(
                 lessonId = 1,
                 chip = "D-2",
                 displayText = "김OO님 팀 3명",
                 date = LocalDateTime.of(2025, 7, 15, 19, 0),
                 location = "하이원",
-                status = Status.Default
+                imageRes = R.drawable.img_snowboard_86,
+                status = Reservation.Status.Default
             ),
             onButtonClick = {},
             modifier = Modifier.width(328.dp),
@@ -371,26 +375,28 @@ private fun HomeLessonCardPreview() {
     }
 }
 
-private class HomeLessonCardPreviewProvider :
+private class HomeLessonCardPreviewProvider() :
     PreviewParameterProvider<ImmutableList<HomeLessonCardState>> {
     override val values = sequenceOf(
-        persistentListOf(HomeLessonCardState.Empty),
+        persistentListOf(Empty),
         persistentListOf(
-            HomeLessonCardState.Reservation(
+            Reservation(
                 lessonId = 1,
                 chip = "Now",
                 displayText = "김OO님 팀 3명",
                 location = "하이원",
                 date = LocalDateTime.of(2025, 7, 15, 19, 0),
-                status = Status.Matching,
+                imageRes = R.drawable.img_snowboard_86,
+                status = Reservation.Status.Matching,
             ),
-            HomeLessonCardState.Reservation(
+            Reservation(
                 lessonId = 1,
                 chip = "D-3",
                 displayText = "김OO님 팀 3명",
                 location = "지산리조트",
                 date = LocalDateTime.of(2026, 7, 11, 19, 0),
-                status = Status.Default,
+                imageRes = R.drawable.img_snowboard_86,
+                status = Reservation.Status.Default,
             ),
         ),
     )
