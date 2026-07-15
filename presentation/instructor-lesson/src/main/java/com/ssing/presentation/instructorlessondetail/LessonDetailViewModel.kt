@@ -90,6 +90,9 @@ internal class LessonDetailViewModel @Inject constructor(
         }
         viewModelScope.launch {
             lessonRepository.lessonCompleted(lessonId)
+                .onSuccess {
+                    loadLessonDetail()
+                }
                 .onFailure {
                     if (it is ApiException) {
                         sendEffect(LessonDetailContract.Effect.ShowToast(it.uiMessage))
