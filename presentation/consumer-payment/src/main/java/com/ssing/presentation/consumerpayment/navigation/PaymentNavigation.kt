@@ -14,7 +14,7 @@ fun NavController.navigateToConsumerPayment(matchingRequestId: Long) =
     navigate(ConsumerPayment(matchingRequestId))
 
 fun NavGraphBuilder.consumerPaymentNavGraph(
-    navigateToLesson: () -> Unit,
+    navigateToLesson: (Long) -> Unit,
     navigateToHome: () -> Unit,
 ) {
     slideComposable<ConsumerPayment> {
