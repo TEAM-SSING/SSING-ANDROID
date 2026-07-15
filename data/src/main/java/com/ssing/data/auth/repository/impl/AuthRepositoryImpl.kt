@@ -4,6 +4,7 @@ import com.ssing.core.network.extension.mapApiException
 import com.ssing.core.network.token.TokenAccessManager
 import com.ssing.core.network.util.ApiResponseHandler
 import com.ssing.core.network.util.suspendRunCatching
+import com.ssing.core.notification.NotificationTokenProvider
 import com.ssing.data.auth.exception.AuthException
 import com.ssing.data.auth.remote.datasource.api.AuthDataSource
 import com.ssing.data.auth.repository.api.AuthRepository
@@ -14,6 +15,7 @@ internal class AuthRepositoryImpl @Inject constructor(
     private val apiResponseHandler: ApiResponseHandler,
     private val dataSource: AuthDataSource,
     private val tokenAccessManager: TokenAccessManager,
+    private val notificationTokenProvider: NotificationTokenProvider,
 ) : AuthRepository {
 
     override suspend fun postConsumerKakaoAuth(kakaoAccessToken: String): Result<Unit> =
@@ -50,9 +52,13 @@ internal class AuthRepositoryImpl @Inject constructor(
                 throw throwable
             }
         }.map { }
+            .onSuccess { notificationTokenProvider.registerCurrentToken() }
             .mapApiException { mapLoginException(it.serverCode, it.message, it.requestId) }
 
     override suspend fun postLogout(): Result<Unit> {
+        // Access Token 제거 전에 먼저 FCM 토큰을 서버에서 해제한다.
+        notificationTokenProvider.unregisterCurrentToken()
+
         val refreshToken = tokenAccessManager.withLock { getRefreshToken() }
 
         if (refreshToken != null) {
