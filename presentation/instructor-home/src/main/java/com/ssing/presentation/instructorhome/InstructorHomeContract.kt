@@ -11,8 +11,6 @@ internal interface InstructorHomeContract {
 
     @Immutable
     data class State(
-        val lessonId: Long? = 0,
-        val offerId: Long? = 0,
         val isLoading: Boolean = false,
         val lessonCards: ImmutableList<HomeLessonCardState> = persistentListOf(),
         val hasUnreadNotification: Boolean = false,
