@@ -93,7 +93,7 @@ internal class InstructorHomeViewModel @Inject constructor(
 
     private fun LessonCard.toImageRes(): Int = when (sport) {
         "SKI" -> R.drawable.img_ski_86
-        "SNOWBOARD "-> R.drawable.img_snowboard_86
+        "SNOWBOARD" -> R.drawable.img_snowboard_86
         else -> R.drawable.img_ski_86
     }
 
