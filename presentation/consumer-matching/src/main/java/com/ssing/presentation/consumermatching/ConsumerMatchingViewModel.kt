@@ -29,6 +29,20 @@ internal class ConsumerMatchingViewModel @Inject constructor(
     private val matchingRequestId =
         savedStateHandle.toRoute<ConsumerMatchingGraph>().matchingRequestId
 
+    private var isSubmitting = false
+
+    private fun launchExclusive(block: suspend () -> Unit) {
+        if (isSubmitting) return
+        isSubmitting = true
+        viewModelScope.launch {
+            try {
+                block()
+            } finally {
+                isSubmitting = false
+            }
+        }
+    }
+
     init {
         consumerMatchingRepository.connect()
 
@@ -87,7 +101,7 @@ internal class ConsumerMatchingViewModel @Inject constructor(
     }
 
     // pending
-    fun editCondition() = viewModelScope.launch {
+    fun editCondition() = launchExclusive {
         consumerMatchingRepository.cancelMatching(matchingRequestId)
             .onSuccess {
                 consumerMatchingRepository.disconnect()
@@ -99,7 +113,7 @@ internal class ConsumerMatchingViewModel @Inject constructor(
             }
     }
 
-    fun stopPending() = viewModelScope.launch {
+    fun stopPending() = launchExclusive {
         consumerMatchingRepository.cancelMatching(matchingRequestId)
             .onSuccess {
                 consumerMatchingRepository.disconnect()
@@ -126,7 +140,7 @@ internal class ConsumerMatchingViewModel @Inject constructor(
     fun closeCancelModal() =
         updateState { copy(showCancelModal = false) }
 
-    fun confirmCancel() = viewModelScope.launch {
+    fun confirmCancel() = launchExclusive {
         consumerMatchingRepository.cancelMatching(matchingRequestId)
             .onSuccess {
                 consumerMatchingRepository.disconnect()
@@ -140,7 +154,7 @@ internal class ConsumerMatchingViewModel @Inject constructor(
             }
     }
 
-    fun requestRematching() = viewModelScope.launch {
+    fun requestRematching() = launchExclusive {
         consumerMatchingRepository.confirmMatching(
             matchingRequestId = matchingRequestId,
             decision = REJECTED_DECISION,
@@ -152,7 +166,7 @@ internal class ConsumerMatchingViewModel @Inject constructor(
         }
     }
 
-    fun acceptMatching() = viewModelScope.launch {
+    fun acceptMatching() = launchExclusive {
         consumerMatchingRepository.confirmMatching(
             matchingRequestId = matchingRequestId,
             decision = ACCEPTED_DECISION,
