@@ -29,7 +29,7 @@ internal class InstructorHomeViewModel @Inject constructor(
         InstructorHomeContract.State()
     ) {
 
-    init{
+    init {
         loadHome()
     }
 
@@ -90,7 +90,7 @@ internal class InstructorHomeViewModel @Inject constructor(
             location = resort.displayName,
             date = runCatching { OffsetDateTime.parse(scheduledAt).toLocalDateTime() }.getOrNull(),
             imageRes = toImageRes(),
-            status = toCardStatus(),
+            status = toReservationStatus(),
         )
 
     private fun InstructorLessonCard.toImageRes(): Int = when (sport) {
@@ -105,11 +105,19 @@ internal class InstructorHomeViewModel @Inject constructor(
         else -> "D-$remainingDays"
     }
 
-    private fun InstructorLessonCard.toCardStatus(): Status = when {
-        displayStatus == IN_PROGRESS -> Status.Matching
-        remainingDays == 0 -> Status.Matched
-        else -> Status.Default
-    }
+    private fun InstructorLessonCard.toReservationStatus(): Status =
+        when (displayStatus) {
+            MATCHING -> Status.Matching
+
+            WAITING_FOR_INSTRUCTOR,
+            WAITING_FOR_CONFIRMATION,
+            PAYMENT_PENDING,
+            IN_PROGRESS -> Status.Matched
+
+            CONFIRMED -> Status.Default
+
+            else -> Status.Default
+        }
 
     private fun Int.toGrade(): Grade =
         when (this) {
@@ -122,18 +130,68 @@ internal class InstructorHomeViewModel @Inject constructor(
         }
 
     private companion object {
+        const val MATCHING = "MATCHING"
+        const val WAITING_FOR_CONFIRMATION = "WAITING_FOR_CONFIRMATION"
+        const val WAITING_FOR_INSTRUCTOR = "WAITING_FOR_INSTRUCTOR"
+        const val PAYMENT_PENDING = "PAYMENT_PENDING"
+        const val CONFIRMED = "CONFIRMED"
         const val IN_PROGRESS = "IN_PROGRESS"
     }
 
     fun onMatchingClick() {
         sendEffect(InstructorHomeContract.Effect.NavigateToMatching)
-
     }
 
     fun onLessonClick(
         lesson: Reservation,
     ) {
-        sendEffect(InstructorHomeContract.Effect.NavigateToLessonDetail(lessonId = lesson.lessonId))
+        Timber.i("lessonId: ${lesson.lessonId} / offerId: $lesson.offerId")
+
+        when (lesson.status) {
+            Status.Matching -> {
+                sendEffect(
+                    InstructorHomeContract.Effect.NavigateToMatching
+                )
+            }
+
+            Status.Matched -> {
+                val lessonId = lesson.lessonId
+
+                if (lessonId == null) {
+                    Timber.e(
+                        "강습 상세 이동에 필요한 lessonId가 없습니다. " +
+                                "status=${lesson.status}, offerId=${lesson.offerId}"
+                    )
+                    return
+                }
+
+                sendEffect(
+                    InstructorHomeContract.Effect.NavigateToLessonDetail(
+                        lessonId = lessonId,
+                    )
+                )
+            }
+
+            Status.Default -> {
+                val lessonId = lesson.lessonId
+                val offerId = lesson.offerId
+
+                if (lessonId == null || offerId == null) {
+                    Timber.e(
+                        "강습 상세 이동에 필요한 lessonId나 offerId가 없습니다. " +
+                                "status=${lesson.status}, offerId=${lesson.offerId}"
+                    )
+                    return
+                }
+
+                sendEffect(
+                    InstructorHomeContract.Effect.NavigateToLessonDetail(
+                        lessonId = lessonId,
+                        offerId = offerId,
+                    )
+                )
+            }
+        }
     }
 
     fun onReviewClick() {

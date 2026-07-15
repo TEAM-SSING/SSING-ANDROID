@@ -26,7 +26,10 @@ internal interface InstructorHomeContract {
     sealed interface Effect {
         data class ShowToast(val message: String) : Effect
         data object NavigateToMatching : Effect
-        data class NavigateToLessonDetail(val lessonId: Long?) : Effect
+        data class NavigateToLessonDetail(
+            val lessonId: Long? = null,
+            val offerId: Long? = null,
+        ) : Effect
     }
 }
 
