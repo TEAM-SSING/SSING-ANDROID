@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -26,9 +27,10 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ssing.core.ui.R
+import com.ssing.core.ui.common.component.Empty
 import com.ssing.core.ui.common.component.HomeLessonCardList
-import com.ssing.core.ui.common.component.HomeLessonCardState
-import com.ssing.core.ui.common.component.HomeLessonCardState.Reservation.Status
+import com.ssing.core.ui.common.component.Reservation
+import com.ssing.core.ui.common.component.Reservation.Status
 import com.ssing.core.ui.common.component.SsingChipStyle
 import com.ssing.core.ui.common.component.SsingHomeTopBar
 import com.ssing.core.ui.common.component.StartMatchingButton
@@ -36,6 +38,7 @@ import com.ssing.core.ui.common.component.StartMatchingCardStyle
 import com.ssing.core.ui.designsystem.theme.SSINGTheme
 import com.ssing.core.ui.extension.toast
 import com.ssing.core.ui.util.HandleUiEffects
+import com.ssing.presentation.instructorhome.component.InstructorHomeEmptyReviewCard
 import com.ssing.presentation.instructorhome.component.InstructorHomeReviewCard
 import kotlinx.collections.immutable.persistentListOf
 import java.time.LocalDateTime
@@ -66,6 +69,7 @@ internal fun InstructorHomeRoute(
         onReservationClick = viewModel::onReservationClick,
         onReviewClick = viewModel::onReviewClick,
         contentPadding = contentPadding,
+        hasReview = false,
         modifier = modifier,
     )
 }
@@ -73,11 +77,12 @@ internal fun InstructorHomeRoute(
 @Composable
 private fun InstructorHomeScreen(
     state: InstructorHomeContract.State,
-    onLessonClick: (HomeLessonCardState.Reservation) -> Unit,
+    onLessonClick: (Reservation) -> Unit,
     onMatchingClick: () -> Unit,
     onReservationClick: () -> Unit,
     onReviewClick: () -> Unit,
     contentPadding: PaddingValues,
+    hasReview: Boolean,
     modifier: Modifier = Modifier,
 ) {
     Scaffold(
@@ -110,7 +115,7 @@ private fun InstructorHomeScreen(
 
             HomeLessonCardList(
                 states = state.lessonCards,
-                onButtonClick = onLessonClick,//(state.lessonId),
+                onButtonClick = onLessonClick,
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -168,12 +173,15 @@ private fun InstructorHomeScreen(
                     style = SSINGTheme.typography.body.sb16,
                 )
 
-                InstructorHomeReviewCard(
-                    averageRating = state.averageRating,
-                    grade = state.grade,
-                    achievementRate = state.achievementRate,
-                    onClick = onReviewClick,
-                )
+                if (hasReview) {
+                    InstructorHomeReviewCard(
+                        averageRating = state.averageRating,
+                        grade = state.grade,
+                        achievementRate = state.achievementRate,
+                        onClick = onReviewClick,
+                    )
+                }
+                else { InstructorHomeEmptyReviewCard() }
             }
         }
     }
@@ -188,20 +196,22 @@ private fun InstructorHomeScreenPreview() {
                 nickname = "김씽씽",
                 matchingCount = 99,
                 lessonCards = persistentListOf(
-                    HomeLessonCardState.Reservation(
+                    Reservation(
                         lessonId = 1,
                         chip = "Now",
                         displayText = "김OO님 팀 3명",
                         location = "하이원",
                         date = LocalDateTime.of(2025, 7, 15, 19, 0),
+                        imageRes = R.drawable.img_ski_86,
                         status = Status.Matching,
                     ),
-                    HomeLessonCardState.Reservation(
+                    Reservation(
                         lessonId = 1,
                         chip = "D-3",
                         displayText = "김OO님 팀 3명",
                         location = "지산리조트",
                         date = LocalDateTime.of(2026, 7, 11, 19, 0),
+                        imageRes = R.drawable.img_snowboard_86,
                         status = Status.Default,
                     ),
                 ),
@@ -213,6 +223,7 @@ private fun InstructorHomeScreenPreview() {
             onMatchingClick = {},
             onReservationClick = {},
             onReviewClick = {},
+            hasReview = true,
             contentPadding = PaddingValues(0.dp),
         )
     }
@@ -226,9 +237,7 @@ private fun InstructorHomeScreen2Preview() {
             state = InstructorHomeContract.State(
                 nickname = "김씽씽",
                 matchingCount = 99,
-                lessonCards = persistentListOf(
-                    HomeLessonCardState.Empty,
-                ),
+                lessonCards = persistentListOf(Empty),
                 averageRating = 3.0f,
                 grade = Grade.GRADE4,
                 achievementRate = 88,
@@ -237,6 +246,7 @@ private fun InstructorHomeScreen2Preview() {
             onMatchingClick = {},
             onReservationClick = {},
             onReviewClick = {},
+            hasReview = false,
             contentPadding = PaddingValues(0.dp),
         )
     }
