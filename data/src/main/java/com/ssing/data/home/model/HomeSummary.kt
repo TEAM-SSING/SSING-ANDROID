@@ -11,7 +11,7 @@ data class InstructorHomeSummary(
     val matchingPeopleCount: Long,
     val hasUnreadNotification: Boolean,
     val reviewSummary: ReviewSummary,
-    val nickname: String,
+    val instructorName: String,
 )
 
 data class LessonCard(
@@ -23,7 +23,7 @@ data class LessonCard(
     val sport: String,
     val resort: Resort,
 
-)
+    )
 
 data class ReviewSummary(
     val averageRating: Float,
