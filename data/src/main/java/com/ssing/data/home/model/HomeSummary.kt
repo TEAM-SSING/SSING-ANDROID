@@ -6,6 +6,13 @@ data class ConsumerHomeSummary(
     val hasUnreadNotification: Boolean,
 )
 
+data class InstructorHomeSummary(
+    val lessonCards: List<LessonCard>,
+    val matchingPeopleCount: Long,
+    val hasUnreadNotification: Boolean,
+    val reviewSummary: ReviewSummary,
+)
+
 data class LessonCard(
     val lessonId: Long,
     val remainingDays: Int,
@@ -14,6 +21,13 @@ data class LessonCard(
     val scheduledAt: String,
     val sport: String,
     val resort: Resort,
+
+)
+
+data class ReviewSummary(
+    val averageRating: Float,
+    val grade: Int,
+    val achievementRate: Int,
 )
 
 data class Resort(
