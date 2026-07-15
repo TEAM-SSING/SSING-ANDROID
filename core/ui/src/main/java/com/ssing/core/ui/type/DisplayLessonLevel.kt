@@ -7,7 +7,7 @@ enum class LessonLevel(val display: String) {
     CERTIFIED("자격증이 있어요");
 
     companion object {
-        fun fromRaw(raw: String): LessonLevel? = entries.find { it.display == raw }
+        fun fromRaw(raw: String): LessonLevel? = entries.find { it.name == raw }
     }
 }
 

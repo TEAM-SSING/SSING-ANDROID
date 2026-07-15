@@ -5,7 +5,7 @@ enum class Sport(val display: String) {
     SKI("스키");
 
     companion object {
-        fun fromRaw(raw: String): Sport? = entries.find { it.display == raw }
+        fun fromRaw(raw: String): Sport? = entries.find { it.name == raw }
     }
 }
 
