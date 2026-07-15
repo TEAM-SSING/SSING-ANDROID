@@ -6,6 +6,7 @@ import androidx.compose.runtime.Immutable
 internal data class AlarmUiModel(
     val id: Long,
     val type: AlarmType,
+    val title: String,
     val content: String,
     val date: String,
     val isRead: Boolean = false,

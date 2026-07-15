@@ -10,6 +10,7 @@ internal interface NotificationContract {
     @Immutable
     data class State(
         val isLoading: Boolean = false,
+        val isLoadingMore: Boolean = false,
         val alarms: ImmutableList<AlarmUiModel> = persistentListOf(),
     ) {
         val isEmpty: Boolean
