@@ -33,10 +33,7 @@ internal interface ConsumerMatchingContract {
         val reviews: ImmutableList<InstructorReview> = persistentListOf(),
         val estimatedFee: Int = 0,
         val lessonDuration: String = "",
-    ) {
-        val detailCardTitle: String =
-            "${nickname}님" + if (teamCount > 1) " 외 ${teamCount - 1}명" else ""
-    }
+    )
 
     sealed interface Effect {
         sealed interface Pending : Effect {
