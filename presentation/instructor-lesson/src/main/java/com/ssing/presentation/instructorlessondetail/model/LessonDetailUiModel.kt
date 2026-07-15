@@ -58,6 +58,9 @@ internal data class LessonDetailCanceledUiModel(
     val location: String = "",
     val duration: String = "",
     val price: Int = 0,
+    val canceledAt: String = "",
+    val canceledByName: String = "",
+    val cancelReason: String = "",
 )
 
 /** 강습생 정보 화면에서 팀 단위로 보여줄 데이터. */

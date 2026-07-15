@@ -275,6 +275,10 @@ private fun InstructorLessonDetailRequestResult.toPhase(): LessonDetailContract.
                 duration = lessonDurationMinutes.toDurationText(),
                 price = totalLessonPrice,
                 teams = matchingRequests.map { it.toModel() }.toPersistentList(),
+                canceledAt = runCatching { LocalDateTime.parse(canceledAt) }
+                    .getOrNull()?.ssingDateFormatter() ?: canceledAt,
+                canceledByName = canceledByName,
+                cancelReason = cancelReason,
             )
         )
     }
