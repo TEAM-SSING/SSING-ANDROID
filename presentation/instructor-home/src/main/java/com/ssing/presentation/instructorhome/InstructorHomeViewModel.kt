@@ -50,9 +50,9 @@ internal class InstructorHomeViewModel @Inject constructor(
                             hasUnreadNotification = result.hasUnreadNotification,
                             instructorName = result.instructorName,
                             matchingPeopleCount = result.matchingPeopleCount,
-                            averageRating = result.reviewSummary.averageRating,
-                            grade = result.reviewSummary.grade.toGrade(),
-                            achievementRate = result.reviewSummary.achievementRate,
+                            averageRating = 4.0f,
+                            grade = Grade.GRADE4,
+                            achievementRate = 77,
                         )
                     }
                 }

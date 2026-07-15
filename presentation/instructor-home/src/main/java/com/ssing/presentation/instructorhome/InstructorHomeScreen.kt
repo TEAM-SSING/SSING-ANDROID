@@ -70,7 +70,7 @@ internal fun InstructorHomeRoute(
         onReservationClick = viewModel::onReservationClick,
         onReviewClick = viewModel::onReviewClick,
         contentPadding = contentPadding,
-        hasReview = false,
+        hasReview = true,
         modifier = modifier,
     )
 }
