@@ -52,8 +52,12 @@ internal class MatchingViewModel @Inject constructor(
         when (event) {
             is InstructorMatchingEvent.OfferReceivedEvent,
             is InstructorMatchingEvent.OfferClosedEvent,
-            is InstructorMatchingEvent.MatchingCanceledEvent,
-                -> restoreActiveOffer()
+            -> restoreActiveOffer()
+
+            is InstructorMatchingEvent.MatchingCanceledEvent -> {
+                updateState { copy(phase = MatchingPhase.Waiting) }
+                sendEffect(MatchingContract.Effect.ShowToast(MSG_CONSUMER_REJECTED))
+            }
 
             is InstructorMatchingEvent.MatchingConfirmedEvent -> onMatchingConfirmed(event.lessonId)
         }
@@ -75,6 +79,7 @@ internal class MatchingViewModel @Inject constructor(
     }
 
     private fun onMatchingConfirmed(lessonId: Long) = viewModelScope.launch {
+        Timber.d("매칭 확정 수신 → 강습 상세 이동 (lessonId=$lessonId)")
         try {
             instructorMatchingRepository.disconnectSocket()
         } finally {
