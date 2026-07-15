@@ -6,6 +6,7 @@ import com.ssing.core.network.exception.ApiException
 import com.ssing.core.ui.base.BaseViewModel
 import com.ssing.core.ui.extension.uiMessage
 import com.ssing.data.matching.instructormatching.model.InstructorMatchingOffer
+import com.ssing.data.matching.instructormatching.model.InstructorMatchingOfferDetail
 import com.ssing.data.matching.instructormatching.repository.api.InstructorMatchingRepository
 import com.ssing.presentation.instructormatching.MatchingContract.MatchingDialog
 import com.ssing.presentation.instructormatching.MatchingContract.MatchingPhase
@@ -14,10 +15,10 @@ import com.ssing.presentation.instructormatching.model.LessonSummaryUiModel
 import com.ssing.presentation.instructormatching.model.LevelOption
 import com.ssing.presentation.instructormatching.model.MatchingOfferUiModel
 import com.ssing.presentation.instructormatching.model.OfferStatusOption
+import com.ssing.presentation.instructormatching.model.ParticipantUiModel
 import com.ssing.presentation.instructormatching.model.SportOption
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
@@ -45,7 +46,10 @@ internal class MatchingViewModel @Inject constructor(
                     EVENT_OFFER_RECEIVED,
                     EVENT_OFFER_CLOSED,
                     EVENT_MATCHING_CANCELED,
-                    -> restoreActiveOffer()
+                        -> {
+                        val offerId = event.offerId
+                        if (offerId != null) restoreOfferDetail(offerId) else restoreActiveOffer()
+                    }
                 }
             }
         }
@@ -178,7 +182,10 @@ internal class MatchingViewModel @Inject constructor(
                     updateState {
                         when {
                             offer != null -> copy(phase = MatchingPhase.OfferArrived(offer.toUiModel()))
-                            phase is MatchingPhase.OfferArrived || phase is MatchingPhase.PendingConfirm -> copy(phase = MatchingPhase.Waiting)
+                            phase is MatchingPhase.OfferArrived || phase is MatchingPhase.PendingConfirm -> copy(
+                                phase = MatchingPhase.Waiting
+                            )
+
                             else -> this
                         }
                     }
@@ -191,6 +198,74 @@ internal class MatchingViewModel @Inject constructor(
                 }
         }
     }
+    fun restoreOfferDetail(offerId: Long) {
+        viewModelScope.launch {
+            instructorMatchingRepository.fetchOfferDetail(offerId)
+                .onSuccess { detail ->
+                    Timber.d("matching-offer 상세 응답: $detail")
+                    when (detail) {
+                        is InstructorMatchingOfferDetail.Available ->
+                            updateState { copy(phase = detail.toPhase()) }
+
+                        is InstructorMatchingOfferDetail.Stale ->
+                            // TODO(홈 연동): 홈 재조회 후 같은 offerId의 CONFIRMED/IN_PROGRESS 카드면 lessonId로 이동.
+                            updateState {
+                                when (phase) {
+                                    is MatchingPhase.OfferArrived,
+                                    is MatchingPhase.PendingConfirm,
+                                        -> copy(phase = MatchingPhase.Waiting)
+
+                                    else -> this
+                                }
+                            }
+                    }
+                }
+                .onFailure {
+                    Timber.e(it, "matching-offer 상세 실패")
+                    if (it is ApiException) {
+                        sendEffect(MatchingContract.Effect.ShowToast(it.uiMessage))
+                    }
+                }
+        }
+    }
+
+    private fun InstructorMatchingOfferDetail.Available.toPhase(): MatchingPhase =
+        when (matchingStatus) {
+            MATCHING_STATUS_WAITING_FOR_INSTRUCTOR -> MatchingPhase.OfferArrived(toUiModel())
+            MATCHING_STATUS_WAITING_FOR_CONFIRMATION,
+            MATCHING_STATUS_PAYMENT_PENDING,
+                -> MatchingPhase.PendingConfirm(
+                offer = toUiModel(),
+                confirmationExpiresAtMillis = null
+            )
+
+            else -> MatchingPhase.OfferArrived(toUiModel())
+        }
+
+    private fun InstructorMatchingOfferDetail.Available.toUiModel(): MatchingOfferUiModel =
+        MatchingOfferUiModel(
+            offerId = offerId,
+            groupId = groupId,
+            status = runCatching { OfferStatusOption.valueOf(offerStatus) }
+                .getOrDefault(OfferStatusOption.UNKNOWN),
+            // 무기한 대기 정책 — 상세 응답에 expiresAt/타이머가 없다.
+            expiresAtMillis = null,
+            nickname = requestSummary.requesterName,
+            teamCount = requestSummary.headcount,
+            price = priceSummary.totalPaymentAmount,
+            participants = participants.map {
+                ParticipantUiModel(age = it.age, isMale = it.gender == GENDER_MALE)
+            },
+            lesson = LessonSummaryUiModel(
+                resortLabel = lessonSummary.resort.displayName,
+                sportLabel = lessonSummary.sport.toSportLabel(),
+                levelLabel = lessonSummary.level.toLevelLabel(),
+                headcount = lessonSummary.totalHeadcount,
+                durationHours = DurationOption.entries
+                    .firstOrNull { it.hours * 60 == lessonSummary.durationMinutes }?.hours
+                    ?: (lessonSummary.durationMinutes / 60),
+            ),
+        )
 
     private fun currentOffer(): MatchingOfferUiModel? =
         when (val phase = uiState.value.phase) {
@@ -204,11 +279,14 @@ internal class MatchingViewModel @Inject constructor(
         groupId = groupId,
         status = runCatching { OfferStatusOption.valueOf(offerStatus) }
             .getOrDefault(OfferStatusOption.UNKNOWN),
-        expiresAtMillis = expiresAt?.let { runCatching { java.time.Instant.parse(it).toEpochMilli() }.getOrNull() },
+        expiresAtMillis = expiresAt?.let {
+            runCatching {
+                java.time.Instant.parse(it).toEpochMilli()
+            }.getOrNull()
+        },
         nickname = requestSummary.requesterName,
         teamCount = requestSummary.headcount,
         price = priceSummary.totalPaymentAmount,
-        // TODO(#151, 서버 대기): participants(수강생 나이/성별) — offer 응답에 추가 예정. 내려오면 여기서 채운다.
         participants = emptyList(),
         lesson = LessonSummaryUiModel(
             resortLabel = lessonSummary.resort.displayName,
@@ -239,5 +317,11 @@ internal class MatchingViewModel @Inject constructor(
         const val EVENT_OFFER_RECEIVED = "MATCHING_OFFER_RECEIVED"
         const val EVENT_OFFER_CLOSED = "MATCHING_OFFER_CLOSED"
         const val EVENT_MATCHING_CANCELED = "MATCHING_CANCELED"
+
+        const val MATCHING_STATUS_WAITING_FOR_INSTRUCTOR = "WAITING_FOR_INSTRUCTOR"
+        const val MATCHING_STATUS_WAITING_FOR_CONFIRMATION = "WAITING_FOR_CONFIRMATION"
+        const val MATCHING_STATUS_PAYMENT_PENDING = "PAYMENT_PENDING"
+
+        const val GENDER_MALE = "MALE"
     }
 }
