@@ -4,6 +4,6 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class PaymentRequest(
+internal data class PaymentRequest(
     @SerialName("matchingRequestId") val matchingRequestId: Long,
 )
