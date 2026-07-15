@@ -67,7 +67,7 @@ internal class InstructorMatchingRepositoryImpl @Inject constructor(
     override suspend fun fetchOfferDetail(offerId: Long): Result<InstructorMatchingOfferDetail> =
         apiResponseHandler.safeApiCall {
             remoteDataSource.getMatchingOfferDetail(offerId)
-        }.map { it.toModel() }
+        }.mapCatching { it.toModel() }
 
     override suspend fun startMatchingExposure(
         sport: String,
@@ -87,6 +87,7 @@ internal class InstructorMatchingRepositoryImpl @Inject constructor(
                 ),
             )
         }.map { it.isExposed }
+
     private fun MatchingEnvelope<JsonElement>.toInstructorMatchingEventOrNull(): InstructorMatchingEvent? =
         runCatching {
             when (eventType) {
