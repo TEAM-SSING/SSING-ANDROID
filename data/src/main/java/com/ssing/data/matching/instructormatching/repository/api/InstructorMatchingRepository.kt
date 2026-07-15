@@ -2,6 +2,7 @@ package com.ssing.data.matching.instructormatching.repository.api
 
 import com.ssing.data.matching.instructormatching.model.InstructorMatchingExposure
 import com.ssing.data.matching.instructormatching.model.InstructorMatchingOffer
+import com.ssing.data.matching.instructormatching.model.InstructorMatchingOfferDetail
 import com.ssing.data.matching.instructormatching.model.InstructorMatchingSocketEvent
 import kotlinx.coroutines.flow.Flow
 
@@ -11,6 +12,8 @@ interface InstructorMatchingRepository {
     suspend fun fetchMatchingExposure(): Result<InstructorMatchingExposure>
 
     suspend fun fetchActiveOffer(): Result<InstructorMatchingOffer?>
+
+    suspend fun fetchOfferDetail(offerId: Long): Result<InstructorMatchingOfferDetail>
 
     suspend fun startMatchingExposure(
         sport: String,
