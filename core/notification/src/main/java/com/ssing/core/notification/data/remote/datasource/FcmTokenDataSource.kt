@@ -4,7 +4,7 @@ import com.ssing.core.notification.data.remote.dto.FcmTokenRegisterRequest
 import com.ssing.core.notification.data.remote.dto.FcmTokenUnregisterRequest
 
 
-interface NotificationDataSource {
+interface FcmTokenDataSource {
     suspend fun registerFcmToken(request: FcmTokenRegisterRequest): Result<Unit>
 
     suspend fun unregisterFcmToken(request: FcmTokenUnregisterRequest): Result<Unit>

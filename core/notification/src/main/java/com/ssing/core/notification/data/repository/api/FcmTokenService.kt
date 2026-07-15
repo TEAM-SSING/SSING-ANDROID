@@ -7,7 +7,7 @@ import retrofit2.http.POST
 import retrofit2.http.PUT
 
 
-interface NotificationService {
+interface FcmTokenService {
 
     @PUT("api/v1/fcm-tokens")
     suspend fun registerFcmToken(
