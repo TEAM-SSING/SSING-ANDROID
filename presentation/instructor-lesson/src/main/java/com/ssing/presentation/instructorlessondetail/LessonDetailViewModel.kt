@@ -83,7 +83,7 @@ internal class LessonDetailViewModel @Inject constructor(
     }
 
     fun onEndClick() {
-        val lessonId = currentLessonId() ?: return
+        if (uiState.value.phase !is LessonDetailContract.LessonDetailPhase.LessonDetailOngoing) return
 
         updateState {
             copy(showLessonEndDialog = false)
@@ -189,13 +189,6 @@ internal class LessonDetailViewModel @Inject constructor(
             )
         }
     }
-
-    private fun currentLessonId(): Long? =
-        when (val phase = uiState.value.phase) {
-            is LessonDetailContract.LessonDetailPhase.LessonDetailOngoing -> phase.ongoing.lessonId
-            else -> null
-        }
-
     private fun InstructorLessonDetailRequestResult.toPhase(): LessonDetailContract.LessonDetailPhase =
         when (this) {
             is InstructorLessonDetailBefore -> LessonDetailContract.LessonDetailPhase.LessonDetailBefore(
