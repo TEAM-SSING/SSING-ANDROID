@@ -2,12 +2,16 @@ package com.ssing.data.home.repository.impl
 
 import com.ssing.core.network.util.ApiResponseHandler
 import com.ssing.data.home.model.ConsumerHomeSummary
+import com.ssing.data.home.model.InstructorHomeSummary
 import com.ssing.data.home.model.LessonCard
 import com.ssing.data.home.model.Resort
+import com.ssing.data.home.model.ReviewSummary
 import com.ssing.data.home.remote.datasource.api.HomeRemoteDataSource
 import com.ssing.data.home.remote.dto.response.ConsumerHomeResponse
+import com.ssing.data.home.remote.dto.response.InstructorHomeResponse
 import com.ssing.data.home.remote.dto.response.LessonCardResponse
 import com.ssing.data.home.remote.dto.response.ResortResponse
+import com.ssing.data.home.remote.dto.response.ReviewSummaryResponse
 import com.ssing.data.home.repository.api.HomeRepository
 import javax.inject.Inject
 
@@ -21,10 +25,22 @@ internal class HomeRepositoryImpl @Inject constructor(
             dataSource.getConsumerHome()
         }.map { it.toModel() }
 
+    override suspend fun getInstructorHome(): Result<InstructorHomeSummary> =
+        apiResponseHandler.safeApiCall {
+            dataSource.getInstructorHome()
+        }.map { it.toModel() }
+
     private fun ConsumerHomeResponse.toModel(): ConsumerHomeSummary = ConsumerHomeSummary(
         lessonCards = this.lessonCards.map { it.toModel() },
         matchingPeopleCount = this.matchingPeopleCount,
         hasUnreadNotification = this.hasUnreadNotification,
+    )
+
+    private fun InstructorHomeResponse.toModel(): InstructorHomeSummary = InstructorHomeSummary(
+        lessonCards = this.lessonCards.map { it.toModel() },
+        matchingPeopleCount = this.matchingPeopleCount,
+        hasUnreadNotification = this.hasUnreadNotification,
+        reviewSummary = this.reviewSummary.toModel(),
     )
 
     private fun LessonCardResponse.toModel(): LessonCard = LessonCard(
@@ -40,5 +56,11 @@ internal class HomeRepositoryImpl @Inject constructor(
     private fun ResortResponse.toModel(): Resort = Resort(
         code = this.code,
         displayName = this.displayName,
+    )
+
+    private fun ReviewSummaryResponse.toModel(): ReviewSummary = ReviewSummary(
+        averageRating = this.averageRating,
+        grade = this.grade,
+        achievementRate = achievementRate,
     )
 }
