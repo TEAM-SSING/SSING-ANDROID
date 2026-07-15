@@ -1,8 +1,8 @@
 package com.ssing.presentation.consumerlesson.mapper
 
+import com.ssing.core.ui.type.displayGender
 import com.ssing.data.consumerlesson.model.InstructorProfile
 import com.ssing.presentation.consumerlesson.model.InstructorProfileUiModel
-import com.ssing.presentation.consumerlesson.util.displayGender
 import java.time.Year
 
 internal fun InstructorProfile.toUiModel(): InstructorProfileUiModel = InstructorProfileUiModel(
