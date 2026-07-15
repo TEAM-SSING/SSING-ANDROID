@@ -29,6 +29,9 @@ internal class ConsumerMatchingViewModel @Inject constructor(
     private val matchingRequestId =
         savedStateHandle.toRoute<ConsumerMatchingGraph>().matchingRequestId
 
+    private val isRecoveredEntry =
+        savedStateHandle.toRoute<ConsumerMatchingGraph>().isRecoveredEntry
+
     private var isSubmitting = false
 
     private fun launchExclusive(block: suspend () -> Unit) {
@@ -105,7 +108,12 @@ internal class ConsumerMatchingViewModel @Inject constructor(
         consumerMatchingRepository.cancelMatching(matchingRequestId)
             .onSuccess {
                 consumerMatchingRepository.disconnect()
-                sendEffect(ConsumerMatchingContract.Effect.Pending.PopBackStack)
+                val effect = if (isRecoveredEntry) {
+                    ConsumerMatchingContract.Effect.Pending.NavigateToConditionFromRecovery
+                } else {
+                    ConsumerMatchingContract.Effect.Pending.PopBackStack
+                }
+                sendEffect(effect)
             }
             .onFailure {
                 val message = if (it is ApiException) it.uiMessage else CANCEL_FAILURE_FALLBACK_MSG

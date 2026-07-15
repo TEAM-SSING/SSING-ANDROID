@@ -21,7 +21,10 @@ import kotlinx.serialization.Serializable
 data object ConsumerMatchingCondition : Route
 
 @Serializable
-data class ConsumerMatchingGraph(val matchingRequestId: Long) : Route
+data class ConsumerMatchingGraph(
+    val matchingRequestId: Long,
+    val isRecoveredEntry: Boolean = false,
+) : Route
 
 @Serializable
 private data object ConsumerMatchingPending : Route
@@ -65,6 +68,10 @@ fun NavGraphBuilder.consumerMatchingNavGraph(
                 navigateToResult = navController::navigateToConsumerMatchingResult,
                 navigateToFailure = navController::navigateToConsumerMatchingFailure,
                 navigateToHome = navigateToHome,
+                navigateToConditionFromRecovery = {
+                    navigateToHome()
+                    navController.navigateToConsumerMatchingCondition()
+                },
                 modifier = Modifier.padding(paddingValues),
                 viewModel = sharedViewModel(backStackEntry, navController),
             )
