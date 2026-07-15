@@ -6,6 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import com.ssing.core.ui.extension.clearBackStackNavOptions
+import com.ssing.core.ui.navigation.Route
 import com.ssing.core.ui.navigation.SsingNavHost
 import com.ssing.presentation.auth.consumer.navigation.ConsumerLogin
 import com.ssing.presentation.auth.consumer.navigation.consumerAuthNavGraph
@@ -18,19 +19,19 @@ import com.ssing.presentation.consumermatching.navigation.navigateToConsumerMatc
 import com.ssing.presentation.consumerpayment.navigation.consumerPaymentNavGraph
 import com.ssing.presentation.consumerpayment.navigation.navigateToComsumerPayment
 import com.ssing.presentation.consumerprofile.navigation.consumerProfileNavGraph
-import com.ssing.presentation.devauth.navigation.DevAuth
 import com.ssing.presentation.devauth.navigation.devAuthNavGraph
 import com.ssing.presentation.notification.navigation.notificationNavGraph
 
 @Composable
 internal fun ConsumerMainNavHost(
+    startDestination: Route,
     navController: NavHostController,
     paddingValues: PaddingValues,
     modifier: Modifier = Modifier,
 ) {
     SsingNavHost(
         navController = navController,
-        startDestination = DevAuth,
+        startDestination = startDestination,
         modifier = modifier.fillMaxSize(),
     ) {
         devAuthNavGraph(
