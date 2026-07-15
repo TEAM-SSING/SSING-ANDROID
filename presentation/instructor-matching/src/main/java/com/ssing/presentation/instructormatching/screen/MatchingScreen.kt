@@ -31,6 +31,7 @@ import com.ssing.presentation.instructormatching.model.SportOption
 @Composable
 internal fun MatchingRoute(
     navigateBack: () -> Unit,
+    navigateToLessonDetail: (Long) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: MatchingViewModel = hiltViewModel(),
 ) {
@@ -41,6 +42,7 @@ internal fun MatchingRoute(
         when (effect) {
             is MatchingContract.Effect.ShowToast -> context.toast(effect.message)
             MatchingContract.Effect.NavigateBack -> navigateBack()
+            is MatchingContract.Effect.NavigateToLessonDetail -> navigateToLessonDetail(effect.lessonId)
         }
     }
 
