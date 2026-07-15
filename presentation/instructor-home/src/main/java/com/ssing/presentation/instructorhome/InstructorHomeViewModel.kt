@@ -119,16 +119,6 @@ internal class InstructorHomeViewModel @Inject constructor(
             else -> Status.Default
         }
 
-    private fun Int.toGrade(): Grade =
-        when (this) {
-            1 -> Grade.GRADE1
-            2 -> Grade.GRADE2
-            3 -> Grade.GRADE3
-            4 -> Grade.GRADE4
-            5 -> Grade.GRADE5
-            else -> Grade.GRADE1
-        }
-
     private companion object {
         const val MATCHING = "MATCHING"
         const val WAITING_FOR_CONFIRMATION = "WAITING_FOR_CONFIRMATION"
