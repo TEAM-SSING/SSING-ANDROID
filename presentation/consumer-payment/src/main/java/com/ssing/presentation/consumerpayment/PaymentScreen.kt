@@ -53,7 +53,7 @@ internal fun PaymentRoute(
 
     HandleUiEffects(viewModel.uiEffect) { effect ->
         when (effect) {
-            is PaymentContract.Effect.NavigateToLesson -> navigateToLesson(state.lessonId)
+            is PaymentContract.Effect.NavigateToLesson -> navigateToLesson(effect.lessonId)
             PaymentContract.Effect.NavigateToHome -> navigateToHome()
             is PaymentContract.Effect.ShowToast -> context.toast(effect.message)
         }
@@ -111,6 +111,7 @@ internal fun PaymentScreen(
                 text = "결제하기",
                 onClick = onPaymentClick,
                 style = SsingButtonStyle.BLUE,
+                enabled = !state.isLoading,
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(color = White)
@@ -231,7 +232,7 @@ private fun PayInfoSection(
                 )
 
                 Text(
-                    text = "%,d원".format(state.lessonCost + state.resortCost),
+                    text = "%,d원".format(state.totalPaymentAmount),
                     style = SSINGTheme.typography.title.b16,
                     color = SSINGTheme.colors.primaryNormal,
                 )
@@ -246,7 +247,6 @@ private fun PaymentScreenPreview() {
     SSINGTheme {
         PaymentScreen(
             state = PaymentContract.State(
-                lessonId = 1,
                 nickname = "김OO",
                 tags = persistentListOf("스노보드", "처음타요"),
                 classDateTime = "7월 9일 오후 04:40",
@@ -260,6 +260,7 @@ private fun PaymentScreenPreview() {
                 equipmentStatus = "착용 완료",
                 lessonCost = 60000,
                 resortCost = 20000,
+                totalPaymentAmount = 80000,
             ),
             onPaymentClick = {},
             onBackClick = {},

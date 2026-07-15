@@ -9,8 +9,8 @@ import com.ssing.core.network.socket.SocketState
 import com.ssing.core.ui.base.BaseViewModel
 import com.ssing.core.ui.extension.uiMessage
 import com.ssing.data.matching.instructormatching.event.InstructorMatchingEvent
-import com.ssing.data.matching.instructormatching.model.InstructorMatchingOffer
 import com.ssing.data.matching.instructormatching.model.InstructorMatchingOfferDetail
+import com.ssing.data.matching.instructormatching.model.InstructorMatchingSetting
 import com.ssing.data.matching.instructormatching.repository.api.InstructorMatchingRepository
 import com.ssing.presentation.instructormatching.MatchingContract.MatchingDialog
 import com.ssing.presentation.instructormatching.MatchingContract.MatchingPhase
@@ -18,6 +18,7 @@ import com.ssing.presentation.instructormatching.navigation.InstructorMatching
 import com.ssing.presentation.instructormatching.model.DurationOption
 import com.ssing.presentation.instructormatching.model.LessonSummaryUiModel
 import com.ssing.presentation.instructormatching.model.LevelOption
+import com.ssing.presentation.instructormatching.model.MatchingExposureUiState
 import com.ssing.presentation.instructormatching.model.MatchingOfferUiModel
 import com.ssing.presentation.instructormatching.model.OfferStatusOption
 import com.ssing.presentation.instructormatching.model.ParticipantUiModel
@@ -255,18 +256,16 @@ internal class MatchingViewModel @Inject constructor(
     fun restoreActiveOffer() {
         restoreJob?.cancel()
         restoreJob = viewModelScope.launch {
-            instructorMatchingRepository.fetchActiveOffer()
-                .onSuccess { offer ->
-                    Timber.d("matching-offers 응답: $offer")
-                    updateState {
-                        when {
-                            offer != null -> copy(phase = MatchingPhase.OfferArrived(offer.toUiModel()))
-                            phase is MatchingPhase.OfferArrived || phase is MatchingPhase.PendingConfirm -> copy(
-                                phase = MatchingPhase.Waiting
-                            )
-
-                            else -> this
-                        }
+            instructorMatchingRepository.fetchMatchingActive()
+                .onSuccess { active ->
+                    Timber.d("matching-offers 응답: $active")
+                    // 저장된 조건은 항상 복원한다(대기 화면 조건 카드/조건 수정용).
+                    updateState { copy(exposure = exposure.applyMatchingSetting(active.setting)) }
+                    val offerId = active.offerId
+                    when {
+                        offerId != null -> restoreOfferDetail(offerId)
+                        active.setting.isExposed -> updateState { copy(phase = MatchingPhase.Waiting) }
+                        else -> updateState { copy(phase = MatchingPhase.SettingExposure) }
                     }
                 }
                 .onFailure {
@@ -277,6 +276,7 @@ internal class MatchingViewModel @Inject constructor(
                 }
         }
     }
+
     fun restoreOfferDetail(offerId: Long) {
         restoreJob?.cancel()
         restoreJob = viewModelScope.launch {
@@ -347,37 +347,27 @@ internal class MatchingViewModel @Inject constructor(
             ),
         )
 
+    private fun MatchingExposureUiState.applyMatchingSetting(
+        setting: InstructorMatchingSetting,
+    ): MatchingExposureUiState = copy(
+        resortName = setting.resort.displayName,
+        selectedSports = runCatching { SportOption.valueOf(setting.sport) }.getOrNull(),
+        selectedLevels = setting.lessonLevels
+            .mapNotNull { runCatching { LevelOption.valueOf(it) }.getOrNull() }
+            .toSet(),
+        selectedDurations = setting.availableDurationMinutes
+            .mapNotNull { minutes -> DurationOption.entries.firstOrNull { it.hours * 60 == minutes } }
+            .toSet(),
+        maxHeadcount = setting.maxHeadcount,
+        isNoticeChecked = setting.equipmentReady,
+    )
+
     private fun currentOffer(): MatchingOfferUiModel? =
         when (val phase = uiState.value.phase) {
             is MatchingPhase.OfferArrived -> phase.offer
             is MatchingPhase.PendingConfirm -> phase.offer
             else -> null
         }
-
-    private fun InstructorMatchingOffer.toUiModel(): MatchingOfferUiModel = MatchingOfferUiModel(
-        offerId = offerId,
-        groupId = groupId,
-        status = runCatching { OfferStatusOption.valueOf(offerStatus) }
-            .getOrDefault(OfferStatusOption.UNKNOWN),
-        expiresAtMillis = expiresAt?.let {
-            runCatching {
-                java.time.Instant.parse(it).toEpochMilli()
-            }.getOrNull()
-        },
-        nickname = requestSummary.requesterName,
-        teamCount = requestSummary.headcount,
-        price = priceSummary.totalPaymentAmount,
-        participants = emptyList(),
-        lesson = LessonSummaryUiModel(
-            resortLabel = lessonSummary.resort.displayName,
-            sportLabel = lessonSummary.sport.toSportLabel(),
-            levelLabel = lessonSummary.level.toLevelLabel(),
-            headcount = lessonSummary.totalHeadcount,
-            durationHours = DurationOption.entries
-                .firstOrNull { it.hours * 60 == lessonSummary.durationMinutes }?.hours
-                ?: (lessonSummary.durationMinutes / 60),
-        ),
-    )
 
     private fun String.toSportLabel(): String =
         runCatching { SportOption.valueOf(this).label }.getOrDefault(this)

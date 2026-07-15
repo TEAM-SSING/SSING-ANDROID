@@ -68,6 +68,7 @@ fun NavGraphBuilder.consumerMatchingNavGraph(
             ConsumerMatchingPendingRoute(
                 popBackStack = navController::popBackStack,
                 navigateToResult = navController::navigateToConsumerMatchingResult,
+                navigateToPayment = navigateToPayment,
                 navigateToFailure = navController::navigateToConsumerMatchingFailure,
                 navigateToHome = navigateToHome,
                 navigateToConditionFromRecovery = {

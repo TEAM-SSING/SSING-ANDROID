@@ -1,15 +1,5 @@
 package com.ssing.data.matching.instructormatching.model
 
-data class InstructorMatchingOffer(
-    val offerId: Long,
-    val groupId: Long,
-    val offerStatus: String,
-    val expiresAt: String?,
-    val requestSummary: InstructorMatchingRequestSummary,
-    val lessonSummary: InstructorMatchingLessonSummary,
-    val priceSummary: InstructorMatchingPriceSummary,
-)
-
 data class InstructorMatchingRequestSummary(
     val requesterName: String,
     val headcount: Int,

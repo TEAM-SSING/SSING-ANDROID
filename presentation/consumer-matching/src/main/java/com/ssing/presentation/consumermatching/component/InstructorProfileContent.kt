@@ -498,8 +498,9 @@ private fun ReviewCard(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
-                UrlImage(
-                    url = review.profileImageUrl,
+                Image(
+                    painter = painterResource(R.drawable.img_dummy_review_profile),
+                    contentDescription = null,
                     modifier = Modifier
                         .clip(CircleShape)
                         .height(32.dp)

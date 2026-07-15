@@ -2,6 +2,7 @@ package com.ssing.data.matching.consumermatching.repository.api
 
 import com.ssing.core.network.socket.SocketState
 import com.ssing.data.matching.consumermatching.event.ConsumerMatchingEvent
+import com.ssing.data.matching.consumermatching.model.ConsumerMatchingActive
 import com.ssing.data.matching.consumermatching.model.ConsumerMatchingRequestResult
 import com.ssing.data.matching.consumermatching.model.ConsumerMatchingParticipant
 import kotlinx.coroutines.flow.Flow
@@ -35,4 +36,6 @@ interface ConsumerMatchingRepository {
     ): Result<Unit>
 
     suspend fun getMatchingActive(): Result<Long?>
+
+    suspend fun refetchMatching(): Result<ConsumerMatchingActive>
 }
