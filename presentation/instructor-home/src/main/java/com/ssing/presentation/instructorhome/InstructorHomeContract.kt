@@ -11,14 +11,15 @@ internal interface InstructorHomeContract {
 
     @Immutable
     data class State(
+        val isLoading: Boolean = false,
+        val lessonCards: ImmutableList<HomeLessonCardState> = persistentListOf(),
+        val hasUnreadNotification: Boolean = false,
         val lessonId: Long = 0,
         val nickname: String = "",
-        val matchingCount: Int = 0,
-        val lessonCards: ImmutableList<HomeLessonCardState> = persistentListOf(),
+        val matchingPeopleCount: Long = 0,
         val averageRating: Float = 0f,
         val grade: Grade = Grade.GRADE1,
         val achievementRate: Int = 0,
-        val isLoading: Boolean = false,
     )
 
     sealed interface Effect {
