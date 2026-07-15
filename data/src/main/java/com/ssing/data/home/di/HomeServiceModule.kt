@@ -1,8 +1,7 @@
-package com.ssing.data.lesson.di
+package com.ssing.data.home.di
 
 import com.ssing.core.network.di.Auth
-import com.ssing.data.lesson.remote.service.LessonService
-import dagger.Binds
+import com.ssing.data.home.remote.service.HomeService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -12,11 +11,11 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-internal object LessonServiceModule {
+internal class HomeServiceModule {
 
     @Provides
     @Singleton
-    fun provideLessonService(
-        @Auth retrofit: Retrofit
-    ): LessonService = retrofit.create(LessonService::class.java)
+    fun provideConsumerService(
+        @Auth retrofit: Retrofit,
+    ): HomeService = retrofit.create(HomeService::class.java)
 }
