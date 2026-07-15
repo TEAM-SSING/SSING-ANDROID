@@ -169,6 +169,7 @@ private fun SsingField(
             )
             .padding(all = 16.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         if (selectedValue != null) {
             Text(
