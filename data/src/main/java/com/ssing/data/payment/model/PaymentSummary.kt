@@ -8,6 +8,6 @@ data class PaymentSummary(
     val groupStatus: String,
     val paidCount: Int,
     val requiredCount: Int,
-    val lessonId: Long,
-    val expiresAt: String,
+    val lessonId: Long? = null,
+    val expiresAt: String? = null,
 )

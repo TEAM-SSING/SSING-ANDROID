@@ -12,7 +12,7 @@ internal data class PaymentResponse (
     @SerialName("groupStatus") val groupStatus: String,
     @SerialName("paidCount") val paidCount: Int,
     @SerialName("requiredCount") val requiredCount: Int,
-    @SerialName("lessonId") val lessonId: Long,
-    @SerialName("expiresAt") val expiresAt: String,
+    @SerialName("lessonId") val lessonId: Long? = null,
+    @SerialName("expiresAt") val expiresAt: String? = null,
 
     )
