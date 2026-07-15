@@ -61,6 +61,8 @@ internal class ConsumerMatchingViewModel @Inject constructor(
         consumerMatchingRepository.socketState
             .onEach { state -> handleSocketState(state) }
             .launchIn(viewModelScope)
+
+        refetching(noneFallback = RecoveryNoneFallback.FAILURE)
     }
 
     override fun onCleared() {
