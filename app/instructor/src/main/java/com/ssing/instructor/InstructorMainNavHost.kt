@@ -6,6 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import com.ssing.core.ui.extension.clearBackStackNavOptions
+import com.ssing.core.ui.navigation.Route
 import com.ssing.core.ui.navigation.SsingNavHost
 import com.ssing.presentation.auth.instructor.navigation.InstructorLogin
 import com.ssing.presentation.auth.instructor.navigation.instructorAuthNavGraph
@@ -23,7 +24,7 @@ import com.ssing.presentation.notification.navigation.notificationNavGraph
 internal fun InstructorMainNavHost(
     navController: NavHostController,
     paddingValues: PaddingValues,
-    startDestination: Any,
+    startDestination: Route,
     modifier: Modifier = Modifier,
 ) {
     SsingNavHost(

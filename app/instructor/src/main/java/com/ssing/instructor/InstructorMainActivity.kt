@@ -10,6 +10,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.getValue
@@ -21,28 +22,19 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.ssing.core.network.session.AuthSessionManager
-import com.ssing.core.network.token.TokenAccessManager
 import com.ssing.core.ui.common.component.SsingBottomBar
 import com.ssing.core.ui.designsystem.theme.SSINGTheme
-import com.ssing.presentation.auth.instructor.navigation.InstructorLogin
-import com.ssing.presentation.devauth.navigation.DevAuth
-import com.ssing.presentation.instructorhome.navigation.InstructorHome
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.collections.immutable.toImmutableList
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class InstructorMainActivity : ComponentActivity() {
+    private val viewModel: InstructorMainViewModel by viewModels()
 
     @Inject
     lateinit var authSessionManager: AuthSessionManager
-
-    @Inject
-    lateinit var tokenAccessManager: TokenAccessManager
-
-    private val startDestination = MutableStateFlow<Any?>(null)
 
     private val requestNotificationPermissionLauncher =
         registerForActivityResult(
@@ -55,16 +47,17 @@ class InstructorMainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         val splashScreen = installSplashScreen()
         super.onCreate(savedInstanceState)
-        splashScreen.setKeepOnScreenCondition { startDestination.value == null }
         enableEdgeToEdge()
         observeSessionExpired()
         requestNotificationPermission()
-        decideStartDestination()
+
+        splashScreen.setKeepOnScreenCondition { viewModel.startDestination.value == null }
+
         setContent {
             SSINGTheme {
-                val destination by startDestination.collectAsStateWithLifecycle()
+                val startDestination by viewModel.startDestination.collectAsStateWithLifecycle()
 
-                destination?.let { start ->
+                startDestination?.let { destination ->
                     val appState = rememberInstructorMainAppState()
                     val isBottomBarVisible by appState.isBottomBarVisible.collectAsStateWithLifecycle()
                     val currentTab by appState.currentTab.collectAsStateWithLifecycle()
@@ -83,24 +76,11 @@ class InstructorMainActivity : ComponentActivity() {
                         InstructorMainNavHost(
                             navController = appState.navController,
                             paddingValues = innerPadding,
-                            startDestination = start,
+                            startDestination = destination,
                         )
                     }
                 }
             }
-        }
-    }
-
-    private fun decideStartDestination() {
-        if (START_AT_DEV_AUTH) {
-            startDestination.value = DevAuth
-            return
-        }
-
-        lifecycleScope.launch {
-            val accessToken = tokenAccessManager.getAccessToken()
-            startDestination.value =
-                if (accessToken.isNullOrBlank()) InstructorLogin else InstructorHome
         }
     }
 
@@ -126,9 +106,5 @@ class InstructorMainActivity : ComponentActivity() {
                 }
             }
         }
-    }
-
-    companion object {
-        private const val START_AT_DEV_AUTH = false
     }
 }
