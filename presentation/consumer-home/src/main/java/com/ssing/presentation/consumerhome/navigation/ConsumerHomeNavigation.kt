@@ -12,7 +12,7 @@ data object ConsumerHome : MainTabRoute
 
 fun NavGraphBuilder.consumerHomeNavGraph(
     paddingValues: PaddingValues,
-    navigateToLessonDetail: (Long) -> Unit,
+    navigateToLessonDetail: (Long?) -> Unit,
     navigateToMatching: () -> Unit,
     navigateToActiveMatching: (Long) -> Unit,
 ) {

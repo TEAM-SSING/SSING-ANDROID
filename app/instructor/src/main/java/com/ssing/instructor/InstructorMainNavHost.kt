@@ -60,7 +60,12 @@ internal fun InstructorMainNavHost(
             },
             navigateToLessonDetail = { lessonId ->
                 navController.navigate(
-                    route = InstructorLesson(lessonId = lessonId),
+                    route = InstructorLesson(lessonId = lessonId ?: 0),
+                )
+            },
+            navigateToMatchingWaiting = {
+                navController.navigate(
+                    route = InstructorMatching
                 )
             },
             navigateToNotification = {

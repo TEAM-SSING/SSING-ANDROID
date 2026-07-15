@@ -41,13 +41,14 @@ import java.time.LocalDateTime
 
 sealed interface HomeLessonCardState
     data class Reservation(
-        val lessonId: Long,
         val chip: String,
         val displayText: String,
         val location: String,
         val imageRes: Int,
         val date: LocalDateTime?,
         val status: Status,
+        val lessonId: Long? = null,
+        val offerId: Long? = null,
     ) : HomeLessonCardState {
         sealed interface Status {
             data object Default : Status

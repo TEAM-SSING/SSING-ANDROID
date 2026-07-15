@@ -48,7 +48,8 @@ internal fun ConsumerMainNavHost(
             paddingValues = paddingValues,
             navigateToLessonDetail = { lessonId ->
                 navController.navigate(
-                    route = ConsumerLesson(lessonId),
+                    // TODO: 검토 필요 (nullable)
+                    route = ConsumerLesson(lessonId ?: 0),
                 )
             },
             navigateToMatching = { navController.navigateToConsumerMatchingCondition() },

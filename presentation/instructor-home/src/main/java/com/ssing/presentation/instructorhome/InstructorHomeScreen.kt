@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -46,17 +45,19 @@ import java.time.LocalDateTime
 @Composable
 internal fun InstructorHomeRoute(
     contentPadding: PaddingValues,
-    navigateToLessonDetail: (Long) -> Unit,
+    navigateToLessonDetail: (Long?) -> Unit,
     navigateToMatching: () -> Unit,
     navigateToNotification: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: InstructorHomeViewModel = hiltViewModel(),
+    navigateToMatchingWaiting: () -> Unit,
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val context = LocalContext.current
 
     HandleUiEffects(viewModel.uiEffect) { effect ->
         when (effect) {
+            is InstructorHomeContract.Effect.NavigateToMatchingWaiting -> navigateToMatchingWaiting
             is InstructorHomeContract.Effect.NavigateToLessonDetail -> navigateToLessonDetail(effect.lessonId)
             is InstructorHomeContract.Effect.NavigateToMatching -> navigateToMatching()
             is InstructorHomeContract.Effect.ShowToast -> context.toast(effect.message)
@@ -71,7 +72,7 @@ internal fun InstructorHomeRoute(
         onReviewClick = viewModel::onReviewClick,
         onNotificationClick = navigateToNotification,
         contentPadding = contentPadding,
-        hasReview = false,
+        hasReview = true,
         modifier = modifier,
     )
 }
@@ -89,7 +90,6 @@ private fun InstructorHomeScreen(
     modifier: Modifier = Modifier,
 ) {
     Scaffold(
-        modifier = modifier,
         topBar = {
             SsingHomeTopBar(
                 logo = {
@@ -142,7 +142,7 @@ private fun InstructorHomeScreen(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
             ) {
                 StartMatchingButton(
-                    badgeText = "${state.matchingCount}명 매칭중",
+                    badgeText = "${state.matchingPeopleCount}명 매칭중",
                     title = "씽 매칭",
                     description = "준비된 강습생과\n바로 연결하기",
                     iconRes = R.drawable.img_fast_dark,
@@ -171,7 +171,7 @@ private fun InstructorHomeScreen(
                 verticalArrangement = Arrangement.spacedBy(8.dp),
             ) {
                 Text(
-                    text = "${state.nickname}님의 강습 후기",
+                    text = "${state.instructorName}님의 강습 후기",
                     color = SSINGTheme.colors.textNormal,
                     style = SSINGTheme.typography.body.sb16,
                 )
@@ -183,8 +183,9 @@ private fun InstructorHomeScreen(
                         achievementRate = state.achievementRate,
                         onClick = onReviewClick,
                     )
+                } else {
+                    InstructorHomeEmptyReviewCard()
                 }
-                else { InstructorHomeEmptyReviewCard() }
             }
         }
     }
@@ -196,8 +197,8 @@ private fun InstructorHomeScreenPreview() {
     SSINGTheme {
         InstructorHomeScreen(
             state = InstructorHomeContract.State(
-                nickname = "김씽씽",
-                matchingCount = 99,
+                instructorName = "김씽씽",
+                matchingPeopleCount = 99,
                 lessonCards = persistentListOf(
                     Reservation(
                         lessonId = 1,
@@ -239,8 +240,8 @@ private fun InstructorHomeScreen2Preview() {
     SSINGTheme {
         InstructorHomeScreen(
             state = InstructorHomeContract.State(
-                nickname = "김씽씽",
-                matchingCount = 99,
+                instructorName = "김씽씽",
+                matchingPeopleCount = 99,
                 lessonCards = persistentListOf(Empty),
                 averageRating = 3.0f,
                 grade = Grade.GRADE4,

@@ -28,10 +28,17 @@ class ApiResponseHandler @Inject constructor(
      *
      * @param block 실행할 suspend API 호출
      */
-    suspend fun <T> safeApiCall(block: suspend () -> BaseResponse<T>): Result<T> =
+    suspend fun <T> safeApiCall(
+        block: suspend () -> BaseResponse<T>,
+    ): Result<T> =
         suspendRunCatching {
             block().data
         }.recoverCatching { throwable ->
+            Timber.e(
+                throwable,
+                "safeApiCall 원본 예외: type=${throwable::class.qualifiedName}, message=${throwable.message}"
+            )
+
             throw mapThrowable(throwable)
         }
 
