@@ -8,7 +8,7 @@ import android.content.Intent
 import androidx.core.app.NotificationCompat
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
-import com.ssing.data.repository.NotificationRepository
+import com.ssing.core.notification.data.repository.NotificationRepository
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -51,7 +51,7 @@ class PushNotificationService : FirebaseMessagingService() {
         super.onNewToken(token)
 
         serviceScope.launch {
-            notificationRepository.saveNotificationToken(token)
+            notificationRepository.registerFcmToken(token)
                 .onFailure { Timber.e(it, "FCM 토큰 저장 실패") }
         }
     }
