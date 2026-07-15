@@ -53,7 +53,7 @@ internal fun PaymentRoute(
 
     HandleUiEffects(viewModel.uiEffect) { effect ->
         when (effect) {
-            is PaymentContract.Effect.NavigateToLesson -> navigateToLesson(state.lessonId)
+            is PaymentContract.Effect.NavigateToLesson -> navigateToLesson(effect.lessonId)
             PaymentContract.Effect.NavigateToHome -> navigateToHome()
             is PaymentContract.Effect.ShowToast -> context.toast(effect.message)
         }
@@ -246,7 +246,6 @@ private fun PaymentScreenPreview() {
     SSINGTheme {
         PaymentScreen(
             state = PaymentContract.State(
-                lessonId = 1,
                 nickname = "김OO",
                 tags = persistentListOf("스노보드", "처음타요"),
                 classDateTime = "7월 9일 오후 04:40",

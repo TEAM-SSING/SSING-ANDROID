@@ -9,7 +9,6 @@ internal interface PaymentContract {
 
     @Immutable
     data class State(
-        val lessonId: Long = 0,
         val isLoading: Boolean = false,
         val showCancelModal: Boolean = false,
         val nickname: String = "",
