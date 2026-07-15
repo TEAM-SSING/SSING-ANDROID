@@ -2,7 +2,6 @@ package com.ssing.data.payment.remote.datasource.impl
 
 import com.ssing.core.network.model.BaseResponse
 import com.ssing.data.payment.remote.datasource.api.PaymentRemoteDataSource
-import com.ssing.data.payment.remote.dto.request.PaymentRequest
 import com.ssing.data.payment.remote.dto.response.PaymentResponse
 import com.ssing.data.payment.remote.service.PaymentService
 import javax.inject.Inject
@@ -13,10 +12,8 @@ internal class PaymentRemoteDataSourceImpl @Inject constructor(
 
     override suspend fun postPaymentRequest(
         matchingRequestId: Long,
-        request: PaymentRequest,
     ): BaseResponse<PaymentResponse> =
         paymentService.postPaymentService(
             matchingRequestId = matchingRequestId,
-            request = request
         )
 }
