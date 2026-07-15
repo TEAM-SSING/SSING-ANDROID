@@ -14,5 +14,4 @@ internal data class PaymentResponse (
     @SerialName("requiredCount") val requiredCount: Int,
     @SerialName("lessonId") val lessonId: Long? = null,
     @SerialName("expiresAt") val expiresAt: String? = null,
-
     )

@@ -18,4 +18,3 @@ internal abstract class PaymentDataSourceModule {
         impl: PaymentRemoteDataSourceImpl,
     ): PaymentRemoteDataSource
 }
-
