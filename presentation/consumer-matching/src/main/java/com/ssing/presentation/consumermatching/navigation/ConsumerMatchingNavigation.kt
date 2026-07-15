@@ -32,7 +32,10 @@ private data object ConsumerMatchingResult : Route
 @Serializable
 private data object ConsumerMatchingFailure : Route
 
-fun NavController.navigateToConsumerMatching() =
+fun NavController.navigateToConsumerMatchingCondition() =
+    this.navigate(ConsumerMatchingCondition)
+
+private fun NavController.navigateToConsumerMatching() =
     this.navigate(ConsumerMatchingGraph)
 
 private fun NavController.navigateToConsumerMatchingResult() =
