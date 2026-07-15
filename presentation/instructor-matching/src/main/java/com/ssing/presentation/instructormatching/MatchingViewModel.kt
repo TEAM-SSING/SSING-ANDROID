@@ -21,6 +21,7 @@ import com.ssing.presentation.instructormatching.model.ParticipantUiModel
 import com.ssing.presentation.instructormatching.model.SportOption
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -237,8 +238,11 @@ internal class MatchingViewModel @Inject constructor(
 
     fun dismissDialog() = updateState { copy(dialog = null) }
 
+    private var restoreJob: Job? = null
+
     fun restoreActiveOffer() {
-        viewModelScope.launch {
+        restoreJob?.cancel()
+        restoreJob = viewModelScope.launch {
             instructorMatchingRepository.fetchActiveOffer()
                 .onSuccess { offer ->
                     Timber.d("matching-offers 응답: $offer")
@@ -262,7 +266,8 @@ internal class MatchingViewModel @Inject constructor(
         }
     }
     fun restoreOfferDetail(offerId: Long) {
-        viewModelScope.launch {
+        restoreJob?.cancel()
+        restoreJob = viewModelScope.launch {
             instructorMatchingRepository.fetchOfferDetail(offerId)
                 .onSuccess { detail ->
                     Timber.d("matching-offer 상세 응답: $detail")

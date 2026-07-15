@@ -7,7 +7,6 @@ import com.ssing.data.matching.instructormatching.remote.dto.response.Instructor
 import com.ssing.data.matching.instructormatching.remote.dto.response.InstructorMatchingExposureResponse
 import com.ssing.data.matching.instructormatching.remote.dto.response.InstructorMatchingExposureStartResponse
 import com.ssing.data.matching.instructormatching.remote.dto.response.InstructorMatchingOfferDecisionResponse
-import retrofit2.http.Body
 import com.ssing.data.matching.instructormatching.remote.dto.response.InstructorMatchingOfferDetailResponse
 import com.ssing.data.matching.instructormatching.remote.dto.response.InstructorMatchingOffersResponse
 import retrofit2.http.Body
