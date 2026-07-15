@@ -10,11 +10,11 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class ConsumerPayment(val matchingRequestId: Long) : Route
 
-fun NavController.navigateToComsumerPayment(matchingRequestId: Long) =
+fun NavController.navigateToConsumerPayment(matchingRequestId: Long) =
     navigate(ConsumerPayment(matchingRequestId))
 
 fun NavGraphBuilder.consumerPaymentNavGraph(
-    navigateToLesson: () -> Unit,
+    navigateToLesson: (Long) -> Unit,
     navigateToHome: () -> Unit,
 ) {
     slideComposable<ConsumerPayment> {

@@ -18,7 +18,7 @@ import com.ssing.presentation.consumermatching.navigation.consumerMatchingNavGra
 import com.ssing.presentation.consumermatching.navigation.navigateToConsumerMatching
 import com.ssing.presentation.consumermatching.navigation.navigateToConsumerMatchingCondition
 import com.ssing.presentation.consumerpayment.navigation.consumerPaymentNavGraph
-import com.ssing.presentation.consumerpayment.navigation.navigateToComsumerPayment
+import com.ssing.presentation.consumerpayment.navigation.navigateToConsumerPayment
 import com.ssing.presentation.consumerprofile.navigation.consumerProfileNavGraph
 import com.ssing.presentation.devauth.navigation.devAuthNavGraph
 import com.ssing.presentation.notification.navigation.notificationNavGraph
@@ -92,7 +92,7 @@ internal fun ConsumerMainNavHost(
                     navOptions = navController.clearBackStackNavOptions(),
                 )
             },
-            navigateToPayment = { navController.navigateToComsumerPayment(it) },
+            navigateToPayment = { navController.navigateToConsumerPayment(it) },
         )
         consumerAuthNavGraph(
             paddingValues = paddingValues,

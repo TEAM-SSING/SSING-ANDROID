@@ -43,7 +43,7 @@ import kotlinx.collections.immutable.persistentListOf
 
 @Composable
 internal fun PaymentRoute(
-    navigateToLesson: () -> Unit,
+    navigateToLesson: (Long) -> Unit,
     navigateToHome: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: PaymentViewModel = hiltViewModel(),
@@ -53,7 +53,7 @@ internal fun PaymentRoute(
 
     HandleUiEffects(viewModel.uiEffect) { effect ->
         when (effect) {
-            PaymentContract.Effect.NavigateToLesson -> navigateToLesson()
+            is PaymentContract.Effect.NavigateToLesson -> navigateToLesson(state.lessonId)
             PaymentContract.Effect.NavigateToHome -> navigateToHome()
             is PaymentContract.Effect.ShowToast -> context.toast(effect.message)
         }
@@ -79,7 +79,7 @@ internal fun PaymentRoute(
 
     PaymentScreen(
         state = state,
-        onPaymentClick = viewModel::navigateToLesson,
+        onPaymentClick = viewModel::onPaymentClick,
         onBackClick = viewModel::showCancelModal,
         modifier = modifier,
     )
@@ -246,6 +246,7 @@ private fun PaymentScreenPreview() {
     SSINGTheme {
         PaymentScreen(
             state = PaymentContract.State(
+                lessonId = 1,
                 nickname = "김OO",
                 tags = persistentListOf("스노보드", "처음타요"),
                 classDateTime = "7월 9일 오후 04:40",
