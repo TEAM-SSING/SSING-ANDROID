@@ -15,6 +15,7 @@ import com.ssing.presentation.consumerhome.navigation.consumerHomeNavGraph
 import com.ssing.presentation.consumerlesson.navigation.ConsumerLesson
 import com.ssing.presentation.consumerlesson.navigation.consumerLessonNavGraph
 import com.ssing.presentation.consumermatching.navigation.consumerMatchingNavGraph
+import com.ssing.presentation.consumermatching.navigation.navigateToConsumerMatching
 import com.ssing.presentation.consumermatching.navigation.navigateToConsumerMatchingCondition
 import com.ssing.presentation.consumerpayment.navigation.consumerPaymentNavGraph
 import com.ssing.presentation.consumerpayment.navigation.navigateToComsumerPayment
@@ -51,6 +52,9 @@ internal fun ConsumerMainNavHost(
                 )
             },
             navigateToMatching = { navController.navigateToConsumerMatchingCondition() },
+            navigateToActiveMatching = { matchingRequestId ->
+                navController.navigateToConsumerMatching(matchingRequestId, isRecoveredEntry = true)
+            },
         )
         consumerProfileNavGraph(
             paddingValues = paddingValues,

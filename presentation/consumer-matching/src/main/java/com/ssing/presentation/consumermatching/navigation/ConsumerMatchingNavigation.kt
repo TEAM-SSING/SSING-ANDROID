@@ -38,8 +38,8 @@ private data object ConsumerMatchingFailure : Route
 fun NavController.navigateToConsumerMatchingCondition() =
     this.navigate(ConsumerMatchingCondition)
 
-fun NavController.navigateToConsumerMatching(matchingRequestId: Long) =
-    this.navigate(ConsumerMatchingGraph(matchingRequestId))
+fun NavController.navigateToConsumerMatching(matchingRequestId: Long, isRecoveredEntry: Boolean = false) =
+    this.navigate(ConsumerMatchingGraph(matchingRequestId, isRecoveredEntry))
 
 private fun NavController.navigateToConsumerMatchingResult() =
     this.navigate(ConsumerMatchingResult)
@@ -56,7 +56,9 @@ fun NavGraphBuilder.consumerMatchingNavGraph(
     slideComposable<ConsumerMatchingCondition> {
         ConsumerMatchingConditionRoute(
             onPopBackStack = navController::popBackStack,
-            navigateToMatching = navController::navigateToConsumerMatching,
+            navigateToMatching = { matchingRequestId ->
+                navController.navigateToConsumerMatching(matchingRequestId)
+            },
             modifier = Modifier.padding(paddingValues)
         )
     }
