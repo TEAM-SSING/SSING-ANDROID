@@ -10,8 +10,6 @@ internal interface ConsumerMatchingContract {
     data class State(
         // pending
         val tags: ImmutableList<String> = persistentListOf(),
-        val nickname: String = "",
-        val teamCount: Int = 0,
         val location: String = "",
         val duration: String = "",
         val price: Int = 0,
@@ -40,6 +38,7 @@ internal interface ConsumerMatchingContract {
             data object PopBackStack : Pending
             data object NavigateToConditionFromRecovery : Pending
             data object NavigateToResult : Pending
+            data class NavigateToPayment(val matchingRequestId: Long) : Pending
             data object NavigateToFailure : Pending
             data object NavigateToHome : Pending
             data class ShowToast(val message: String) : Pending

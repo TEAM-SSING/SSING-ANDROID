@@ -46,9 +46,9 @@ internal fun ConsumerMainNavHost(
         )
         consumerHomeNavGraph(
             paddingValues = paddingValues,
-            navigateToLessonDetail = {
+            navigateToLessonDetail = { lessonId ->
                 navController.navigate(
-                    route = ConsumerLesson,
+                    route = ConsumerLesson(lessonId),
                 )
             },
             navigateToMatching = { navController.navigateToConsumerMatchingCondition() },
@@ -66,9 +66,9 @@ internal fun ConsumerMainNavHost(
             },
         )
         consumerPaymentNavGraph(
-            navigateToLesson = {
+            navigateToLesson = { lessonId ->
                 navController.navigate(
-                    route = ConsumerLesson,
+                    route = ConsumerLesson(lessonId),
                     navOptions = navController.clearBackStackNavOptions(),
                 )
             },
@@ -92,7 +92,7 @@ internal fun ConsumerMainNavHost(
                     navOptions = navController.clearBackStackNavOptions(),
                 )
             },
-            navigateToPayment = { navController.navigateToConsumerPayment(it) },
+            navigateToPayment = { navController.navigateToConsumerPayment() },
         )
         consumerAuthNavGraph(
             paddingValues = paddingValues,
