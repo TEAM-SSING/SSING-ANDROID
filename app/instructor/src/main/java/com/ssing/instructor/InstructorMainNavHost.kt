@@ -61,6 +61,11 @@ internal fun InstructorMainNavHost(
                 navController.navigate(
                     route = InstructorLesson(lessonId = lessonId ?: 0),
                 )
+            },
+            navigateToMatchingWaiting = {
+                navController.navigate(
+                    route = InstructorMatching
+                )
             }
         )
         notificationNavGraph(
