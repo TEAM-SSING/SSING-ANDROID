@@ -15,9 +15,9 @@ import com.ssing.core.ui.type.formatDate
 import com.ssing.core.ui.type.formatDateTime
 import com.ssing.core.ui.type.formatMinutesText
 import com.ssing.core.ui.type.formatTime
-import com.ssing.data.consumerlesson.model.ConsumerLessonDetail
-import com.ssing.data.consumerlesson.repository.api.ConsumerLessonDetailRepository
-import com.ssing.data.lessoncancel.repository.api.LessonCancelRepository
+import com.ssing.data.lesson.common.repository.api.LessonRepository
+import com.ssing.data.lesson.consumer.model.ConsumerLessonDetail
+import com.ssing.data.lesson.consumer.repository.api.ConsumerLessonRepository
 import com.ssing.presentation.consumerlesson.mapper.toUiModel
 import com.ssing.presentation.consumerlesson.model.CanceledLessonInfoUiModel
 import com.ssing.presentation.consumerlesson.model.CompletedLessonInfoUiModel
@@ -33,8 +33,8 @@ import javax.inject.Inject
 @HiltViewModel
 internal class ConsumerLessonViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    private val consumerLessonDetailRepository: ConsumerLessonDetailRepository,
-    private val lessonCancelRepository: LessonCancelRepository,
+    private val consumerLessonRepository: ConsumerLessonRepository,
+    private val lessonRepository: LessonRepository,
     @param:ApplicationScope private val applicationScope: CoroutineScope,
 ) :
     BaseViewModel<ConsumerLessonContract.State, ConsumerLessonContract.Effect>(
@@ -47,13 +47,13 @@ internal class ConsumerLessonViewModel @Inject constructor(
 
     init {
         loadLessonDetail(lessonId)
-        consumerLessonDetailRepository.connectSocket()
+        consumerLessonRepository.connectSocket()
         observeSocketEvents()
     }
 
     private fun observeSocketEvents() {
         viewModelScope.launch {
-            consumerLessonDetailRepository.socketEvents.collect { event ->
+            consumerLessonRepository.socketEvents.collect { event ->
                 Timber.d("강습 상세 조회 소켓 이벤트: lessonId = ${event.lessonId}, lessonStatus = ${event.lessonStatus}")
                 if (event.lessonId == lessonId) {
                     loadLessonDetail(lessonId)
@@ -64,7 +64,7 @@ internal class ConsumerLessonViewModel @Inject constructor(
 
     fun loadLessonDetail(lessonId: Long) {
         viewModelScope.launch {
-            consumerLessonDetailRepository.fetchConsumerLessonDetail(lessonId)
+            consumerLessonRepository.fetchConsumerLessonDetail(lessonId)
                 .onSuccess { result ->
                     Timber.d("consumer-lesson: $result")
                     updateState { applyLessonDetail(result) }
@@ -80,7 +80,7 @@ internal class ConsumerLessonViewModel @Inject constructor(
 
     override fun onCleared() {
         super.onCleared()
-        applicationScope.launch { consumerLessonDetailRepository.disconnectSocket() }
+        applicationScope.launch { consumerLessonRepository.disconnectSocket() }
     }
 
     private fun ConsumerLessonContract.State.applyLessonDetail(
@@ -97,10 +97,10 @@ internal class ConsumerLessonViewModel @Inject constructor(
                 ),
                 lessonInfo = detail.lessonInfo.toUiModel(
                     durationMinutes = detail.scheduledDurationMinutes,
-                    matchingRequests = detail.lessonMatchingRequest,
+                    matchingRequests = detail.matchingRequests,
                 ),
                 instructorProfile = instructorProfileUiModel,
-                participantTeams = detail.lessonMatchingRequest
+                participantTeams = detail.matchingRequests
                     .map { it.toUiModel() }
                     .toPersistentList(),
                 isReady = detail.currentActorConfirmed,
@@ -113,10 +113,10 @@ internal class ConsumerLessonViewModel @Inject constructor(
                 ),
                 lessonInfo = detail.lessonInfo.toUiModel(
                     durationMinutes = detail.scheduledDurationMinutes,
-                    matchingRequests = detail.lessonMatchingRequest,
+                    matchingRequests = detail.matchingRequests,
                 ),
                 instructorProfile = instructorProfileUiModel,
-                participantTeams = detail.lessonMatchingRequest
+                participantTeams = detail.matchingRequests
                     .map { it.toUiModel() }
                     .toPersistentList(),
             )
@@ -166,16 +166,11 @@ internal class ConsumerLessonViewModel @Inject constructor(
         updateState { copy(showReadyAlert = false) }
     }
 
-    // TODO: 서버 연동 후 수정 - [테스트] participantReadyCount를 로컬에서 직접 증가시킴
     fun onReadyConfirmed() {
-        var isAllReady = false
+        val before = uiState.value.lessonBannerState as? LessonBannerState.Before ?: return
+        val updatedBanner = before.copy(participantReadyCount = before.participantReadyCount + 1)
 
         updateState {
-            val before = lessonBannerState as? LessonBannerState.Before ?: return@updateState this
-            val updatedBanner =
-                before.copy(participantReadyCount = before.participantReadyCount + 1)
-            isAllReady = updatedBanner.totalReadyCount == updatedBanner.totalCount
-
             copy(
                 isReady = true,
                 showReadyAlert = false,
@@ -183,11 +178,16 @@ internal class ConsumerLessonViewModel @Inject constructor(
             )
         }
 
-        if (isAllReady) {
-            onLessonStarted(
-                remainingTime = "2:59:59",
-                elapsedTime = "0분",
-            )
+        viewModelScope.launch {
+            lessonRepository.lessonStart(lessonId)
+                .onFailure {
+                    updateState {
+                        copy(isReady = false, lessonBannerState = before)
+                    }
+                    if (it is ApiException) {
+                        sendEffect(ConsumerLessonContract.Effect.ShowToast(it.uiMessage))
+                    }
+                }
         }
     }
 
@@ -200,13 +200,15 @@ internal class ConsumerLessonViewModel @Inject constructor(
     }
 
     fun onEndLessonConfirmed() {
-        updateState {
-            copy(
-                showEndLessonAlert = false,
-                lessonBannerState = LessonBannerState.Completed(
-                    lessonDate = "2026년 12월 31일",
-                ),
-            )
+        updateState { copy(showEndLessonAlert = false) }
+
+        viewModelScope.launch {
+            lessonRepository.lessonCompleted(lessonId)
+                .onFailure {
+                    if (it is ApiException) {
+                        sendEffect(ConsumerLessonContract.Effect.ShowToast(it.uiMessage))
+                    }
+                }
         }
     }
 
@@ -236,7 +238,7 @@ internal class ConsumerLessonViewModel @Inject constructor(
         }
 
         viewModelScope.launch {
-            lessonCancelRepository.postLessonCancel(
+            lessonRepository.lessonCanceled(
                 lessonId = lessonId,
                 cancelReason = reason.toServerCode(),
                 cancelReasonDetail = etcReason,
@@ -269,20 +271,6 @@ internal class ConsumerLessonViewModel @Inject constructor(
     }
 
     fun onChatClick() = sendEffect(ConsumerLessonContract.Effect.ShowToast("준비 중인 기능입니다."))
-
-    fun onLessonStarted(remainingTime: String, elapsedTime: String) {
-        updateState {
-            copy(
-                lessonBannerState = LessonBannerState.Ongoing(
-                    remainingTime = remainingTime,
-                    elapsedTime = elapsedTime,
-                ),
-                participantTeams = participantTeams
-                    .map { it.copy(isReady = false) }
-                    .toPersistentList(),
-            )
-        }
-    }
 
     fun onReportIssueClick() = sendEffect(ConsumerLessonContract.Effect.ShowToast("준비 중인 기능입니다."))
 
