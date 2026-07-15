@@ -11,6 +11,14 @@ internal data class ConsumerHomeResponse(
 )
 
 @Serializable
+internal data class InstructorHomeResponse(
+    @SerialName("lessonCards") val lessonCards: List<LessonCardResponse>,
+    @SerialName("matchingPeopleCount") val matchingPeopleCount: Long,
+    @SerialName("hasUnreadNotification") val hasUnreadNotification: Boolean,
+    @SerialName("reviewSummary") val reviewSummary: ReviewSummaryResponse,
+)
+
+@Serializable
 internal data class LessonCardResponse(
     @SerialName("lessonId") val lessonId: Long,
     @SerialName("remainingDays") val remainingDays: Int,
@@ -25,4 +33,11 @@ internal data class LessonCardResponse(
 internal data class ResortResponse(
     @SerialName("code") val code: String,
     @SerialName("displayName") val displayName: String,
+)
+
+@Serializable
+internal data class ReviewSummaryResponse(
+    @SerialName("averageRating") val averageRating: Float,
+    @SerialName("grade") val grade: Int,
+    @SerialName("achievementRate") val achievementRate: Int,
 )
