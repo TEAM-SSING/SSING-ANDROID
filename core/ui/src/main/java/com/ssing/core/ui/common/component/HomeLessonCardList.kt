@@ -45,8 +45,8 @@ sealed interface HomeLessonCardState
         val chip: String,
         val displayText: String,
         val location: String,
-        val date: LocalDateTime,
         val imageRes: Int,
+        val date: LocalDateTime?,
         val status: Status,
     ) : HomeLessonCardState {
         sealed interface Status {
@@ -215,7 +215,7 @@ private fun LessonInfoSection(
             ) {
                 InfoRow(
                     iconRes = R.drawable.ic_reservation_16,
-                    text = state.date.ssingDateFormatter(),
+                    text = state.date?.ssingDateFormatter() ?: "",
                 )
 
                 Icon(

@@ -7,7 +7,6 @@ import kotlinx.collections.immutable.toPersistentList
 
 @Immutable
 internal data class LessonDetailBeforeUiModel(
-    val lessonId: Long,
     val teams: ImmutableList<TeamParticipantsInfo>,
     val tags: ImmutableList<String>,
     val isInstructorReady: Boolean = false,
