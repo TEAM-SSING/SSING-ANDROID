@@ -8,14 +8,6 @@ import androidx.navigation.navOptions
  * 백스택을 완전히 초기화하고 루트(0)로 이동하는 NavOptions를 생성합니다.
  *
  * 상태 저장 및 복원을 수행하지 않으므로, 화면 이동 시 이전 상태가 초기화됩니다.
- *
- * graph.findStartDestination()이 아닌 graph.id로 popUpTo하는 이유:
- * findStartDestination()은 NavHost가 최초 구성될 때 고정된 root startDestination을 가리킨다.
- * 로그인 세션마다 실제 시작 화면이 달라지고(DevAuth/ConsumerHome 등) 로그인 이후엔 그 destination이
- * 백스택에서 완전히 사라지므로, popUpTo 대상이 스택에 없으면 조용히 no-op되어 백스택이 전혀
- * 지워지지 않는 문제가 있었다(그 결과 이전 화면들이 파묻힌 채 남아 뒤로가기로 재진입 가능).
- * graph.id(root NavGraph 자체)는 항상 스택에 포함된 것으로 취급되어 무조건 전체를 비운다.
- *
  * 사용 사례:
  * - 로그아웃 후 로그인 화면으로 이동 (이전 사용자 상태 초기화 필요)
  * - 특정 플로우 완료 후 완전히 새로운 화면으로 시작
