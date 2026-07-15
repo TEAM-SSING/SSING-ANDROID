@@ -1,27 +1,22 @@
 package com.ssing.data.consumerlesson.remote.dto.response
 
-import com.ssing.data.consumerlesson.remote.dto.response.cancelinfo.ConsumerLessonCancelInfo
-import com.ssing.data.consumerlesson.remote.dto.response.instructorprofile.ConsumerLessonInstructorProfile
-import com.ssing.data.consumerlesson.remote.dto.response.lessoninfo.ConsumerLessonInfo
-import com.ssing.data.consumerlesson.remote.dto.response.matchingrequest.ConsumerLessonMatchingRequest
-import com.ssing.data.consumerlesson.remote.dto.response.statusinfo.ConsumerLessonStatusInfo
-import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.JsonContentPolymorphicSerializer
+import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.json.jsonObject
+import kotlinx.serialization.json.jsonPrimitive
 
-@Serializable
-internal data class ConsumerLessonDetailResponse(
-    @SerialName("lessonId")
-    val lessonId: Long,
-    @SerialName("lessonStatus")
-    val lessonStatus: String,
-    @SerialName("statusInfo")
-    val statusInfo: ConsumerLessonStatusInfo? = null,
-    @SerialName("cancelInfo")
-    val cancelInfo: ConsumerLessonCancelInfo? = null,
-    @SerialName("lessonInfo")
-    val lessonInfo: ConsumerLessonInfo? = null,
-    @SerialName("instructorProfile")
-    val instructorProfile: ConsumerLessonInstructorProfile? = null,
-    @SerialName("matchingRequests")
-    val matchingRequests: List<ConsumerLessonMatchingRequest>? = null,
-    )
+@Serializable(with = ConsumerLessonDetailResponseSerializer::class)
+sealed interface ConsumerLessonDetailResponse
+
+object ConsumerLessonDetailResponseSerializer : JsonContentPolymorphicSerializer<ConsumerLessonDetailResponse>(
+    ConsumerLessonDetailResponse::class
+) {
+    override fun selectDeserializer(element: JsonElement) = when (element.jsonObject["lessonStatus"]?.jsonPrimitive?.content) {
+        "CONFIRMED" -> ConsumerLessonDetailBeforeResponse.serializer()
+        "IN_PROGRESS" -> ConsumerLessonDetailOngoingResponse.serializer()
+        "COMPLETED" -> ConsumerLessonDetailCompletedResponse.serializer()
+        "CANCELED" -> ConsumerLessonDetailCanceledResponse.serializer()
+        else -> error("Unknown lessonStatus: ${element.jsonObject["lessonStatus"]}")
+    }
+}

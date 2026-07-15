@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-internal data class ConsumerLessonInfo(
+data class ConsumerLessonInfo(
     @SerialName("representativeConsumerNames")
     val representativeConsumerNames: List<String>,
     @SerialName("totalHeadcount")
@@ -32,7 +32,7 @@ internal data class ConsumerLessonInfo(
     @SerialName("actualDurationMinutes")
     val actualDurationMinutes: Int? = null,
 
-    // canceled
+    // completed, canceled
     @SerialName("lessonDurationMinutes")
     val lessonDurationMinutes: Int? = null,
 )

@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-internal data class ConsumerLessonInstructorProfile(
+data class ConsumerLessonInstructorProfile(
     @SerialName("instructorId")
     val instructorId: Long,
     @SerialName("name")

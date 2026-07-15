@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-internal data class ConsumerLessonMatchingRequest(
+data class ConsumerLessonMatchingRequest(
     @SerialName("matchingRequestId")
     val matchingRequestId: Long,
     @SerialName("representativeMemberId")

@@ -2,7 +2,6 @@ package com.ssing.data.consumerlesson.repository.impl
 
 import com.ssing.core.network.socket.SocketState
 import com.ssing.core.network.util.ApiResponseHandler
-import com.ssing.data.consumerlesson.exception.ConsumerLessonDetailException
 import com.ssing.data.consumerlesson.model.ConsumerLessonDetail
 import com.ssing.data.consumerlesson.model.ConsumerLessonSocketEvent
 import com.ssing.data.consumerlesson.model.InstructorProfile
@@ -10,6 +9,10 @@ import com.ssing.data.consumerlesson.model.LessonInfo
 import com.ssing.data.consumerlesson.model.LessonMatchingRequest
 import com.ssing.data.consumerlesson.model.LessonParticipant
 import com.ssing.data.consumerlesson.remote.datasource.api.ConsumerLessonDetailDataSource
+import com.ssing.data.consumerlesson.remote.dto.response.ConsumerLessonDetailBeforeResponse
+import com.ssing.data.consumerlesson.remote.dto.response.ConsumerLessonDetailCanceledResponse
+import com.ssing.data.consumerlesson.remote.dto.response.ConsumerLessonDetailCompletedResponse
+import com.ssing.data.consumerlesson.remote.dto.response.ConsumerLessonDetailOngoingResponse
 import com.ssing.data.consumerlesson.remote.dto.response.ConsumerLessonDetailResponse
 import com.ssing.data.consumerlesson.remote.dto.response.instructorprofile.ConsumerLessonInstructorProfile
 import com.ssing.data.consumerlesson.remote.dto.response.lessoninfo.ConsumerLessonInfo
@@ -21,7 +24,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onStart
 import javax.inject.Inject
 
 internal class ConsumerLessonDetailRepositoryImpl @Inject constructor(
@@ -57,77 +59,54 @@ internal class ConsumerLessonDetailRepositoryImpl @Inject constructor(
             dataSource.getConsumerLessonDetail(lessonId)
         }.mapCatching { it.toModel() }
 
-    private fun ConsumerLessonDetailResponse.toModel(): ConsumerLessonDetail {
-        val dtoLessonInfo = lessonInfo!!
-        val lessonInfo = dtoLessonInfo.toModel()
-        val instructorProfile = instructorProfile!!.toModel()
-
-        return when (lessonStatus) {
-            "CONFIRMED" -> {
-                val status = statusInfo!!
-
-                ConsumerLessonDetail.Confirmed(
-                    lessonId = lessonId,
-                    lessonInfo = lessonInfo,
-                    instructorProfile = instructorProfile,
-                    confirmedCount = status.confirmedCount!!,
-                    requiredCount = status.requiredCount!!,
-                    currentActorConfirmed = status.currentActorConfirmed!!,
-                    instructorConfirmed = status.instructorConfirmed!!,
-                    scheduledDurationMinutes = dtoLessonInfo.scheduledDurationMinutes!!,
-                    lessonMatchingRequest = matchingRequests.orEmpty().map { it.toModel() },
-                )
-            }
-
-            "IN_PROGRESS" -> {
-                val status = statusInfo!!
-
-                ConsumerLessonDetail.InProgress(
-                    lessonId = lessonId,
-                    lessonInfo = lessonInfo,
-                    instructorProfile = instructorProfile,
-                    serverTime = status.serverTime!!,
-                    actualStartedAt = status.actualStartedAt!!,
-                    expectedEndedAt = status.expectedEndedAt!!,
-                    elapsedSeconds = status.elapsedSeconds!!,
-                    remainingSeconds = status.remainingSeconds!!,
-                    scheduledDurationMinutes = dtoLessonInfo.scheduledDurationMinutes!!,
-                    lessonMatchingRequest = matchingRequests.orEmpty().map { it.toModel() },
-                )
-            }
-
-            "COMPLETED" -> ConsumerLessonDetail.Completed(
+    private fun ConsumerLessonDetailResponse.toModel(): ConsumerLessonDetail =
+        when (this) {
+            is ConsumerLessonDetailBeforeResponse -> ConsumerLessonDetail.Confirmed(
                 lessonId = lessonId,
-                lessonInfo = lessonInfo,
-                instructorProfile = instructorProfile,
-                lessonDurationMinutes = dtoLessonInfo.lessonDurationMinutes!!,
-                actualStartedAt = dtoLessonInfo.actualStartedAt!!,
-                actualEndedAt = dtoLessonInfo.actualEndedAt!!,
-                actualDurationMinutes = dtoLessonInfo.actualDurationMinutes!!,
+                lessonInfo = lessonInfo.toModel(),
+                instructorProfile = instructorProfile.toModel(),
+                confirmedCount = statusInfo.confirmedCount!!,
+                requiredCount = statusInfo.requiredCount!!,
+                currentActorConfirmed = statusInfo.currentActorConfirmed!!,
+                instructorConfirmed = statusInfo.instructorConfirmed!!,
+                scheduledDurationMinutes = lessonInfo.scheduledDurationMinutes!!,
+                lessonMatchingRequest = matchingRequests.map { it.toModel() },
             )
 
-            "CANCELED" -> {
-                val cancel = cancelInfo!!
+            is ConsumerLessonDetailOngoingResponse -> ConsumerLessonDetail.InProgress(
+                lessonId = lessonId,
+                lessonInfo = lessonInfo.toModel(),
+                instructorProfile = instructorProfile.toModel(),
+                serverTime = statusInfo.serverTime!!,
+                actualStartedAt = statusInfo.actualStartedAt!!,
+                expectedEndedAt = statusInfo.expectedEndedAt!!,
+                elapsedSeconds = statusInfo.elapsedSeconds!!,
+                remainingSeconds = statusInfo.remainingSeconds!!,
+                scheduledDurationMinutes = lessonInfo.scheduledDurationMinutes!!,
+                lessonMatchingRequest = matchingRequests.map { it.toModel() },
+            )
 
-                ConsumerLessonDetail.Canceled(
-                    lessonId = lessonId,
-                    lessonInfo = lessonInfo,
-                    instructorProfile = instructorProfile,
-                    canceledAt = cancel.canceledAt,
-                    canceledByMemberId = cancel.canceledBy.memberId,
-                    canceledByName = cancel.canceledBy.name,
-                    cancelReason = cancel.cancelReason,
-                    lessonDurationMinutes = dtoLessonInfo.lessonDurationMinutes!!,
-                )
-            }
+            is ConsumerLessonDetailCompletedResponse -> ConsumerLessonDetail.Completed(
+                lessonId = lessonId,
+                lessonInfo = lessonInfo.toModel(),
+                instructorProfile = instructorProfile.toModel(),
+                lessonDurationMinutes = lessonInfo.lessonDurationMinutes!!,
+                actualStartedAt = lessonInfo.actualStartedAt!!,
+                actualEndedAt = lessonInfo.actualEndedAt!!,
+                actualDurationMinutes = lessonInfo.actualDurationMinutes!!,
+            )
 
-            else -> throw ConsumerLessonDetailException.LessonInvalidState(
-                serverCode = null,
-                message = "Unknown lessonStatus",
-                requestId = null,
+            is ConsumerLessonDetailCanceledResponse -> ConsumerLessonDetail.Canceled(
+                lessonId = lessonId,
+                lessonInfo = lessonInfo.toModel(),
+                instructorProfile = instructorProfile.toModel(),
+                canceledAt = cancelInfo.canceledAt,
+                canceledByMemberId = cancelInfo.canceledBy.memberId,
+                canceledByName = cancelInfo.canceledBy.name,
+                cancelReason = cancelInfo.cancelReason,
+                lessonDurationMinutes = lessonInfo.lessonDurationMinutes!!,
             )
         }
-    }
 
     private fun ConsumerLessonInfo.toModel(): LessonInfo = LessonInfo(
         representativeConsumerNames = representativeConsumerNames,
