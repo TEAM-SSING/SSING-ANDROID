@@ -6,6 +6,10 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.ssing.core.network.di.ApplicationScope
 import com.ssing.core.network.exception.ApiException
+import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.viewModelScope
+import androidx.navigation.toRoute
+import com.ssing.core.network.exception.ApiException
 import com.ssing.core.ui.base.BaseViewModel
 import com.ssing.core.ui.common.component.CancelReason
 import com.ssing.core.ui.common.component.LessonBannerState
@@ -18,13 +22,21 @@ import com.ssing.core.ui.type.formatTime
 import com.ssing.data.consumerlesson.model.ConsumerLessonDetail
 import com.ssing.data.consumerlesson.repository.api.ConsumerLessonDetailRepository
 import com.ssing.presentation.consumerlesson.mapper.toUiModel
+import com.ssing.core.ui.extension.uiMessage
+import com.ssing.data.lessoncancel.repository.api.LessonCancelRepository
 import com.ssing.presentation.consumerlesson.model.CanceledLessonInfoUiModel
 import com.ssing.presentation.consumerlesson.model.CompletedLessonInfoUiModel
+import com.ssing.presentation.consumerlesson.navigation.ConsumerLesson
+import com.ssing.presentation.consumerlesson.model.InstructorProfileUiModel
+import com.ssing.presentation.consumerlesson.model.LessonInfoUiModel
+import com.ssing.presentation.consumerlesson.model.ParticipantTeamUiModel
 import com.ssing.presentation.consumerlesson.navigation.ConsumerLesson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
+import timber.log.Timber
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
@@ -38,6 +50,12 @@ internal class ConsumerLessonViewModel @Inject constructor(
     BaseViewModel<ConsumerLessonContract.State, ConsumerLessonContract.Effect>(
         ConsumerLessonContract.State()
     ) {
+internal class ConsumerLessonViewModel @Inject constructor(
+    savedStateHandle: SavedStateHandle,
+    private val lessonCancelRepository: LessonCancelRepository,
+) : BaseViewModel<ConsumerLessonContract.State, ConsumerLessonContract.Effect>(
+    ConsumerLessonContract.State()
+) {
 
     val etcState = TextFieldState()
 
@@ -218,21 +236,42 @@ internal class ConsumerLessonViewModel @Inject constructor(
         updateState { copy(selectedReason = reason) }
     }
 
+    private fun CancelReason.toServerCode(): String = when (this) {
+        CancelReason.SCHEDULE_CHANGE -> "SCHEDULE_CHANGED"
+        CancelReason.INSTRUCTOR_NO_SHOW -> "INSTRUCTOR_NOT_MET"
+        CancelReason.CONSUMER_NO_SHOW -> "CONSUMER_NOT_MET"
+        CancelReason.ETC -> "ETC"
+    }
+
     fun onCancelConfirmed() {
+        val reason = uiState.value.selectedReason ?: return
         val etcReason = if (uiState.value.selectedReason == CancelReason.ETC) {
             etcState.text.toString()
         } else {
             null
         }
-        // TODO: 서버 연동 시 etcReason 처리
-        updateState {
-            copy(
-                lessonBannerState = LessonBannerState.Canceled,
-                showCancelConfirmSheet = false,
-                selectedReason = null,
-            )
+
+        viewModelScope.launch {
+            lessonCancelRepository.postLessonCancel(
+                lessonId = lessonId,
+                cancelReason = reason.toServerCode(),
+                cancelReasonDetail = etcReason,
+            ).onSuccess {
+                updateState {
+                    copy(
+                        lessonBannerState = LessonBannerState.Canceled,
+                        showCancelConfirmSheet = false,
+                        selectedReason = null,
+                    )
+                }
+                etcState.edit { replace(0, length, "") }
+            }.onFailure {
+                Timber.e(it, "강습 취소 실패")
+                if (it is ApiException) {
+                    sendEffect(ConsumerLessonContract.Effect.ShowToast(it.uiMessage))
+                }
+            }
         }
-        etcState.edit { replace(0, length, "") }
     }
 
     fun onCancelDismiss() {
