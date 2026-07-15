@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 internal data class PaymentResponse (
-    @SerialName("matchingResultId") val matchingRequestId: Long,
+    @SerialName("matchingRequestId") val matchingRequestId: Long,
     @SerialName("matchingStatus") val matchingStatus: String,
     @SerialName("paymentStatus") val paymentStatus: String,
     @SerialName("groupId") val groupId: Long,
