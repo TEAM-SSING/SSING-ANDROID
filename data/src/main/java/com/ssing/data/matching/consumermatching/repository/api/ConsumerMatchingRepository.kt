@@ -33,4 +33,6 @@ interface ConsumerMatchingRepository {
         matchingRequestId: Long,
         decision: String,
     ): Result<Unit>
+
+    suspend fun getMatchingActive(): Result<Long?>
 }
