@@ -21,7 +21,10 @@ import kotlinx.serialization.Serializable
 data object ConsumerMatchingCondition : Route
 
 @Serializable
-data class ConsumerMatchingGraph(val matchingRequestId: Long) : Route
+data class ConsumerMatchingGraph(
+    val matchingRequestId: Long,
+    val isRecoveredEntry: Boolean = false,
+) : Route
 
 @Serializable
 private data object ConsumerMatchingPending : Route
@@ -35,8 +38,8 @@ private data object ConsumerMatchingFailure : Route
 fun NavController.navigateToConsumerMatchingCondition() =
     this.navigate(ConsumerMatchingCondition)
 
-fun NavController.navigateToConsumerMatching(matchingRequestId: Long) =
-    this.navigate(ConsumerMatchingGraph(matchingRequestId))
+fun NavController.navigateToConsumerMatching(matchingRequestId: Long, isRecoveredEntry: Boolean = false) =
+    this.navigate(ConsumerMatchingGraph(matchingRequestId, isRecoveredEntry))
 
 private fun NavController.navigateToConsumerMatchingResult() =
     this.navigate(ConsumerMatchingResult)
@@ -53,7 +56,9 @@ fun NavGraphBuilder.consumerMatchingNavGraph(
     slideComposable<ConsumerMatchingCondition> {
         ConsumerMatchingConditionRoute(
             onPopBackStack = navController::popBackStack,
-            navigateToMatching = navController::navigateToConsumerMatching,
+            navigateToMatching = { matchingRequestId ->
+                navController.navigateToConsumerMatching(matchingRequestId)
+            },
             modifier = Modifier.padding(paddingValues)
         )
     }
@@ -65,6 +70,10 @@ fun NavGraphBuilder.consumerMatchingNavGraph(
                 navigateToResult = navController::navigateToConsumerMatchingResult,
                 navigateToFailure = navController::navigateToConsumerMatchingFailure,
                 navigateToHome = navigateToHome,
+                navigateToConditionFromRecovery = {
+                    navigateToHome()
+                    navController.navigateToConsumerMatchingCondition()
+                },
                 modifier = Modifier.padding(paddingValues),
                 viewModel = sharedViewModel(backStackEntry, navController),
             )

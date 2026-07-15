@@ -47,6 +47,7 @@ internal fun ConsumerMatchingPendingRoute(
     navigateToResult: () -> Unit,
     navigateToFailure: () -> Unit,
     navigateToHome: () -> Unit,
+    navigateToConditionFromRecovery: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: ConsumerMatchingViewModel = hiltViewModel(),
 ) {
@@ -60,6 +61,7 @@ internal fun ConsumerMatchingPendingRoute(
                 ConsumerMatchingContract.Effect.Pending.NavigateToFailure -> navigateToFailure()
                 ConsumerMatchingContract.Effect.Pending.NavigateToHome -> navigateToHome()
                 ConsumerMatchingContract.Effect.Pending.PopBackStack -> popBackStack()
+                ConsumerMatchingContract.Effect.Pending.NavigateToConditionFromRecovery -> navigateToConditionFromRecovery()
                 is ConsumerMatchingContract.Effect.Pending.ShowToast -> context.toast(effect.message)
             }
         }
