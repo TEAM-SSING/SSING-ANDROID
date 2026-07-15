@@ -3,6 +3,7 @@ package com.ssing.presentation.instructorlessondetail
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
+import com.ssing.core.network.di.ApplicationScope
 import com.ssing.core.network.exception.ApiException
 import com.ssing.core.ui.base.BaseViewModel
 import com.ssing.core.ui.common.component.CancelReason
@@ -16,6 +17,7 @@ import com.ssing.data.lesson.model.InstructorLessonDetailOngoing
 import com.ssing.data.lesson.model.InstructorLessonDetailRequestResult
 import com.ssing.data.lesson.model.MatchingRequest
 import com.ssing.data.lesson.repository.api.LessonRepository
+import com.ssing.data.lesson.repository.api.LessonSocketRepository
 import com.ssing.presentation.instructorlessondetail.model.LessonDetailBeforeUiModel
 import com.ssing.presentation.instructorlessondetail.model.LessonDetailCanceledUiModel
 import com.ssing.presentation.instructorlessondetail.model.LessonDetailCompletedUiModel
@@ -24,6 +26,10 @@ import com.ssing.presentation.instructorlessondetail.model.TeamParticipantsInfo
 import com.ssing.presentation.instructorlessondetail.navigation.InstructorLesson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.toPersistentList
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -34,6 +40,8 @@ internal class LessonDetailViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val lessonRepository: LessonRepository,
     private val instructorLessonDetailRepository: InstructorLessonRepository,
+    private val lessonSocketRepository: LessonSocketRepository,
+    @param:ApplicationScope private val applicationScope: CoroutineScope,
 ) :
     BaseViewModel<LessonDetailContract.State, LessonDetailContract.Effect>(
         LessonDetailContract.State()
@@ -43,6 +51,16 @@ internal class LessonDetailViewModel @Inject constructor(
 
     init {
         loadLessonDetail()
+
+        lessonSocketRepository.connect()
+        observeSocketEvents()
+    }
+
+    private fun observeSocketEvents() {
+        lessonSocketRepository.event
+            .filter { it.lessonId == lessonId }
+            .onEach { loadLessonDetail() }
+            .launchIn(viewModelScope)
     }
 
     private fun loadLessonDetail() {
@@ -174,6 +192,11 @@ internal class LessonDetailViewModel @Inject constructor(
                 )
             )
         }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        applicationScope.launch { lessonSocketRepository.disconnect() }
     }
 }
 
