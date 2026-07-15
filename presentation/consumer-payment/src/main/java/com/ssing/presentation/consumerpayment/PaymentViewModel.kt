@@ -87,9 +87,9 @@ internal class PaymentViewModel @Inject constructor(
             return
         }
 
-        viewModelScope.launch {
-            updateState { copy(isLoading = true) }
+        updateState { copy(isLoading = true) }
 
+        viewModelScope.launch {
             paymentRepository.postPayment(matchingRequestId)
                 .onSuccess { result ->
                     Timber.d("payment 응답: $result")

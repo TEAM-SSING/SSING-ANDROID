@@ -111,6 +111,7 @@ internal fun PaymentScreen(
                 text = "결제하기",
                 onClick = onPaymentClick,
                 style = SsingButtonStyle.BLUE,
+                enabled = !state.isLoading,
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(color = White)
