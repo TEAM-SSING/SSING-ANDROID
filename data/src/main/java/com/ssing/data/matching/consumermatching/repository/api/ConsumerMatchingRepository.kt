@@ -24,4 +24,13 @@ interface ConsumerMatchingRepository {
         participants: List<ConsumerMatchingParticipant>,
         equipmentReady: Boolean,
     ): Result<ConsumerMatchingRequestResult>
+
+    suspend fun cancelMatching(
+        matchingRequestId: Long,
+    ): Result<Unit>
+
+    suspend fun confirmMatching(
+        matchingRequestId: Long,
+        decision: String,
+    ): Result<Unit>
 }

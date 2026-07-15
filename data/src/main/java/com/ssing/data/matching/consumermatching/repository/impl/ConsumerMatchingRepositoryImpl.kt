@@ -9,6 +9,7 @@ import com.ssing.data.matching.consumermatching.model.ConsumerMatchingParticipan
 import com.ssing.data.matching.consumermatching.model.ConsumerMatchingRequestResult
 import com.ssing.data.matching.consumermatching.remote.datasource.api.ConsumerMatchingRemoteDataSource
 import com.ssing.data.matching.consumermatching.remote.dto.request.ConsumerMatchingConditionRequest
+import com.ssing.data.matching.consumermatching.remote.dto.request.ConsumerMatchingConfirmationRequest
 import com.ssing.data.matching.consumermatching.remote.dto.request.ConsumerMatchingParticipantRequest
 import com.ssing.data.matching.consumermatching.remote.dto.response.ConsumerMatchingRequestResponse
 import com.ssing.data.matching.consumermatching.remote.payload.InstructorAcceptedPayload
@@ -65,6 +66,22 @@ internal class ConsumerMatchingRepositoryImpl @Inject constructor(
             )
         )
     }.map { it.toModel() }
+
+    override suspend fun cancelMatching(matchingRequestId: Long): Result<Unit> =
+        apiResponseHandler.safeApiCall {
+            remoteDataSource.postMatchingCancellation(matchingRequestId)
+        }.map { }
+
+    override suspend fun confirmMatching(
+        matchingRequestId: Long,
+        decision: String,
+    ): Result<Unit> =
+        apiResponseHandler.safeApiCall {
+            remoteDataSource.patchMatchingConfirmation(
+                matchingRequestId = matchingRequestId,
+                request = ConsumerMatchingConfirmationRequest(decision)
+            )
+        }.map { }
 
     private fun ConsumerMatchingParticipant.toRequest(): ConsumerMatchingParticipantRequest =
         ConsumerMatchingParticipantRequest(
