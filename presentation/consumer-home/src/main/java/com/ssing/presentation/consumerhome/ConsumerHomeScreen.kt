@@ -45,6 +45,7 @@ internal fun ConsumerHomeRoute(
     navigateToLessonDetail: (Long) -> Unit,
     contentPadding : PaddingValues,
     navigateToMatching: () -> Unit,
+    navigateToActiveMatching: (Long) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: ConsumerHomeViewModel = hiltViewModel(),
 ) {
@@ -55,6 +56,9 @@ internal fun ConsumerHomeRoute(
         when (effect) {
             is ConsumerHomeContract.Effect.NavigateToLessonDetail -> navigateToLessonDetail(effect.lessonId)
             is ConsumerHomeContract.Effect.NavigateToMatching -> navigateToMatching()
+            is ConsumerHomeContract.Effect.NavigateToActiveMatching -> {
+                navigateToActiveMatching(effect.matchingRequestId)
+            }
             is ConsumerHomeContract.Effect.ShowToast -> context.toast(effect.message)
         }
     }

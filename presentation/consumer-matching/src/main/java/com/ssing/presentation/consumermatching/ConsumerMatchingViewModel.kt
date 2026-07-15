@@ -1,11 +1,16 @@
 package com.ssing.presentation.consumermatching
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.toRoute
 import com.ssing.core.network.di.ApplicationScope
+import com.ssing.core.network.exception.ApiException
 import com.ssing.core.network.socket.SocketState
 import com.ssing.core.ui.base.BaseViewModel
+import com.ssing.core.ui.extension.uiMessage
 import com.ssing.data.matching.consumermatching.event.ConsumerMatchingEvent
 import com.ssing.data.matching.consumermatching.repository.api.ConsumerMatchingRepository
+import com.ssing.presentation.consumermatching.navigation.ConsumerMatchingGraph
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.launchIn
@@ -15,11 +20,32 @@ import javax.inject.Inject
 
 @HiltViewModel
 internal class ConsumerMatchingViewModel @Inject constructor(
+    savedStateHandle: SavedStateHandle,
     private val consumerMatchingRepository: ConsumerMatchingRepository,
     @param:ApplicationScope private val applicationScope: CoroutineScope,
 ) : BaseViewModel<ConsumerMatchingContract.State, ConsumerMatchingContract.Effect>(
     initialState = ConsumerMatchingContract.State(),
 ) {
+    private val matchingRequestId =
+        savedStateHandle.toRoute<ConsumerMatchingGraph>().matchingRequestId
+
+    private val isRecoveredEntry =
+        savedStateHandle.toRoute<ConsumerMatchingGraph>().isRecoveredEntry
+
+    private var isSubmitting = false
+
+    private fun launchExclusive(block: suspend () -> Unit) {
+        if (isSubmitting) return
+        isSubmitting = true
+        viewModelScope.launch {
+            try {
+                block()
+            } finally {
+                isSubmitting = false
+            }
+        }
+    }
+
     init {
         consumerMatchingRepository.connect()
 
@@ -78,14 +104,33 @@ internal class ConsumerMatchingViewModel @Inject constructor(
     }
 
     // pending
-    fun editCondition() = viewModelScope.launch {
-        consumerMatchingRepository.disconnect()
-        sendEffect(ConsumerMatchingContract.Effect.Pending.PopBackStack)
+    fun editCondition() = launchExclusive {
+        consumerMatchingRepository.cancelMatching(matchingRequestId)
+            .onSuccess {
+                consumerMatchingRepository.disconnect()
+                val effect = if (isRecoveredEntry) {
+                    ConsumerMatchingContract.Effect.Pending.NavigateToConditionFromRecovery
+                } else {
+                    ConsumerMatchingContract.Effect.Pending.PopBackStack
+                }
+                sendEffect(effect)
+            }
+            .onFailure {
+                val message = if (it is ApiException) it.uiMessage else CANCEL_FAILURE_FALLBACK_MSG
+                sendEffect(ConsumerMatchingContract.Effect.Pending.ShowToast(message))
+            }
     }
 
-    fun stopPending() = viewModelScope.launch {
-        consumerMatchingRepository.disconnect()
-        sendEffect(ConsumerMatchingContract.Effect.Pending.NavigateToHome)
+    fun stopPending() = launchExclusive {
+        consumerMatchingRepository.cancelMatching(matchingRequestId)
+            .onSuccess {
+                consumerMatchingRepository.disconnect()
+                sendEffect(ConsumerMatchingContract.Effect.Pending.NavigateToHome)
+            }
+            .onFailure {
+                val message = if (it is ApiException) it.uiMessage else CANCEL_FAILURE_FALLBACK_MSG
+                sendEffect(ConsumerMatchingContract.Effect.Pending.ShowToast(message))
+            }
     }
 
     // TODO: 소켓 연동 시 변경 / 플로우 확인용 임시 콜백
@@ -103,25 +148,57 @@ internal class ConsumerMatchingViewModel @Inject constructor(
     fun closeCancelModal() =
         updateState { copy(showCancelModal = false) }
 
-    fun confirmCancel() = viewModelScope.launch {
-        consumerMatchingRepository.disconnect()
-        updateState { copy(showCancelModal = false) }
-        sendEffect(ConsumerMatchingContract.Effect.Result.NavigateToHome)
+    fun confirmCancel() = launchExclusive {
+        consumerMatchingRepository.cancelMatching(matchingRequestId)
+            .onSuccess {
+                consumerMatchingRepository.disconnect()
+                updateState { copy(showCancelModal = false) }
+                sendEffect(ConsumerMatchingContract.Effect.Result.NavigateToHome)
+            }
+            .onFailure {
+                updateState { copy(showCancelModal = false) }
+                val message = if (it is ApiException) it.uiMessage else CANCEL_FAILURE_FALLBACK_MSG
+                sendEffect(ConsumerMatchingContract.Effect.Result.ShowToast(message))
+            }
     }
 
-    fun requestRematching() {
-        sendEffect(ConsumerMatchingContract.Effect.Result.PopBackStack)
+    fun requestRematching() = launchExclusive {
+        consumerMatchingRepository.confirmMatching(
+            matchingRequestId = matchingRequestId,
+            decision = REJECTED_DECISION,
+        ).onSuccess {
+            sendEffect(ConsumerMatchingContract.Effect.Result.PopBackStack)
+        }.onFailure {
+            val message = if (it is ApiException) it.uiMessage else REJECT_FAILURE_FALLBACK_MSG
+            sendEffect(ConsumerMatchingContract.Effect.Result.ShowToast(message))
+        }
     }
 
-    fun acceptMatching() {
-        // TODO: API 연동 시 실제 matchingRequestId 넣어주기
-        sendEffect(ConsumerMatchingContract.Effect.Result.NavigateToPayment(1L))
+    fun acceptMatching() = launchExclusive {
+        consumerMatchingRepository.confirmMatching(
+            matchingRequestId = matchingRequestId,
+            decision = ACCEPTED_DECISION,
+        ).onSuccess {
+            sendEffect(ConsumerMatchingContract.Effect.Result.NavigateToPayment(matchingRequestId))
+        }.onFailure {
+            val message = if (it is ApiException) it.uiMessage else ACCEPT_FAILURE_FALLBACK_MSG
+            sendEffect(ConsumerMatchingContract.Effect.Result.ShowToast(message))
+        }
     }
 
     fun navigateToReview() =
-        sendEffect(ConsumerMatchingContract.Effect.Result.ShowToast("준비 중인 기능이에요."))
+        sendEffect(ConsumerMatchingContract.Effect.Result.ShowToast(IN_DEVELOPMENT_MSG))
 
     // failure
     fun navigateToHome() =
         sendEffect(ConsumerMatchingContract.Effect.Failure.NavigateToHome)
+
+    private companion object {
+        const val ACCEPTED_DECISION = "ACCEPTED"
+        const val REJECTED_DECISION = "REJECTED"
+        const val CANCEL_FAILURE_FALLBACK_MSG = "매칭 중지에 실패했어요."
+        const val ACCEPT_FAILURE_FALLBACK_MSG = "강사 수락에 실패했어요."
+        const val REJECT_FAILURE_FALLBACK_MSG = "강사 거절에 실패했어요."
+        const val IN_DEVELOPMENT_MSG = "준비 중인 기능이에요."
+    }
 }

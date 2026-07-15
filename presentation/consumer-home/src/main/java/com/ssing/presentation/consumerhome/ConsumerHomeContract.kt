@@ -17,6 +17,7 @@ internal interface ConsumerHomeContract {
     sealed interface Effect {
         data class ShowToast(val message: String) : Effect
         data object NavigateToMatching : Effect
+        data class NavigateToActiveMatching(val matchingRequestId: Long) : Effect
         data class NavigateToLessonDetail(val lessonId: Long) : Effect
     }
 }

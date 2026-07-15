@@ -11,6 +11,7 @@ import com.ssing.data.home.model.LessonCard
 import com.ssing.data.home.repository.api.HomeRepository
 import com.ssing.core.ui.common.component.Reservation
 import com.ssing.core.ui.common.component.Reservation.Status
+import com.ssing.data.matching.consumermatching.repository.api.ConsumerMatchingRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
@@ -23,6 +24,7 @@ import javax.inject.Inject
 @HiltViewModel
 internal class ConsumerHomeViewModel @Inject constructor(
     private val consumerHomeRepository: HomeRepository,
+    private val consumerMatchingRepository: ConsumerMatchingRepository,
 ) :
     BaseViewModel<ConsumerHomeContract.State, ConsumerHomeContract.Effect>(
         ConsumerHomeContract.State()
@@ -88,7 +90,7 @@ internal class ConsumerHomeViewModel @Inject constructor(
 
     private fun LessonCard.toImageRes(): Int = when (sport) {
         "SKI" -> R.drawable.img_ski_86
-        "SNOWBOARD "-> R.drawable.img_snowboard_86
+        "SNOWBOARD " -> R.drawable.img_snowboard_86
         else -> R.drawable.img_ski_86
     }
 
@@ -108,8 +110,24 @@ internal class ConsumerHomeViewModel @Inject constructor(
         const val IN_PROGRESS = "IN_PROGRESS"
     }
 
-    fun onMatchingClick() {
-        sendEffect(ConsumerHomeContract.Effect.NavigateToMatching)
+    fun onMatchingClick() = viewModelScope.launch {
+        consumerMatchingRepository.getMatchingActive()
+            .onSuccess { matchingRequestId ->
+                if (matchingRequestId != null) {
+                    Timber.d("씽 매칭 클릭-진행 중 매칭 있음-바로 매칭으로")
+                    sendEffect(
+                        ConsumerHomeContract.Effect.NavigateToActiveMatching(matchingRequestId)
+                    )
+                    sendEffect(ConsumerHomeContract.Effect.ShowToast("진행 중인 매칭이 있어요."))
+                } else {
+                    Timber.d("씽 매칭 클릭-진행 중 매칭 없음-매칭 조건 입력으로")
+                    sendEffect(ConsumerHomeContract.Effect.NavigateToMatching)
+                }
+            }
+            .onFailure {
+                Timber.e(it, "씽 매칭 클릭-매칭 상태 조회 실패-매칭 조건 입력으로")
+                sendEffect(ConsumerHomeContract.Effect.NavigateToMatching)
+            }
     }
 
     fun onLessonClick(

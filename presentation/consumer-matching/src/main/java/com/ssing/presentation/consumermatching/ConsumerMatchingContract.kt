@@ -38,6 +38,7 @@ internal interface ConsumerMatchingContract {
     sealed interface Effect {
         sealed interface Pending : Effect {
             data object PopBackStack : Pending
+            data object NavigateToConditionFromRecovery : Pending
             data object NavigateToResult : Pending
             data object NavigateToFailure : Pending
             data object NavigateToHome : Pending
