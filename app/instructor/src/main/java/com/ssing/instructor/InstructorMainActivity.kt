@@ -27,7 +27,8 @@ import com.ssing.core.ui.common.component.SsingBottomBar
 import com.ssing.core.ui.designsystem.theme.SSINGTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.collections.immutable.toImmutableList
-import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -38,8 +39,7 @@ class InstructorMainActivity : ComponentActivity() {
     @Inject
     lateinit var authSessionManager: AuthSessionManager
 
-    private val deepLinkIntent = MutableStateFlow<Intent?>(null)
-
+    private val deepLinkIntent = Channel<Intent>(Channel.BUFFERED)
     private val requestNotificationPermissionLauncher =
         registerForActivityResult(
             ActivityResultContracts.RequestPermission()
@@ -67,11 +67,8 @@ class InstructorMainActivity : ComponentActivity() {
                     val currentTab by appState.currentTab.collectAsStateWithLifecycle()
 
                     LaunchedEffect(appState) {
-                        deepLinkIntent.collect { intent ->
-                            intent?.let {
-                                appState.navController.handleDeepLink(it)
-                                deepLinkIntent.value = null
-                            }
+                        deepLinkIntent.receiveAsFlow().collect { intent ->
+                            appState.navController.handleDeepLink(intent)
                         }
                     }
 
@@ -100,7 +97,7 @@ class InstructorMainActivity : ComponentActivity() {
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         setIntent(intent)
-        deepLinkIntent.value = intent
+        deepLinkIntent.trySend(intent)
     }
 
     private fun requestNotificationPermission() {
