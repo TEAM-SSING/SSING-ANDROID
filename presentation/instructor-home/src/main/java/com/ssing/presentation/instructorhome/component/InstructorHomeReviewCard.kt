@@ -1,5 +1,6 @@
 package com.ssing.presentation.instructorhome.component
 
+import android.R.attr.text
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -8,9 +9,11 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
@@ -20,6 +23,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ssing.core.ui.designsystem.theme.SSINGTheme
@@ -63,6 +67,25 @@ internal fun InstructorHomeReviewCard(
             modifier = Modifier.fillMaxWidth()
         )
     }
+}
+
+@Composable
+internal fun InstructorHomeEmptyReviewCard() {
+    Text(
+        modifier = Modifier
+            .background(
+                color = SSINGTheme.colors.backgroundNormal,
+                shape = RoundedCornerShape(12.dp),
+            )
+            .fillMaxWidth()
+            .heightIn(min = 104.dp)
+            .wrapContentSize(align = Alignment.Center)
+            .padding(12.dp),
+        text = "아직 남겨진 후기가 없어요.\n새로운 강습을 진행해 후기를 남겨보세요",
+        style = SSINGTheme.typography.caption.sb14,
+        color = SSINGTheme.colors.textDisabled,
+        textAlign = TextAlign.Center,
+    )
 }
 
 @Composable
@@ -191,11 +214,17 @@ private fun LinearProgressBar(
 @Composable
 private fun InstructorHomeReviewCardPreview() {
     SSINGTheme {
-        InstructorHomeReviewCard(
-            averageRating = 4f,
-            grade = Grade.GRADE4,
-            achievementRate = 88,
-            onClick = {},
-        )
+        Column {
+            InstructorHomeReviewCard(
+                averageRating = 4f,
+                grade = Grade.GRADE4,
+                achievementRate = 88,
+                onClick = {},
+            )
+
+            Spacer(modifier = Modifier.height(10.dp))
+
+            InstructorHomeEmptyReviewCard()
+        }
     }
 }

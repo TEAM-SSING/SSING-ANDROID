@@ -1,5 +1,6 @@
 package com.ssing.data.matching.consumermatching.di
 
+import com.ssing.core.network.di.Auth
 import com.ssing.data.matching.consumermatching.remote.service.ConsumerMatchingService
 import dagger.Module
 import dagger.Provides
@@ -15,6 +16,6 @@ internal object ConsumerMatchingServiceModule {
     @Provides
     @Singleton
     fun provideConsumerMatchingService(
-        retrofit: Retrofit,
+        @Auth retrofit: Retrofit,
     ): ConsumerMatchingService = retrofit.create(ConsumerMatchingService::class.java)
 }

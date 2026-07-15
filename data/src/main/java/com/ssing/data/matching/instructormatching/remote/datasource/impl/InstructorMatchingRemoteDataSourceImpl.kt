@@ -5,6 +5,7 @@ import com.ssing.data.matching.instructormatching.remote.datasource.api.Instruct
 import com.ssing.data.matching.instructormatching.remote.dto.request.InstructorMatchingExposureStartRequest
 import com.ssing.data.matching.instructormatching.remote.dto.response.InstructorMatchingExposureResponse
 import com.ssing.data.matching.instructormatching.remote.dto.response.InstructorMatchingExposureStartResponse
+import com.ssing.data.matching.instructormatching.remote.dto.response.InstructorMatchingOffersResponse
 import com.ssing.data.matching.instructormatching.remote.service.InstructorMatchingService
 import javax.inject.Inject
 
@@ -19,4 +20,7 @@ internal class InstructorMatchingRemoteDataSourceImpl @Inject constructor(
         request: InstructorMatchingExposureStartRequest,
     ): BaseResponse<InstructorMatchingExposureStartResponse> =
         instructorMatchingService.putMatchingExposure(request)
+
+    override suspend fun getMatchingOffers(): BaseResponse<InstructorMatchingOffersResponse> =
+        instructorMatchingService.getMatchingOffers()
 }

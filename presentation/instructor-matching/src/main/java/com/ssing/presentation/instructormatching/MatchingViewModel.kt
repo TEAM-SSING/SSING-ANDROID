@@ -1,17 +1,26 @@
 package com.ssing.presentation.instructormatching
 
 import androidx.lifecycle.viewModelScope
+import com.ssing.core.network.di.ApplicationScope
 import com.ssing.core.network.exception.ApiException
+import com.ssing.core.network.socket.SocketState
 import com.ssing.core.ui.base.BaseViewModel
 import com.ssing.core.ui.extension.uiMessage
+import com.ssing.data.matching.instructormatching.event.InstructorMatchingEvent
+import com.ssing.data.matching.instructormatching.model.InstructorMatchingOffer
 import com.ssing.data.matching.instructormatching.repository.api.InstructorMatchingRepository
 import com.ssing.presentation.instructormatching.MatchingContract.MatchingDialog
 import com.ssing.presentation.instructormatching.MatchingContract.MatchingPhase
 import com.ssing.presentation.instructormatching.model.DurationOption
+import com.ssing.presentation.instructormatching.model.LessonSummaryUiModel
 import com.ssing.presentation.instructormatching.model.LevelOption
 import com.ssing.presentation.instructormatching.model.MatchingOfferUiModel
+import com.ssing.presentation.instructormatching.model.OfferStatusOption
 import com.ssing.presentation.instructormatching.model.SportOption
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
@@ -19,6 +28,7 @@ import javax.inject.Inject
 @HiltViewModel
 internal class MatchingViewModel @Inject constructor(
     private val instructorMatchingRepository: InstructorMatchingRepository,
+    @param:ApplicationScope private val applicationScope: CoroutineScope,
 ) :
     BaseViewModel<MatchingContract.State, MatchingContract.Effect>(
         MatchingContract.State()
@@ -26,6 +36,50 @@ internal class MatchingViewModel @Inject constructor(
 
     init {
         loadMatchingExposure()
+        instructorMatchingRepository.connectSocket()
+
+        instructorMatchingRepository.event
+            .onEach { handleMatchingEvent(it) }
+            .launchIn(viewModelScope)
+
+        instructorMatchingRepository.socketState
+            .onEach { handleSocketState(it) }
+            .launchIn(viewModelScope)
+    }
+
+    private fun handleMatchingEvent(event: InstructorMatchingEvent) {
+        Timber.d("matching 소켓 이벤트: ${event::class.simpleName}")
+        when (event) {
+            is InstructorMatchingEvent.OfferReceivedEvent,
+            is InstructorMatchingEvent.OfferClosedEvent,
+            is InstructorMatchingEvent.MatchingCanceledEvent,
+                -> restoreActiveOffer()
+
+            is InstructorMatchingEvent.MatchingConfirmedEvent -> onMatchingConfirmed(event.lessonId)
+        }
+    }
+
+    private var socketErrorToastShown = false
+
+    private fun handleSocketState(state: SocketState) {
+        when (state) {
+            is SocketState.Error, SocketState.Forbidden -> {
+                if (!socketErrorToastShown) {
+                    socketErrorToastShown = true
+                    sendEffect(MatchingContract.Effect.ShowToast("연결에 문제가 발생했어요."))
+                }
+            }
+            SocketState.Connected -> socketErrorToastShown = false
+            SocketState.Connecting, SocketState.Disconnected -> Unit
+        }
+    }
+
+    private fun onMatchingConfirmed(lessonId: Long) = viewModelScope.launch {
+        try {
+            instructorMatchingRepository.disconnectSocket()
+        } finally {
+            sendEffect(MatchingContract.Effect.NavigateToLessonDetail(lessonId))
+        }
     }
 
     private fun loadMatchingExposure() {
@@ -147,6 +201,31 @@ internal class MatchingViewModel @Inject constructor(
 
     fun dismissDialog() = updateState { copy(dialog = null) }
 
+    fun restoreActiveOffer() {
+        viewModelScope.launch {
+            instructorMatchingRepository.fetchActiveOffer()
+                .onSuccess { offer ->
+                    Timber.d("matching-offers 응답: $offer")
+                    updateState {
+                        when {
+                            offer != null -> copy(phase = MatchingPhase.OfferArrived(offer.toUiModel()))
+                            phase is MatchingPhase.OfferArrived || phase is MatchingPhase.PendingConfirm -> copy(
+                                phase = MatchingPhase.Waiting
+                            )
+
+                            else -> this
+                        }
+                    }
+                }
+                .onFailure {
+                    Timber.e(it, "matching-offers 실패")
+                    if (it is ApiException) {
+                        sendEffect(MatchingContract.Effect.ShowToast(it.uiMessage))
+                    }
+                }
+        }
+    }
+
     private fun currentOffer(): MatchingOfferUiModel? =
         when (val phase = uiState.value.phase) {
             is MatchingPhase.OfferArrived -> phase.offer
@@ -154,7 +233,44 @@ internal class MatchingViewModel @Inject constructor(
             else -> null
         }
 
+    private fun InstructorMatchingOffer.toUiModel(): MatchingOfferUiModel = MatchingOfferUiModel(
+        offerId = offerId,
+        groupId = groupId,
+        status = runCatching { OfferStatusOption.valueOf(offerStatus) }
+            .getOrDefault(OfferStatusOption.UNKNOWN),
+        expiresAtMillis = expiresAt?.let {
+            runCatching {
+                java.time.Instant.parse(it).toEpochMilli()
+            }.getOrNull()
+        },
+        nickname = requestSummary.requesterName,
+        teamCount = requestSummary.headcount,
+        price = priceSummary.totalPaymentAmount,
+        // TODO(#151, 서버 대기): participants(수강생 나이/성별) — offer 응답에 추가 예정. 내려오면 여기서 채운다.
+        participants = emptyList(),
+        lesson = LessonSummaryUiModel(
+            resortLabel = lessonSummary.resort.displayName,
+            sportLabel = lessonSummary.sport.toSportLabel(),
+            levelLabel = lessonSummary.level.toLevelLabel(),
+            headcount = lessonSummary.totalHeadcount,
+            durationHours = DurationOption.entries
+                .firstOrNull { it.hours * 60 == lessonSummary.durationMinutes }?.hours
+                ?: (lessonSummary.durationMinutes / 60),
+        ),
+    )
+
+    private fun String.toSportLabel(): String =
+        runCatching { SportOption.valueOf(this).label }.getOrDefault(this)
+
+    private fun String.toLevelLabel(): String =
+        runCatching { LevelOption.valueOf(this).label }.getOrDefault(this)
 
     private fun <T> Set<T>.toggle(item: T): Set<T> =
         if (item in this) this - item else this + item
+
+    override fun onCleared() {
+        super.onCleared()
+        applicationScope.launch { instructorMatchingRepository.disconnectSocket() }
+    }
+
 }

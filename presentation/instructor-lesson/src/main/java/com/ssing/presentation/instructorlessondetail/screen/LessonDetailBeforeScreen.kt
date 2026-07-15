@@ -160,7 +160,6 @@ private fun LessonDetailBeforeScreenPreview() {
                 location = "OOO 리조트",
                 duration = "0시간",
                 price = 0,
-                lessonId = 123456789,
                 teams = persistentListOf(
                     TeamParticipantsInfo(
                         teamNickname = "김OO",
