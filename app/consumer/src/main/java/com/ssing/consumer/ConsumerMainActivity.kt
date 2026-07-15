@@ -10,6 +10,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.getValue
@@ -30,6 +31,8 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class ConsumerMainActivity : ComponentActivity() {
+    private val viewModel: ConsumerMainViewModel by viewModels()
+
     @Inject
     lateinit var authSessionManager: AuthSessionManager
 
@@ -42,32 +45,40 @@ class ConsumerMainActivity : ComponentActivity() {
         }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        installSplashScreen()
+        val splashScreen = installSplashScreen()
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         observeSessionExpired()
         requestNotificationPermission()
+
+        splashScreen.setKeepOnScreenCondition { viewModel.startDestination.value == null }
+
         setContent {
             SSINGTheme {
-                val appState = rememberConsumerMainAppState()
-                val isBottomBarVisible by appState.isBottomBarVisible.collectAsStateWithLifecycle()
-                val currentTab by appState.currentTab.collectAsStateWithLifecycle()
+                val startDestination by viewModel.startDestination.collectAsStateWithLifecycle()
 
-                Scaffold(
-                    modifier = Modifier.fillMaxSize(),
-                    bottomBar = {
-                        SsingBottomBar(
-                            isVisible = isBottomBarVisible,
-                            tabs = ConsumerMainTab.entries.toImmutableList(),
-                            currentTab = currentTab,
-                            onTabSelected = appState::navigate,
+                startDestination?.let { destination ->
+                    val appState = rememberConsumerMainAppState()
+                    val isBottomBarVisible by appState.isBottomBarVisible.collectAsStateWithLifecycle()
+                    val currentTab by appState.currentTab.collectAsStateWithLifecycle()
+
+                    Scaffold(
+                        modifier = Modifier.fillMaxSize(),
+                        bottomBar = {
+                            SsingBottomBar(
+                                isVisible = isBottomBarVisible,
+                                tabs = ConsumerMainTab.entries.toImmutableList(),
+                                currentTab = currentTab,
+                                onTabSelected = appState::navigate,
+                            )
+                        },
+                    ) { innerPadding ->
+                        ConsumerMainNavHost(
+                            startDestination = destination,
+                            navController = appState.navController,
+                            paddingValues = innerPadding,
                         )
-                    },
-                ) { innerPadding ->
-                    ConsumerMainNavHost(
-                        navController = appState.navController,
-                        paddingValues = innerPadding,
-                    )
+                    }
                 }
             }
         }

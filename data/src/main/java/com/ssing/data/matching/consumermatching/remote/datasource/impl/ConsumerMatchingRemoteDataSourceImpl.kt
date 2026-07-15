@@ -4,6 +4,7 @@ import com.ssing.core.network.model.BaseResponse
 import com.ssing.data.matching.consumermatching.remote.datasource.api.ConsumerMatchingRemoteDataSource
 import com.ssing.data.matching.consumermatching.remote.dto.request.ConsumerMatchingConditionRequest
 import com.ssing.data.matching.consumermatching.remote.dto.request.ConsumerMatchingConfirmationRequest
+import com.ssing.data.matching.consumermatching.remote.dto.response.ConsumerMatchingActiveResponse
 import com.ssing.data.matching.consumermatching.remote.dto.response.ConsumerMatchingCancellationResponse
 import com.ssing.data.matching.consumermatching.remote.dto.response.ConsumerMatchingConfirmationResponse
 import com.ssing.data.matching.consumermatching.remote.dto.response.ConsumerMatchingRequestResponse
@@ -18,6 +19,9 @@ internal class ConsumerMatchingRemoteDataSourceImpl @Inject constructor(
         request: ConsumerMatchingConditionRequest,
     ): BaseResponse<ConsumerMatchingRequestResponse> =
         consumerMatchingService.postMatchingRequest(request)
+
+    override suspend fun getMatchingActive(): BaseResponse<ConsumerMatchingActiveResponse> =
+        consumerMatchingService.getMatchingActive()
 
     override suspend fun postMatchingCancellation(
         matchingRequestId: Long,

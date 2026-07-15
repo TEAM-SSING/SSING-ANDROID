@@ -7,12 +7,15 @@ import com.ssing.data.matching.instructormatching.remote.dto.response.Instructor
 import com.ssing.data.matching.instructormatching.remote.dto.response.InstructorMatchingExposureResponse
 import com.ssing.data.matching.instructormatching.remote.dto.response.InstructorMatchingExposureStartResponse
 import com.ssing.data.matching.instructormatching.remote.dto.response.InstructorMatchingOfferDecisionResponse
+import com.ssing.data.matching.instructormatching.remote.dto.response.InstructorMatchingOfferDetailResponse
 import com.ssing.data.matching.instructormatching.remote.dto.response.InstructorMatchingOffersResponse
 
 internal interface InstructorMatchingRemoteDataSource {
     suspend fun getMatchingExposure(): BaseResponse<InstructorMatchingExposureResponse>
 
     suspend fun getMatchingOffers(): BaseResponse<InstructorMatchingOffersResponse>
+
+    suspend fun getMatchingOfferDetail(offerId: Long): BaseResponse<InstructorMatchingOfferDetailResponse>
 
     suspend fun putMatchingExposure(
         request: InstructorMatchingExposureStartRequest,
