@@ -11,6 +11,7 @@ import com.ssing.core.ui.extension.uiMessage
 import com.ssing.data.matching.consumermatching.event.ConsumerMatchingEvent
 import com.ssing.data.matching.consumermatching.model.ConsumerMatchingActive
 import com.ssing.data.matching.consumermatching.repository.api.ConsumerMatchingRepository
+import com.ssing.presentation.consumermatching.model.InstructorReview
 import com.ssing.presentation.consumermatching.navigation.ConsumerMatchingGraph
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.persistentListOf
@@ -63,11 +64,31 @@ internal class ConsumerMatchingViewModel @Inject constructor(
             .launchIn(viewModelScope)
 
         refetching(noneFallback = RecoveryNoneFallback.FAILURE)
+        loadReview()
     }
 
     override fun onCleared() {
         applicationScope.launch {
             consumerMatchingRepository.disconnect()
+        }
+    }
+
+    private fun loadReview() {
+        updateState {
+            copy(
+                reviews = persistentListOf(
+                    InstructorReview(
+                        profileImageUrl = "",
+                        nickname = "박OO",
+                        gender = "남",
+                        age = 42,
+                        rating = 4,
+                        tags = persistentListOf("스노보드", "처음 타요"),
+                        content = "스노우 보드 처음 타는 저희 아이두명 강습 해주셨습니다.아이들이 겁이 많은데 정말 즐거운 시간 보낸 것 같습니다.",
+                        date = "2026.12.11",
+                    )
+                )
+            )
         }
     }
 
@@ -144,7 +165,10 @@ internal class ConsumerMatchingViewModel @Inject constructor(
         val priceSummary = active.priceSummary
 
         return copy(
-            tags = persistentListOf(requestSummary.sport.toSport(), requestSummary.lessonLevel.toLessonLevel()),
+            tags = persistentListOf(
+                requestSummary.sport.toSport(),
+                requestSummary.lessonLevel.toLessonLevel()
+            ),
             location = requestSummary.resort.displayName,
             duration = lessonSummary?.durationMinutes?.toDurationText() ?: duration,
             price = priceSummary?.totalPaymentAmount ?: price,
@@ -156,7 +180,8 @@ internal class ConsumerMatchingViewModel @Inject constructor(
             lessonCount = instructorProfile?.completedLessonCount?.let { "${it}회" } ?: lessonCount,
             rating = instructorProfile?.averageRating?.let { "%.1f".format(it) } ?: rating,
             introduction = instructorProfile?.introduction ?: introduction,
-            certifications = instructorProfile?.certificateTypes?.toPersistentList() ?: certifications,
+            certifications = instructorProfile?.certificateTypes?.toPersistentList()
+                ?: certifications,
             estimatedFee = priceSummary?.totalPaymentAmount ?: estimatedFee,
             lessonDuration = lessonSummary?.durationMinutes?.toDurationText() ?: lessonDuration,
         )
