@@ -10,6 +10,7 @@ class CoreNotificationConventionPlugin : Plugin<Project> {
             with(pluginManager) {
                 apply("com.google.dagger.hilt.android")
                 apply("com.google.devtools.ksp")
+                apply("org.jetbrains.kotlin.plugin.serialization")
             }
             dependencies {
                 add("implementation", project(":core:network"))
@@ -17,6 +18,7 @@ class CoreNotificationConventionPlugin : Plugin<Project> {
                 add("ksp", libs.findLibrary("hilt.compiler").get())
                 add("implementation", libs.findLibrary("retrofit.core").get())
                 add("implementation", libs.findLibrary("retrofit.kotlin.serialization").get())
+                add("implementation", libs.findLibrary("kotlinx.serialization.json").get())
                 add("implementation", libs.findLibrary("timber").get())
                 add("implementation", libs.findLibrary("androidx.core.ktx").get())
                 add("implementation", platform(libs.findLibrary("firebase.bom").get()))
