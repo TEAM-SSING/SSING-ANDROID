@@ -40,6 +40,7 @@ internal class InstructorMatchingRepositoryImpl @Inject constructor(
     private val json: Json,
 ) : InstructorMatchingRepository {
 
+    // 개인 큐(/user/queue/matching) 이벤트 중 수신자가 강사인 것만 eventType별로 디코딩해 노출한다.
     override val event: Flow<InstructorMatchingEvent> =
         socketDataSource.event
             .filter { it.recipientRole == RECIPIENT_INSTRUCTOR }
@@ -142,6 +143,7 @@ internal class InstructorMatchingRepositoryImpl @Inject constructor(
             }
         }.onFailure { Timber.e(it, "강사 매칭 소켓 이벤트 디코딩 실패 (eventType=$eventType)") }
             .getOrNull()
+
     override suspend fun cancelMatchingExposure(): Result<Boolean> =
         apiResponseHandler.safeApiCall {
             remoteDataSource.postMatchingExposureCancellation()
