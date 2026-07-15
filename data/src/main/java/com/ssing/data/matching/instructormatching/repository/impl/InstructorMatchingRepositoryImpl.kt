@@ -8,12 +8,15 @@ import com.ssing.data.matching.instructormatching.event.InstructorMatchingEvent
 import com.ssing.data.matching.instructormatching.model.InstructorMatchingExposure
 import com.ssing.data.matching.instructormatching.model.InstructorMatchingLessonSummary
 import com.ssing.data.matching.instructormatching.model.InstructorMatchingOffer
+import com.ssing.data.matching.instructormatching.model.InstructorMatchingOfferDecision
 import com.ssing.data.matching.instructormatching.model.InstructorMatchingPriceSummary
 import com.ssing.data.matching.instructormatching.model.InstructorMatchingRequestSummary
 import com.ssing.data.matching.instructormatching.model.InstructorMatchingResort
 import com.ssing.data.matching.instructormatching.remote.datasource.api.InstructorMatchingRemoteDataSource
 import com.ssing.data.matching.instructormatching.remote.dto.request.InstructorMatchingExposureStartRequest
+import com.ssing.data.matching.instructormatching.remote.dto.request.InstructorMatchingOfferDecisionRequest
 import com.ssing.data.matching.instructormatching.remote.dto.response.InstructorMatchingExposureResponse
+import com.ssing.data.matching.instructormatching.remote.dto.response.InstructorMatchingOfferDecisionResponse
 import com.ssing.data.matching.instructormatching.remote.dto.response.InstructorMatchingOfferResponse
 import com.ssing.data.matching.instructormatching.remote.payload.MatchingCanceledPayload
 import com.ssing.data.matching.instructormatching.remote.payload.MatchingConfirmedPayload
@@ -77,7 +80,6 @@ internal class InstructorMatchingRepositoryImpl @Inject constructor(
                 ),
             )
         }.map { it.isExposed }
-
     private fun MatchingEnvelope<JsonElement>.toInstructorMatchingEventOrNull(): InstructorMatchingEvent? =
         runCatching {
             when (eventType) {
@@ -140,6 +142,31 @@ internal class InstructorMatchingRepositoryImpl @Inject constructor(
             }
         }.onFailure { Timber.e(it, "강사 매칭 소켓 이벤트 디코딩 실패 (eventType=$eventType)") }
             .getOrNull()
+
+    override suspend fun cancelMatchingExposure(): Result<Boolean> =
+        apiResponseHandler.safeApiCall {
+            remoteDataSource.postMatchingExposureCancellation()
+        }.map { it.isExposed }
+
+    override suspend fun respondMatchingOffer(
+        offerId: Long,
+        decision: String,
+    ): Result<InstructorMatchingOfferDecision> =
+        apiResponseHandler.safeApiCall {
+            remoteDataSource.patchMatchingOffer(
+                offerId = offerId,
+                request = InstructorMatchingOfferDecisionRequest(decision = decision),
+            )
+        }.map { it.toModel() }
+
+    private fun InstructorMatchingOfferDecisionResponse.toModel(): InstructorMatchingOfferDecision =
+        InstructorMatchingOfferDecision(
+            offerId = this.offerId,
+            offerStatus = this.offerStatus,
+            groupId = this.groupId,
+            groupStatus = this.groupStatus,
+            requesterConfirmationExpiresAt = this.requesterConfirmationExpiresAt,
+        )
 
     private fun InstructorMatchingExposureResponse.toModel(): InstructorMatchingExposure =
         InstructorMatchingExposure(
