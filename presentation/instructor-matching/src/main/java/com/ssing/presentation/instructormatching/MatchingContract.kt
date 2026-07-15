@@ -39,5 +39,6 @@ internal interface MatchingContract {
     sealed interface Effect {
         data class ShowToast(val message: String) : Effect
         data object NavigateBack : Effect
+        data class NavigateToLessonDetail(val lessonId: Long) : Effect
     }
 }
