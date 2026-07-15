@@ -3,6 +3,11 @@ package com.ssing.core.ui.type
 import java.time.OffsetDateTime
 import java.time.format.DateTimeFormatter
 
+fun formatDate(isoDateTime: String): String {
+    val dateTime = OffsetDateTime.parse(isoDateTime)
+    return dateTime.format(DateTimeFormatter.ofPattern("yyyy년 M월 d일"))
+}
+
 fun formatTime(isoDateTime: String): String {
     val dateTime = OffsetDateTime.parse(isoDateTime)
     return dateTime.format(DateTimeFormatter.ofPattern("HH:mm"))

@@ -11,6 +11,7 @@ import com.ssing.core.ui.common.component.CancelReason
 import com.ssing.core.ui.common.component.LessonBannerState
 import com.ssing.core.ui.extension.uiMessage
 import com.ssing.core.ui.type.formatCountdown
+import com.ssing.core.ui.type.formatDate
 import com.ssing.core.ui.type.formatDateTime
 import com.ssing.core.ui.type.formatMinutesText
 import com.ssing.core.ui.type.formatTime
@@ -120,7 +121,7 @@ internal class ConsumerLessonViewModel @Inject constructor(
 
             is ConsumerLessonDetail.Completed -> copy(
                 lessonBannerState = LessonBannerState.Completed(
-                    lessonDate = detail.actualEndedAt
+                    lessonDate = formatDate(detail.actualEndedAt)
                 ),
                 instructorProfile = instructorProfileUiModel,
                 lessonInfo = null,
