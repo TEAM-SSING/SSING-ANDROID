@@ -1,5 +1,6 @@
 package com.ssing.presentation.instructorhome.component
 
+import android.R.attr.text
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -8,9 +9,11 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
@@ -75,7 +78,9 @@ internal fun InstructorHomeEmptyReviewCard() {
                 shape = RoundedCornerShape(12.dp),
             )
             .fillMaxWidth()
-            .padding(vertical = 32.dp),
+            .heightIn(min = 104.dp)
+            .wrapContentSize(align = Alignment.Center)
+            .padding(12.dp),
         text = "아직 남겨진 후기가 없어요.\n새로운 강습을 진행해 후기를 남겨보세요",
         style = SSINGTheme.typography.caption.sb14,
         color = SSINGTheme.colors.textDisabled,
