@@ -15,8 +15,6 @@ import com.ssing.data.consumerlesson.remote.dto.response.ConsumerLessonDetailCom
 import com.ssing.data.consumerlesson.remote.dto.response.ConsumerLessonDetailOngoingResponse
 import com.ssing.data.consumerlesson.remote.dto.response.ConsumerLessonDetailResponse
 import com.ssing.data.consumerlesson.remote.dto.response.instructorprofile.ConsumerLessonInstructorProfile
-import com.ssing.data.consumerlesson.remote.dto.response.lessoninfo.ConsumerLessonInfo
-import com.ssing.data.consumerlesson.remote.dto.response.matchingrequest.ConsumerLessonMatchingRequest
 import com.ssing.data.consumerlesson.remote.dto.response.matchingrequest.Participant
 import com.ssing.data.consumerlesson.repository.api.ConsumerLessonDetailRepository
 import com.ssing.data.lesson.common.remote.datasource.api.LessonSocketDataSource
@@ -57,7 +55,7 @@ internal class ConsumerLessonDetailRepositoryImpl @Inject constructor(
     override suspend fun fetchConsumerLessonDetail(lessonId: Long): Result<ConsumerLessonDetail> =
         apiResponseHandler.safeApiCall {
             dataSource.getConsumerLessonDetail(lessonId)
-        }.mapCatching { it.toModel() }
+        }.map { it.toModel() }
 
     private fun ConsumerLessonDetailResponse.toModel(): ConsumerLessonDetail =
         when (this) {
@@ -65,11 +63,11 @@ internal class ConsumerLessonDetailRepositoryImpl @Inject constructor(
                 lessonId = lessonId,
                 lessonInfo = lessonInfo.toModel(),
                 instructorProfile = instructorProfile.toModel(),
-                confirmedCount = statusInfo.confirmedCount!!,
-                requiredCount = statusInfo.requiredCount!!,
-                currentActorConfirmed = statusInfo.currentActorConfirmed!!,
-                instructorConfirmed = statusInfo.instructorConfirmed!!,
-                scheduledDurationMinutes = lessonInfo.scheduledDurationMinutes!!,
+                confirmedCount = statusInfo.confirmedCount,
+                requiredCount = statusInfo.requiredCount,
+                currentActorConfirmed = statusInfo.currentActorConfirmed,
+                instructorConfirmed = statusInfo.instructorConfirmed,
+                scheduledDurationMinutes = lessonInfo.scheduledDurationMinutes,
                 lessonMatchingRequest = matchingRequests.map { it.toModel() },
             )
 
@@ -77,12 +75,12 @@ internal class ConsumerLessonDetailRepositoryImpl @Inject constructor(
                 lessonId = lessonId,
                 lessonInfo = lessonInfo.toModel(),
                 instructorProfile = instructorProfile.toModel(),
-                serverTime = statusInfo.serverTime!!,
-                actualStartedAt = statusInfo.actualStartedAt!!,
-                expectedEndedAt = statusInfo.expectedEndedAt!!,
-                elapsedSeconds = statusInfo.elapsedSeconds!!,
-                remainingSeconds = statusInfo.remainingSeconds!!,
-                scheduledDurationMinutes = lessonInfo.scheduledDurationMinutes!!,
+                serverTime = statusInfo.serverTime,
+                actualStartedAt = statusInfo.actualStartedAt,
+                expectedEndedAt = statusInfo.expectedEndedAt,
+                elapsedSeconds = statusInfo.elapsedSeconds,
+                remainingSeconds = statusInfo.remainingSeconds,
+                scheduledDurationMinutes = lessonInfo.scheduledDurationMinutes,
                 lessonMatchingRequest = matchingRequests.map { it.toModel() },
             )
 
@@ -90,10 +88,10 @@ internal class ConsumerLessonDetailRepositoryImpl @Inject constructor(
                 lessonId = lessonId,
                 lessonInfo = lessonInfo.toModel(),
                 instructorProfile = instructorProfile.toModel(),
-                lessonDurationMinutes = lessonInfo.lessonDurationMinutes!!,
-                actualStartedAt = lessonInfo.actualStartedAt!!,
-                actualEndedAt = lessonInfo.actualEndedAt!!,
-                actualDurationMinutes = lessonInfo.actualDurationMinutes!!,
+                lessonDurationMinutes = lessonInfo.lessonDurationMinutes,
+                actualStartedAt = lessonInfo.actualStartedAt,
+                actualEndedAt = lessonInfo.actualEndedAt,
+                actualDurationMinutes = lessonInfo.actualDurationMinutes,
             )
 
             is ConsumerLessonDetailCanceledResponse -> ConsumerLessonDetail.Canceled(
@@ -104,11 +102,41 @@ internal class ConsumerLessonDetailRepositoryImpl @Inject constructor(
                 canceledByMemberId = cancelInfo.canceledBy.memberId,
                 canceledByName = cancelInfo.canceledBy.name,
                 cancelReason = cancelInfo.cancelReason,
-                lessonDurationMinutes = lessonInfo.lessonDurationMinutes!!,
+                lessonDurationMinutes = lessonInfo.lessonDurationMinutes,
             )
         }
 
-    private fun ConsumerLessonInfo.toModel(): LessonInfo = LessonInfo(
+    private fun ConsumerLessonDetailBeforeResponse.LessonInfo.toModel(): LessonInfo = LessonInfo(
+        representativeConsumerNames = representativeConsumerNames,
+        totalHeadcount = totalHeadcount,
+        resortCode = resort.code,
+        resortDisplayName = resort.displayName,
+        sport = sport,
+        lessonLevel = lessonLevel,
+        myTeamLessonPrice = myTeamLessonPrice,
+    )
+
+    private fun ConsumerLessonDetailOngoingResponse.LessonInfo.toModel(): LessonInfo = LessonInfo(
+        representativeConsumerNames = representativeConsumerNames,
+        totalHeadcount = totalHeadcount,
+        resortCode = resort.code,
+        resortDisplayName = resort.displayName,
+        sport = sport,
+        lessonLevel = lessonLevel,
+        myTeamLessonPrice = myTeamLessonPrice,
+    )
+
+    private fun ConsumerLessonDetailCompletedResponse.LessonInfo.toModel(): LessonInfo = LessonInfo(
+        representativeConsumerNames = representativeConsumerNames,
+        totalHeadcount = totalHeadcount,
+        resortCode = resort.code,
+        resortDisplayName = resort.displayName,
+        sport = sport,
+        lessonLevel = lessonLevel,
+        myTeamLessonPrice = myTeamLessonPrice,
+    )
+
+    private fun ConsumerLessonDetailCanceledResponse.LessonInfo.toModel(): LessonInfo = LessonInfo(
         representativeConsumerNames = representativeConsumerNames,
         totalHeadcount = totalHeadcount,
         resortCode = resort.code,
@@ -128,14 +156,24 @@ internal class ConsumerLessonDetailRepositoryImpl @Inject constructor(
             profileImageUrl = profileImageUrl,
         )
 
-    private fun ConsumerLessonMatchingRequest.toModel(): LessonMatchingRequest =
+    private fun ConsumerLessonDetailBeforeResponse.MatchingRequest.toModel(): LessonMatchingRequest =
         LessonMatchingRequest(
             matchingRequestId = matchingRequestId,
             representativeMemberId = representativeMemberId,
             representativeMemberName = representativeMemberName,
             headcount = headcount,
             participants = participants.map { it.toModel() },
-            startConfirmed = startConfirmed ?: false,
+            startConfirmed = startConfirmed,
+        )
+
+    private fun ConsumerLessonDetailOngoingResponse.MatchingRequest.toModel(): LessonMatchingRequest =
+        LessonMatchingRequest(
+            matchingRequestId = matchingRequestId,
+            representativeMemberId = representativeMemberId,
+            representativeMemberName = representativeMemberName,
+            headcount = headcount,
+            participants = participants.map { it.toModel() },
+            startConfirmed = false,
         )
 
     private fun Participant.toModel(): LessonParticipant = LessonParticipant(
