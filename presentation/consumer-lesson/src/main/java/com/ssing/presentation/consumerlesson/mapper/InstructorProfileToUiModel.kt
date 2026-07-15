@@ -1,7 +1,7 @@
 package com.ssing.presentation.consumerlesson.mapper
 
 import com.ssing.core.ui.type.displayGender
-import com.ssing.data.consumerlesson.model.InstructorProfile
+import com.ssing.data.lesson.consumer.model.InstructorProfile
 import com.ssing.presentation.consumerlesson.model.InstructorProfileUiModel
 import java.time.Year
 
