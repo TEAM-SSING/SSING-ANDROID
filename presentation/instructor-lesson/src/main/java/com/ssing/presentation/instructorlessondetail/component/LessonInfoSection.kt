@@ -8,16 +8,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.ssing.core.ui.common.component.SsingMatchingDetailCardSmall
 import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
 
 @Composable
 fun LessonInfoSection(
     tags: ImmutableList<String>,
-    nicknames: ImmutableList<String>,
     totalCount: Int,
     place: String,
     duration: String,
     price: Int,
     modifier: Modifier = Modifier,
+    nicknames: ImmutableList<String> = persistentListOf(),
 ) {
     Column(modifier = modifier) {
         SectionTitle(text = "강습 정보")

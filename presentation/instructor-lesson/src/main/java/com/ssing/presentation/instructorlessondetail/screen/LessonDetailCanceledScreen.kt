@@ -5,30 +5,28 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.ssing.core.ui.common.component.ConsumerInfoCard
 import com.ssing.core.ui.common.component.LessonBanner
 import com.ssing.core.ui.common.component.LessonBannerState
 import com.ssing.core.ui.common.component.SsingButtonStyle
-import com.ssing.core.ui.common.component.SsingMatchingDetailCardSmall
 import com.ssing.core.ui.common.component.SsingTopBar
 import com.ssing.core.ui.designsystem.theme.Blue50
 import com.ssing.core.ui.designsystem.theme.SSINGTheme
+import com.ssing.presentation.instructorlessondetail.component.ConsumerInfoList
+import com.ssing.presentation.instructorlessondetail.component.LessonDetailBodyContainer
 import com.ssing.presentation.instructorlessondetail.component.LessonDetailSsingButton
+import com.ssing.presentation.instructorlessondetail.component.LessonInfoSection
 import com.ssing.presentation.instructorlessondetail.component.LessonManager
 import com.ssing.presentation.instructorlessondetail.component.SectionTitle
 import com.ssing.presentation.instructorlessondetail.model.LessonDetailCanceledUiModel
 import com.ssing.presentation.instructorlessondetail.model.TeamParticipantsInfo
 import kotlinx.collections.immutable.persistentListOf
-import kotlinx.collections.immutable.toPersistentList
 
 @Composable
 internal fun LessonDetailCanceledScreen(
@@ -68,23 +66,11 @@ internal fun LessonDetailCanceledScreen(
                     lessonBannerState = lessonBannerState
                 )
 
-                Column(
-                    modifier = Modifier
-                        .weight(1f)
-                        .background(
-                            color = SSINGTheme.colors.backgroundNormal,
-                            shape = RoundedCornerShape(
-                                topStart = 12.dp,
-                                topEnd = 12.dp,
-                            )
-                        )
-                        .padding(horizontal = 16.dp)
-                ) {
+                LessonDetailBodyContainer {
                     Spacer(modifier = Modifier.height(16.dp))
-                    SectionTitle(text = "강습 정보")
-                    SsingMatchingDetailCardSmall(
+                    LessonInfoSection(
                         tags = cancel.tags,
-                        teamNicknames = cancel.teams.map { it.teamNickname }.toPersistentList(),
+                        nicknames = cancel.nicknames,
                         totalCount = cancel.teams.size,
                         place = cancel.location,
                         duration = cancel.duration,
@@ -92,19 +78,12 @@ internal fun LessonDetailCanceledScreen(
                     )
 
                     Spacer(modifier = Modifier.height(24.dp))
+
                     SectionTitle(text = "강습생 정보")
+
                     Spacer(modifier = Modifier.height(8.dp))
-                    cancel.teams.forEachIndexed { index, team ->
-                        ConsumerInfoCard(
-                            isReady = false,
-                            nickname = team.teamNickname,
-                            participants = team.participants,
-                            price = team.price,
-                        )
-                        if (index != cancel.teams.lastIndex) {
-                            Spacer(modifier = Modifier.height(8.dp))
-                        }
-                    }
+
+                    ConsumerInfoList(teams = cancel.teams)
 
                     LessonManager(
                         primaryText = "문제 신고",
