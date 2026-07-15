@@ -37,6 +37,7 @@ object NetworkModule {
     @Singleton
     fun provideJson(): Json = Json {
         encodeDefaults = true
+        explicitNulls = false
         ignoreUnknownKeys = true
         prettyPrint = BuildConfig.DEBUG
     }

@@ -1,78 +1,156 @@
 package com.ssing.presentation.consumerlesson
 
 import androidx.compose.foundation.text.input.TextFieldState
+import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.viewModelScope
+import androidx.navigation.toRoute
+import com.ssing.core.network.di.ApplicationScope
+import com.ssing.core.network.exception.ApiException
 import com.ssing.core.ui.base.BaseViewModel
 import com.ssing.core.ui.common.component.CancelReason
 import com.ssing.core.ui.common.component.LessonBannerState
+import com.ssing.core.ui.extension.uiMessage
+import com.ssing.core.ui.type.formatCountdown
+import com.ssing.core.ui.type.formatDate
+import com.ssing.core.ui.type.formatDateTime
+import com.ssing.core.ui.type.formatMinutesText
+import com.ssing.core.ui.type.formatTime
+import com.ssing.data.consumerlesson.model.ConsumerLessonDetail
+import com.ssing.data.consumerlesson.repository.api.ConsumerLessonDetailRepository
+import com.ssing.data.lessoncancel.repository.api.LessonCancelRepository
+import com.ssing.presentation.consumerlesson.mapper.toUiModel
 import com.ssing.presentation.consumerlesson.model.CanceledLessonInfoUiModel
 import com.ssing.presentation.consumerlesson.model.CompletedLessonInfoUiModel
-import com.ssing.presentation.consumerlesson.model.InstructorProfileUiModel
-import com.ssing.presentation.consumerlesson.model.LessonInfoUiModel
-import com.ssing.presentation.consumerlesson.model.ParticipantTeamUiModel
+import com.ssing.presentation.consumerlesson.navigation.ConsumerLesson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
-internal class ConsumerLessonViewModel @Inject constructor() :
+internal class ConsumerLessonViewModel @Inject constructor(
+    savedStateHandle: SavedStateHandle,
+    private val consumerLessonDetailRepository: ConsumerLessonDetailRepository,
+    private val lessonCancelRepository: LessonCancelRepository,
+    @param:ApplicationScope private val applicationScope: CoroutineScope,
+) :
     BaseViewModel<ConsumerLessonContract.State, ConsumerLessonContract.Effect>(
         ConsumerLessonContract.State()
     ) {
 
     val etcState = TextFieldState()
 
+    private val lessonId: Long = savedStateHandle.toRoute<ConsumerLesson>().lessonId
+
     init {
-        // TODO: 서버 연동 후 실제 API 호출로 교체
-        loadDummyData()
+        loadLessonDetail(lessonId)
+        consumerLessonDetailRepository.connectSocket()
+        observeSocketEvents()
     }
 
-    private fun loadDummyData() {
-        val dummyLessonInfo = LessonInfoUiModel(
-            tags = persistentListOf("스노보드", "자격증이 있어요"),
-            teamNicknames = persistentListOf("김멍멍", "김야옹"),
-            totalCount = 2,
-            place = "000 리조트",
-            duration = "2시간",
-            price = 500000,
-        )
+    private fun observeSocketEvents() {
+        viewModelScope.launch {
+            consumerLessonDetailRepository.socketEvents.collect { event ->
+                Timber.d("강습 상세 조회 소켓 이벤트: lessonId = ${event.lessonId}, lessonStatus = ${event.lessonStatus}")
+                if (event.lessonId == lessonId) {
+                    loadLessonDetail(lessonId)
+                }
+            }
+        }
+    }
 
-        updateState {
-            copy(
+    fun loadLessonDetail(lessonId: Long) {
+        viewModelScope.launch {
+            consumerLessonDetailRepository.fetchConsumerLessonDetail(lessonId)
+                .onSuccess { result ->
+                    Timber.d("consumer-lesson: $result")
+                    updateState { applyLessonDetail(result) }
+                }
+                .onFailure {
+                    Timber.e(it, "consumer-lesson 실패")
+                    if (it is ApiException) {
+                        sendEffect(ConsumerLessonContract.Effect.ShowToast(it.uiMessage))
+                    }
+                }
+        }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        applicationScope.launch { consumerLessonDetailRepository.disconnectSocket() }
+    }
+
+    private fun ConsumerLessonContract.State.applyLessonDetail(
+        detail: ConsumerLessonDetail,
+    ): ConsumerLessonContract.State {
+        val instructorProfileUiModel = detail.instructorProfile.toUiModel()
+
+        return when (detail) {
+            is ConsumerLessonDetail.Confirmed -> copy(
                 lessonBannerState = LessonBannerState.Before(
-                    isInstructorReady = true,
-                    participantReadyCount = 4,
-                    participantTotalCount = 5,
+                    isInstructorReady = detail.instructorConfirmed,
+                    participantReadyCount = detail.confirmedCount,
+                    participantTotalCount = detail.requiredCount,
                 ),
-                lessonInfo = dummyLessonInfo,
-                instructorProfile = InstructorProfileUiModel(
-                    name = "김어흥 강사",
-                    age = 27,
-                    gender = "남",
-                    level = "grade1",
-                    imageUrl = "",
+                lessonInfo = detail.lessonInfo.toUiModel(
+                    durationMinutes = detail.scheduledDurationMinutes,
+                    matchingRequests = detail.lessonMatchingRequest,
                 ),
-                participantTeams = persistentListOf(
-                    ParticipantTeamUiModel(
-                        isReady = true,
-                        nickname = "김음메",
-                        participants = persistentListOf("38세 남", "12세 여", "9세 남"),
-                    ),
-                    ParticipantTeamUiModel(
-                        isReady = false,
-                        nickname = "김끼룩",
-                        participants = persistentListOf("38세 남", "12세 여", "9세 남"),
-                    ),
+                instructorProfile = instructorProfileUiModel,
+                participantTeams = detail.lessonMatchingRequest
+                    .map { it.toUiModel() }
+                    .toPersistentList(),
+                isReady = detail.currentActorConfirmed,
+            )
+
+            is ConsumerLessonDetail.InProgress -> copy(
+                lessonBannerState = LessonBannerState.Ongoing(
+                    remainingTime = formatCountdown(detail.remainingSeconds),
+                    elapsedTime = formatMinutesText(detail.elapsedSeconds / 60),
                 ),
+                lessonInfo = detail.lessonInfo.toUiModel(
+                    durationMinutes = detail.scheduledDurationMinutes,
+                    matchingRequests = detail.lessonMatchingRequest,
+                ),
+                instructorProfile = instructorProfileUiModel,
+                participantTeams = detail.lessonMatchingRequest
+                    .map { it.toUiModel() }
+                    .toPersistentList(),
+            )
+
+            is ConsumerLessonDetail.Completed -> copy(
+                lessonBannerState = LessonBannerState.Completed(
+                    lessonDate = formatDate(detail.actualEndedAt)
+                ),
+                instructorProfile = instructorProfileUiModel,
+                lessonInfo = null,
+                participantTeams = persistentListOf(),
                 completedLessonInfo = CompletedLessonInfoUiModel(
-                    lessonInfo = dummyLessonInfo,
-                    actualTimeRange = "14:00 - 16:00 (2시간)",
+                    lessonInfo = detail.lessonInfo.toUiModel(
+                        durationMinutes = detail.lessonDurationMinutes,
+                        matchingRequests = emptyList(),
+                    ),
+                    actualTimeRange = "${formatTime(detail.actualStartedAt)}~" +
+                            "${formatTime(detail.actualEndedAt)} " +
+                            "(${formatMinutesText(detail.actualDurationMinutes)})",
                 ),
+            )
+
+            is ConsumerLessonDetail.Canceled -> copy(
+                lessonBannerState = LessonBannerState.Canceled,
+                instructorProfile = instructorProfileUiModel,
+                participantTeams = persistentListOf(),
                 canceledLessonInfo = CanceledLessonInfoUiModel(
-                    lessonInfo = dummyLessonInfo,
-                    cancelDateTime = "2026.07.10 14:00",
-                    cancelSubject = "강습생",
-                    cancelReason = "일정 변경",
+                    lessonInfo = detail.lessonInfo.toUiModel(
+                        durationMinutes = detail.lessonDurationMinutes,
+                        matchingRequests = emptyList(),
+                    ),
+                    cancelDateTime = formatDateTime(detail.canceledAt),
+                    cancelSubject = detail.canceledByName,
+                    cancelReason = detail.cancelReason,
                 ),
             )
         }
@@ -142,21 +220,42 @@ internal class ConsumerLessonViewModel @Inject constructor() :
         updateState { copy(selectedReason = reason) }
     }
 
+    private fun CancelReason.toServerCode(): String = when (this) {
+        CancelReason.SCHEDULE_CHANGE -> "SCHEDULE_CHANGED"
+        CancelReason.INSTRUCTOR_NO_SHOW -> "INSTRUCTOR_NOT_MET"
+        CancelReason.CONSUMER_NO_SHOW -> "CONSUMER_NOT_MET"
+        CancelReason.ETC -> "ETC"
+    }
+
     fun onCancelConfirmed() {
+        val reason = uiState.value.selectedReason ?: return
         val etcReason = if (uiState.value.selectedReason == CancelReason.ETC) {
             etcState.text.toString()
         } else {
             null
         }
-        // TODO: 서버 연동 시 etcReason 처리
-        updateState {
-            copy(
-                lessonBannerState = LessonBannerState.Canceled,
-                showCancelConfirmSheet = false,
-                selectedReason = null,
-            )
+
+        viewModelScope.launch {
+            lessonCancelRepository.postLessonCancel(
+                lessonId = lessonId,
+                cancelReason = reason.toServerCode(),
+                cancelReasonDetail = etcReason,
+            ).onSuccess {
+                updateState {
+                    copy(
+                        lessonBannerState = LessonBannerState.Canceled,
+                        showCancelConfirmSheet = false,
+                        selectedReason = null,
+                    )
+                }
+                etcState.edit { replace(0, length, "") }
+            }.onFailure {
+                Timber.e(it, "강습 취소 실패")
+                if (it is ApiException) {
+                    sendEffect(ConsumerLessonContract.Effect.ShowToast(it.uiMessage))
+                }
+            }
         }
-        etcState.edit { replace(0, length, "") }
     }
 
     fun onCancelDismiss() {

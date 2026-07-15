@@ -83,6 +83,11 @@ internal class ConsumerMatchingRepositoryImpl @Inject constructor(
             )
         }.map { }
 
+    override suspend fun getMatchingActive(): Result<Long?> =
+        apiResponseHandler.safeApiCall {
+            remoteDataSource.getMatchingActive()
+        }.map { it.matchingRequestId }
+
     private fun ConsumerMatchingParticipant.toRequest(): ConsumerMatchingParticipantRequest =
         ConsumerMatchingParticipantRequest(
             age = this.age,
