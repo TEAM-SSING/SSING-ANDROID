@@ -92,7 +92,7 @@ internal fun ConsumerMainNavHost(
                     navOptions = navController.clearBackStackNavOptions(),
                 )
             },
-            navigateToPayment = { navController.navigateToConsumerPayment(it) },
+            navigateToPayment = { navController.navigateToConsumerPayment() },
         )
         consumerAuthNavGraph(
             paddingValues = paddingValues,

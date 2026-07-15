@@ -8,10 +8,10 @@ import com.ssing.presentation.consumerpayment.PaymentRoute
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class ConsumerPayment(val matchingRequestId: Long) : Route
+data object ConsumerPayment : Route
 
-fun NavController.navigateToConsumerPayment(matchingRequestId: Long) =
-    navigate(ConsumerPayment(matchingRequestId))
+fun NavController.navigateToConsumerPayment() =
+    navigate(ConsumerPayment)
 
 fun NavGraphBuilder.consumerPaymentNavGraph(
     navigateToLesson: (Long) -> Unit,

@@ -1,8 +1,6 @@
 package com.ssing.presentation.consumerpayment
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.toRoute
 import com.ssing.core.network.exception.ApiException
 import com.ssing.core.ui.base.BaseViewModel
 import com.ssing.core.ui.extension.uiMessage
@@ -10,7 +8,6 @@ import com.ssing.data.matching.consumermatching.model.ConsumerMatchingActive
 import com.ssing.data.matching.consumermatching.repository.api.ConsumerMatchingRepository
 import com.ssing.data.payment.model.PaymentSummary
 import com.ssing.data.payment.repository.api.PaymentRepository
-import com.ssing.presentation.consumerpayment.navigation.ConsumerPayment
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.launch
@@ -19,13 +16,12 @@ import javax.inject.Inject
 
 @HiltViewModel
 internal class PaymentViewModel @Inject constructor(
-    savedStateHandle: SavedStateHandle,
     private val paymentRepository: PaymentRepository,
     private val consumerMatchingRepository: ConsumerMatchingRepository,
 ) : BaseViewModel<PaymentContract.State, PaymentContract.Effect>(
     PaymentContract.State()
 ) {
-    private val matchingRequestId = savedStateHandle.toRoute<ConsumerPayment>().matchingRequestId
+    private var matchingRequestId: Long? = null
 
     init {
         loadPaymentInfo()
@@ -37,6 +33,8 @@ internal class PaymentViewModel @Inject constructor(
                 if (active !is ConsumerMatchingActive.Active) {
                     return@onSuccess Timber.w("결제 화면 진입했지만 활성 매칭이 없음")
                 }
+
+                matchingRequestId = active.matchingRequestId
 
                 val requestSummary = active.requestSummary
                 val lessonSummary = active.lessonSummary
@@ -84,6 +82,10 @@ internal class PaymentViewModel @Inject constructor(
 
     fun onPaymentClick() {
         if (uiState.value.isLoading) return
+        val matchingRequestId = matchingRequestId ?: run {
+            sendEffect(PaymentContract.Effect.ShowToast("결제 정보를 아직 불러오는 중이에요. 잠시 후 다시 시도해주세요."))
+            return
+        }
 
         viewModelScope.launch {
             updateState { copy(isLoading = true) }
