@@ -30,14 +30,11 @@ internal interface MatchingContract {
 
     sealed interface MatchingDialog {
         data object StopWaiting : MatchingDialog
-
-        data object ConsumerRejected : MatchingDialog
-
-        data object MatchingFailed : MatchingDialog
     }
 
     sealed interface Effect {
         data class ShowToast(val message: String) : Effect
         data object NavigateBack : Effect
+        data class NavigateToLessonDetail(val lessonId: Long) : Effect
     }
 }

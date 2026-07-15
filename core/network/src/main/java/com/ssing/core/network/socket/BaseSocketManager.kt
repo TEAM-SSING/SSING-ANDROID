@@ -23,7 +23,9 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.json.Json
@@ -185,7 +187,10 @@ internal abstract class BaseSocketManager<T>(
         accessToken = null
         reissueAttempted = false
         try {
-            session?.disconnect()
+            withContext(NonCancellable) {
+                suspendRunCatching { session?.disconnect() }
+                    .onFailure { Timber.w(it, "🐮 disconnect() 중 세션 종료 실패 (이미 끊겼을 수 있음)") }
+            }
         } finally {
             session = null
             _socketState.update { SocketState.Disconnected }
@@ -289,11 +294,16 @@ internal abstract class BaseSocketManager<T>(
 
     private suspend fun logout() {
         Timber.w("🐮 세션 만료 - 로그아웃 처리")
-        suspendRunCatching { session?.disconnect() }
-            .onFailure { Timber.w(it, "🐮 세션 종료 실패 (이미 끊겼을 수 있음)") }
-        session = null
-        authSessionManager.forceLogout()
-        _socketState.update { SocketState.Disconnected }
+        try {
+            withContext(NonCancellable) {
+                suspendRunCatching { session?.disconnect() }
+                    .onFailure { Timber.w(it, "🐮 세션 종료 실패 (이미 끊겼을 수 있음)") }
+                session = null
+                authSessionManager.forceLogout()
+            }
+        } finally {
+            _socketState.update { SocketState.Disconnected }
+        }
     }
 
     private companion object {
