@@ -284,18 +284,19 @@ internal class LessonDetailViewModel @Inject constructor(
                 val currentRemaining = (remainingSeconds - secondsPassed).coerceAtLeast(0)
                 val currentElapsed = elapsedSeconds + secondsPassed
 
-                val currentOngoing = (uiState.value.phase as? LessonDetailContract.LessonDetailPhase.LessonDetailOngoing)?.ongoing
-
-                if (currentOngoing != null) {
-                    updateState {
+                updateState {
+                    val currentPhase = phase as? LessonDetailContract.LessonDetailPhase.LessonDetailOngoing
+                    if (currentPhase != null) {
                         copy(
-                            phase = LessonDetailContract.LessonDetailPhase.LessonDetailOngoing(
-                                ongoing = currentOngoing.copy(
+                            phase = currentPhase.copy(
+                                ongoing = currentPhase.ongoing.copy(
                                     remainingTime = formatCountdown(currentRemaining),
-                                    elapsedTime = formatMinutesText(currentElapsed / 60),
+                                    elapsedTime = formatMinutesText(currentElapsed/60),
                                 )
                             )
                         )
+                    } else {
+                        this
                     }
                 }
 
