@@ -144,7 +144,7 @@ internal class ConsumerLessonRepositoryImpl @Inject constructor(
         gender = gender,
         birthYear = birthYear,
         level = level,
-        profileImageUrl = profileImageUrl,
+        profileImageUrl = profileImageUrl.orEmpty(),
     )
 
     private fun ParticipantResponse.toModel() = LessonParticipant(participantId, gender, age)

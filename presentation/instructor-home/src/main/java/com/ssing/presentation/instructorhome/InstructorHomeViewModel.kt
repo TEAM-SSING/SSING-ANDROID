@@ -148,10 +148,7 @@ internal class InstructorHomeViewModel @Inject constructor(
                 val lessonId = lesson.lessonId
 
                 if (lessonId == null) {
-                    Timber.e(
-                        "강습 상세 이동에 필요한 lessonId가 없습니다. " +
-                                "status=${lesson.status}, offerId=${lesson.offerId}"
-                    )
+                    sendEffect(InstructorHomeContract.Effect.NavigateToMatching)
                     return
                 }
 

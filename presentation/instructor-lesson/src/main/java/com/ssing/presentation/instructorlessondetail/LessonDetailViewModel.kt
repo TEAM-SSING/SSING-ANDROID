@@ -82,7 +82,14 @@ internal class LessonDetailViewModel @Inject constructor(
         viewModelScope.launch {
             instructorLessonDetailRepository.fetchInstructorLessonDetail(lessonId)
                 .onSuccess { result ->
-                    updateState { copy(phase = result.toPhase()) }
+                    val phase = result.toPhase()
+                    updateState {
+                        copy(
+                            phase = phase,
+                            showLessonEndDialog = showLessonEndDialog &&
+                                phase is LessonDetailContract.LessonDetailPhase.LessonDetailOngoing,
+                        )
+                    }
                 }
                 .onFailure {
                     if (it is ApiException) {
@@ -94,6 +101,8 @@ internal class LessonDetailViewModel @Inject constructor(
     }
 
     fun onBackClick() = sendEffect(LessonDetailContract.Effect.NavigateBack)
+
+    fun onMatchingClick() = sendEffect(LessonDetailContract.Effect.NavigateToMatching)
 
     fun onCancelClassClick() {
         updateState {
@@ -114,6 +123,7 @@ internal class LessonDetailViewModel @Inject constructor(
     }
 
     fun onEndClick() {
+        if (uiState.value.phase !is LessonDetailContract.LessonDetailPhase.LessonDetailOngoing) return
         updateState { copy(showLessonEndDialog = true) }
     }
 

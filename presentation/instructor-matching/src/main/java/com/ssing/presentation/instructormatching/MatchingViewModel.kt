@@ -11,6 +11,7 @@ import com.ssing.core.ui.extension.uiMessage
 import com.ssing.data.matching.instructormatching.event.InstructorMatchingEvent
 import com.ssing.data.matching.instructormatching.model.InstructorMatchingOfferDetail
 import com.ssing.data.matching.instructormatching.model.InstructorMatchingSetting
+import com.ssing.data.home.repository.api.HomeRepository
 import com.ssing.data.matching.instructormatching.repository.api.InstructorMatchingRepository
 import com.ssing.presentation.instructormatching.MatchingContract.MatchingDialog
 import com.ssing.presentation.instructormatching.MatchingContract.MatchingPhase
@@ -35,6 +36,7 @@ import javax.inject.Inject
 @HiltViewModel
 internal class MatchingViewModel @Inject constructor(
     private val instructorMatchingRepository: InstructorMatchingRepository,
+    private val homeRepository: HomeRepository,
     @param:ApplicationScope private val applicationScope: CoroutineScope,
     savedStateHandle: SavedStateHandle,
 ) :
@@ -66,7 +68,14 @@ internal class MatchingViewModel @Inject constructor(
     private fun handleMatchingEvent(event: InstructorMatchingEvent) {
         Timber.d("matching 소켓 이벤트: ${event::class.simpleName}")
         when (event) {
-            is InstructorMatchingEvent.OfferReceivedEvent -> restoreOfferDetail(event.offerId)
+            is InstructorMatchingEvent.OfferReceivedEvent -> {
+                if (uiState.value.phase is MatchingPhase.PendingConfirm) {
+                    sendEffect(MatchingContract.Effect.ShowToast(MSG_CONSUMER_REJECTED))
+                    restoreActiveOffer()
+                } else {
+                    restoreOfferDetail(event.offerId)
+                }
+            }
             is InstructorMatchingEvent.OfferClosedEvent -> restoreOfferDetail(event.offerId)
 
             is InstructorMatchingEvent.MatchingCanceledEvent -> {
@@ -288,16 +297,7 @@ internal class MatchingViewModel @Inject constructor(
                             updateState { copy(phase = detail.toPhase()) }
 
                         is InstructorMatchingOfferDetail.Stale ->
-                            // TODO(홈 연동): 홈 재조회 후 같은 offerId의 CONFIRMED/IN_PROGRESS 카드면 lessonId로 이동.
-                            updateState {
-                                when (phase) {
-                                    is MatchingPhase.OfferArrived,
-                                    is MatchingPhase.PendingConfirm,
-                                        -> copy(phase = MatchingPhase.Waiting)
-
-                                    else -> this
-                                }
-                            }
+                            navigateToLessonIfConfirmed(detail.offerId)
                     }
                 }
                 .onFailure {
@@ -307,6 +307,44 @@ internal class MatchingViewModel @Inject constructor(
                     }
                 }
         }
+    }
+
+    private suspend fun navigateToLessonIfConfirmed(offerId: Long) {
+        homeRepository.getInstructorHome()
+            .onSuccess { summary ->
+                val lessonId = summary.lessonCards
+                    .firstOrNull { card ->
+                        card.offerId == offerId &&
+                            card.lessonId != null &&
+                            card.displayStatus in NAVIGABLE_LESSON_STATUSES
+                    }?.lessonId
+
+                if (lessonId != null) {
+                    Timber.d("Stale 오퍼 → 강습 상세 이동 (offerId=$offerId, lessonId=$lessonId)")
+                    sendEffect(MatchingContract.Effect.NavigateToLessonDetail(lessonId))
+                } else {
+                    Timber.d("Stale 오퍼 → 매칭 대기로 전환 (offerId=$offerId)")
+                    updateState {
+                        when (phase) {
+                            is MatchingPhase.OfferArrived,
+                            is MatchingPhase.PendingConfirm,
+                                -> copy(phase = MatchingPhase.Waiting)
+                            else -> this
+                        }
+                    }
+                }
+            }
+            .onFailure {
+                Timber.e(it, "홈 재조회 실패 → 매칭 대기로 전환")
+                updateState {
+                    when (phase) {
+                        is MatchingPhase.OfferArrived,
+                        is MatchingPhase.PendingConfirm,
+                            -> copy(phase = MatchingPhase.Waiting)
+                        else -> this
+                    }
+                }
+            }
     }
 
     private fun InstructorMatchingOfferDetail.Available.toPhase(): MatchingPhase =
@@ -392,6 +430,8 @@ internal class MatchingViewModel @Inject constructor(
         const val MATCHING_STATUS_WAITING_FOR_INSTRUCTOR = "WAITING_FOR_INSTRUCTOR"
         const val MATCHING_STATUS_WAITING_FOR_CONFIRMATION = "WAITING_FOR_CONFIRMATION"
         const val MATCHING_STATUS_PAYMENT_PENDING = "PAYMENT_PENDING"
+
+        val NAVIGABLE_LESSON_STATUSES = setOf("CONFIRMED", "IN_PROGRESS")
 
         const val GENDER_MALE = "MALE"
     }
