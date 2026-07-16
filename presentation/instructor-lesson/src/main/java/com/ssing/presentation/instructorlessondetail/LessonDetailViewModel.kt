@@ -17,7 +17,6 @@ import com.ssing.core.ui.type.formatCountdown
 import com.ssing.core.ui.type.formatDate
 import com.ssing.core.ui.type.formatMinutesText
 import com.ssing.core.ui.type.formatTime
-import com.ssing.core.ui.util.ssingDateFormatter
 import com.ssing.data.lesson.common.model.LessonStartConfirmationResult
 import com.ssing.data.lesson.common.repository.api.LessonRepository
 import com.ssing.data.lesson.instructor.model.InstructorConfirmedMatchingRequest
@@ -41,7 +40,6 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
-import java.time.LocalDateTime
 import javax.inject.Inject
 
 @HiltViewModel
@@ -105,6 +103,15 @@ internal class LessonDetailViewModel @Inject constructor(
                     } else {
                         stopTicking()
                     }
+
+                    val phase = result.toPhase()
+                    updateState {
+                        copy(
+                            phase = phase,
+                            showLessonEndDialog = showLessonEndDialog &&
+                                phase is LessonDetailContract.LessonDetailPhase.LessonDetailOngoing,
+                        )
+                    }
                 }
                 .onFailure {
                     if (it is ApiException) {
@@ -116,6 +123,8 @@ internal class LessonDetailViewModel @Inject constructor(
     }
 
     fun onBackClick() = sendEffect(LessonDetailContract.Effect.NavigateBack)
+
+    fun onMatchingClick() = sendEffect(LessonDetailContract.Effect.NavigateToMatching)
 
     fun onCancelClassClick() {
         updateState {
@@ -136,6 +145,7 @@ internal class LessonDetailViewModel @Inject constructor(
     }
 
     fun onEndClick() {
+        if (uiState.value.phase !is LessonDetailContract.LessonDetailPhase.LessonDetailOngoing) return
         updateState { copy(showLessonEndDialog = true) }
     }
 

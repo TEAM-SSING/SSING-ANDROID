@@ -41,6 +41,7 @@ internal fun LessonDetailCanceledScreen(
     onBack: () -> Unit,
     onCancelClassClick: () -> Unit,
     onEndClick: () -> Unit,
+    onMatchingClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -144,7 +145,7 @@ internal fun LessonDetailCanceledScreen(
         }
         SsingButton(
             text = "씽 매칭으로 돌아가기",
-            onClick = onEndClick,
+            onClick = onMatchingClick,
             style = SsingButtonStyle.BLUE,
             modifier = Modifier
                 .fillMaxWidth()
@@ -185,6 +186,7 @@ private fun LessonDetailCanceledScreenPreview() {
             onCancelClassClick = {},
             onBack = {},
             onEndClick = {},
+            onMatchingClick = {},
             lessonBannerState = LessonBannerState.Canceled,
         )
     }

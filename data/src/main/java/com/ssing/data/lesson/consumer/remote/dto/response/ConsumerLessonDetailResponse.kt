@@ -69,7 +69,7 @@ data class InstructorProfileResponse(
     @SerialName("gender") val gender: String,
     @SerialName("birthYear") val birthYear: Int,
     @SerialName("level") val level: Int,
-    @SerialName("profileImageUrl") val profileImageUrl: String,
+    @SerialName("profileImageUrl") val profileImageUrl: String? = null,
 )
 
 @Serializable

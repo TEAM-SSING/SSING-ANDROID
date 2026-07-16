@@ -15,6 +15,7 @@ data class InstructorLesson(val lessonId :Long): Route
 fun NavGraphBuilder.instructorLessonNavGraph(
     paddingValues: PaddingValues,
     navController: NavController,
+    navigateToMatching: () -> Unit,
 ) {
     composable<InstructorLesson>(
         deepLinks = listOf(
@@ -23,6 +24,7 @@ fun NavGraphBuilder.instructorLessonNavGraph(
     ) {
         LessonDetailRoute(
             navigateBack = navController::popBackStack,
+            navigateToMatching = navigateToMatching,
         )
     }
 }

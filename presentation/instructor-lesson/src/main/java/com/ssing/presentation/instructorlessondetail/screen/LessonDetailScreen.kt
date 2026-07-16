@@ -18,6 +18,7 @@ import com.ssing.presentation.instructorlessondetail.LessonDetailViewModel
 @Composable
 internal fun LessonDetailRoute(
     navigateBack: () -> Unit,
+    navigateToMatching: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: LessonDetailViewModel = hiltViewModel(),
 ) {
@@ -28,6 +29,7 @@ internal fun LessonDetailRoute(
         when (effect) {
             is LessonDetailContract.Effect.ShowToast -> context.toast(effect.message)
             LessonDetailContract.Effect.NavigateBack -> navigateBack()
+            LessonDetailContract.Effect.NavigateToMatching -> navigateToMatching()
         }
     }
 
@@ -43,6 +45,7 @@ internal fun LessonDetailRoute(
         onEndConfirmClick = viewModel::onEndConfirmClick,
         onLessonEndDialogDismiss = viewModel::onLessonEndDialogDismiss,
         onContinueClick = viewModel::onContinueClick,
+        onMatchingClick = viewModel::onMatchingClick,
         onCancelReasonSelect = viewModel::onCancelReasonSelect,
         onCancelSheetOpen = viewModel::onCancelSheetOpen,
         onCancelSheetDismiss = viewModel::onCancelSheetDismiss,
@@ -65,6 +68,7 @@ private fun LessonDetailScreen(
     onEndConfirmClick: () -> Unit,
     onLessonEndDialogDismiss: () -> Unit,
     onContinueClick: () -> Unit,
+    onMatchingClick: () -> Unit,
     onCancelReasonSelect: (CancelReason) -> Unit,
     onCancelSheetOpen: () -> Unit,
     onCancelSheetDismiss: () -> Unit,
@@ -123,6 +127,7 @@ private fun LessonDetailScreen(
             onBack = onBackClick,
             onCancelClassClick = onCancelClassClick,
             onEndClick = onEndClick,
+            onMatchingClick = onMatchingClick,
             modifier = modifier,
         )
     }
