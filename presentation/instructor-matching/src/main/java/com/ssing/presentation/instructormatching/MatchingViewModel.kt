@@ -54,8 +54,6 @@ internal class MatchingViewModel @Inject constructor(
             route.startFresh -> Unit
             else -> restoreActiveOffer()
         }
-        instructorMatchingRepository.connectSocket()
-
         instructorMatchingRepository.event
             .onEach { handleMatchingEvent(it) }
             .launchIn(viewModelScope)
@@ -63,6 +61,8 @@ internal class MatchingViewModel @Inject constructor(
         instructorMatchingRepository.socketState
             .onEach { handleSocketState(it) }
             .launchIn(viewModelScope)
+
+        instructorMatchingRepository.connectSocket()
     }
 
     private fun handleMatchingEvent(event: InstructorMatchingEvent) {
@@ -97,7 +97,10 @@ internal class MatchingViewModel @Inject constructor(
                     sendEffect(MatchingContract.Effect.ShowToast("연결에 문제가 발생했어요."))
                 }
             }
-            SocketState.Connected -> socketErrorToastShown = false
+            SocketState.Connected -> {
+                socketErrorToastShown = false
+                resyncActiveOffer()
+            }
             SocketState.Connecting, SocketState.Disconnected -> Unit
         }
     }
@@ -186,6 +189,8 @@ internal class MatchingViewModel @Inject constructor(
                             exposure = exposure.copy(isSubmitting = false),
                         )
                     }
+                    // 노출 시작 직후 서버가 즉시 만든 제안이 있으면 바로 반영 (선대기 레이스 복구)
+                    restoreActiveOffer()
                 }
                 .onFailure {
                     Timber.e(it, "matching-exposure 저장 실패")
@@ -214,7 +219,9 @@ internal class MatchingViewModel @Inject constructor(
             instructorMatchingRepository.cancelMatchingExposure()
                 .onSuccess { isExposed ->
                     Timber.d("즉시노출 중단 응답 isExposed=$isExposed")
-                    updateState { copy(dialog = null, phase = MatchingPhase.SettingExposure) }
+                    // 대기 중지(종료) 시 조건 입력 화면이 아니라 홈으로 나간다.
+                    updateState { copy(dialog = null) }
+                    sendEffect(MatchingContract.Effect.NavigateBack)
                 }
                 .onFailure {
                     Timber.e(it, "즉시노출 중단 실패")
@@ -274,6 +281,19 @@ internal class MatchingViewModel @Inject constructor(
     fun dismissDialog() = updateState { copy(dialog = null) }
 
     private var restoreJob: Job? = null
+
+    /**
+     * 소켓 연결/재연결·화면 재진입 시 현재 활성 제안을 REST로 재동기화한다.
+     *
+     * '조건에 맞는 요청을 찾는 중'(Waiting) 상태에서만 재조회한다.
+     * 이미 제안 도착/확정 대기(OfferArrived·PendingConfirm)이거나 조건 설정(SettingExposure) 중이면,
+     * active 재조회가 그 상태를 대기 화면으로 덮어쓰면 안 되므로 건너뛴다.
+     * (확정 전 홈 이동 → 카드로 재진입 시 대기화면이 잘못 뜨는 문제 방지)
+     */
+    fun resyncActiveOffer() {
+        if (uiState.value.phase !is MatchingPhase.Waiting) return
+        restoreActiveOffer()
+    }
 
     fun restoreActiveOffer() {
         restoreJob?.cancel()
