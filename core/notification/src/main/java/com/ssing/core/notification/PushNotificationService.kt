@@ -82,7 +82,7 @@ class PushNotificationService : FirebaseMessagingService() {
             )
         }
         val notification = NotificationCompat.Builder(this, DEFAULT_CHANNEL_ID)
-            .setSmallIcon(applicationInfo.icon)
+            .setSmallIcon(R.drawable.ic_stat_name)
             .setContentTitle(title)
             .setContentText(body)
             .apply { pendingIntent?.let { setContentIntent(it) } }
