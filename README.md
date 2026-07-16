@@ -13,7 +13,7 @@
 |            🏂한유빈 (LEAD)<br/>[@oilbeaneda](https://github.com/oilbeaneda)            |            🏂전도연<br/>[@doyeon0307](https://github.com/doyeon0307)            |            🏂조예슬<br/>[@joyrii](https://github.com/joyrii)            |            🏂김예지<br/>[@apffkxhsls](https://github.com/apffkxhsls)            |            🏂김예림<br/>[@doorimng](https://github.com/doorimng)            |
 |:---:|:---:|:---:|:---:|:---:|
 | <img alt="한유빈 avatar" src="https://avatars.githubusercontent.com/oilbeaneda" height="200" /> | <img alt="전도연 avatar" src="https://avatars.githubusercontent.com/doyeon0307" height="200" /> | <img alt="조예슬 avatar" src="https://avatars.githubusercontent.com/joyrii" height="200" /> | <img alt="김예지 avatar" src="https://avatars.githubusercontent.com/apffkxhsls" height="200" /> | <img alt="김예림 avatar" src="https://avatars.githubusercontent.com/doorimng" height="200" /> |
-
+|                        `강사 매칭 플로우`,<br/> `알림`, `기초 세팅`                               |                                `소비자매칭 플로우`,<br/> `WebSocket 세팅`                                          |                            `소비자강습상세`,<br/> `DS 세팅`                                      |                                                                                    `강사 강습상세`,<br/> `FCM 세팅`                                                                                    |                                       `카카오 로그인`,<br/> `홈`, `강습 확정`,<br/> `결제`                                       |
 
 <br/>
 
