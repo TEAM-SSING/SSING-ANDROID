@@ -117,12 +117,12 @@ internal class LessonDetailViewModel @Inject constructor(
                     if (it is ApiException) {
                         sendEffect(LessonDetailContract.Effect.ShowToast(it.uiMessage))
                     }
-                    sendEffect(LessonDetailContract.Effect.NavigateBack)
+                    sendEffect(LessonDetailContract.Effect.NavigateToHome)
                 }
         }
     }
 
-    fun onBackClick() = sendEffect(LessonDetailContract.Effect.NavigateBack)
+    fun onBackClick() = sendEffect(LessonDetailContract.Effect.NavigateToHome)
 
     fun onMatchingClick() = sendEffect(LessonDetailContract.Effect.NavigateToMatching)
 

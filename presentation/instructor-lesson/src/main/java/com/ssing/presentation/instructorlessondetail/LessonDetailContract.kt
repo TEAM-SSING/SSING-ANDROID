@@ -62,7 +62,7 @@ internal interface LessonDetailContract {
     }
 
     sealed interface Effect {
-        data object NavigateBack : Effect
+        data object NavigateToHome : Effect
         data object NavigateToMatching : Effect
         data class ShowToast(val message: String) : Effect
     }

@@ -91,6 +91,12 @@ internal fun InstructorMainNavHost(
             navigateToMatching = {
                 navController.navigate(route = InstructorMatching())
             },
+            navigateToHome = {
+                navController.navigate(
+                    route = InstructorHome,
+                    navOptions = navController.clearBackStackNavOptions(),
+                )
+            }
         )
         instructorProfileNavGraph(
             paddingValues = paddingValues,
