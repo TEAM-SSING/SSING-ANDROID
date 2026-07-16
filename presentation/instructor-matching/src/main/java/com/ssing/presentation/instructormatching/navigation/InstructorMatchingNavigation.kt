@@ -17,7 +17,7 @@ import kotlinx.serialization.Serializable
  * @param offerId FCM '새 강습 도착' 딥링크로 진입 시 특정 제안 id. 그 외(거절/일반 진입)엔 null.
  */
 @Serializable
-data class InstructorMatching(val offerId: Long? = null) : Route
+data class InstructorMatching(val offerId: Long? = null, val startFresh: Boolean = false) : Route
 
 fun NavGraphBuilder.instructorMatchingNavGraph(
     paddingValues: PaddingValues,

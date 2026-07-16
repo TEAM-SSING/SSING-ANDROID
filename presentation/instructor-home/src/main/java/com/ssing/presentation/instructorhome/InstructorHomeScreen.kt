@@ -63,7 +63,7 @@ internal fun InstructorHomeRoute(
 
     HandleUiEffects(viewModel.uiEffect) { effect ->
         when (effect) {
-            is InstructorHomeContract.Effect.NavigateToMatchingWaiting -> navigateToMatchingWaiting
+            is InstructorHomeContract.Effect.NavigateToMatchingWaiting -> navigateToMatchingWaiting()
             is InstructorHomeContract.Effect.NavigateToLessonDetail -> navigateToLessonDetail(effect.lessonId)
             is InstructorHomeContract.Effect.NavigateToMatching -> navigateToMatching()
             is InstructorHomeContract.Effect.ShowToast -> context.toast(effect.message)

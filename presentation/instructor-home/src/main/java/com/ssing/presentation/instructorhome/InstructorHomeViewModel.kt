@@ -136,7 +136,7 @@ internal class InstructorHomeViewModel @Inject constructor(
         when (lesson.status) {
             Status.Matching -> {
                 sendEffect(
-                    InstructorHomeContract.Effect.NavigateToMatching
+                    InstructorHomeContract.Effect.NavigateToMatchingWaiting
                 )
             }
 
@@ -144,7 +144,7 @@ internal class InstructorHomeViewModel @Inject constructor(
                 val lessonId = lesson.lessonId
 
                 if (lessonId == null) {
-                    sendEffect(InstructorHomeContract.Effect.NavigateToMatching)
+                    sendEffect(InstructorHomeContract.Effect.NavigateToMatchingWaiting)
                     return
                 }
 
