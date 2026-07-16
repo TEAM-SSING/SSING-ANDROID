@@ -38,7 +38,6 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
 @HiltViewModel
@@ -295,7 +294,7 @@ private fun InstructorLessonDetail.toPhase(): LessonDetailContract.LessonDetailP
                     tags = persistentListOf(displaySport(lessonInfo.basic.sport), displayLessonLevel(lessonInfo.basic.lessonLevel)),
                     classTitle = lessonInfo.basic.representativeConsumerNames.joinToString(),
                     lessonDate = formatDate(actualStartedAt),
-                    lessonTime = "${formatTime(actualStartedAt)} ~ ${formatTime(actualEndedAt)}",
+                    lessonTime = "${formatTime(actualStartedAt)} ~ ${formatTime(actualEndedAt)} (${formatMinutesText(actualDurationMinutes)})",
                     location = lessonInfo.basic.resort.displayName,
                     duration = formatMinutesText(lessonDurationMinutes),
                     price = lessonInfo.totalLessonPrice,

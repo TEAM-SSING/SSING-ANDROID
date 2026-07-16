@@ -90,6 +90,7 @@ internal fun LessonDetailCompletedScreen(
                         tags = completed.tags,
                         teamNicknames = completed.teams.map { it.teamNickname }.toPersistentList(),
                         totalCount = completed.teams.size,
+                        actualTimeRange = completed.lessonTime,
                         place = completed.location,
                         duration = completed.duration,
                         price = completed.price,
