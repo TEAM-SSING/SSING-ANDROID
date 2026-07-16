@@ -76,6 +76,7 @@ internal class ConsumerMatchingViewModel @Inject constructor(
     private fun loadReview() {
         updateState {
             copy(
+                rating = "4.8",
                 reviews = persistentListOf(
                     InstructorReview(
                         profileImageUrl = "",
@@ -179,7 +180,6 @@ internal class ConsumerMatchingViewModel @Inject constructor(
             level = instructorProfile?.level?.let { "grade$it" } ?: level,
             career = instructorProfile?.careerYears?.let { "${it}년" } ?: career,
             lessonCount = instructorProfile?.completedLessonCount?.let { "${it}회" } ?: lessonCount,
-            rating = instructorProfile?.averageRating?.let { "%.1f".format(it) } ?: rating,
             introduction = instructorProfile?.introduction ?: introduction,
             certifications = instructorProfile?.certificateTypes?.toPersistentList()
                 ?: certifications,
