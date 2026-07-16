@@ -85,6 +85,7 @@ internal fun LessonDetailCanceledScreen(
                 ) {
                     Spacer(modifier = Modifier.height(16.dp))
                     SectionTitle(text = "강습 정보")
+                    Spacer(modifier = Modifier.height(8.dp))
                     SsingMatchingDetailCardSmall(
                         tags = cancel.tags,
                         teamNicknames = cancel.teams.map { it.teamNickname }.toPersistentList(),
