@@ -156,7 +156,6 @@ internal fun ConsumerMatchingPendingScreen(
                 tags = state.tags,
                 location = state.location,
                 duration = state.duration,
-                price = state.price,
                 equipmentStatus = "착용 완료",
                 borderColor = SSINGTheme.colors.borderAlternative,
             )
