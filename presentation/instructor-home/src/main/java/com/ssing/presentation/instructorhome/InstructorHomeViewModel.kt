@@ -29,10 +29,6 @@ internal class InstructorHomeViewModel @Inject constructor(
         InstructorHomeContract.State()
     ) {
 
-    init {
-        loadHome()
-    }
-
     fun loadHome() {
         viewModelScope.launch {
             updateState {
