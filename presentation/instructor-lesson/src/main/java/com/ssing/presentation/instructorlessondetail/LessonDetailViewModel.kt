@@ -88,8 +88,6 @@ internal class LessonDetailViewModel @Inject constructor(
     }
 
     private fun loadLessonDetail() {
-        updateState { copy(phase = LessonDetailContract.LessonDetailPhase.Loading) }
-
         viewModelScope.launch {
             instructorLessonDetailRepository.fetchInstructorLessonDetail(lessonId)
                 .onSuccess { result ->

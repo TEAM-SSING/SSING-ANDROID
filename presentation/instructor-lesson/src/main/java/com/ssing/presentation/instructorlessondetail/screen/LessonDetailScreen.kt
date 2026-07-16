@@ -86,7 +86,7 @@ private fun LessonDetailScreen(
     modifier: Modifier = Modifier,
 ) {
     when (val phase = state.phase) {
-        is LessonDetailPhase.Loading -> {}
+        is LessonDetailPhase.Init -> {}
 
         is LessonDetailPhase.LessonDetailBefore -> LessonDetailBeforeScreen(
             before = phase.before,

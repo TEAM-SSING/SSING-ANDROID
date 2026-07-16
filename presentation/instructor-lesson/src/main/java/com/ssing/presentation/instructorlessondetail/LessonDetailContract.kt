@@ -47,7 +47,7 @@ internal interface LessonDetailContract {
     )
 
     sealed interface LessonDetailPhase {
-        data object Loading : LessonDetailPhase
+        data object Init : LessonDetailPhase
         data class LessonDetailBefore(val before: LessonDetailBeforeUiModel) : LessonDetailPhase
         data class LessonDetailOngoing(val ongoing: LessonDetailOngoingUiModel) : LessonDetailPhase
         data class LessonDetailCompleted(val completed: LessonDetailCompletedUiModel) :
