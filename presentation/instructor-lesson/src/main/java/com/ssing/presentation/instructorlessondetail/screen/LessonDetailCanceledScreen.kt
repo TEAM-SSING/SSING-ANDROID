@@ -1,5 +1,6 @@
 package com.ssing.presentation.instructorlessondetail.screen
 
+import android.R.attr.text
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -27,6 +28,8 @@ import com.ssing.core.ui.common.component.SsingMatchingDetailCardSmall
 import com.ssing.core.ui.common.component.SsingTopBar
 import com.ssing.core.ui.designsystem.theme.Blue50
 import com.ssing.core.ui.designsystem.theme.SSINGTheme
+import com.ssing.core.ui.type.formatDate
+import com.ssing.core.ui.type.formatDateTime
 import com.ssing.presentation.instructorlessondetail.component.SectionTitle
 import com.ssing.presentation.instructorlessondetail.model.LessonDetailCanceledUiModel
 import com.ssing.presentation.instructorlessondetail.model.TeamParticipantsInfo
@@ -93,6 +96,9 @@ internal fun LessonDetailCanceledScreen(
                         place = cancel.location,
                         duration = cancel.duration,
                         price = cancel.price,
+                        cancelDateTime = formatDateTime(cancel.canceledAt),
+                        cancelSubject = cancel.canceledByName,
+                        cancelReason = cancel.cancelReason,
                     )
 
                     Spacer(modifier = Modifier.height(24.dp))

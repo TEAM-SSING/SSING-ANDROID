@@ -1,5 +1,6 @@
 package com.ssing.presentation.instructorlessondetail
 
+import android.os.SystemClock
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
@@ -33,9 +34,12 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import javax.inject.Inject
@@ -52,6 +56,8 @@ internal class LessonDetailViewModel @Inject constructor(
     ) {
 
     private val lessonId = savedStateHandle.toRoute<InstructorLesson>().lessonId
+
+    private var tickerJob: Job? = null
 
     init {
         loadLessonDetail()
@@ -90,6 +96,15 @@ internal class LessonDetailViewModel @Inject constructor(
             instructorLessonDetailRepository.fetchInstructorLessonDetail(lessonId)
                 .onSuccess { result ->
                     updateState { copy(phase = result.toPhase()) }
+
+                    if (result is InstructorLessonDetail.InProgress) {
+                        startTicking(
+                            remainingSeconds = result.remainingSeconds,
+                            elapsedSeconds = result.elapsedSeconds,
+                        )
+                    } else {
+                        stopTicking()
+                    }
                 }
                 .onFailure {
                     if (it is ApiException) {
@@ -255,7 +270,47 @@ internal class LessonDetailViewModel @Inject constructor(
 
     override fun onCleared() {
         super.onCleared()
+        stopTicking()
         applicationScope.launch { instructorLessonDetailRepository.disconnectSocket() }
+    }
+
+    private fun startTicking(remainingSeconds: Int, elapsedSeconds: Int) {
+        tickerJob?.cancel()
+        val syncedAt = SystemClock.elapsedRealtime()
+
+        tickerJob = viewModelScope.launch {
+            while (isActive) {
+                val secondsPassed = ((SystemClock.elapsedRealtime() - syncedAt) / 1000).toInt()
+                val currentRemaining = (remainingSeconds - secondsPassed).coerceAtLeast(0)
+                val currentElapsed = elapsedSeconds + secondsPassed
+
+                val currentOngoing = (uiState.value.phase as? LessonDetailContract.LessonDetailPhase.LessonDetailOngoing)?.ongoing
+
+                if (currentOngoing != null) {
+                    updateState {
+                        copy(
+                            phase = LessonDetailContract.LessonDetailPhase.LessonDetailOngoing(
+                                ongoing = currentOngoing.copy(
+                                    remainingTime = formatCountdown(currentRemaining),
+                                    elapsedTime = formatMinutesText(currentElapsed / 60),
+                                )
+                            )
+                        )
+                    }
+                }
+
+                if (currentRemaining <= 0) {
+                    loadLessonDetail()
+                    break
+                }
+                delay(1000)
+            }
+        }
+    }
+
+    private fun stopTicking() {
+        tickerJob?.cancel()
+        tickerJob = null
     }
 }
 
