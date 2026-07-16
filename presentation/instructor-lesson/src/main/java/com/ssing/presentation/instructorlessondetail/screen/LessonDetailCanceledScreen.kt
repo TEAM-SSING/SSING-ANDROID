@@ -80,7 +80,6 @@ internal fun LessonDetailCanceledScreen(
                             )
                         )
                         .padding(horizontal = 16.dp)
-                        .weight(1f)
                 ) {
                     Spacer(modifier = Modifier.height(16.dp))
                     SectionTitle(text = "강습 정보")
