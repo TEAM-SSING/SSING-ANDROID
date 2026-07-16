@@ -57,11 +57,6 @@ internal fun LessonDetailCanceledScreen(
                 .background(Blue50)
                 .statusBarsPadding(),
         )
-        Column(
-            modifier = Modifier
-                .weight(1f)
-                .background(color = Blue50),
-        ) {
             Column(
                 modifier = Modifier
                     .verticalScroll(rememberScrollState())
@@ -76,6 +71,7 @@ internal fun LessonDetailCanceledScreen(
                 Column(
                     modifier = Modifier
                         .weight(1f)
+                        .background(color = Blue50)
                         .background(
                             color = SSINGTheme.colors.backgroundNormal,
                             shape = RoundedCornerShape(
@@ -142,7 +138,6 @@ internal fun LessonDetailCanceledScreen(
                     Spacer(modifier = Modifier.height(16.dp))
                 }
             }
-        }
         SsingButton(
             text = "씽 매칭으로 돌아가기",
             onClick = onMatchingClick,
