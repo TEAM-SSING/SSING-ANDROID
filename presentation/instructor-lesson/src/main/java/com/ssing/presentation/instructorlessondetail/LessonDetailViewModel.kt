@@ -102,6 +102,8 @@ internal class LessonDetailViewModel @Inject constructor(
 
     fun onBackClick() = sendEffect(LessonDetailContract.Effect.NavigateBack)
 
+    fun onMatchingClick() = sendEffect(LessonDetailContract.Effect.NavigateToMatching)
+
     fun onCancelClassClick() {
         updateState {
             copy(showReadyDialog = false, showLessonEndDialog = false)
