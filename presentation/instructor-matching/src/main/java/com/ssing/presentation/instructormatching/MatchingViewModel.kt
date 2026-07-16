@@ -101,7 +101,12 @@ internal class MatchingViewModel @Inject constructor(
     }
 
     private fun onMatchingConfirmed(lessonId: Long) = viewModelScope.launch {
-        Timber.d("매칭 확정 수신 → 강습 상세 이동 (lessonId=$lessonId)")
+        Timber.d("매칭 확정 수신 → 노출 중단 후 강습 상세 이동 (lessonId=$lessonId)")
+        // TODO(서버 보강 필요): 이 처리는 '확정 순간 매칭 화면(소켓 연결)에 있을 때'만 동작한다.
+        //  강사가 홈 등으로 이동해 소켓이 끊긴 뒤 확정되면(FCM만 수신) 노출이 안 꺼질 수 있으므로,
+        //  완전한 신규 매칭 차단은 서버가 '확정 강습 보유 강사 노출 제외'로 처리해야 한다.
+        instructorMatchingRepository.cancelMatchingExposure()
+            .onFailure { Timber.e(it, "확정 후 노출 중단 실패") }
         try {
             instructorMatchingRepository.disconnectSocket()
         } finally {
@@ -303,7 +308,8 @@ internal class MatchingViewModel @Inject constructor(
                 .onFailure {
                     Timber.e(it, "matching-offer 상세 실패")
                     if (it is ApiException.Conflict) {
-                        updateState { copy(phase = MatchingPhase.SettingExposure) }
+                        // 409 MATCHING_NOT_ACTIVE: 협상 종료 → 홈 재조회 후 확정 강습이면 이동, 아니면 대기
+                        navigateToLessonIfConfirmed(offerId)
                     } else if (it is ApiException) {
                         sendEffect(MatchingContract.Effect.ShowToast(it.uiMessage))
                     }
@@ -372,7 +378,7 @@ internal class MatchingViewModel @Inject constructor(
             expiresAtMillis = null,
             nickname = requestSummary.requesterName,
             teamCount = requestSummary.headcount,
-            price = priceSummary.totalPaymentAmount,
+            price = priceSummary.instructorSettlementAmount,
             participants = participants.map {
                 ParticipantUiModel(age = it.age, isMale = it.gender == GENDER_MALE)
             },

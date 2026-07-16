@@ -16,7 +16,5 @@ data class InstructorMatchingLessonSummary(
 )
 
 data class InstructorMatchingPriceSummary(
-    val lessonPriceAmount: Int,
-    val resortPassFeeAmount: Int,
-    val totalPaymentAmount: Int,
+    val instructorSettlementAmount: Int,
 )
