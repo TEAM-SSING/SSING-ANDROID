@@ -279,7 +279,9 @@ internal class MatchingViewModel @Inject constructor(
                 }
                 .onFailure {
                     Timber.e(it, "matching-offers 실패")
-                    if (it is ApiException) {
+                    if (it is ApiException.Conflict) {
+                        updateState { copy(phase = MatchingPhase.SettingExposure) }
+                    } else if (it is ApiException) {
                         sendEffect(MatchingContract.Effect.ShowToast(it.uiMessage))
                     }
                 }
@@ -302,7 +304,9 @@ internal class MatchingViewModel @Inject constructor(
                 }
                 .onFailure {
                     Timber.e(it, "matching-offer 상세 실패")
-                    if (it is ApiException) {
+                    if (it is ApiException.Conflict) {
+                        updateState { copy(phase = MatchingPhase.SettingExposure) }
+                    } else if (it is ApiException) {
                         sendEffect(MatchingContract.Effect.ShowToast(it.uiMessage))
                     }
                 }
