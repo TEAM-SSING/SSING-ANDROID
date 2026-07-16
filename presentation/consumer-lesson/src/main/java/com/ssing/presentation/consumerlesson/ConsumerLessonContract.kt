@@ -39,9 +39,9 @@ internal interface ConsumerLessonContract {
 
         val bottomButtonText: String = when (lessonBannerState) {
             is LessonBannerState.Before -> if (isReady) {
-                "강습 준비 완료"
-            } else {
                 "강습 대기 중"
+            } else {
+                "강습 준비 완료"
             }
 
             is LessonBannerState.Ongoing -> "강습 종료"
