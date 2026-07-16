@@ -151,14 +151,14 @@ internal class PaymentViewModel @Inject constructor(
             return
         }
 
+        updateState { copy(showCancelModal = false) }
+
         viewModelScope.launch {
             consumerMatchingRepository.cancelMatching(matchingRequestId)
                 .onSuccess {
-                    updateState { copy(showCancelModal = false) }
                     sendEffect(PaymentContract.Effect.NavigateToHome)
                 }
                 .onFailure { throwable ->
-                    updateState { copy(showCancelModal = false) }
                     if (throwable is ApiException) sendEffect(
                         PaymentContract.Effect.ShowToast(
                             throwable.uiMessage
