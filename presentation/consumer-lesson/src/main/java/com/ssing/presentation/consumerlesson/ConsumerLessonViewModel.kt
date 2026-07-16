@@ -279,6 +279,8 @@ internal class ConsumerLessonViewModel @Inject constructor(
         etcState.edit { replace(0, length, "") }
     }
 
+    fun onInstructorProfileClick() = sendEffect(ConsumerLessonContract.Effect.ShowToast("준비 중인 기능입니다."))
+
     fun onChatClick() = sendEffect(ConsumerLessonContract.Effect.ShowToast("준비 중인 기능입니다."))
 
     fun onReportIssueClick() = sendEffect(ConsumerLessonContract.Effect.ShowToast("준비 중인 기능입니다."))
