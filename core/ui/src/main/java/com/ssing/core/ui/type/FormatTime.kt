@@ -2,6 +2,7 @@ package com.ssing.core.ui.type
 
 import java.time.OffsetDateTime
 import java.time.format.DateTimeFormatter
+import java.util.Locale
 
 fun formatDate(isoDateTime: String): String {
     val dateTime = OffsetDateTime.parse(isoDateTime)
@@ -15,7 +16,7 @@ fun formatTime(isoDateTime: String): String {
 
 fun formatDateTime(isoDateTime: String): String {
     val dateTime = OffsetDateTime.parse(isoDateTime)
-    return dateTime.format(DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm"))
+    return dateTime.format(DateTimeFormatter.ofPattern("M월 d일 E요일 HH:mm", Locale.KOREAN))
 }
 
 fun formatMinutesText(minutes: Int): String {

@@ -85,6 +85,7 @@ internal fun LessonDetailOngoingScreen(
                 ) {
                     Spacer(modifier = Modifier.height(16.dp))
                     SectionTitle(text = "강습 정보")
+                    Spacer(modifier = Modifier.height(8.dp))
                     SsingMatchingDetailCardSmall(
                         tags = ongoing.tags,
                         teamNicknames = ongoing.nicknames,

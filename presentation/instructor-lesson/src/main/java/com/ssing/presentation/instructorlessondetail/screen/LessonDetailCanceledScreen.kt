@@ -27,6 +27,7 @@ import com.ssing.core.ui.common.component.SsingMatchingDetailCardSmall
 import com.ssing.core.ui.common.component.SsingTopBar
 import com.ssing.core.ui.designsystem.theme.Blue50
 import com.ssing.core.ui.designsystem.theme.SSINGTheme
+import com.ssing.core.ui.type.formatDateTime
 import com.ssing.presentation.instructorlessondetail.component.SectionTitle
 import com.ssing.presentation.instructorlessondetail.model.LessonDetailCanceledUiModel
 import com.ssing.presentation.instructorlessondetail.model.TeamParticipantsInfo
@@ -86,6 +87,7 @@ internal fun LessonDetailCanceledScreen(
                 ) {
                     Spacer(modifier = Modifier.height(16.dp))
                     SectionTitle(text = "강습 정보")
+                    Spacer(modifier = Modifier.height(8.dp))
                     SsingMatchingDetailCardSmall(
                         tags = cancel.tags,
                         teamNicknames = cancel.teams.map { it.teamNickname }.toPersistentList(),
@@ -93,6 +95,9 @@ internal fun LessonDetailCanceledScreen(
                         place = cancel.location,
                         duration = cancel.duration,
                         price = cancel.price,
+                        cancelDateTime = formatDateTime(cancel.canceledAt),
+                        cancelSubject = cancel.canceledByName,
+                        cancelReason = cancel.cancelReason,
                     )
 
                     Spacer(modifier = Modifier.height(24.dp))

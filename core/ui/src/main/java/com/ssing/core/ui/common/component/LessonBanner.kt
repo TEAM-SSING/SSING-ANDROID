@@ -37,13 +37,10 @@ sealed interface LessonBannerState {
         val participantTotalCount: Int,
     ) : LessonBannerState {
         val totalReadyCount: Int
-            get() = (participantReadyCount + if (isInstructorReady) 1 else 0).coerceIn(
-                0,
-                totalCount
-            )
+            get() = participantReadyCount.coerceIn(0, totalCount)
 
         val totalCount: Int
-            get() = participantTotalCount + 1
+            get() = participantTotalCount
     }
 
     data class Ongoing(
@@ -93,6 +90,9 @@ private fun LessonBeforeContent(
     beforeLessonText: String,
     modifier: Modifier = Modifier,
 ) {
+    val readyConsumerCount = lessonBannerState.participantReadyCount -
+            if (lessonBannerState.isInstructorReady) 1 else 0
+
     Column(
         modifier = modifier
             .fillMaxWidth()
@@ -166,8 +166,8 @@ private fun LessonBeforeContent(
                     .clip(CircleShape),
             )
 
-            repeat(lessonBannerState.participantTotalCount) { index ->
-                val isReady = index < lessonBannerState.participantReadyCount
+            repeat(lessonBannerState.participantTotalCount - 1) { index ->
+                val isReady = index < readyConsumerCount
 
                 Icon(
                     painter = painterResource(

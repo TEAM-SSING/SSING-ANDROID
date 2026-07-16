@@ -21,6 +21,7 @@ import kotlinx.collections.immutable.persistentListOf
 @Composable
 internal fun OngoingLessonContent(
     state: ConsumerLessonContract.State,
+    onInstructorProfileClick: () -> Unit,
     onReportIssueClick: () -> Unit,
     onChatClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -32,7 +33,10 @@ internal fun OngoingLessonContent(
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        InstructorProfileSection(state.instructorProfile)
+        InstructorProfileSection(
+            state.instructorProfile,
+            onInstructorProfileClick,
+        )
 
         Spacer(modifier = Modifier.height(24.dp))
 
@@ -85,6 +89,7 @@ private fun OngoingLessonContentPreview() {
 
         OngoingLessonContent(
             state = state,
+            onInstructorProfileClick = {},
             onReportIssueClick = {},
             onChatClick = {},
         )

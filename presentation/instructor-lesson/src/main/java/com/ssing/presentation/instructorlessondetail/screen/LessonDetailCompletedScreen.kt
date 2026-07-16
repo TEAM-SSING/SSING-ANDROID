@@ -85,10 +85,12 @@ internal fun LessonDetailCompletedScreen(
                 ) {
                     Spacer(modifier = Modifier.height(16.dp))
                     SectionTitle(text = "강습 정보")
+                    Spacer(modifier = Modifier.height(8.dp))
                     SsingMatchingDetailCardSmall(
                         tags = completed.tags,
                         teamNicknames = completed.teams.map { it.teamNickname }.toPersistentList(),
                         totalCount = completed.teams.size,
+                        actualTimeRange = completed.lessonTime,
                         place = completed.location,
                         duration = completed.duration,
                         price = completed.price,

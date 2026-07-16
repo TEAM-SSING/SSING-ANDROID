@@ -1,5 +1,6 @@
 package com.ssing.presentation.consumerlesson
 
+import android.os.SystemClock
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
@@ -27,6 +28,9 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
@@ -45,6 +49,8 @@ internal class ConsumerLessonViewModel @Inject constructor(
     val etcState = TextFieldState()
 
     private val lessonId: Long = savedStateHandle.toRoute<ConsumerLesson>().lessonId
+
+    private var tickerJob: Job? = null
 
     init {
         loadLessonDetail(lessonId)
@@ -68,6 +74,17 @@ internal class ConsumerLessonViewModel @Inject constructor(
             consumerLessonRepository.fetchConsumerLessonDetail(lessonId)
                 .onSuccess { result ->
                     Timber.d("consumer-lesson: $result")
+                    updateState { applyLessonDetail(result) }
+
+                    if (result is ConsumerLessonDetail.InProgress) {
+                        startTicking(
+                            remainingSeconds = result.remainingSeconds,
+                            elapsedSeconds = result.elapsedSeconds,
+                        )
+                    } else {
+                        stopTicking()
+                    }
+
                     updateState {
                         val next = applyLessonDetail(result)
                         next.copy(
@@ -87,6 +104,7 @@ internal class ConsumerLessonViewModel @Inject constructor(
 
     override fun onCleared() {
         super.onCleared()
+        stopTicking()
         applicationScope.launch { consumerLessonRepository.disconnectSocket() }
     }
 
@@ -289,6 +307,8 @@ internal class ConsumerLessonViewModel @Inject constructor(
         etcState.edit { replace(0, length, "") }
     }
 
+    fun onInstructorProfileClick() = sendEffect(ConsumerLessonContract.Effect.ShowToast("준비 중인 기능입니다."))
+
     fun onChatClick() = sendEffect(ConsumerLessonContract.Effect.ShowToast("준비 중인 기능입니다."))
 
     fun onReportIssueClick() = sendEffect(ConsumerLessonContract.Effect.ShowToast("준비 중인 기능입니다."))
@@ -299,4 +319,36 @@ internal class ConsumerLessonViewModel @Inject constructor(
     fun onLessonListClick() = sendEffect(ConsumerLessonContract.Effect.ShowToast("준비 중인 기능입니다."))
 
     fun onHomeClick() = sendEffect(ConsumerLessonContract.Effect.NavigationToHome)
+
+    private fun startTicking(remainingSeconds: Int, elapsedSeconds: Int) {
+        tickerJob?.cancel()
+        val syncedAt = SystemClock.elapsedRealtime()
+
+        tickerJob = viewModelScope.launch {
+            while (isActive) {
+                val secondsPassed = ((SystemClock.elapsedRealtime() - syncedAt) / 1000).toInt()
+                val currentRemaining = (remainingSeconds - secondsPassed).coerceAtLeast(0)
+                val currentElapsed = elapsedSeconds + secondsPassed
+
+                updateState {
+                    copy(
+                        lessonBannerState = LessonBannerState.Ongoing(
+                            remainingTime = formatCountdown(currentRemaining),
+                            elapsedTime = formatMinutesText(currentElapsed / 60),
+                        )
+                    )
+                }
+
+                if (currentRemaining <= 0) {
+                    break
+                }
+                delay(1000)
+            }
+        }
+    }
+
+    private fun stopTicking() {
+        tickerJob?.cancel()
+        tickerJob = null
+    }
 }

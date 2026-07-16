@@ -10,6 +10,7 @@ import com.ssing.presentation.consumerlesson.model.InstructorProfileUiModel
 @Composable
 internal fun InstructorProfileSection(
     instructorProfile: InstructorProfileUiModel?,
+    onInstructorProfileClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     instructorProfile?.let { info ->
@@ -23,7 +24,7 @@ internal fun InstructorProfileSection(
                 gender = info.gender,
                 level = info.level,
                 imageUrl = info.imageUrl,
-                onClick = {},
+                onClick = onInstructorProfileClick,
             )
         }
     }
@@ -41,6 +42,7 @@ private fun InstructorProfileSectionPreview() {
                 level = "grade1",
                 imageUrl = "",
             ),
+            onInstructorProfileClick = {},
         )
     }
 }
