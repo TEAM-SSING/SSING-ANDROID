@@ -43,7 +43,7 @@ sealed interface LessonBannerState {
             )
 
         val totalCount: Int
-            get() = participantTotalCount + 1
+            get() = participantTotalCount
     }
 
     data class Ongoing(
@@ -166,7 +166,7 @@ private fun LessonBeforeContent(
                     .clip(CircleShape),
             )
 
-            repeat(lessonBannerState.participantTotalCount) { index ->
+            repeat(lessonBannerState.participantTotalCount - 1) { index ->
                 val isReady = index < lessonBannerState.participantReadyCount
 
                 Icon(
