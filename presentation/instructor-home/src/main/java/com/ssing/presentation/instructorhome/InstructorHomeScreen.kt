@@ -52,7 +52,7 @@ internal fun InstructorHomeRoute(
     navigateToNotification: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: InstructorHomeViewModel = hiltViewModel(),
-    navigateToMatchingWaiting: () -> Unit,
+    navigateToMatchingWaiting: (Long?) -> Unit,
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val context = LocalContext.current
@@ -63,7 +63,7 @@ internal fun InstructorHomeRoute(
 
     HandleUiEffects(viewModel.uiEffect) { effect ->
         when (effect) {
-            is InstructorHomeContract.Effect.NavigateToMatchingWaiting -> navigateToMatchingWaiting()
+            is InstructorHomeContract.Effect.NavigateToMatchingWaiting -> navigateToMatchingWaiting(effect.offerId)
             is InstructorHomeContract.Effect.NavigateToLessonDetail -> navigateToLessonDetail(effect.lessonId)
             is InstructorHomeContract.Effect.NavigateToMatching -> navigateToMatching()
             is InstructorHomeContract.Effect.ShowToast -> context.toast(effect.message)
