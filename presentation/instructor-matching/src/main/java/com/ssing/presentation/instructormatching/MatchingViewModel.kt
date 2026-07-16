@@ -43,12 +43,14 @@ internal class MatchingViewModel @Inject constructor(
     BaseViewModel<MatchingContract.State, MatchingContract.Effect>(
         MatchingContract.State()
     ) {
+    private var offerId: Long? = null
 
     init {
         loadMatchingExposure()
         val route = savedStateHandle.toRoute<InstructorMatching>()
+        offerId = route.offerId
         when {
-            route.offerId != null -> restoreOfferDetail(route.offerId)
+            offerId != null -> restoreOfferDetail(requireNotNull(offerId))
             route.startFresh -> Unit
             else -> restoreActiveOffer()
         }
@@ -74,7 +76,7 @@ internal class MatchingViewModel @Inject constructor(
                     restoreOfferDetail(event.offerId)
                 }
             }
-            is InstructorMatchingEvent.OfferClosedEvent -> restoreOfferDetail(event.offerId)
+            is InstructorMatchingEvent.OfferClosedEvent -> restoreActiveOffer()
 
             is InstructorMatchingEvent.MatchingCanceledEvent -> {
                 updateState { copy(phase = MatchingPhase.Waiting) }
@@ -254,7 +256,11 @@ internal class MatchingViewModel @Inject constructor(
             instructorMatchingRepository.respondMatchingOffer(offer.offerId, DECISION_REJECTED)
                 .onSuccess { result ->
                     Timber.d("매칭 제안 거절 응답: $result")
+                    // 거절한 offer는 무효화하고, 서버가 새로 매칭한 offer(새 offerId)를
+                    // active 재조회로 받아온다. (없으면 대기 화면 유지)
+                    offerId = null
                     updateState { copy(phase = MatchingPhase.Waiting) }
+                    restoreActiveOffer()
                 }
                 .onFailure {
                     Timber.e(it, "매칭 제안 거절 실패")
@@ -277,9 +283,10 @@ internal class MatchingViewModel @Inject constructor(
                     Timber.d("matching-offers 응답: $active")
                     // 저장된 조건은 항상 복원한다(대기 화면 조건 카드/조건 수정용).
                     updateState { copy(exposure = exposure.applyMatchingSetting(active.setting)) }
-                    val offerId = active.offerId
+                    val activeOfferId = active.offerId
+                    offerId = activeOfferId
                     when {
-                        offerId != null -> restoreOfferDetail(offerId)
+                        activeOfferId != null -> restoreOfferDetail(activeOfferId)
                         active.setting.isExposed -> updateState { copy(phase = MatchingPhase.Waiting) }
                         else -> updateState { copy(phase = MatchingPhase.SettingExposure) }
                     }
@@ -296,6 +303,7 @@ internal class MatchingViewModel @Inject constructor(
     }
 
     fun restoreOfferDetail(offerId: Long) {
+        this.offerId = offerId
         restoreJob?.cancel()
         restoreJob = viewModelScope.launch {
             instructorMatchingRepository.fetchOfferDetail(offerId)
