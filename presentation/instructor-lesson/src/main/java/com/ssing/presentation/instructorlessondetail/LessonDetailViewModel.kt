@@ -300,7 +300,6 @@ internal class LessonDetailViewModel @Inject constructor(
                 }
 
                 if (currentRemaining <= 0) {
-                    loadLessonDetail()
                     break
                 }
                 delay(1000)

@@ -328,7 +328,6 @@ internal class ConsumerLessonViewModel @Inject constructor(
                 }
 
                 if (currentRemaining <= 0) {
-                    loadLessonDetail(lessonId)
                     break
                 }
                 delay(1000)
