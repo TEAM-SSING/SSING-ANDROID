@@ -15,7 +15,7 @@ internal fun ConsumerLessonInfo.toUiModel(
 ): LessonInfoUiModel = LessonInfoUiModel(
     tags = persistentListOf(displaySport(basic.sport), displayLessonLevel(basic.lessonLevel)),
     teamNicknames = matchingRequests
-        .map { "${it.representativeMemberName}님 팀" }
+        .map { it.representativeMemberName }
         .toPersistentList(),
     totalCount = basic.totalHeadcount,
     place = basic.resort.displayName,

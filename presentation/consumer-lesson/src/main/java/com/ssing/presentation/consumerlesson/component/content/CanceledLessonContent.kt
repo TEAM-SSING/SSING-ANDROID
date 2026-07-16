@@ -20,6 +20,7 @@ import kotlinx.collections.immutable.persistentListOf
 @Composable
 internal fun CanceledLessonContent(
     state: ConsumerLessonContract.State,
+    onInstructorProfileClick: () -> Unit,
     onReportIssueClick: () -> Unit,
     onLessonListClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -36,7 +37,10 @@ internal fun CanceledLessonContent(
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        InstructorProfileSection(state.instructorProfile)
+        InstructorProfileSection(
+            state.instructorProfile,
+            onInstructorProfileClick,
+        )
 
         Spacer(modifier = Modifier.height(24.dp))
 
@@ -80,6 +84,7 @@ private fun CanceledLessonContentPreview() {
 
         CanceledLessonContent(
             state = state,
+            onInstructorProfileClick = {},
             onReportIssueClick = {},
             onLessonListClick = {},
         )

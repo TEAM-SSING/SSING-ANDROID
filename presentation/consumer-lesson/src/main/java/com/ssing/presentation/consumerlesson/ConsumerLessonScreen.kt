@@ -118,6 +118,7 @@ internal fun ConsumerLessonRoute(
         onReportIssueClick = viewModel::onReportIssueClick,
         onAdditionalLessonClick = viewModel::onAdditionalLessonClick,
         onLessonListClick = viewModel::onLessonListClick,
+        onInstructorProfileClick = viewModel::onInstructorProfileClick,
         onChatClick = viewModel::onChatClick,
         modifier = modifier,
     )
@@ -133,6 +134,7 @@ private fun ConsumerLessonScreen(
     onReportIssueClick: () -> Unit,
     onAdditionalLessonClick: () -> Unit,
     onLessonListClick: () -> Unit,
+    onInstructorProfileClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -163,24 +165,28 @@ private fun ConsumerLessonScreen(
                 when (state.lessonBannerState) {
                     is LessonBannerState.Before -> BeforeLessonContent(
                         state,
+                        onInstructorProfileClick = onInstructorProfileClick,
                         onChatClick = onChatClick,
                         onCancelClick = onCancelClick,
                     )
 
                     is LessonBannerState.Ongoing -> OngoingLessonContent(
                         state,
+                        onInstructorProfileClick = onInstructorProfileClick,
                         onReportIssueClick = onReportIssueClick,
                         onChatClick = onChatClick,
                     )
 
                     is LessonBannerState.Completed -> CompletedLessonContent(
                         state,
+                        onInstructorProfileClick = onInstructorProfileClick,
                         onReportIssueClick = onReportIssueClick,
                         onAdditionalLessonClick = onAdditionalLessonClick,
                     )
 
                     is LessonBannerState.Canceled -> CanceledLessonContent(
                         state,
+                        onInstructorProfileClick = onInstructorProfileClick,
                         onReportIssueClick = onReportIssueClick,
                         onLessonListClick = onLessonListClick,
                     )
@@ -290,6 +296,7 @@ private fun ConsumerLessonScreenPreview(
             onReportIssueClick = {},
             onAdditionalLessonClick = {},
             onLessonListClick = {},
+            onInstructorProfileClick = {},
         )
     }
 }
