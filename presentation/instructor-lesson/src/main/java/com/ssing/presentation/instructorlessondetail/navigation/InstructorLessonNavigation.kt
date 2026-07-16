@@ -10,12 +10,13 @@ import com.ssing.presentation.instructorlessondetail.screen.LessonDetailRoute
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class InstructorLesson(val lessonId :Long): Route
+data class InstructorLesson(val lessonId: Long) : Route
 
 fun NavGraphBuilder.instructorLessonNavGraph(
     paddingValues: PaddingValues,
     navController: NavController,
     navigateToMatching: () -> Unit,
+    navigateToHome: () -> Unit,
 ) {
     composable<InstructorLesson>(
         deepLinks = listOf(
@@ -24,6 +25,7 @@ fun NavGraphBuilder.instructorLessonNavGraph(
     ) {
         LessonDetailRoute(
             navigateBack = navController::popBackStack,
+            navigateToHome = navigateToHome,
             navigateToMatching = navigateToMatching,
         )
     }

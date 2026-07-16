@@ -97,6 +97,12 @@ internal fun InstructorMainNavHost(
                     navOptions = navController.backToHomeNavOptions(),
                 )
             },
+            navigateToHome = {
+                navController.navigate(
+                    route = InstructorHome,
+                    navOptions = navController.clearBackStackNavOptions(),
+                )
+            }
         )
         instructorProfileNavGraph(
             paddingValues = paddingValues,

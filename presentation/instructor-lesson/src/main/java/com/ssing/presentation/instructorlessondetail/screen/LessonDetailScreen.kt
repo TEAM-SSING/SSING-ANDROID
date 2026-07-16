@@ -1,5 +1,6 @@
 package com.ssing.presentation.instructorlessondetail.screen
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -19,6 +20,7 @@ import com.ssing.presentation.instructorlessondetail.LessonDetailViewModel
 internal fun LessonDetailRoute(
     navigateBack: () -> Unit,
     navigateToMatching: () -> Unit,
+    navigateToHome: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: LessonDetailViewModel = hiltViewModel(),
 ) {
@@ -28,8 +30,16 @@ internal fun LessonDetailRoute(
     HandleUiEffects(viewModel.uiEffect) { effect ->
         when (effect) {
             is LessonDetailContract.Effect.ShowToast -> context.toast(effect.message)
-            LessonDetailContract.Effect.NavigateBack -> navigateBack()
+            LessonDetailContract.Effect.NavigateToHome -> navigateToHome()
             LessonDetailContract.Effect.NavigateToMatching -> navigateToMatching()
+        }
+    }
+
+    BackHandler {
+        when {
+            state.showReadyDialog -> viewModel.onReadyDialogDismiss()
+            state.showLessonEndDialog -> viewModel.onLessonEndDialogDismiss()
+            else -> navigateToHome()
         }
     }
 
@@ -76,7 +86,7 @@ private fun LessonDetailScreen(
     modifier: Modifier = Modifier,
 ) {
     when (val phase = state.phase) {
-        is LessonDetailPhase.Loading -> {}
+        is LessonDetailPhase.LessonDetailInit -> {}
 
         is LessonDetailPhase.LessonDetailBefore -> LessonDetailBeforeScreen(
             before = phase.before,

@@ -90,92 +90,87 @@ internal fun LessonDetailBeforeScreen(
                 .background(Blue50)
                 .statusBarsPadding(),
         )
-
         Column(
             modifier = Modifier
+                .verticalScroll(rememberScrollState())
                 .weight(1f)
-                .background(color = Blue50),
         ) {
+            Spacer(modifier = Modifier.height(16.dp))
+
+            LessonBanner(
+                lessonBannerState = lessonBannerState,
+                beforeLessonText = "강습을 준비해주세요",
+            )
+
             Column(
                 modifier = Modifier
-                    .verticalScroll(rememberScrollState())
-                    .weight(1f)
+                    .fillMaxWidth()
+                    .background(color = Blue50)
+                    .background(
+                        color = SSINGTheme.colors.backgroundNormal,
+                        shape = RoundedCornerShape(
+                            topStart = 12.dp,
+                            topEnd = 12.dp,
+                        )
+                    )
+                    .padding(horizontal = 16.dp)
             ) {
                 Spacer(modifier = Modifier.height(16.dp))
-
-                LessonBanner(
-                    lessonBannerState = lessonBannerState,
-                    beforeLessonText = "강습을 준비해주세요",
+                SectionTitle(text = "강습 정보")
+                Spacer(modifier = Modifier.height(8.dp))
+                SsingMatchingDetailCardSmall(
+                    tags = before.tags,
+                    teamNicknames = before.nicknames,
+                    totalCount = before.teams.size,
+                    place = before.location,
+                    duration = before.duration,
+                    price = before.price,
                 )
 
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(
-                            color = SSINGTheme.colors.backgroundNormal,
-                            shape = RoundedCornerShape(
-                                topStart = 12.dp,
-                                topEnd = 12.dp,
-                            )
-                        )
-                        .padding(horizontal = 16.dp)
-                ) {
-                    Spacer(modifier = Modifier.height(16.dp))
-                    SectionTitle(text = "강습 정보")
-                    Spacer(modifier = Modifier.height(8.dp))
-                    SsingMatchingDetailCardSmall(
-                        tags = before.tags,
-                        teamNicknames = before.nicknames,
-                        totalCount = before.teams.size,
-                        place = before.location,
-                        duration = before.duration,
-                        price = before.price,
+                Spacer(modifier = Modifier.height(24.dp))
+                SectionTitle(text = "강습생 정보")
+                Spacer(modifier = Modifier.height(8.dp))
+                before.teams.forEachIndexed { index, team ->
+                    ConsumerInfoCard(
+                        isReady = team.isReady ?: false,
+                        nickname = team.teamNickname,
+                        participants = team.participants,
+                        price = team.price,
                     )
-
-                    Spacer(modifier = Modifier.height(24.dp))
-                    SectionTitle(text = "강습생 정보")
-                    Spacer(modifier = Modifier.height(8.dp))
-                    before.teams.forEachIndexed { index, team ->
-                        ConsumerInfoCard(
-                            isReady = team.isReady ?: false,
-                            nickname = team.teamNickname,
-                            participants = team.participants,
-                            price = team.price,
-                        )
-                        if (index != before.teams.lastIndex) {
-                            Spacer(modifier = Modifier.height(4.dp))
-                        }
+                    if (index != before.teams.lastIndex) {
+                        Spacer(modifier = Modifier.height(4.dp))
                     }
-
-                    Spacer(modifier = Modifier.height(24.dp))
-                    Text(
-                        text = "강습 관리",
-                        style = SSINGTheme.typography.caption.sb12,
-                        color = SSINGTheme.colors.textAlternative,
-                        modifier = Modifier.padding(bottom = 8.dp),
-                    )
-                    Row(
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
-                        modifier = Modifier.fillMaxWidth(),
-                    ) {
-                        SsingButton(
-                            text = "강습 취소",
-                            onClick = onCancelSheetOpen,
-                            style = SsingButtonStyle.RED,
-                            modifier = Modifier.weight(1f),
-                        )
-
-                        SsingButton(
-                            text = "채팅방",
-                            onClick = onChatRoomClick,
-                            style = SsingButtonStyle.GRAY,
-                            modifier = Modifier.weight(1f),
-                        )
-                    }
-                    Spacer(modifier = Modifier.height(16.dp))
                 }
+
+                Spacer(modifier = Modifier.height(24.dp))
+                Text(
+                    text = "강습 관리",
+                    style = SSINGTheme.typography.caption.sb12,
+                    color = SSINGTheme.colors.textAlternative,
+                    modifier = Modifier.padding(bottom = 8.dp),
+                )
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    modifier = Modifier.fillMaxWidth(),
+                ) {
+                    SsingButton(
+                        text = "강습 취소",
+                        onClick = onCancelSheetOpen,
+                        style = SsingButtonStyle.RED,
+                        modifier = Modifier.weight(1f),
+                    )
+
+                    SsingButton(
+                        text = "채팅방",
+                        onClick = onChatRoomClick,
+                        style = SsingButtonStyle.GRAY,
+                        modifier = Modifier.weight(1f),
+                    )
+                }
+                Spacer(modifier = Modifier.height(16.dp))
             }
         }
+
         SsingButton(
             text = if (before.isInstructorReady) "강습 대기중" else "강습 준비 완료",
             onClick = onReadyButtonClick,
