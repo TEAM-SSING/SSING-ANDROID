@@ -30,7 +30,7 @@ internal interface InstructorHomeContract {
             val offerId: Long? = null,
         ) : Effect
 
-        data object NavigateToMatchingWaiting : Effect
+        data class NavigateToMatchingWaiting(val offerId: Long? = null) : Effect
     }
 }
 
