@@ -43,6 +43,9 @@ internal class InstructorHomeViewModel @Inject constructor(
                         copy(
                             isLoading = false,
                             lessonCards = result.lessonCards.toUiState(),
+                            hasActiveLesson = result.lessonCards.any {
+                                it.displayStatus == CONFIRMED || it.displayStatus == IN_PROGRESS
+                            },
                             hasUnreadNotification = result.hasUnreadNotification,
                             instructorName = result.instructorName,
                             matchingPeopleCount = result.matchingPeopleCount,
@@ -122,9 +125,17 @@ internal class InstructorHomeViewModel @Inject constructor(
         const val PAYMENT_PENDING = "PAYMENT_PENDING"
         const val CONFIRMED = "CONFIRMED"
         const val IN_PROGRESS = "IN_PROGRESS"
+
+        const val MSG_ACTIVE_LESSON_BLOCK =
+            "진행 예정이거나 진행 중인 강습이 있어 즉시매칭을 시작할 수 없어요."
     }
 
     fun onMatchingClick() {
+        // 확정/진행 중인 강습이 있으면 즉시매칭 시작을 막는다.
+        if (uiState.value.hasActiveLesson) {
+            sendEffect(InstructorHomeContract.Effect.ShowToast(MSG_ACTIVE_LESSON_BLOCK))
+            return
+        }
         sendEffect(InstructorHomeContract.Effect.NavigateToMatching)
     }
 
