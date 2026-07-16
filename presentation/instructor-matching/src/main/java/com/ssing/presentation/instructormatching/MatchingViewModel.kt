@@ -195,8 +195,12 @@ internal class MatchingViewModel @Inject constructor(
         }
     }
 
-    fun editExposure() = updateState {
-        copy(phase = MatchingPhase.SettingExposure)
+    fun editExposure() {
+        updateState { copy(phase = MatchingPhase.SettingExposure) }
+        viewModelScope.launch {
+            instructorMatchingRepository.cancelMatchingExposure()
+                .onFailure { Timber.e(it, "조건 수정 진입 - 노출 중단 실패") }
+        }
     }
 
     fun stopWaiting() = updateState {
