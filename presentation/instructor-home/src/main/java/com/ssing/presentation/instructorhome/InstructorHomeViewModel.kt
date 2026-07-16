@@ -148,8 +148,6 @@ internal class InstructorHomeViewModel @Inject constructor(
                 val lessonId = lesson.lessonId
 
                 if (lessonId == null) {
-                    // 제안 단계(WAITING_FOR_INSTRUCTOR/CONFIRMATION/PAYMENT_PENDING) 카드는
-                    // lessonId가 없다. 매칭 화면으로 이동해 활성 제안을 복구한다.
                     sendEffect(InstructorHomeContract.Effect.NavigateToMatching)
                     return
                 }
