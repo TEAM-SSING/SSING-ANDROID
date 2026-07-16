@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -99,10 +100,6 @@ private fun SsingBottomBarItem(
 
     Column(
         modifier = modifier
-            .background(
-                color = if (isPressed) SSINGTheme.colors.borderDisabled else Color.Transparent,
-                shape = RoundedCornerShape(12.dp),
-            )
             .clickable(
                 interactionSource = interactionSource,
                 indication = null,
@@ -111,15 +108,25 @@ private fun SsingBottomBarItem(
             .padding(top = 8.dp, bottom = 12.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        Icon(
-            imageVector = ImageVector.vectorResource(iconRes),
-            contentDescription = stringResource(tab.titleRes),
-            tint = textColor,
-        )
-        Text(
-            text = stringResource(tab.titleRes),
-            style = SSINGTheme.typography.caption.md11,
-            color = textColor,
-        )
+        Column(
+            modifier = Modifier
+                .widthIn(min = 40.dp)
+                .background(
+                    color = if (isPressed) SSINGTheme.colors.borderDisabled else Color.Transparent,
+                    shape = RoundedCornerShape(12.dp),
+                ),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            Icon(
+                imageVector = ImageVector.vectorResource(iconRes),
+                contentDescription = stringResource(tab.titleRes),
+                tint = textColor,
+            )
+            Text(
+                text = stringResource(tab.titleRes),
+                style = SSINGTheme.typography.caption.md11,
+                color = textColor,
+            )
+        }
     }
 }
