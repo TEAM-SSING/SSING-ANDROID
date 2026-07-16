@@ -366,8 +366,7 @@ private fun InstructorLessonDetail.toPhase(): LessonDetailContract.LessonDetailP
                 duration = formatMinutesText(lessonDurationMinutes),
                 price = lessonInfo.totalLessonPrice,
                 teams = matchingRequests.map { it.toModel() }.toPersistentList(),
-                canceledAt = runCatching { LocalDateTime.parse(canceledAt) }
-                    .getOrNull()?.ssingDateFormatter() ?: canceledAt,
+                canceledAt = canceledAt,
                 canceledByName = canceledByName,
                 cancelReason = cancelReason,
             )
