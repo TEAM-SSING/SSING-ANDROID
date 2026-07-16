@@ -145,8 +145,27 @@ internal class PaymentViewModel @Inject constructor(
         updateState { copy(showCancelModal = false) }
 
     fun confirmCancel() {
-        updateState { copy(showCancelModal = false) }
-        sendEffect(PaymentContract.Effect.NavigateToHome)
+        val matchingRequestId = matchingRequestId ?: run {
+            updateState { copy(showCancelModal = false) }
+            sendEffect(PaymentContract.Effect.ShowToast("매칭 정보를 아직 불러오는 중이에요. 잠시 후 다시 시도해주세요."))
+            return
+        }
+
+        viewModelScope.launch {
+            consumerMatchingRepository.cancelMatching(matchingRequestId)
+                .onSuccess {
+                    updateState { copy(showCancelModal = false) }
+                    sendEffect(PaymentContract.Effect.NavigateToHome)
+                }
+                .onFailure { throwable ->
+                    updateState { copy(showCancelModal = false) }
+                    if (throwable is ApiException) sendEffect(
+                        PaymentContract.Effect.ShowToast(
+                            throwable.uiMessage
+                        )
+                    )
+                }
+        }
     }
 
     private companion object {
