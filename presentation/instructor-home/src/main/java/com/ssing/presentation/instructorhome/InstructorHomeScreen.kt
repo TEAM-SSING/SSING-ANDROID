@@ -99,6 +99,7 @@ private fun InstructorHomeScreen(
                     )
                 },
                 onNotificationClick = onNotificationClick,
+                hasUnreadNotifications = state.hasUnreadNotification,
                 modifier = Modifier.statusBarsPadding(),
             )
         },

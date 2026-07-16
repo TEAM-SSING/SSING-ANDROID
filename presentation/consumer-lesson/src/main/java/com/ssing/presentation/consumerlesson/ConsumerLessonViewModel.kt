@@ -68,7 +68,13 @@ internal class ConsumerLessonViewModel @Inject constructor(
             consumerLessonRepository.fetchConsumerLessonDetail(lessonId)
                 .onSuccess { result ->
                     Timber.d("consumer-lesson: $result")
-                    updateState { applyLessonDetail(result) }
+                    updateState {
+                        val next = applyLessonDetail(result)
+                        next.copy(
+                            showEndLessonAlert = next.showEndLessonAlert &&
+                                result is ConsumerLessonDetail.InProgress,
+                        )
+                    }
                 }
                 .onFailure {
                     Timber.e(it, "consumer-lesson 실패")
@@ -192,12 +198,16 @@ internal class ConsumerLessonViewModel @Inject constructor(
                 .onFailure {
                     if (it is ApiException) {
                         sendEffect(ConsumerLessonContract.Effect.ShowToast(it.uiMessage))
+                        if (it is ApiException.Conflict) {
+                            loadLessonDetail(lessonId)
+                        }
                     }
                 }
         }
     }
 
     fun onEndLessonClick() {
+        if (uiState.value.lessonBannerState !is LessonBannerState.Ongoing) return
         updateState { copy(showEndLessonAlert = true) }
     }
 

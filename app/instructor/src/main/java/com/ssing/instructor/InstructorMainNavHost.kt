@@ -88,6 +88,9 @@ internal fun InstructorMainNavHost(
         instructorLessonNavGraph(
             paddingValues = paddingValues,
             navController = navController,
+            navigateToMatching = {
+                navController.navigate(route = InstructorMatching())
+            },
         )
         instructorProfileNavGraph(
             paddingValues = paddingValues,
