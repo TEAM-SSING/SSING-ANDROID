@@ -139,52 +139,19 @@ internal class InstructorHomeViewModel @Inject constructor(
         sendEffect(InstructorHomeContract.Effect.NavigateToMatching)
     }
 
-    fun onLessonClick(
-        lesson: Reservation,
-    ) {
-        Timber.i("lessonId: ${lesson.lessonId} / offerId: $lesson.offerId")
+    fun onLessonClick(lesson: Reservation) {
+        Timber.i("lessonId: ${lesson.lessonId} / offerId: ${lesson.offerId}")
 
-        when (lesson.status) {
-            Status.Matching -> {
-                sendEffect(
-                    InstructorHomeContract.Effect.NavigateToMatchingWaiting
-                )
-            }
-
-            Status.Matched -> {
-                val lessonId = lesson.lessonId
-
-                if (lessonId == null) {
-                    sendEffect(InstructorHomeContract.Effect.NavigateToMatchingWaiting)
-                    return
-                }
-
-                sendEffect(
-                    InstructorHomeContract.Effect.NavigateToLessonDetail(
-                        lessonId = lessonId,
-                    )
-                )
-            }
-
-            Status.Default -> {
-                val lessonId = lesson.lessonId
-                val offerId = lesson.offerId
-
-                if (lessonId == null || offerId == null) {
-                    Timber.e(
-                        "강습 상세 이동에 필요한 lessonId나 offerId가 없습니다. " +
-                                "status=${lesson.status}, offerId=${lesson.offerId}"
-                    )
-                    return
-                }
-
-                sendEffect(
-                    InstructorHomeContract.Effect.NavigateToLessonDetail(
-                        lessonId = lessonId,
-                        offerId = offerId,
-                    )
-                )
-            }
+        when {
+            lesson.lessonId != null -> sendEffect(
+                InstructorHomeContract.Effect.NavigateToLessonDetail(lessonId = lesson.lessonId)
+            )
+            lesson.offerId != null -> sendEffect(
+                InstructorHomeContract.Effect.NavigateToMatchingWaiting(offerId = lesson.offerId)
+            )
+            else -> sendEffect(
+                InstructorHomeContract.Effect.NavigateToMatchingWaiting(offerId = null)
+            )
         }
     }
 
