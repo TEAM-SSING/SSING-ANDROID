@@ -187,6 +187,7 @@ internal class InstructorMatchingRepositoryImpl @Inject constructor(
             availableDurationMinutes = availableDurationMinutes,
             maxHeadcount = maxHeadcount,
             equipmentReady = equipmentReady,
+            estimatedLessonPriceAmount = estimatedLessonPriceAmount,
         )
 
     private fun InstructorMatchingOfferDecisionResponse.toModel(): InstructorMatchingOfferDecision =

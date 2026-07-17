@@ -18,6 +18,7 @@ internal data class InstructorMatchingSettingResponse(
     @SerialName("availableDurationMinutes") val availableDurationMinutes: List<Int>,
     @SerialName("maxHeadcount") val maxHeadcount: Int,
     @SerialName("equipmentReady") val equipmentReady: Boolean,
+    @SerialName("estimatedLessonPriceAmount") val estimatedLessonPriceAmount: Int? = null,
 )
 
 @Serializable
