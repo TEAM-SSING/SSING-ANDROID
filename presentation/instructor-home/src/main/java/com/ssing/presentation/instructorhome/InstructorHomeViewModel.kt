@@ -110,10 +110,9 @@ internal class InstructorHomeViewModel @Inject constructor(
 
             WAITING_FOR_INSTRUCTOR,
             WAITING_FOR_CONFIRMATION,
-            PAYMENT_PENDING,
-            IN_PROGRESS -> Status.Matched
-
-            CONFIRMED -> Status.Default
+            PAYMENT_PENDING -> Status.Matched
+            CONFIRMED,
+            IN_PROGRESS -> Status.Default
 
             else -> Status.Default
         }
