@@ -76,6 +76,7 @@ internal class ConsumerMatchingViewModel @Inject constructor(
     private fun loadReview() {
         updateState {
             copy(
+                keywords = persistentListOf("#키즈전문", "#수락률 100%"),
                 rating = "4.8",
                 reviews = persistentListOf(
                     InstructorReview(

@@ -210,19 +210,10 @@ private fun LessonInfoSection(
                 color = SSINGTheme.colors.textNormal,
             )
 
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(4.dp),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
+            Column {
                 InfoRow(
                     iconRes = R.drawable.ic_reservation_16,
                     text = state.date?.ssingDateFormatter() ?: "",
-                )
-
-                Icon(
-                    imageVector = ImageVector.vectorResource(R.drawable.ic_divide_line),
-                    contentDescription = null,
-                    tint = SSINGTheme.colors.borderAlternative,
                 )
 
                 InfoRow(

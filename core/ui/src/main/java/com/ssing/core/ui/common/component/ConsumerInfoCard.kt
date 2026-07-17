@@ -75,7 +75,7 @@ fun ConsumerInfoCard(
         }
 
         Column(
-            verticalArrangement = Arrangement.spacedBy(4.dp),
+            verticalArrangement = Arrangement.spacedBy(6.dp),
         ) {
             Text(
                 text = "${nickname}님 팀 ${participants.size}명",

@@ -15,7 +15,7 @@ internal fun ConsumerConfirmedMatchingRequest.toUiModel(): ParticipantTeamUiMode
 )
 
 internal fun ConsumerMatchingRequest.toUiModel(): ParticipantTeamUiModel = ParticipantTeamUiModel(
-    isReady = true,
+    isReady = false,
     nickname = representativeMemberName,
     participants = participants
         .map { "${it.age}세 ${displayGender(it.gender)}" }
