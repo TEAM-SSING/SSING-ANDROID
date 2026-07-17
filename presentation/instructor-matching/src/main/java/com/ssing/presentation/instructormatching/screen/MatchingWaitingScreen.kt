@@ -33,7 +33,6 @@ import com.ssing.presentation.instructormatching.model.MatchingExposureUiState
 import com.ssing.presentation.instructormatching.model.MatchingWaitingUiState
 import com.ssing.presentation.instructormatching.model.ParticipantUiModel
 import com.ssing.presentation.instructormatching.model.SportOption
-import com.ssing.presentation.instructormatching.model.toParticipant
 import kotlinx.collections.immutable.toPersistentList
 
 @Composable
@@ -86,7 +85,7 @@ internal fun MatchingWaitingScreen(
             duration = exposure.selectedDurations.joinToString(" / ") { it.label },
             maxCapacity = exposure.maxHeadcount,
             participant = waiting.participant,
-            price = waiting.price,
+            price = waiting.price.takeIf { it > 0 },
             equipmentStatus = waiting.equipmentStatus,
             modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp),
             borderColor = SSINGTheme.colors.borderAlternative,
@@ -131,7 +130,7 @@ private fun MatchingWaitingScreenPreview() {
             waiting = MatchingWaitingUiState(
                 nickname = "김OO",
                 teamCount = 2,
-                classDateTime = "강습생과 만난 후 강습 시작",
+                classDateTime = "강습생과 만난 후 강습 시작돼요",
                 participants = listOf(
                     ParticipantUiModel(age = 28, isMale = true),
                     ParticipantUiModel(age = 25, isMale = false),
