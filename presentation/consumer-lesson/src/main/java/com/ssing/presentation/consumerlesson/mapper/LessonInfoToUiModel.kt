@@ -16,6 +16,7 @@ internal fun ConsumerLessonInfo.toUiModel(
     tags = persistentListOf(displaySport(basic.sport), displayLessonLevel(basic.lessonLevel)),
     teamNicknames = matchingRequests
         .map { it.representativeMemberName }
+        .ifEmpty { basic.representativeConsumerNames }
         .toPersistentList(),
     totalCount = basic.totalHeadcount,
     place = basic.resort.displayName,
