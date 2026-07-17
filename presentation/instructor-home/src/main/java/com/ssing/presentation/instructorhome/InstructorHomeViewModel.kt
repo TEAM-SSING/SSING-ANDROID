@@ -80,17 +80,19 @@ internal class InstructorHomeViewModel @Inject constructor(
         }.toImmutableList()
     }
 
-    private fun InstructorLessonCard.toReservation(): Reservation =
-        Reservation(
+    private fun InstructorLessonCard.toReservation(): Reservation {
+        val status = toReservationStatus()
+        return Reservation(
             lessonId = lessonId,
             offerId = offerId,
-            chip = toChipText(),
+            chip = toChipText(status),
             displayText = title,
             location = resort.displayName,
             date = runCatching { OffsetDateTime.parse(scheduledAt).toLocalDateTime() }.getOrNull(),
             imageRes = toImageRes(),
-            status = toReservationStatus(),
+            status = status,
         )
+    }
 
     private fun InstructorLessonCard.toImageRes(): Int = when (sport) {
         "SKI" -> R.drawable.img_ski_86
@@ -98,11 +100,8 @@ internal class InstructorHomeViewModel @Inject constructor(
         else -> R.drawable.img_ski_86
     }
 
-    private fun InstructorLessonCard.toChipText(): String = when {
-        displayStatus == IN_PROGRESS -> "진행중"
-        remainingDays == 0 -> "Now"
-        else -> "D-$remainingDays"
-    }
+    private fun InstructorLessonCard.toChipText(status: Status): String =
+        if (status == Status.Default) "D-$remainingDays" else "Now"
 
     private fun InstructorLessonCard.toReservationStatus(): Status =
         when (displayStatus) {
@@ -111,8 +110,10 @@ internal class InstructorHomeViewModel @Inject constructor(
             WAITING_FOR_INSTRUCTOR,
             WAITING_FOR_CONFIRMATION,
             PAYMENT_PENDING -> Status.Matched
-            CONFIRMED,
-            IN_PROGRESS -> Status.Default
+
+            IN_PROGRESS -> Status.Matching
+
+            CONFIRMED -> Status.Default
 
             else -> Status.Default
         }

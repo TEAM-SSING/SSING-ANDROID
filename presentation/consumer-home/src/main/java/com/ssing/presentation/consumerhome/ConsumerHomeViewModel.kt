@@ -77,16 +77,18 @@ internal class ConsumerHomeViewModel @Inject constructor(
         }.toImmutableList()
     }
 
-    private fun ConsumerLessonCard.toReservation(): Reservation =
-        Reservation(
+    private fun ConsumerLessonCard.toReservation(): Reservation {
+        val status = toCardStatus()
+        return Reservation(
             lessonId = lessonId,
-            chip = toChipText(),
+            chip = toChipText(status),
             displayText = title,
             location = resort.displayName,
             date = runCatching { OffsetDateTime.parse(scheduledAt).toLocalDateTime() }.getOrNull(),
             imageRes = toImageRes(),
-            status = toCardStatus(),
+            status = status,
         )
+    }
 
     private fun ConsumerLessonCard.toImageRes(): Int = when (sport) {
         "SKI" -> R.drawable.img_ski_86
@@ -94,11 +96,8 @@ internal class ConsumerHomeViewModel @Inject constructor(
         else -> R.drawable.img_ski_86
     }
 
-    private fun ConsumerLessonCard.toChipText(): String = when {
-        displayStatus == IN_PROGRESS -> "진행중"
-        remainingDays == 0 -> "Now"
-        else -> "D-$remainingDays"
-    }
+    private fun ConsumerLessonCard.toChipText(status: Status): String =
+        if (status == Status.Default) "D-$remainingDays" else "Now"
 
     private fun ConsumerLessonCard.toCardStatus(): Status = when {
         displayStatus == IN_PROGRESS -> Status.Matching
