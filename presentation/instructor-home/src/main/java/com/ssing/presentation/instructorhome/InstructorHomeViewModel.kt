@@ -130,9 +130,15 @@ internal class InstructorHomeViewModel @Inject constructor(
     }
 
     fun onMatchingClick() {
-        // 확정/진행 중인 강습이 있으면 즉시매칭 시작을 막는다.
         if (uiState.value.hasActiveLesson) {
             sendEffect(InstructorHomeContract.Effect.ShowToast(MSG_ACTIVE_LESSON_BLOCK))
+            return
+        }
+        val ongoingOffer = uiState.value.lessonCards
+            .filterIsInstance<Reservation>()
+            .firstOrNull { it.status == Status.Matched && it.offerId != null }
+        if (ongoingOffer != null) {
+            sendEffect(InstructorHomeContract.Effect.NavigateToMatchingWaiting(offerId = ongoingOffer.offerId))
             return
         }
         sendEffect(InstructorHomeContract.Effect.NavigateToMatching)

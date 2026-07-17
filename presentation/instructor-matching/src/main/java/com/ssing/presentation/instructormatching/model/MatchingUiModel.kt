@@ -4,11 +4,6 @@ import androidx.compose.runtime.Immutable
 import com.ssing.core.ui.common.component.Gender
 import com.ssing.core.ui.common.component.Participant
 
-
-// TODO(매칭-API): API 연동 시 MatchingRepository 내 private 메소드로 DTO → UiModel 변환 구현
-//  (sport/lessonLevel enum 문자열 → label, durationMinutes → hours 등)
-
-
 /**
  * 강습 종목 옵션
  **/
@@ -88,7 +83,7 @@ internal data class MatchingOfferUiModel(
     val expiresAtMillis: Long?,
     val nickname: String = "",
     val teamCount: Int = 0,
-    val classDateTime: String = "강습생과 만난 직후 강습 시작",
+    val classDateTime: String = "강습생과 만난 직후 강습 시작돼요",
     val participant: String = "",
     val participants: List<ParticipantUiModel> = emptyList(),
     val isPaid: Boolean = false,
@@ -117,7 +112,7 @@ internal data class LessonSummaryUiModel(
 internal data class MatchingWaitingUiState(
     val nickname: String = "",
     val teamCount: Int = 0,
-    val classDateTime: String = "강습생과 만난 직후 강습 시작",
+    val classDateTime: String = "강습생과 만난 직후 강습 시작돼요",
     val participant: String = "",
     val participants: List<ParticipantUiModel> = emptyList(),
     val isPaid: Boolean = false,

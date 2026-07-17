@@ -55,7 +55,7 @@ internal fun ConsumerMatchingResultRoute(
         SsingModal(
             onDismissRequest = viewModel::closeCancelModal,
             title = "매칭을 취소할까요?",
-            text = "홈으로 이동하면 현재 매칭된 강사와의 연결이 취소됩니다",
+            text = "홈으로 이동하면 현재 매칭된 강사와의 연결이 취소돼요",
             primaryText = "계속 보기",
             onPrimary = viewModel::closeCancelModal,
             primaryStyle = SsingButtonStyle.GRAY,

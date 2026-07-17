@@ -13,4 +13,5 @@ data class InstructorMatchingSetting(
     val availableDurationMinutes: List<Int>,
     val maxHeadcount: Int,
     val equipmentReady: Boolean,
+    val estimatedLessonPriceAmount: Int?,
 )

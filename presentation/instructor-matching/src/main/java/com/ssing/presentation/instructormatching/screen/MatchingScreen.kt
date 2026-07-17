@@ -172,7 +172,7 @@ private val previewOffer = MatchingOfferUiModel(
     expiresAtMillis = null,
     nickname = "홍지민",
     teamCount = 4,
-    classDateTime = "강습생과 만난 직후 강습 시작",
+    classDateTime = "강습생과 만난 직후 강습 시작돼요",
     participants = listOf(
         ParticipantUiModel(age = 28, isMale = true),
         ParticipantUiModel(age = 25, isMale = false),
@@ -192,7 +192,7 @@ private val previewOffer = MatchingOfferUiModel(
 private val previewWaiting = MatchingWaitingUiState(
     nickname = "홍지민",
     teamCount = 2,
-    classDateTime = "강습생과 만난 직후 강습 시작",
+    classDateTime = "강습생과 만난 직후 강습 시작돼요",
     participants = listOf(
         ParticipantUiModel(age = 28, isMale = true),
         ParticipantUiModel(age = 25, isMale = false),

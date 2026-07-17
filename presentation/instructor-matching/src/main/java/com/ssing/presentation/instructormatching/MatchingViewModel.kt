@@ -21,6 +21,7 @@ import com.ssing.presentation.instructormatching.model.LessonSummaryUiModel
 import com.ssing.presentation.instructormatching.model.LevelOption
 import com.ssing.presentation.instructormatching.model.MatchingExposureUiState
 import com.ssing.presentation.instructormatching.model.MatchingOfferUiModel
+import com.ssing.presentation.instructormatching.model.MatchingWaitingUiState
 import com.ssing.presentation.instructormatching.model.OfferStatusOption
 import com.ssing.presentation.instructormatching.model.ParticipantUiModel
 import com.ssing.presentation.instructormatching.model.SportOption
@@ -301,8 +302,12 @@ internal class MatchingViewModel @Inject constructor(
             instructorMatchingRepository.fetchMatchingActive()
                 .onSuccess { active ->
                     Timber.d("matching-offers 응답: $active")
-                    // 저장된 조건은 항상 복원한다(대기 화면 조건 카드/조건 수정용).
-                    updateState { copy(exposure = exposure.applyMatchingSetting(active.setting)) }
+                    updateState {
+                        copy(
+                            exposure = exposure.applyMatchingSetting(active.setting),
+                            waiting = waiting.applyMatchingSetting(active.setting),
+                        )
+                    }
                     val activeOfferId = active.offerId
                     offerId = activeOfferId
                     when {
@@ -438,6 +443,13 @@ internal class MatchingViewModel @Inject constructor(
             .toSet(),
         maxHeadcount = setting.maxHeadcount,
         isNoticeChecked = setting.equipmentReady,
+    )
+
+    private fun MatchingWaitingUiState.applyMatchingSetting(
+        setting: InstructorMatchingSetting,
+    ): MatchingWaitingUiState = copy(
+        price = setting.estimatedLessonPriceAmount ?: price,
+        equipmentStatus = if (setting.equipmentReady) "착용 완료" else "",
     )
 
     private fun currentOffer(): MatchingOfferUiModel? =
