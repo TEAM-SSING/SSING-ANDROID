@@ -585,11 +585,9 @@ private fun ReviewCard(
             overflow = TextOverflow.Ellipsis,
         )
 
-        Spacer(
-            Modifier
-                .weight(1f)
-                .heightIn(min = 11.dp),
-        )
+        Spacer(Modifier.height(11.dp))
+
+        Spacer(Modifier.weight(1f))
 
         Text(
             text = review.date,
