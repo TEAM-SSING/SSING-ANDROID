@@ -59,8 +59,8 @@ internal fun LessonDetailCanceledScreen(
         )
             Column(
                 modifier = Modifier
-                    .verticalScroll(rememberScrollState())
                     .weight(1f)
+                    .verticalScroll(rememberScrollState())
             ) {
                 Spacer(modifier = Modifier.height(16.dp))
 
