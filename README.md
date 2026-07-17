@@ -6,6 +6,8 @@
 즉시 강습부터 사전 예약까지 다양한 방식으로 나에게 맞는 강습을 시작할 수 있습니다.
 스키장 현장에서 준비된 강사와 실시간으로 연결되어, 기다림 없이 바로 강습을 시작해보세요!
 
+<img width="3840" height="2160" alt="KakaoTalk_Photo_2026-07-17-23-31-18" src="https://github.com/user-attachments/assets/f00173d3-a111-4382-816f-71111a87dbc9" />
+
 <br/>
 
 ## 💙 Contributors
@@ -14,6 +16,16 @@
 |:---------------------------------------------------------------------------------------------------------------------------:|:---------------------------------------------------------------------------------------------------------------------------:|:---------------------------------------------------------------------------------------------------------------------------:|:---------------------------------------------------------------------------------------------------------------------------:|:---------------------------------------------------------------------------------------------------------------------------:|
 | <img alt="한유빈 avatar" src="https://github.com/user-attachments/assets/777d6a78-a17a-4fac-83f7-6c5f4e71cf9c" height="200" /> | <img alt="전도연 avatar" src="https://github.com/user-attachments/assets/e5dae0d2-98b1-4c89-bc61-c14c2ff9d617" height="200" /> | <img alt="조예슬 avatar" src="https://github.com/user-attachments/assets/022fa9b5-a6e9-4059-a9df-0f378cc576fe" height="200" /> | <img alt="김예지 avatar" src="https://github.com/user-attachments/assets/0d2a9981-8303-4c82-a36b-b15d07537987" height="200" /> | <img alt="김예림 avatar" src="https://github.com/user-attachments/assets/c6b03389-963d-4265-a5a0-1fccef83e5e5" height="200" /> |
 |                                               `강사 매칭 플로우`,<br/> `알림`, `기초 세팅`                                               |                                              `소비자 매칭 플로우`,<br/> `WebSocket 세팅`                                              |                                                  `소비자 강습상세`,<br/> `DS 세팅`                                                   |                                                  `강사 강습상세`,<br/> `FCM 세팅`                                                   |                                           `카카오 로그인`,<br/> `홈`, `강습 확정`,<br/> `결제`                                           |
+
+
+<br/>
+
+## 🎥 ScreenShot
+
+| 성공 플로우 | 매칭 중 앱 이탈 > 재시작 시 매칭 화면으로 자동 복구 | 바텀시트로 강습 취소 |
+|:---:|:---:|:---:|
+| <video src="https://github.com/user-attachments/assets/b8638abc-cb7c-4f18-ab8e-c982224f8923" /> | <video src="https://github.com/user-attachments/assets/caecd8a9-e7a0-4685-8ab2-a008f6c4847d" /> | <video src="https://github.com/user-attachments/assets/33d89648-e45a-4757-a7b1-873b7942060f" /> |
+
 
 <br/>
 
@@ -62,7 +74,6 @@
 │       └── 📁 navigation
 │
 ├── 📂 data                     # 단일 모듈, feature별 패키지
-│   ├── 📁 di                   # 의존성 주입 모듈
 │   ├── 📁 auth
 │   ├── 📁 devauth
 │   ├── 📁 home
