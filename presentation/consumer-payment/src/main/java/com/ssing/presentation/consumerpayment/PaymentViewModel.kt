@@ -51,6 +51,7 @@ internal class PaymentViewModel @Inject constructor(
                         lessonCost = priceSummary?.lessonPriceAmount ?: lessonCost,
                         resortCost = priceSummary?.resortPassFeeAmount ?: resortCost,
                         totalPaymentAmount = priceSummary?.totalPaymentAmount ?: totalPaymentAmount,
+                        equipmentStatus = "착용 완료",
                     )
                 }
             }
