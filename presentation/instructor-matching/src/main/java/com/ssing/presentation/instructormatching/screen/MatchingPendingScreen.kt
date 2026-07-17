@@ -108,7 +108,7 @@ private fun MatchingPendingScreenPreview() {
                 expiresAtMillis = null,
                 nickname = "홍지민",
                 teamCount = 4,
-                classDateTime = "강습생과 만난 직후 강습 시작",
+                classDateTime = "강습생과 만난 직후 강습 시작돼요",
                 participants = listOf(
                     ParticipantUiModel(age = 11, isMale = true),
                     ParticipantUiModel(age = 11, isMale = true),

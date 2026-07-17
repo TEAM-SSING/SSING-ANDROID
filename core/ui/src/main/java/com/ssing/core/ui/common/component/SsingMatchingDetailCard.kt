@@ -384,7 +384,7 @@ private fun SsingClassDetailCardPreview(
             nickname = "김OO",
             teamCount = 0,
             totalCount = totalCount,
-            classDateTime = "강사와 만난 후 강습 시작",
+            classDateTime = "강사와 만난 후 강습 시작돼요",
             location = "OOO 리조트",
             duration = "0시간",
             maxCapacity = 0,

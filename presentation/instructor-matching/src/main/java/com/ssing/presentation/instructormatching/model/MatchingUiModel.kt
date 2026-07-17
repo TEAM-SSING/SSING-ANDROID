@@ -88,7 +88,7 @@ internal data class MatchingOfferUiModel(
     val expiresAtMillis: Long?,
     val nickname: String = "",
     val teamCount: Int = 0,
-    val classDateTime: String = "강습생과 만난 직후 강습 시작",
+    val classDateTime: String = "강습생과 만난 직후 강습 시작돼요",
     val participant: String = "",
     val participants: List<ParticipantUiModel> = emptyList(),
     val isPaid: Boolean = false,
@@ -117,7 +117,7 @@ internal data class LessonSummaryUiModel(
 internal data class MatchingWaitingUiState(
     val nickname: String = "",
     val teamCount: Int = 0,
-    val classDateTime: String = "강습생과 만난 직후 강습 시작",
+    val classDateTime: String = "강습생과 만난 직후 강습 시작돼요",
     val participant: String = "",
     val participants: List<ParticipantUiModel> = emptyList(),
     val isPaid: Boolean = false,
