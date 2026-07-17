@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
+import androidx.navigation.navOptions
 import com.ssing.core.ui.extension.clearBackStackNavOptions
 import com.ssing.core.ui.navigation.Route
 import com.ssing.core.ui.navigation.SsingNavHost
@@ -55,17 +56,20 @@ internal fun InstructorMainNavHost(
             paddingValues = paddingValues,
             navigateToMatching = {
                 navController.navigate(
-                    route = InstructorMatching(),
+                    route = InstructorMatching(startFresh = true),
+                    navOptions = navController.backToHomeNavOptions(),
                 )
             },
             navigateToLessonDetail = { lessonId ->
                 navController.navigate(
                     route = InstructorLesson(lessonId = lessonId ?: 0),
+                    navOptions = navController.backToHomeNavOptions(),
                 )
             },
-            navigateToMatchingWaiting = {
+            navigateToMatchingWaiting = { offerId ->
                 navController.navigate(
-                    route = InstructorMatching
+                    route = InstructorMatching(offerId = offerId),
+                    navOptions = navController.backToHomeNavOptions(),
                 )
             },
             navigateToNotification = {
@@ -82,6 +86,7 @@ internal fun InstructorMainNavHost(
             navigateToLessonDetail = { lessonId ->
                 navController.navigate(
                     route = InstructorLesson(lessonId = lessonId),
+                    navOptions = navController.backToHomeNavOptions(),
                 )
             },
         )
@@ -89,7 +94,10 @@ internal fun InstructorMainNavHost(
             paddingValues = paddingValues,
             navController = navController,
             navigateToMatching = {
-                navController.navigate(route = InstructorMatching())
+                navController.navigate(
+                    route = InstructorMatching(),
+                    navOptions = navController.backToHomeNavOptions(),
+                )
             },
             navigateToHome = {
                 navController.navigate(
@@ -108,4 +116,8 @@ internal fun InstructorMainNavHost(
             },
         )
     }
+}
+private fun NavHostController.backToHomeNavOptions() = navOptions {
+    popUpTo(InstructorHome) { inclusive = false }
+    launchSingleTop = true
 }

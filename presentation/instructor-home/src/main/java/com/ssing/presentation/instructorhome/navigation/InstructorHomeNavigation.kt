@@ -15,7 +15,7 @@ fun NavGraphBuilder.instructorHomeNavGraph(
     navigateToMatching: () -> Unit,
     navigateToNotification: () -> Unit,
     navigateToLessonDetail: (Long?) -> Unit,
-    navigateToMatchingWaiting: () -> Unit,
+    navigateToMatchingWaiting: (Long?) -> Unit,
 ) {
     composable<InstructorHome> {
         InstructorHomeRoute(

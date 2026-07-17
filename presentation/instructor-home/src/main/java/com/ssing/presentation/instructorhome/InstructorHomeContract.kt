@@ -19,6 +19,7 @@ internal interface InstructorHomeContract {
         val averageRating: Float = 0f,
         val grade: Grade = Grade.GRADE1,
         val achievementRate: Int = 0,
+        val hasActiveLesson: Boolean = false,
     )
 
     sealed interface Effect {
@@ -29,7 +30,7 @@ internal interface InstructorHomeContract {
             val offerId: Long? = null,
         ) : Effect
 
-        data object NavigateToMatchingWaiting : Effect
+        data class NavigateToMatchingWaiting(val offerId: Long? = null) : Effect
     }
 }
 

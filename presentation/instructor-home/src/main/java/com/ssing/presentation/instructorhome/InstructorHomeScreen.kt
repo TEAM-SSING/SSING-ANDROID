@@ -24,6 +24,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LifecycleEventEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ssing.core.ui.R
 import com.ssing.core.ui.common.component.Empty
@@ -48,16 +50,23 @@ internal fun InstructorHomeRoute(
     navigateToLessonDetail: (Long?) -> Unit,
     navigateToMatching: () -> Unit,
     navigateToNotification: () -> Unit,
+    navigateToMatchingWaiting: (Long?) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: InstructorHomeViewModel = hiltViewModel(),
-    navigateToMatchingWaiting: () -> Unit,
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val context = LocalContext.current
 
+    LifecycleEventEffect(Lifecycle.Event.ON_RESUME) {
+        viewModel.loadHome()
+    }
+
     HandleUiEffects(viewModel.uiEffect) { effect ->
         when (effect) {
-            is InstructorHomeContract.Effect.NavigateToMatchingWaiting -> navigateToMatchingWaiting
+            is InstructorHomeContract.Effect.NavigateToMatchingWaiting -> navigateToMatchingWaiting(
+                effect.offerId
+            )
+
             is InstructorHomeContract.Effect.NavigateToLessonDetail -> navigateToLessonDetail(effect.lessonId)
             is InstructorHomeContract.Effect.NavigateToMatching -> navigateToMatching()
             is InstructorHomeContract.Effect.ShowToast -> context.toast(effect.message)

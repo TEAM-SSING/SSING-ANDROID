@@ -39,7 +39,5 @@ internal data class InstructorMatchingLessonSummaryResponse(
 
 @Serializable
 internal data class InstructorMatchingPriceSummaryResponse(
-    @SerialName("lessonPriceAmount") val lessonPriceAmount: Int,
-    @SerialName("resortPassFeeAmount") val resortPassFeeAmount: Int,
-    @SerialName("totalPaymentAmount") val totalPaymentAmount: Int,
+    @SerialName("instructorSettlementAmount") val instructorSettlementAmount: Int? = null,
 )

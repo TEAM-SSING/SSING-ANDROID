@@ -237,9 +237,7 @@ internal class InstructorMatchingRepositoryImpl @Inject constructor(
                 },
                 priceSummary = requireNotNull(priceSummary) { "AVAILABLE 응답에 priceSummary 누락" }.let {
                     InstructorMatchingPriceSummary(
-                        lessonPriceAmount = it.lessonPriceAmount,
-                        resortPassFeeAmount = it.resortPassFeeAmount,
-                        totalPaymentAmount = it.totalPaymentAmount,
+                        instructorSettlementAmount = it.instructorSettlementAmount ?: 0,
                     )
                 },
                 participants = participants.map {

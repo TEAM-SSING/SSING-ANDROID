@@ -43,19 +43,17 @@ internal class MatchingViewModel @Inject constructor(
     BaseViewModel<MatchingContract.State, MatchingContract.Effect>(
         MatchingContract.State()
     ) {
+    private var offerId: Long? = null
 
     init {
         loadMatchingExposure()
-        // FCM '새 강습 도착' 딥링크로 진입하면 offerId가 담겨온다.
-        // offerId가 있으면 그 제안 상세를, 없으면(거절/일반 진입) 활성 제안을 조회한다.
-        val offerId = savedStateHandle.toRoute<InstructorMatching>().offerId
-        if (offerId != null) {
-            restoreOfferDetail(offerId)
-        } else {
-            restoreActiveOffer()
+        val route = savedStateHandle.toRoute<InstructorMatching>()
+        offerId = route.offerId
+        when {
+            offerId != null -> restoreOfferDetail(requireNotNull(offerId))
+            route.startFresh -> Unit
+            else -> restoreActiveOffer()
         }
-        instructorMatchingRepository.connectSocket()
-
         instructorMatchingRepository.event
             .onEach { handleMatchingEvent(it) }
             .launchIn(viewModelScope)
@@ -63,6 +61,8 @@ internal class MatchingViewModel @Inject constructor(
         instructorMatchingRepository.socketState
             .onEach { handleSocketState(it) }
             .launchIn(viewModelScope)
+
+        instructorMatchingRepository.connectSocket()
     }
 
     private fun handleMatchingEvent(event: InstructorMatchingEvent) {
@@ -76,7 +76,7 @@ internal class MatchingViewModel @Inject constructor(
                     restoreOfferDetail(event.offerId)
                 }
             }
-            is InstructorMatchingEvent.OfferClosedEvent -> restoreOfferDetail(event.offerId)
+            is InstructorMatchingEvent.OfferClosedEvent -> restoreActiveOffer()
 
             is InstructorMatchingEvent.MatchingCanceledEvent -> {
                 updateState { copy(phase = MatchingPhase.Waiting) }
@@ -97,13 +97,21 @@ internal class MatchingViewModel @Inject constructor(
                     sendEffect(MatchingContract.Effect.ShowToast("연결에 문제가 발생했어요."))
                 }
             }
-            SocketState.Connected -> socketErrorToastShown = false
+            SocketState.Connected -> {
+                socketErrorToastShown = false
+                resyncActiveOffer()
+            }
             SocketState.Connecting, SocketState.Disconnected -> Unit
         }
     }
 
     private fun onMatchingConfirmed(lessonId: Long) = viewModelScope.launch {
-        Timber.d("매칭 확정 수신 → 강습 상세 이동 (lessonId=$lessonId)")
+        Timber.d("매칭 확정 수신 → 노출 중단 후 강습 상세 이동 (lessonId=$lessonId)")
+        // TODO(서버 보강 필요): 이 처리는 '확정 순간 매칭 화면(소켓 연결)에 있을 때'만 동작한다.
+        //  강사가 홈 등으로 이동해 소켓이 끊긴 뒤 확정되면(FCM만 수신) 노출이 안 꺼질 수 있으므로,
+        //  완전한 신규 매칭 차단은 서버가 '확정 강습 보유 강사 노출 제외'로 처리해야 한다.
+        instructorMatchingRepository.cancelMatchingExposure()
+            .onFailure { Timber.e(it, "확정 후 노출 중단 실패") }
         try {
             instructorMatchingRepository.disconnectSocket()
         } finally {
@@ -181,6 +189,8 @@ internal class MatchingViewModel @Inject constructor(
                             exposure = exposure.copy(isSubmitting = false),
                         )
                     }
+                    // 노출 시작 직후 서버가 즉시 만든 제안이 있으면 바로 반영 (선대기 레이스 복구)
+                    restoreActiveOffer()
                 }
                 .onFailure {
                     Timber.e(it, "matching-exposure 저장 실패")
@@ -192,8 +202,12 @@ internal class MatchingViewModel @Inject constructor(
         }
     }
 
-    fun editExposure() = updateState {
-        copy(phase = MatchingPhase.SettingExposure)
+    fun editExposure() {
+        updateState { copy(phase = MatchingPhase.SettingExposure) }
+        viewModelScope.launch {
+            instructorMatchingRepository.cancelMatchingExposure()
+                .onFailure { Timber.e(it, "조건 수정 진입 - 노출 중단 실패") }
+        }
     }
 
     fun stopWaiting() = updateState {
@@ -205,7 +219,9 @@ internal class MatchingViewModel @Inject constructor(
             instructorMatchingRepository.cancelMatchingExposure()
                 .onSuccess { isExposed ->
                     Timber.d("즉시노출 중단 응답 isExposed=$isExposed")
-                    updateState { copy(dialog = null, phase = MatchingPhase.SettingExposure) }
+                    // 대기 중지(종료) 시 조건 입력 화면이 아니라 홈으로 나간다.
+                    updateState { copy(dialog = null) }
+                    sendEffect(MatchingContract.Effect.NavigateBack)
                 }
                 .onFailure {
                     Timber.e(it, "즉시노출 중단 실패")
@@ -247,7 +263,11 @@ internal class MatchingViewModel @Inject constructor(
             instructorMatchingRepository.respondMatchingOffer(offer.offerId, DECISION_REJECTED)
                 .onSuccess { result ->
                     Timber.d("매칭 제안 거절 응답: $result")
+                    // 거절한 offer는 무효화하고, 서버가 새로 매칭한 offer(새 offerId)를
+                    // active 재조회로 받아온다. (없으면 대기 화면 유지)
+                    offerId = null
                     updateState { copy(phase = MatchingPhase.Waiting) }
+                    restoreActiveOffer()
                 }
                 .onFailure {
                     Timber.e(it, "매칭 제안 거절 실패")
@@ -262,6 +282,19 @@ internal class MatchingViewModel @Inject constructor(
 
     private var restoreJob: Job? = null
 
+    /**
+     * 소켓 연결/재연결·화면 재진입 시 현재 활성 제안을 REST로 재동기화한다.
+     *
+     * '조건에 맞는 요청을 찾는 중'(Waiting) 상태에서만 재조회한다.
+     * 이미 제안 도착/확정 대기(OfferArrived·PendingConfirm)이거나 조건 설정(SettingExposure) 중이면,
+     * active 재조회가 그 상태를 대기 화면으로 덮어쓰면 안 되므로 건너뛴다.
+     * (확정 전 홈 이동 → 카드로 재진입 시 대기화면이 잘못 뜨는 문제 방지)
+     */
+    fun resyncActiveOffer() {
+        if (uiState.value.phase !is MatchingPhase.Waiting) return
+        restoreActiveOffer()
+    }
+
     fun restoreActiveOffer() {
         restoreJob?.cancel()
         restoreJob = viewModelScope.launch {
@@ -270,16 +303,19 @@ internal class MatchingViewModel @Inject constructor(
                     Timber.d("matching-offers 응답: $active")
                     // 저장된 조건은 항상 복원한다(대기 화면 조건 카드/조건 수정용).
                     updateState { copy(exposure = exposure.applyMatchingSetting(active.setting)) }
-                    val offerId = active.offerId
+                    val activeOfferId = active.offerId
+                    offerId = activeOfferId
                     when {
-                        offerId != null -> restoreOfferDetail(offerId)
+                        activeOfferId != null -> restoreOfferDetail(activeOfferId)
                         active.setting.isExposed -> updateState { copy(phase = MatchingPhase.Waiting) }
                         else -> updateState { copy(phase = MatchingPhase.SettingExposure) }
                     }
                 }
                 .onFailure {
                     Timber.e(it, "matching-offers 실패")
-                    if (it is ApiException) {
+                    if (it is ApiException.Conflict) {
+                        updateState { copy(phase = MatchingPhase.SettingExposure) }
+                    } else if (it is ApiException) {
                         sendEffect(MatchingContract.Effect.ShowToast(it.uiMessage))
                     }
                 }
@@ -287,6 +323,7 @@ internal class MatchingViewModel @Inject constructor(
     }
 
     fun restoreOfferDetail(offerId: Long) {
+        this.offerId = offerId
         restoreJob?.cancel()
         restoreJob = viewModelScope.launch {
             instructorMatchingRepository.fetchOfferDetail(offerId)
@@ -302,7 +339,10 @@ internal class MatchingViewModel @Inject constructor(
                 }
                 .onFailure {
                     Timber.e(it, "matching-offer 상세 실패")
-                    if (it is ApiException) {
+                    if (it is ApiException.Conflict) {
+                        // 409 MATCHING_NOT_ACTIVE: 협상 종료 → 홈 재조회 후 확정 강습이면 이동, 아니면 대기
+                        navigateToLessonIfConfirmed(offerId)
+                    } else if (it is ApiException) {
                         sendEffect(MatchingContract.Effect.ShowToast(it.uiMessage))
                     }
                 }
@@ -370,7 +410,7 @@ internal class MatchingViewModel @Inject constructor(
             expiresAtMillis = null,
             nickname = requestSummary.requesterName,
             teamCount = requestSummary.headcount,
-            price = priceSummary.totalPaymentAmount,
+            price = priceSummary.instructorSettlementAmount,
             participants = participants.map {
                 ParticipantUiModel(age = it.age, isMale = it.gender == GENDER_MALE)
             },
