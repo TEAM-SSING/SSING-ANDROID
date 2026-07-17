@@ -57,6 +57,7 @@ internal fun MatchingOfferScreen(
             MatchingOfferSummaryDetailCard(
                 offer = offer,
                 stepLabel = "빠른 요청",
+                
             )
 
             Text(
