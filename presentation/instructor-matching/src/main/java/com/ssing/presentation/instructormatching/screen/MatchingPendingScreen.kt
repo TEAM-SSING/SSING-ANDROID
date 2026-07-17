@@ -1,10 +1,11 @@
 package com.ssing.presentation.instructormatching.screen
 
 import androidx.compose.foundation.background
-import com.ssing.presentation.instructormatching.R
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
@@ -25,6 +26,7 @@ import com.ssing.core.ui.common.component.SsingButtonStyle
 import com.ssing.core.ui.common.component.SsingHeader
 import com.ssing.core.ui.common.component.SsingTopBar
 import com.ssing.core.ui.designsystem.theme.SSINGTheme
+import com.ssing.presentation.instructormatching.R
 import com.ssing.presentation.instructormatching.component.MatchingOfferSummaryDetailCard
 import com.ssing.presentation.instructormatching.model.LessonSummaryUiModel
 import com.ssing.presentation.instructormatching.model.MatchingOfferUiModel
@@ -82,6 +84,7 @@ internal fun MatchingPendingScreen(
                 modifier = Modifier.padding(horizontal = 16.dp),
             )
         }
+        Spacer(modifier = Modifier.height(16.dp))
 
         SsingButton(
             text = "대기중",
