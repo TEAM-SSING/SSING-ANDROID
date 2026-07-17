@@ -57,6 +57,7 @@ internal fun InstructorMainNavHost(
             navigateToMatching = {
                 navController.navigate(
                     route = InstructorMatching(startFresh = true),
+                    navOptions = navController.backToHomeNavOptions(),
                 )
             },
             navigateToLessonDetail = { lessonId ->
@@ -68,6 +69,7 @@ internal fun InstructorMainNavHost(
             navigateToMatchingWaiting = { offerId ->
                 navController.navigate(
                     route = InstructorMatching(offerId = offerId),
+                    navOptions = navController.backToHomeNavOptions(),
                 )
             },
             navigateToNotification = {
