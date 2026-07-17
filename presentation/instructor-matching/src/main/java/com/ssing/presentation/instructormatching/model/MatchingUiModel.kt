@@ -4,11 +4,6 @@ import androidx.compose.runtime.Immutable
 import com.ssing.core.ui.common.component.Gender
 import com.ssing.core.ui.common.component.Participant
 
-
-// TODO(매칭-API): API 연동 시 MatchingRepository 내 private 메소드로 DTO → UiModel 변환 구현
-//  (sport/lessonLevel enum 문자열 → label, durationMinutes → hours 등)
-
-
 /**
  * 강습 종목 옵션
  **/
