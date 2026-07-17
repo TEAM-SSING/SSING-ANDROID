@@ -99,7 +99,11 @@ internal class ConsumerHomeViewModel @Inject constructor(
     private fun ConsumerLessonCard.toChipText(status: Status): String =
         if (status == Status.Default) "D-$remainingDays" else "Now"
 
-    private fun ConsumerLessonCard.toCardStatus(): Status = Status.Default
+    private fun ConsumerLessonCard.toCardStatus(): Status = when {
+        displayStatus == IN_PROGRESS -> Status.Matching
+        remainingDays == 0 -> Status.Matched
+        else -> Status.Default
+    }
 
     private companion object {
         const val IN_PROGRESS = "IN_PROGRESS"
