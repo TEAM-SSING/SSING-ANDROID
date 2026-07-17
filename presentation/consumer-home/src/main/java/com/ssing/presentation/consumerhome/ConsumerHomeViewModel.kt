@@ -100,11 +100,7 @@ internal class ConsumerHomeViewModel @Inject constructor(
         else -> "D-$remainingDays"
     }
 
-    private fun ConsumerLessonCard.toCardStatus(): Status = when {
-        displayStatus == IN_PROGRESS -> Status.Matching
-        remainingDays == 0 -> Status.Matched
-        else -> Status.Default
-    }
+    private fun ConsumerLessonCard.toCardStatus(): Status = Status.Default
 
     private companion object {
         const val IN_PROGRESS = "IN_PROGRESS"
