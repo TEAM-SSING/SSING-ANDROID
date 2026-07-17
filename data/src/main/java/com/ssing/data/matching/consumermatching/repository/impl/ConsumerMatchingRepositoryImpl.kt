@@ -14,6 +14,7 @@ import com.ssing.data.matching.consumermatching.model.ConsumerMatchingProgressSu
 import com.ssing.data.matching.consumermatching.model.ConsumerMatchingRequestResult
 import com.ssing.data.matching.consumermatching.model.ConsumerMatchingRequestSummary
 import com.ssing.data.matching.consumermatching.model.ConsumerMatchingResort
+import com.ssing.data.matching.consumermatching.model.ConsumerMatchingSummaryParticipant
 import com.ssing.data.matching.consumermatching.remote.datasource.api.ConsumerMatchingRemoteDataSource
 import com.ssing.data.matching.consumermatching.remote.dto.request.ConsumerMatchingConditionRequest
 import com.ssing.data.matching.consumermatching.remote.dto.request.ConsumerMatchingConfirmationRequest
@@ -130,7 +131,15 @@ internal class ConsumerMatchingRepositoryImpl @Inject constructor(
                 ),
                 sport = requestSummary.sport,
                 lessonLevel = requestSummary.lessonLevel,
+                requesterName = requestSummary.requesterName,
                 headcount = requestSummary.headcount,
+                participants = requestSummary.participants.map {
+                    ConsumerMatchingSummaryParticipant(
+                        name = it.name,
+                        age = it.age,
+                        gender = it.gender,
+                    )
+                },
             ),
             lessonSummary = lessonSummary?.let {
                 ConsumerMatchingLessonSummary(

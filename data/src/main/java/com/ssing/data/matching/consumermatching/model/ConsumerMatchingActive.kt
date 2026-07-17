@@ -25,7 +25,15 @@ data class ConsumerMatchingRequestSummary(
     val resort: ConsumerMatchingResort,
     val sport: String,
     val lessonLevel: String,
+    val requesterName: String,
     val headcount: Int,
+    val participants: List<ConsumerMatchingSummaryParticipant>,
+)
+
+data class ConsumerMatchingSummaryParticipant(
+    val name: String?,
+    val age: Int,
+    val gender: String,
 )
 
 data class ConsumerMatchingResort(
