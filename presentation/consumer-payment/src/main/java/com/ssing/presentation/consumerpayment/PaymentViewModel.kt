@@ -3,13 +3,17 @@ package com.ssing.presentation.consumerpayment
 import androidx.lifecycle.viewModelScope
 import com.ssing.core.network.exception.ApiException
 import com.ssing.core.ui.base.BaseViewModel
+import com.ssing.core.ui.common.component.Gender
+import com.ssing.core.ui.common.component.Participant
 import com.ssing.core.ui.extension.uiMessage
 import com.ssing.data.matching.consumermatching.model.ConsumerMatchingActive
+import com.ssing.data.matching.consumermatching.model.ConsumerMatchingSummaryParticipant
 import com.ssing.data.matching.consumermatching.repository.api.ConsumerMatchingRepository
 import com.ssing.data.payment.model.PaymentSummary
 import com.ssing.data.payment.repository.api.PaymentRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
@@ -42,12 +46,15 @@ internal class PaymentViewModel @Inject constructor(
 
                 updateState {
                     copy(
+                        nickname = requestSummary.requesterName,
                         tags = persistentListOf(
                             requestSummary.sport.toSport(),
                             requestSummary.lessonLevel.toLessonLevel()
                         ),
                         location = requestSummary.resort.displayName,
                         duration = lessonSummary?.durationMinutes?.toDurationText() ?: duration,
+                        participants = requestSummary.participants.map { it.toParticipant() }
+                            .toPersistentList(),
                         lessonCost = priceSummary?.lessonPriceAmount ?: lessonCost,
                         resortCost = priceSummary?.resortPassFeeAmount ?: resortCost,
                         totalPaymentAmount = priceSummary?.totalPaymentAmount ?: totalPaymentAmount,
@@ -80,6 +87,15 @@ internal class PaymentViewModel @Inject constructor(
             this % 60 == 0 -> "${this / 60}시간"
             else -> "${this / 60}시간 ${this % 60}분"
         }
+
+    private fun ConsumerMatchingSummaryParticipant.toParticipant(): Participant =
+        Participant(age = age, gender = gender.toGender())
+
+    private fun String.toGender(): Gender = when (this) {
+        "MALE" -> Gender.MALE
+        "FEMALE" -> Gender.FEMALE
+        else -> Gender.MALE
+    }
 
     fun onPaymentClick() {
         if (uiState.value.isLoading) return
