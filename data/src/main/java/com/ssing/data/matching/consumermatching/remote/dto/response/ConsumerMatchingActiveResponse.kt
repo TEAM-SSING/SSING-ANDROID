@@ -26,7 +26,16 @@ internal data class ConsumerMatchingActiveResponse(
         @SerialName("resort") val resort: Resort,
         @SerialName("sport") val sport: String,
         @SerialName("lessonLevel") val lessonLevel: String,
+        @SerialName("requesterName") val requesterName: String,
         @SerialName("headcount") val headcount: Int,
+        @SerialName("participants") val participants: List<Participant> = emptyList(),
+    )
+
+    @Serializable
+    internal data class Participant(
+        @SerialName("name") val name: String? = null,
+        @SerialName("age") val age: Int,
+        @SerialName("gender") val gender: String,
     )
 
     @Serializable

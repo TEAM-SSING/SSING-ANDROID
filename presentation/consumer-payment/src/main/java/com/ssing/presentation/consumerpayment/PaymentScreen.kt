@@ -156,6 +156,7 @@ private fun PayInfoSection(
     ) {
         SsingMatchingDetailCard(
             nickname = state.nickname,
+            teamCount = state.participants.size,
             stepLabel = "결제 정보",
             stepLabelColor = SSINGTheme.colors.textAlternative,
             tags = state.tags,
