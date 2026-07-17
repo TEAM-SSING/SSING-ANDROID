@@ -57,8 +57,8 @@ internal fun LessonDetailOngoingScreen(
         )
         Column(
             modifier = Modifier
-                .verticalScroll(rememberScrollState())
                 .weight(1f)
+                .verticalScroll(rememberScrollState())
         ) {
             Spacer(modifier = Modifier.height(16.dp))
 
@@ -68,7 +68,7 @@ internal fun LessonDetailOngoingScreen(
 
             Column(
                 modifier = Modifier
-                    .fillMaxWidth()
+                    .weight(1f)
                     .background(color = Blue50)
                     .background(
                         color = SSINGTheme.colors.backgroundNormal,

@@ -47,7 +47,10 @@ internal fun ConsumerMatchingConditionRoute(
 
     HandleUiEffects(viewModel.uiEffect) { effect ->
         when (effect) {
-            is ConsumerMatchingConditionContract.Effect.NavigateToMatching -> navigateToMatching(effect.matchingRequestId)
+            is ConsumerMatchingConditionContract.Effect.NavigateToMatching -> navigateToMatching(
+                effect.matchingRequestId
+            )
+
             is ConsumerMatchingConditionContract.Effect.ShowToast -> context.toast(effect.message)
         }
     }
@@ -235,12 +238,15 @@ private fun ConsumerMatchingConditionScreen(
                             onClick = onAddConsumerClick,
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(top = 2.dp),
+                                .padding(
+                                    top = 2.dp,
+                                    bottom = 2.dp
+                                ),
                         )
                     }
                 }
 
-                Spacer(Modifier.height(24.dp))
+                Spacer(Modifier.height(22.dp))
             }
 
             item {
