@@ -89,6 +89,7 @@ internal fun MatchingWaitingScreen(
             price = waiting.price,
             equipmentStatus = waiting.equipmentStatus,
             modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp),
+            borderColor = SSINGTheme.colors.borderAlternative,
         )
 
         Spacer(modifier = Modifier.weight(1f))
